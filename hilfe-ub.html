@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Satzanfänge Tandem</title>
+<style>
+  :root{
+    --blue:#bcd3f2; --green:#c6e8c0; --orange:#fbd9a8; --orange-bg:#fdf6ea; --pro:#eef0f3;
+    --ink:#1b2a3a; --muted:#5b6b7c; --acc:#1f4e79; --bg:#f4f7fb; --card:#ffffff; --line:#c9d6e5;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
+  button{font:inherit;touch-action:manipulation}
+  header{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:12px 16px;background:var(--acc);color:#fff}
+  header h1{font-size:20px;margin:0 12px 0 0}
+  .tabs{display:flex;gap:6px;flex-wrap:wrap}
+  .tab{border:0;border-radius:10px;padding:10px 16px;background:rgba(255,255,255,.15);color:#fff;font-weight:600;font-size:16px;min-height:44px}
+  .tab[aria-selected="true"]{background:#fff;color:var(--acc)}
+  main{padding:14px 16px 28px;max-width:860px;margin:0 auto}
+  .hint{background:var(--orange-bg);border:1px solid var(--orange);border-radius:12px;padding:10px 14px;font-size:17px;line-height:1.4;margin-bottom:14px}
+  .top{display:grid;grid-template-columns:minmax(0,1fr) 200px;gap:14px;align-items:center;margin-bottom:12px}
+  @media (max-width:600px){.top{grid-template-columns:1fr}.top svg{max-width:220px;margin:0 auto}}
+  .task{font-size:19px;line-height:1.4}
+  .task b{color:var(--acc)}
+  .top svg{width:100%;height:auto;display:block}
+  ol{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+  li{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px 14px 56px;position:relative;font-size:21px;line-height:1.55}
+  li::before{content:attr(data-n);position:absolute;left:14px;top:12px;width:30px;height:30px;border-radius:50%;background:var(--acc);color:#fff;font-size:17px;font-weight:700;display:grid;place-items:center}
+  li[hidden]{display:none}
+  .gap{display:inline-block;min-width:2.2em;border-bottom:2px solid var(--ink);margin:0 .12em;height:1.1em;vertical-align:baseline}
+  .nb{white-space:nowrap}
+  .bar{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+  .btn{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:10px 18px;font-size:17px;font-weight:600;min-height:44px}
+  .btn.primary{background:var(--acc);color:#fff;border-color:var(--acc)}
+  .btn:disabled{opacity:.45}
+  details{background:var(--pro);border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin-top:18px;font-size:19px;line-height:1.5}
+  summary{font-weight:700;color:var(--acc);cursor:pointer;min-height:32px}
+  .foot{color:var(--muted);font-size:14px;margin-top:18px}
+</style>
+</head>
+<body>
+<header>
+  <h1>★ Satzanfänge · Erklär-Tandem</h1>
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" aria-selected="true" data-p="A">Partner A · Set A (5 | 2)</button>
+    <button class="tab" role="tab" aria-selected="false" data-p="B">Partner B · Set B (4 | 3)</button>
+  </div>
+</header>
+<main>
+  <div class="hint">Sprich die Sätze laut und füll die Lücken beim Sprechen. Die Nummern passen zur Checkliste auf deinem Blatt.</div>
+
+  <section data-panel="A">
+    <div class="top">
+      <div class="task">Erkläre deinem Partner mit Set A, warum <b class="nb">5² + 2²</b> nicht reicht.</div>
+      <svg viewBox="0 0 200 160" aria-label="Quadrat mit der Seite 5 plus 2"><rect x="40" y="22" width="91" height="91" fill="#bcd3f2" stroke="#1b2a3a" stroke-width="2"/><rect x="131" y="22" width="37" height="91" fill="#c6e8c0" stroke="#1b2a3a" stroke-width="2"/><rect x="40" y="113" width="91" height="37" fill="#c6e8c0" stroke="#1b2a3a" stroke-width="2"/><rect x="131" y="113" width="37" height="37" fill="#fbd9a8" stroke="#1b2a3a" stroke-width="2"/><text x="86" y="15" text-anchor="middle" font-size="13" fill="#1b2a3a">5 cm</text><text x="150" y="15" text-anchor="middle" font-size="13" fill="#1b2a3a">2</text><text x="26" y="72" text-anchor="middle" font-size="13" fill="#1b2a3a">5</text><text x="30" y="136" text-anchor="middle" font-size="13" fill="#1b2a3a">2</text></svg>
+    </div>
+    <ol>
+      <li data-n="1">Die Seite des großen Quadrats ist <span class="nb"><span class="gap"></span> + <span class="gap"></span> = <span class="gap"></span></span> cm lang.</li>
+      <li data-n="2">Das große Quadrat besteht aus <span class="gap"></span> Teilen: einem großen Quadrat, einem kleinen Quadrat und <span class="gap"></span> gleichen Rechtecken.</li>
+      <li data-n="3">Jedes Rechteck ist <span class="nb"><span class="gap"></span> · <span class="gap"></span> = <span class="gap"></span></span> cm² groß.</li>
+      <li data-n="4">Deshalb ist <span class="nb"><span class="gap"></span>² + <span class="gap"></span>²</span> zu wenig: Es fehlen die zwei Rechtecke, zusammen <span class="gap"></span> cm².</li>
+    </ol>
+    <details>
+      <summary>★★★ Profi-Satz anzeigen</summary>
+      <span class="nb">21²</span> ist nicht 401, weil … Das Quadrat hat die Seite <span class="nb">20 + 1</span>. Es fehlen zwei Rechtecke mit <span class="nb"><span class="gap"></span> · <span class="gap"></span> = <span class="gap"></span></span>, zusammen <span class="gap"></span> .
+    </details>
+  </section>
+
+  <section data-panel="B" hidden>
+    <div class="top">
+      <div class="task">Erkläre deinem Partner mit Set B, warum <b class="nb">4² + 3²</b> nicht reicht.</div>
+      <svg viewBox="0 0 200 160" aria-label="Quadrat mit der Seite 4 plus 3"><rect x="40" y="22" width="73" height="73" fill="#bcd3f2" stroke="#1b2a3a" stroke-width="2"/><rect x="113" y="22" width="55" height="73" fill="#c6e8c0" stroke="#1b2a3a" stroke-width="2"/><rect x="40" y="95" width="73" height="55" fill="#c6e8c0" stroke="#1b2a3a" stroke-width="2"/><rect x="113" y="95" width="55" height="55" fill="#fbd9a8" stroke="#1b2a3a" stroke-width="2"/><text x="77" y="15" text-anchor="middle" font-size="13" fill="#1b2a3a">4 cm</text><text x="141" y="15" text-anchor="middle" font-size="13" fill="#1b2a3a">3</text><text x="26" y="63" text-anchor="middle" font-size="13" fill="#1b2a3a">4</text><text x="30" y="127" text-anchor="middle" font-size="13" fill="#1b2a3a">3</text></svg>
+    </div>
+    <ol>
+      <li data-n="1">Die Seite des großen Quadrats ist <span class="nb"><span class="gap"></span> + <span class="gap"></span> = <span class="gap"></span></span> cm lang.</li>
+      <li data-n="2">Das große Quadrat besteht aus <span class="gap"></span> Teilen: einem großen Quadrat, einem kleinen Quadrat und <span class="gap"></span> gleichen Rechtecken.</li>
+      <li data-n="3">Jedes Rechteck ist <span class="nb"><span class="gap"></span> · <span class="gap"></span> = <span class="gap"></span></span> cm² groß.</li>
+      <li data-n="4">Deshalb ist <span class="nb"><span class="gap"></span>² + <span class="gap"></span>²</span> zu wenig: Es fehlen die zwei Rechtecke, zusammen <span class="gap"></span> cm².</li>
+    </ol>
+    <details>
+      <summary>★★★ Profi-Satz anzeigen</summary>
+      <span class="nb">21²</span> ist nicht 401, weil … Das Quadrat hat die Seite <span class="nb">20 + 1</span>. Es fehlen zwei Rechtecke mit <span class="nb"><span class="gap"></span> · <span class="gap"></span> = <span class="gap"></span></span>, zusammen <span class="gap"></span> .
+    </details>
+  </section>
+
+  <div class="bar">
+    <button class="btn primary" id="next">Nächster Satz</button>
+    <button class="btn" id="all">Alle Sätze zeigen</button>
+    <button class="btn" id="reset">Von vorn</button>
+  </div>
+  <p class="foot">Mathematik Klasse 8 · Die 1. binomische Formel · Hilfe zum Erklär-Tandem</p>
+</main>
+<script>
+(function(){
+  var panels=document.querySelectorAll("[data-panel]"), tabs=document.querySelectorAll(".tab");
+  var next=document.getElementById("next"), all=document.getElementById("all"), reset=document.getElementById("reset");
+  function active(){return document.querySelector("[data-panel]:not([hidden])");}
+  function items(){return active().querySelectorAll("li");}
+  function show(n){var li=items();for(var i=0;i<li.length;i++)li[i].hidden=i>=n;next.disabled=n>=li.length;}
+  function shown(){var li=items(),n=0;for(var i=0;i<li.length;i++)if(!li[i].hidden)n++;return n;}
+  next.onclick=function(){show(shown()+1);};
+  all.onclick=function(){show(items().length);};
+  reset.onclick=function(){show(1);};
+  for(var i=0;i<tabs.length;i++)tabs[i].onclick=function(){
+    for(var j=0;j<tabs.length;j++)tabs[j].setAttribute("aria-selected",tabs[j]===this);
+    for(var k=0;k<panels.length;k++)panels[k].hidden=panels[k].getAttribute("data-panel")!==this.getAttribute("data-p");
+    show(1);
+  };
+  show(1);
+})();
+</script>
+</body>
+</html>

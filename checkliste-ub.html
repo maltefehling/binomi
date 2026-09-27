@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Checkliste Tandem</title>
+<style>
+  :root{
+    --green:#c6e8c0; --green-d:#3f8f3a; --pro:#eef0f3;
+    --ink:#1b2a3a; --muted:#5b6b7c; --acc:#1f4e79; --bg:#f4f7fb; --card:#ffffff; --line:#c9d6e5;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
+  button{font:inherit;touch-action:manipulation}
+  header{padding:12px 16px;background:var(--acc);color:#fff}
+  header h1{font-size:20px;margin:0}
+  main{padding:14px 16px 28px;max-width:760px;margin:0 auto}
+  .task{font-size:19px;line-height:1.4;margin:4px 0 14px}
+  .item{display:flex;gap:14px;align-items:center;width:100%;text-align:left;background:var(--card);color:var(--ink);
+    border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:10px;font-size:20px;line-height:1.4;min-height:64px}
+  .item.pro{background:var(--pro)}
+  .box{flex:0 0 40px;height:40px;border-radius:10px;border:2px solid var(--line);background:#fff;display:grid;place-items:center;font-size:26px;color:transparent}
+  .item[aria-pressed="true"] .box{background:var(--green);border-color:var(--green-d);color:var(--green-d)}
+  .item[aria-pressed="true"]{border-color:var(--green-d)}
+  .msg{min-height:28px;font-size:19px;font-weight:600;color:var(--green-d);margin:6px 0 12px}
+  .btn{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:10px 18px;font-size:17px;font-weight:600;min-height:44px}
+  .foot{color:var(--muted);font-size:14px;margin-top:18px}
+</style>
+</head>
+<body>
+<header><h1>★★ Checkliste · 1. binomische Formel</h1></header>
+<main>
+  <p class="task">Das gehört in deine Erklärung. Tippe einen Punkt an, wenn du ihn erklärt hast.</p>
+  <button class="item" aria-pressed="false"><span class="box">✓</span><span>1. Sag, aus welchen zwei Stücken die Seite des großen Quadrats besteht (z. B. <span style="white-space:nowrap">5 + 2</span>).</span></button>
+  <button class="item" aria-pressed="false"><span class="box">✓</span><span>2. Zeig, dass das große Quadrat aus vier Teilen besteht.</span></button>
+  <button class="item" aria-pressed="false"><span class="box">✓</span><span>3. Zeig die zwei gleichen Rechtecke (z. B. <span style="white-space:nowrap">5 · 2</span>).</span></button>
+  <button class="item" aria-pressed="false"><span class="box">✓</span><span>4. Erkläre: <span style="white-space:nowrap">5² + 2²</span> ist zu wenig, weil die zwei Rechtecke fehlen.</span></button>
+  <button class="item pro" aria-pressed="false"><span class="box">✓</span><span>★★★ Profi: Erkläre, warum <span style="white-space:nowrap">21²</span> nicht 401 ist. Es fehlen zwei Rechtecke mit <span style="white-space:nowrap">20 · 1</span>.</span></button>
+  <div class="msg" id="msg"></div>
+  <button class="btn" id="reset">Von vorn</button>
+  <p class="foot">Mathematik Klasse 8 · Die 1. binomische Formel · Checkliste zum Erklär-Tandem</p>
+</main>
+<script>
+(function(){
+  var items=document.querySelectorAll(".item"), msg=document.getElementById("msg");
+  function update(){
+    var n=0,base=document.querySelectorAll(".item:not(.pro)");
+    base.forEach(function(b){if(b.getAttribute("aria-pressed")==="true")n++;});
+    msg.textContent=n===base.length?"Stark! Alles drin.":"";
+  }
+  items.forEach(function(b){b.onclick=function(){b.setAttribute("aria-pressed",b.getAttribute("aria-pressed")!=="true");update();};});
+  document.getElementById("reset").onclick=function(){items.forEach(function(b){b.setAttribute("aria-pressed","false");});update();};
+})();
+</script>
+</body>
+</html>

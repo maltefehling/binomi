@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Satzanfänge Tandem</title>
+<style>
+  :root{
+    --blue:#bcd3f2; --green:#c6e8c0; --orange:#fbd9a8; --orange-bg:#fdf6ea; --pro:#eef0f3;
+    --ink:#1b2a3a; --muted:#5b6b7c; --acc:#1f4e79; --bg:#f4f7fb; --card:#ffffff; --line:#c9d6e5;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
+  button{font:inherit;touch-action:manipulation}
+  header{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:12px 16px;background:var(--acc);color:#fff}
+  header h1{font-size:20px;margin:0 12px 0 0}
+  .tabs{display:flex;gap:6px;flex-wrap:wrap}
+  .tab{border:0;border-radius:10px;padding:10px 16px;background:rgba(255,255,255,.15);color:#fff;font-weight:600;font-size:16px;min-height:44px}
+  .tab[aria-selected="true"]{background:#fff;color:var(--acc)}
+  main{padding:14px 16px 28px;max-width:860px;margin:0 auto}
+  .hint{background:var(--orange-bg);border:1px solid var(--orange);border-radius:12px;padding:10px 14px;font-size:17px;line-height:1.4;margin-bottom:14px}
+  .top{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:14px;align-items:center;margin-bottom:12px}
+  @media (max-width:600px){.top{grid-template-columns:1fr}.top svg{max-width:220px;margin:0 auto}}
+  .task{font-size:19px;line-height:1.4}
+  .task b{color:var(--acc)}
+  .top svg{width:100%;height:auto;display:block}
+  ol{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+  li{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px 14px 56px;position:relative;font-size:21px;line-height:1.55}
+  li::before{content:attr(data-n);position:absolute;left:14px;top:12px;width:30px;height:30px;border-radius:50%;background:var(--acc);color:#fff;font-size:17px;font-weight:700;display:grid;place-items:center}
+  li[hidden]{display:none}
+  .gap{display:inline-block;min-width:2.2em;border-bottom:2px solid var(--ink);margin:0 .12em;height:1.1em;vertical-align:baseline}
+  .nb{white-space:nowrap}
+  .bar{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+  .btn{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:10px 18px;font-size:17px;font-weight:600;min-height:44px}
+  .btn.primary{background:var(--acc);color:#fff;border-color:var(--acc)}
+  .btn:disabled{opacity:.45}
+  details{background:var(--pro);border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin-top:18px;font-size:19px;line-height:1.5}
+  summary{font-weight:700;color:var(--acc);cursor:pointer;min-height:32px}
+  .foot{color:var(--muted);font-size:14px;margin-top:18px}
+</style>
+</head>
+<body>
+<header>
+  <h1>★ Satzanfänge · Erklär-Tandem</h1>
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" aria-selected="true" data-p="A">Partner A · ( a + 2 ) · ( b + 4 )</button>
+    <button class="tab" role="tab" aria-selected="false" data-p="B">Partner B · ( x + 3 ) · ( y + 5 )</button>
+  </div>
+</header>
+<main>
+  <div class="hint">Sprich die Sätze laut und füll die Lücken beim Sprechen. Die Nummern passen zur Checkliste.</div>
+
+  <section data-panel="A">
+    <div class="top">
+      <div class="task">Beschreibe deinem Partner, wie man <b class="nb">( a + 2 ) · ( b + 4 )</b> ausmultipliziert. Zeige dabei die Bögen.</div>
+      <svg viewBox="0 0 252 150" aria-label="Term mit vier Bögen"><defs><marker id="mc77a12" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10z" fill="#c77a12"/></marker><marker id="m1f4e79" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10z" fill="#1f4e79"/></marker><marker id="m3f8f3a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10z" fill="#3f8f3a"/></marker></defs><path d="M38 62 Q103.0 22 168 62" fill="none" stroke="#1f4e79" stroke-width="2.5" marker-end="url(#m1f4e79)"/><path d="M38 62 Q127.0 0 216 62" fill="none" stroke="#3f8f3a" stroke-width="2.5" marker-end="url(#m3f8f3a)"/><path d="M86 96 Q127.0 136 168 96" fill="none" stroke="#3f8f3a" stroke-width="2.5" marker-end="url(#m3f8f3a)"/><path d="M86 96 Q151.0 158 216 96" fill="none" stroke="#c77a12" stroke-width="2.5" marker-end="url(#mc77a12)"/><text x="14" y="86" text-anchor="middle" font-size="22" fill="#1b2a3a">(</text><text x="38" y="86" text-anchor="middle" font-size="22" fill="#1b2a3a">a</text><text x="62" y="86" text-anchor="middle" font-size="22" fill="#1b2a3a">+</text><text x="86" y="86" text-anchor="middle" font-size="22" fill="#1b2a3a">2</text><text x="108" y="86" text-anchor="middle" font-size="22" fill="#1b2a3a">)</text><text x="126" y="86" text-anchor="middle" font-size="22" fill="#1b2a3a">·</text><text x="144" y="86" text-anchor="middle" font-size="22" fill="#1b2a3a">(</text><text x="168" y="86" text-anchor="middle" font-size="22" fill="#1b2a3a">b</text><text x="192" y="86" text-anchor="middle" font-size="22" fill="#1b2a3a">+</text><text x="216" y="86" text-anchor="middle" font-size="22" fill="#1b2a3a">4</text><text x="238" y="86" text-anchor="middle" font-size="22" fill="#1b2a3a">)</text></svg>
+    </div>
+    <ol>
+      <li data-n="1">In der ersten Klammer stehen <span class="gap"></span> und <span class="gap"></span>. In der zweiten Klammer stehen <span class="gap"></span> und <span class="gap"></span>.</li>
+      <li data-n="2">Ich nehme <span class="gap"></span> aus der ersten Klammer und rechne es mal <span class="gap"></span> und mal <span class="gap"></span>.</li>
+      <li data-n="2">Dann nehme ich <span class="gap"></span> und rechne es auch mal <span class="gap"></span> und mal <span class="gap"></span>.</li>
+      <li data-n="3">Das sind <span class="gap"></span> Malaufgaben. Die Ergebnisse sind <span class="gap"></span>, <span class="gap"></span>, <span class="gap"></span> und <span class="gap"></span>.</li>
+      <li data-n="4">Zum Schluss rechne ich alle Ergebnisse plus: <span class="nb">( a + 2 ) · ( b + 4 ) = <span class="gap"></span> + <span class="gap"></span> + <span class="gap"></span> + <span class="gap"></span></span> .</li>
+    </ol>
+    <details>
+      <summary>★★★ Profi-Satz anzeigen</summary>
+      Bei <span class="nb">( x + 4 ) · ( x + 5 )</span> bekomme ich <span class="gap"></span>, <span class="gap"></span>, <span class="gap"></span> und <span class="gap"></span>. Zwei Ergebnisse haben beide ein x: <span class="gap"></span> und <span class="gap"></span>. Die kann ich zusammenrechnen: <span class="gap"></span>. Das Ergebnis ist <span class="gap"></span> .
+    </details>
+  </section>
+
+  <section data-panel="B" hidden>
+    <div class="top">
+      <div class="task">Beschreibe deinem Partner, wie man <b class="nb">( x + 3 ) · ( y + 5 )</b> ausmultipliziert. Zeige dabei die Bögen.</div>
+      <svg viewBox="0 0 252 150" aria-label="Term mit vier Bögen"><defs><marker id="mc77a12" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10z" fill="#c77a12"/></marker><marker id="m1f4e79" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10z" fill="#1f4e79"/></marker><marker id="m3f8f3a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10z" fill="#3f8f3a"/></marker></defs><path d="M38 62 Q103.0 22 168 62" fill="none" stroke="#1f4e79" stroke-width="2.5" marker-end="url(#m1f4e79)"/><path d="M38 62 Q127.0 0 216 62" fill="none" stroke="#3f8f3a" stroke-width="2.5" marker-end="url(#m3f8f3a)"/><path d="M86 96 Q127.0 136 168 96" fill="none" stroke="#3f8f3a" stroke-width="2.5" marker-end="url(#m3f8f3a)"/><path d="M86 96 Q151.0 158 216 96" fill="none" stroke="#c77a12" stroke-width="2.5" marker-end="url(#mc77a12)"/><text x="14" y="86" text-anchor="middle" font-size="22" fill="#1b2a3a">(</text><text x="38" y="86" text-anchor="middle" font-size="22" fill="#1b2a3a">x</text><text x="62" y="86" text-anchor="middle" font-size="22" fill="#1b2a3a">+</text><text x="86" y="86" text-anchor="middle" font-size="22" fill="#1b2a3a">3</text><text x="108" y="86" text-anchor="middle" font-size="22" fill="#1b2a3a">)</text><text x="126" y="86" text-anchor="middle" font-size="22" fill="#1b2a3a">·</text><text x="144" y="86" text-anchor="middle" font-size="22" fill="#1b2a3a">(</text><text x="168" y="86" text-anchor="middle" font-size="22" fill="#1b2a3a">y</text><text x="192" y="86" text-anchor="middle" font-size="22" fill="#1b2a3a">+</text><text x="216" y="86" text-anchor="middle" font-size="22" fill="#1b2a3a">5</text><text x="238" y="86" text-anchor="middle" font-size="22" fill="#1b2a3a">)</text></svg>
+    </div>
+    <ol>
+      <li data-n="1">In der ersten Klammer stehen <span class="gap"></span> und <span class="gap"></span>. In der zweiten Klammer stehen <span class="gap"></span> und <span class="gap"></span>.</li>
+      <li data-n="2">Ich nehme <span class="gap"></span> aus der ersten Klammer und rechne es mal <span class="gap"></span> und mal <span class="gap"></span>.</li>
+      <li data-n="2">Dann nehme ich <span class="gap"></span> und rechne es auch mal <span class="gap"></span> und mal <span class="gap"></span>.</li>
+      <li data-n="3">Das sind <span class="gap"></span> Malaufgaben. Die Ergebnisse sind <span class="gap"></span>, <span class="gap"></span>, <span class="gap"></span> und <span class="gap"></span>.</li>
+      <li data-n="4">Zum Schluss rechne ich alle Ergebnisse plus: <span class="nb">( x + 3 ) · ( y + 5 ) = <span class="gap"></span> + <span class="gap"></span> + <span class="gap"></span> + <span class="gap"></span></span> .</li>
+    </ol>
+    <details>
+      <summary>★★★ Profi-Satz anzeigen</summary>
+      Bei <span class="nb">( x + 4 ) · ( x + 5 )</span> bekomme ich <span class="gap"></span>, <span class="gap"></span>, <span class="gap"></span> und <span class="gap"></span>. Zwei Ergebnisse haben beide ein x: <span class="gap"></span> und <span class="gap"></span>. Die kann ich zusammenrechnen: <span class="gap"></span>. Das Ergebnis ist <span class="gap"></span> .
+    </details>
+  </section>
+
+  <div class="bar">
+    <button class="btn primary" id="next">Nächster Satz</button>
+    <button class="btn" id="all">Alle Sätze zeigen</button>
+    <button class="btn" id="reset">Von vorn</button>
+  </div>
+  <p class="foot">Mathematik Klasse 8 · Summen multiplizieren · Hilfe zum Erklär-Tandem</p>
+</main>
+<script>
+(function(){
+  var panels=document.querySelectorAll("[data-panel]"), tabs=document.querySelectorAll(".tab");
+  var next=document.getElementById("next"), all=document.getElementById("all"), reset=document.getElementById("reset");
+  function active(){return document.querySelector("[data-panel]:not([hidden])");}
+  function items(){return active().querySelectorAll("li");}
+  function show(n){var li=items();for(var i=0;i<li.length;i++)li[i].hidden=i>=n;next.disabled=n>=li.length;}
+  function shown(){var li=items(),n=0;for(var i=0;i<li.length;i++)if(!li[i].hidden)n++;return n;}
+  next.onclick=function(){show(shown()+1);};
+  all.onclick=function(){show(items().length);};
+  reset.onclick=function(){show(1);};
+  for(var i=0;i<tabs.length;i++)tabs[i].onclick=function(){
+    for(var j=0;j<tabs.length;j++)tabs[j].setAttribute("aria-selected",tabs[j]===this);
+    for(var k=0;k<panels.length;k++)panels[k].hidden=panels[k].getAttribute("data-panel")!==this.getAttribute("data-p");
+    show(1);
+  };
+  show(1);
+})();
+</script>
+</body>
+</html>
