@@ -170,8 +170,9 @@ function Board(svg,opts){
       // Seite in a | b zerlegt: getrennte Beschriftung + kurze Teilstriche oben und links
       const cut=a*u,lab=(x,y,t,rot)=>{const e=el("text",{x,y,class:"lbl"},svg);e.textContent=t;if(rot)e.setAttribute("transform",`rotate(-90 ${x} ${y})`);};
       const bOff=Math.max((FS-cut)/2,28); // kleines Stück: Beschriftung etwas vom Pluszeichen abrücken
-      lab(FX+cut/2,FY-22,a);lab(FX+cut,FY-22,"+");lab(FX+cut+bOff,FY-22,b);
-      lab(FX-26,FY+cut/2,a,true);lab(FX-26,FY+cut,"+");lab(FX-26,FY+cut+bOff,b,true);
+      const LA=opts.labelA??a,LB=opts.labelB??b;
+      lab(FX+cut/2,FY-22,LA);lab(FX+cut,FY-22,"+");lab(FX+cut+bOff,FY-22,LB);
+      lab(FX-26,FY+cut/2,LA,true);lab(FX-26,FY+cut,"+");lab(FX-26,FY+cut+bOff,LB,true);
       const tk={stroke:"#1b2a3a","stroke-width":3};
       el("line",{x1:FX+cut,y1:FY-6,x2:FX+cut,y2:FY+14,...tk},svg);
       el("line",{x1:FX-8,y1:FY+cut,x2:FX+14,y2:FY+cut,...tk},svg);
@@ -278,8 +279,8 @@ function Board(svg,opts){
     ghost(rects){overlay.innerHTML="";rects.forEach(r=>{
       el("rect",{x:FX+r.gx*u,y:FY+r.gy*u,width:r.w*u,height:r.h*u,class:"ghost"},overlay);
       const cx=FX+(r.gx+r.w/2)*u,cy=FY+(r.gy+r.h/2)*u;
-      const t=el("text",{x:r.w<r.h?cx+(r.w*u)/2+60:cx,y:r.w<r.h?cy:cy+(r.h*u)/2+22,class:"lbl"},overlay);t.textContent=r.label;
-      if(r.w<r.h){t.setAttribute("x",FX+FS+12);t.style.textAnchor="start";}
+      const t=el("text",{x:cx,y:cy,class:"lbl"},overlay);t.textContent=r.label;
+      if(r.w<r.h)t.setAttribute("transform",`rotate(-90 ${cx} ${cy})`);
     });},
     clearGhost(){if(overlay)overlay.innerHTML="";},
     // durchgehende Teilungslinien an den Kanten des großen Quadrats
@@ -298,7 +299,7 @@ function Board(svg,opts){
 const m1=document.getElementById("m1");
 let s1solved=false;
 const b1=Board(document.getElementById("b1"),{
-  ticks:true,
+  ticks:true,labelA:20,labelB:1, // gezeichnet 4 : 1, damit der Streifen sichtbar ist
   inner:p=>p.kind==="a2"?"20² = 400":"1² = 1",
   locked:()=>s1solved,
   onChange(){
@@ -308,13 +309,13 @@ const b1=Board(document.getElementById("b1"),{
     if(b1.allPlaced()){b1.pulse(true);m1.className="msg warn";m1.textContent="Das große Quadrat ist nicht voll! Was gehört noch hinein – und wie groß ist es?";}
     else{b1.pulse(false);m1.className="msg";m1.textContent="";}
   }});
-function s1start(){s1solved=false;b1.clearGhost();b1.setup(20,1,["a2","b2"]);}
+function s1start(){s1solved=false;b1.clearGhost();b1.setup(4,1,["a2","b2"]);}
 document.getElementById("s1reset").onclick=s1start;
 document.getElementById("s1solve").onclick=()=>{
   if(s1solved)return;
-  b1.arrange({a2:[0,0],b2:[20,20]});
+  b1.arrange({a2:[0,0],b2:[4,4]});
   b1.pulse(false);s1solved=true;b1.divs(false);
-  setTimeout(()=>b1.ghost([{gx:20,gy:0,w:1,h:20,label:"20 · 1 = 20"},{gx:0,gy:20,w:20,h:1,label:"20 · 1 = 20"}]),260);
+  setTimeout(()=>b1.ghost([{gx:4,gy:0,w:1,h:4,label:"20 · 1 = 20"},{gx:0,gy:4,w:4,h:1,label:"20 · 1 = 20"}]),260);
   m1.className="msg";m1.textContent="21² = 400 + 20 + 20 + 1 = 441  –  die fehlenden 40 stecken in den zwei Rechtecken.";
 };
 
@@ -340,7 +341,7 @@ hlBtn.onclick=()=>{const on=hlBtn.getAttribute("aria-pressed")!=="true";hlBtn.se
 const svg3=document.getElementById("b3"),ra=document.getElementById("ra"),rb=document.getElementById("rb");
 const st={hl:false,wrong:false,vars:false};
 function render3(){
-  const a=+ra.value,b=+rb.value,n=a+b,S=500,O=70,u=S/n,A=a*u,B=b*u;
+  const a=+ra.value,b=+rb.value,n=a+b,S=500,O=70,u=S/n,B=Math.max(b*u,60),A=S-B; // dünne Streifen (z. B. 21²) nicht maßstabsgetreu, aber sichtbar
   document.getElementById("oa").textContent=a;document.getElementById("ob").textContent=b;
   svg3.innerHTML="";addDefs(svg3);
   el("rect",{x:O,y:O,width:S,height:S,fill:"url(#hatch-b3)"},svg3);
