@@ -3,54 +3,108 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Checkliste Tandem</title>
+<title>Fahrplan Tandem</title>
 <style>
   :root{
-    --green:#c6e8c0; --green-d:#3f8f3a; --pro:#eef0f3;
+    --blue:#bcd3f2; --green:#c6e8c0; --green-d:#3f8f3a; --orange:#fbd9a8; --orange-bg:#fdf6ea; --pro:#eef0f3;
     --ink:#1b2a3a; --muted:#5b6b7c; --acc:#1f4e79; --bg:#f4f7fb; --card:#ffffff; --line:#c9d6e5;
   }
   *{box-sizing:border-box}
   html,body{margin:0;background:var(--bg);color:var(--ink);
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
   button{font:inherit;touch-action:manipulation}
-  header{padding:12px 16px;background:var(--acc);color:#fff}
-  header h1{font-size:20px;margin:0}
-  main{padding:14px 16px 28px;max-width:760px;margin:0 auto}
-  .task{font-size:19px;line-height:1.4;margin:4px 0 14px}
-  .item{display:flex;gap:14px;align-items:center;width:100%;text-align:left;background:var(--card);color:var(--ink);
-    border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:10px;font-size:20px;line-height:1.4;min-height:64px}
-  .item.pro{background:var(--pro)}
-  .box{flex:0 0 40px;height:40px;border-radius:10px;border:2px solid var(--line);background:#fff;display:grid;place-items:center;font-size:26px;color:transparent}
-  .item[aria-pressed="true"] .box{background:var(--green);border-color:var(--green-d);color:var(--green-d)}
-  .item[aria-pressed="true"]{border-color:var(--green-d)}
-  .msg{min-height:28px;font-size:19px;font-weight:600;color:var(--green-d);margin:6px 0 12px}
+  header{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:12px 16px;background:var(--acc);color:#fff}
+  header h1{font-size:20px;margin:0 12px 0 0}
+  .tabs{display:flex;gap:6px;flex-wrap:wrap}
+  .tab{border:0;border-radius:10px;padding:10px 16px;background:rgba(255,255,255,.15);color:#fff;font-weight:600;font-size:16px;min-height:44px}
+  .tab[aria-selected="true"]{background:#fff;color:var(--acc)}
+  main{padding:14px 16px 28px;max-width:860px;margin:0 auto}
+  .hint{background:var(--orange-bg);border:1px solid var(--orange);border-radius:12px;padding:10px 14px;font-size:17px;line-height:1.4;margin-bottom:14px}
+  .task{font-size:19px;line-height:1.4;margin:0 0 12px}
+  .task b{color:var(--acc)}
+  .nb{white-space:nowrap}
+  .step{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px 14px 60px;position:relative;margin-bottom:10px}
+  .step::before{content:attr(data-n);position:absolute;left:14px;top:14px;width:32px;height:32px;border-radius:50%;background:var(--acc);color:#fff;font-size:17px;font-weight:700;display:grid;place-items:center}
+  .step.pro{background:var(--pro)}
+  .step.pro::before{content:"★";}
+  .step.done{border-color:var(--green-d);background:#f1f9ef}
+  .zeige{font-size:20px;font-weight:700;margin-bottom:8px}
+  .zeige span{color:var(--acc)}
+  .words{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+  .words b{background:var(--blue);border-radius:8px;padding:4px 10px;font-size:18px;font-weight:600;white-space:nowrap}
+  .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+  .joker,.ok{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:10px;padding:8px 14px;font-size:16px;font-weight:600;min-height:44px}
+  .ok[aria-pressed="true"]{background:var(--green);border-color:var(--green-d);color:var(--green-d)}
+  .satz{display:none;font-size:19px;font-style:italic;background:var(--orange-bg);border:1px dashed var(--orange);border-radius:8px;padding:6px 10px;margin-top:8px}
+  .satz.show{display:block}
+  .msg{min-height:30px;font-size:20px;font-weight:700;color:var(--green-d);margin:12px 0 4px}
   .btn{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:10px 18px;font-size:17px;font-weight:600;min-height:44px}
   .foot{color:var(--muted);font-size:14px;margin-top:18px}
 </style>
 </head>
 <body>
-<header><h1>★★ Checkliste · 1. binomische Formel</h1></header>
+<header>
+  <h1>★★ Fahrplan · Erklär-Tandem</h1>
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" aria-selected="true" data-p="A">Partner A · Set A (5 | 2)</button>
+    <button class="tab" role="tab" aria-selected="false" data-p="B">Partner B · Set B (4 | 3)</button>
+  </div>
+</header>
 <main>
-  <p class="task">Das gehört in deine Erklärung. Tippe einen Punkt an, wenn du ihn erklärt hast.</p>
-  <button class="item" aria-pressed="false"><span class="box">✓</span><span>1. Sag, aus welchen zwei Stücken die Seite des großen Quadrats besteht (z. B. <span style="white-space:nowrap">5 + 2</span>).</span></button>
-  <button class="item" aria-pressed="false"><span class="box">✓</span><span>2. Zeig, dass das große Quadrat aus vier Teilen besteht.</span></button>
-  <button class="item" aria-pressed="false"><span class="box">✓</span><span>3. Zeig die zwei gleichen Rechtecke (z. B. <span style="white-space:nowrap">5 · 2</span>).</span></button>
-  <button class="item" aria-pressed="false"><span class="box">✓</span><span>4. Erkläre: <span style="white-space:nowrap">5² + 2²</span> ist zu wenig, weil die zwei Rechtecke fehlen.</span></button>
-  <button class="item pro" aria-pressed="false"><span class="box">✓</span><span>★★★ Profi: Erkläre, warum <span style="white-space:nowrap">21²</span> nicht 401 ist. Es fehlen zwei Rechtecke mit <span style="white-space:nowrap">20 · 1</span>.</span></button>
+  <div class="hint">Erkläre Schritt für Schritt in <b>eigenen Sätzen</b>. Zeig dabei auf deine Legeteile. Die blauen Wörter helfen dir. Wenn du hängst, tippe auf <b>Joker</b>. Hake jeden Schritt ab, den du erklärt hast.</div>
+  <div id="plan"></div>
   <div class="msg" id="msg"></div>
   <button class="btn" id="reset">Von vorn</button>
-  <p class="foot">Mathematik Klasse 8 · Die 1. binomische Formel · Checkliste zum Erklär-Tandem</p>
+  <p class="foot">Mathematik Klasse 8 · Die 1. binomische Formel · Hilfe zum Erklär-Tandem</p>
 </main>
 <script>
 (function(){
-  var items=document.querySelectorAll(".item"), msg=document.getElementById("msg");
+  // Pro Set: Aufgabe und vier Schritte (Zeige … / Stichwörter / Joker-Satzanfang), dazu der Profi-Schritt
+  var sets={
+    A:{task:'Erkläre deinem Partner mit Set A, warum <b class="nb">(5 + 2)² = 5² + 2²</b> nicht reicht.',
+       steps:[
+        ["auf die Seite des großen Quadrats",["Seite","5 + 2","7 cm"],"Die Seite ist …"],
+        ["nacheinander auf alle Teile",["vier Teile","großes Quadrat","kleines Quadrat","zwei Rechtecke"],"Das große Quadrat besteht aus …"],
+        ["auf die zwei grünen Rechtecke",["5 · 2","10 cm²","gleich groß"],"Jedes Rechteck ist …"],
+        ["auf die Lücken, die bei 5² + 2² bleiben",["zu wenig","es fehlen","zusammen 20 cm²"],"Deshalb reicht 5² + 2² nicht, weil …"]]},
+    B:{task:'Erkläre deinem Partner mit Set B, warum <b class="nb">(4 + 3)² = 4² + 3²</b> nicht reicht.',
+       steps:[
+        ["auf die Seite des großen Quadrats",["Seite","4 + 3","7 cm"],"Die Seite ist …"],
+        ["nacheinander auf alle Teile",["vier Teile","großes Quadrat","kleines Quadrat","zwei Rechtecke"],"Das große Quadrat besteht aus …"],
+        ["auf die zwei grünen Rechtecke",["4 · 3","12 cm²","gleich groß"],"Jedes Rechteck ist …"],
+        ["auf die Lücken, die bei 4² + 3² bleiben",["zu wenig","es fehlen","zusammen 24 cm²"],"Deshalb reicht 4² + 3² nicht, weil …"]]}
+  };
+  var pro=["an das Quadrat mit der Seite 20 + 1 (Seite 1 im Skript)",["21²","20 + 1","zwei Rechtecke 20 · 1","zusammen 40"],"21² ist nicht 401, weil …"];
+  var cur="A", plan=document.getElementById("plan"), msg=document.getElementById("msg");
+
+  function card(n,s,isPro){
+    var d=document.createElement("div"); d.className="step"+(isPro?" pro":""); d.setAttribute("data-n",n);
+    d.innerHTML='<div class="zeige">'+(isPro?'★★★ Profi · Denk ':'👉 Zeige ')+'<span>'+s[0]+'</span></div>'+
+      '<div class="words">'+s[1].map(function(w){return "<b>"+w+"</b>";}).join("")+'</div>'+
+      '<div class="row"><button class="ok" aria-pressed="false">✓ erklärt</button><button class="joker">Joker: Satzanfang zeigen</button></div>'+
+      '<div class="satz">'+s[2]+'</div>';
+    d.querySelector(".joker").onclick=function(){d.querySelector(".satz").classList.add("show");this.disabled=true;};
+    var ok=d.querySelector(".ok");
+    ok.onclick=function(){var on=ok.getAttribute("aria-pressed")!=="true";ok.setAttribute("aria-pressed",on);d.classList.toggle("done",on);update();};
+    return d;
+  }
+  function render(){
+    plan.innerHTML='<p class="task">'+sets[cur].task+'</p>';
+    sets[cur].steps.forEach(function(s,i){plan.appendChild(card(i+1,s,false));});
+    plan.appendChild(card("★",pro,true));
+    update();
+  }
   function update(){
-    var n=0,base=document.querySelectorAll(".item:not(.pro)");
-    base.forEach(function(b){if(b.getAttribute("aria-pressed")==="true")n++;});
+    var base=plan.querySelectorAll(".step:not(.pro)"), n=0;
+    base.forEach(function(s){if(s.classList.contains("done"))n++;});
     msg.textContent=n===base.length?"Stark! Alles drin.":"";
   }
-  items.forEach(function(b){b.onclick=function(){b.setAttribute("aria-pressed",b.getAttribute("aria-pressed")!=="true");update();};});
-  document.getElementById("reset").onclick=function(){items.forEach(function(b){b.setAttribute("aria-pressed","false");});update();};
+  document.querySelectorAll(".tab").forEach(function(t){t.onclick=function(){
+    document.querySelectorAll(".tab").forEach(function(x){x.setAttribute("aria-selected",x===t);});
+    cur=t.getAttribute("data-p"); render();
+  };});
+  document.getElementById("reset").onclick=render;
+  render();
 })();
 </script>
 </body>
