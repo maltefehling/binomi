@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Satzanfänge Tandem</title>
+<title>Lückentext Tandem</title>
 <style>
   :root{
-    --blue:#bcd3f2; --green:#c6e8c0; --orange:#fbd9a8; --orange-bg:#fdf6ea; --pro:#eef0f3;
-    --ink:#1b2a3a; --muted:#5b6b7c; --acc:#1f4e79; --bg:#f4f7fb; --card:#ffffff; --line:#c9d6e5;
+    --blue:#bcd3f2; --green:#c6e8c0; --green-d:#3f8f3a; --orange:#fbd9a8; --orange-bg:#fdf6ea; --pro:#eef0f3;
+    --ink:#1b2a3a; --muted:#5b6b7c; --acc:#1f4e79; --bg:#f4f7fb; --card:#ffffff; --line:#c9d6e5; --red:#d64545;
   }
   *{box-sizing:border-box}
   html,body{margin:0;background:var(--bg);color:var(--ink);
@@ -26,45 +26,52 @@
   .task b{color:var(--acc)}
   .top svg{width:100%;height:auto;display:block}
   ol{list-style:none;padding:0;margin:0;display:grid;gap:10px}
-  li{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px 14px 56px;position:relative;font-size:21px;line-height:1.55}
-  li::before{content:attr(data-n);position:absolute;left:14px;top:12px;width:30px;height:30px;border-radius:50%;background:var(--acc);color:#fff;font-size:17px;font-weight:700;display:grid;place-items:center}
+  li{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px 14px 56px;position:relative;font-size:21px;line-height:2.1}
+  li::before{content:attr(data-n);position:absolute;left:14px;top:16px;width:30px;height:30px;border-radius:50%;background:var(--acc);color:#fff;font-size:17px;font-weight:700;display:grid;place-items:center;line-height:1}
   li[hidden]{display:none}
-  .gap{display:inline-block;min-width:2.2em;border-bottom:2px solid var(--ink);margin:0 .12em;height:1.1em;vertical-align:baseline}
+  li.done{border-color:var(--green-d)}
   .nb{white-space:nowrap}
-  .bar{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+  /* Lücke mit Auswahl */
+  .pick{display:inline-flex;gap:6px;vertical-align:middle;border-bottom:2px dashed var(--muted);padding:0 2px 3px}
+  .pick button{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:9px;padding:2px 12px;font-size:19px;font-weight:600;min-height:40px;white-space:nowrap}
+  .pick button.wrong{border-color:var(--red);color:var(--red);animation:shake .35s}
+  @keyframes shake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+  .filled{display:inline-block;background:var(--green);border-radius:8px;padding:0 8px;font-weight:700;white-space:nowrap}
+  .fb{display:block;font-size:16px;color:var(--red);line-height:1.3;min-height:0}
+  .msg{min-height:30px;font-size:20px;font-weight:700;color:var(--green-d);margin:14px 0 4px}
+  .bar{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
   .btn{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:10px 18px;font-size:17px;font-weight:600;min-height:44px}
-  .btn.primary{background:var(--acc);color:#fff;border-color:var(--acc)}
-  .btn:disabled{opacity:.45}
-  details{background:var(--pro);border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin-top:18px;font-size:19px;line-height:1.5}
-  summary{font-weight:700;color:var(--acc);cursor:pointer;min-height:32px}
+  details{background:var(--pro);border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin-top:18px;font-size:20px;line-height:2.1}
+  summary{font-weight:700;color:var(--acc);cursor:pointer;min-height:32px;line-height:1.5}
   .foot{color:var(--muted);font-size:14px;margin-top:18px}
 </style>
 </head>
 <body>
 <header>
-  <h1>★ Satzanfänge · Erklär-Tandem</h1>
+  <h1>★ Lückentext · Erklär-Tandem</h1>
   <div class="tabs" role="tablist">
     <button class="tab" role="tab" aria-selected="true" data-p="A">Partner A · Set A (5 | 2)</button>
     <button class="tab" role="tab" aria-selected="false" data-p="B">Partner B · Set B (4 | 3)</button>
   </div>
 </header>
 <main>
-  <div class="hint">Sprich die Sätze laut und füll die Lücken beim Sprechen. Die Nummern passen zur ★★-Checkliste.</div>
+  <div class="hint">Tippe in jeder Lücke auf die richtige Möglichkeit. Schau dabei auf deine Legeteile. <b>Am Ende liest du deinem Partner alle Sätze laut vor.</b></div>
 
+  <!-- Lücken: data-o = Möglichkeiten (mit | getrennt), data-k = Nummer der richtigen (ab 0) -->
   <section data-panel="A">
     <div class="top">
       <div class="task">Erkläre deinem Partner mit Set A, warum <b class="nb">(5 + 2)² = 5² + 2²</b> nicht reicht.</div>
       <svg viewBox="0 0 200 160" aria-label="Quadrat mit der Seite 5 plus 2"><rect x="40" y="22" width="91" height="91" fill="#bcd3f2" stroke="#1b2a3a" stroke-width="2"/><rect x="131" y="22" width="37" height="91" fill="#c6e8c0" stroke="#1b2a3a" stroke-width="2"/><rect x="40" y="113" width="91" height="37" fill="#c6e8c0" stroke="#1b2a3a" stroke-width="2"/><rect x="131" y="113" width="37" height="37" fill="#fbd9a8" stroke="#1b2a3a" stroke-width="2"/><text x="86" y="15" text-anchor="middle" font-size="13" fill="#1b2a3a">5 cm</text><text x="150" y="15" text-anchor="middle" font-size="13" fill="#1b2a3a">2</text><text x="26" y="72" text-anchor="middle" font-size="13" fill="#1b2a3a">5</text><text x="30" y="136" text-anchor="middle" font-size="13" fill="#1b2a3a">2</text></svg>
     </div>
     <ol>
-      <li data-n="1">Die Seite des großen Quadrats ist <span class="nb"><span class="gap"></span> + <span class="gap"></span> = <span class="gap"></span></span> cm lang.</li>
-      <li data-n="2">Das große Quadrat besteht aus <span class="gap"></span> Teilen: einem großen Quadrat, einem kleinen Quadrat und <span class="gap"></span> gleichen Rechtecken.</li>
-      <li data-n="3">Jedes Rechteck ist <span class="nb"><span class="gap"></span> · <span class="gap"></span> = <span class="gap"></span></span> cm² groß.</li>
-      <li data-n="4">Deshalb ist <span class="nb"><span class="gap"></span>² + <span class="gap"></span>²</span> zu wenig: Es fehlen die zwei Rechtecke, zusammen <span class="gap"></span> cm².</li>
+      <li data-n="1">Die Seite des großen Quadrats ist <span class="pick" data-o="5 + 2|5 · 2" data-k="0"></span> = <span class="pick" data-o="10|7" data-k="1"></span> cm lang.</li>
+      <li data-n="2">Das große Quadrat besteht aus <span class="pick" data-o="2|4" data-k="1"></span> Teilen: einem großen Quadrat, einem kleinen Quadrat und <span class="pick" data-o="einem|zwei" data-k="1"></span> gleichen Rechtecken.</li>
+      <li data-n="3">Jedes Rechteck ist <span class="pick" data-o="5 + 2|5 · 2" data-k="1"></span> = <span class="pick" data-o="10|7" data-k="0"></span> cm² groß.</li>
+      <li data-n="4">Deshalb ist <span class="nb">5² + 2²</span> <span class="pick" data-o="genau richtig|zu wenig" data-k="1"></span>: Es fehlen die zwei <span class="pick" data-o="Quadrate|Rechtecke" data-k="1"></span>, zusammen <span class="pick" data-o="20|10" data-k="0"></span> cm².</li>
     </ol>
     <details>
       <summary>★★★ Profi-Satz anzeigen</summary>
-      <span class="nb">21²</span> ist nicht 401, weil … Das Quadrat hat die Seite <span class="nb">20 + 1</span>. Es fehlen zwei Rechtecke mit <span class="nb"><span class="gap"></span> · <span class="gap"></span> = <span class="gap"></span></span>, zusammen <span class="gap"></span> .
+      <span class="nb">21²</span> ist nicht 401, weil zwei Rechtecke mit <span class="pick" data-o="20 + 1|20 · 1" data-k="1"></span> fehlen, zusammen <span class="pick" data-o="40|20" data-k="0"></span>.
     </details>
   </section>
 
@@ -74,41 +81,70 @@
       <svg viewBox="0 0 200 160" aria-label="Quadrat mit der Seite 4 plus 3"><rect x="40" y="22" width="73" height="73" fill="#bcd3f2" stroke="#1b2a3a" stroke-width="2"/><rect x="113" y="22" width="55" height="73" fill="#c6e8c0" stroke="#1b2a3a" stroke-width="2"/><rect x="40" y="95" width="73" height="55" fill="#c6e8c0" stroke="#1b2a3a" stroke-width="2"/><rect x="113" y="95" width="55" height="55" fill="#fbd9a8" stroke="#1b2a3a" stroke-width="2"/><text x="77" y="15" text-anchor="middle" font-size="13" fill="#1b2a3a">4 cm</text><text x="141" y="15" text-anchor="middle" font-size="13" fill="#1b2a3a">3</text><text x="26" y="63" text-anchor="middle" font-size="13" fill="#1b2a3a">4</text><text x="30" y="127" text-anchor="middle" font-size="13" fill="#1b2a3a">3</text></svg>
     </div>
     <ol>
-      <li data-n="1">Die Seite des großen Quadrats ist <span class="nb"><span class="gap"></span> + <span class="gap"></span> = <span class="gap"></span></span> cm lang.</li>
-      <li data-n="2">Das große Quadrat besteht aus <span class="gap"></span> Teilen: einem großen Quadrat, einem kleinen Quadrat und <span class="gap"></span> gleichen Rechtecken.</li>
-      <li data-n="3">Jedes Rechteck ist <span class="nb"><span class="gap"></span> · <span class="gap"></span> = <span class="gap"></span></span> cm² groß.</li>
-      <li data-n="4">Deshalb ist <span class="nb"><span class="gap"></span>² + <span class="gap"></span>²</span> zu wenig: Es fehlen die zwei Rechtecke, zusammen <span class="gap"></span> cm².</li>
+      <li data-n="1">Die Seite des großen Quadrats ist <span class="pick" data-o="4 · 3|4 + 3" data-k="1"></span> = <span class="pick" data-o="7|12" data-k="0"></span> cm lang.</li>
+      <li data-n="2">Das große Quadrat besteht aus <span class="pick" data-o="4|2" data-k="0"></span> Teilen: einem großen Quadrat, einem kleinen Quadrat und <span class="pick" data-o="zwei|einem" data-k="0"></span> gleichen Rechtecken.</li>
+      <li data-n="3">Jedes Rechteck ist <span class="pick" data-o="4 · 3|4 + 3" data-k="0"></span> = <span class="pick" data-o="7|12" data-k="1"></span> cm² groß.</li>
+      <li data-n="4">Deshalb ist <span class="nb">4² + 3²</span> <span class="pick" data-o="zu wenig|genau richtig" data-k="0"></span>: Es fehlen die zwei <span class="pick" data-o="Rechtecke|Quadrate" data-k="0"></span>, zusammen <span class="pick" data-o="12|24" data-k="1"></span> cm².</li>
     </ol>
     <details>
       <summary>★★★ Profi-Satz anzeigen</summary>
-      <span class="nb">21²</span> ist nicht 401, weil … Das Quadrat hat die Seite <span class="nb">20 + 1</span>. Es fehlen zwei Rechtecke mit <span class="nb"><span class="gap"></span> · <span class="gap"></span> = <span class="gap"></span></span>, zusammen <span class="gap"></span> .
+      <span class="nb">21²</span> ist nicht 401, weil zwei Rechtecke mit <span class="pick" data-o="20 · 1|20 + 1" data-k="0"></span> fehlen, zusammen <span class="pick" data-o="20|40" data-k="1"></span>.
     </details>
   </section>
 
-  <div class="bar">
-    <button class="btn primary" id="next">Nächster Satz</button>
-    <button class="btn" id="all">Alle Sätze zeigen</button>
-    <button class="btn" id="reset">Von vorn</button>
-  </div>
+  <div class="msg" id="msg"></div>
+  <div class="bar"><button class="btn" id="reset">Von vorn</button></div>
   <p class="foot">Mathematik Klasse 8 · Die 1. binomische Formel · Hilfe zum Erklär-Tandem</p>
 </main>
 <script>
 (function(){
-  var panels=document.querySelectorAll("[data-panel]"), tabs=document.querySelectorAll(".tab");
-  var next=document.getElementById("next"), all=document.getElementById("all"), reset=document.getElementById("reset");
+  var panels=document.querySelectorAll("[data-panel]"), tabs=document.querySelectorAll(".tab"), msg=document.getElementById("msg");
   function active(){return document.querySelector("[data-panel]:not([hidden])");}
-  function items(){return active().querySelectorAll("li");}
-  function show(n){var li=items();for(var i=0;i<li.length;i++)li[i].hidden=i>=n;next.disabled=n>=li.length;}
-  function shown(){var li=items(),n=0;for(var i=0;i<li.length;i++)if(!li[i].hidden)n++;return n;}
-  next.onclick=function(){show(shown()+1);};
-  all.onclick=function(){show(items().length);};
-  reset.onclick=function(){show(1);};
-  for(var i=0;i<tabs.length;i++)tabs[i].onclick=function(){
-    for(var j=0;j<tabs.length;j++)tabs[j].setAttribute("aria-selected",tabs[j]===this);
-    for(var k=0;k<panels.length;k++)panels[k].hidden=panels[k].getAttribute("data-panel")!==this.getAttribute("data-p");
-    show(1);
-  };
-  show(1);
+
+  // Eine Lücke aufbauen: Auswahlknöpfe, richtige Wahl wird grün eingesetzt
+  function build(pick){
+    var opts=pick.getAttribute("data-o").split("|"), ok=+pick.getAttribute("data-k");
+    pick.className="pick"; pick.innerHTML="";
+    var fb=null;
+    opts.forEach(function(o,i){
+      var b=document.createElement("button"); b.type="button"; b.textContent=o;
+      b.onclick=function(){
+        if(i===ok){
+          var f=document.createElement("span"); f.className="filled"; f.textContent=o;
+          pick.replaceWith(f); if(fb)fb.remove(); update();
+        }else{
+          b.classList.remove("wrong"); void b.offsetWidth; b.classList.add("wrong");
+          if(!fb){fb=document.createElement("span");fb.className="fb";fb.textContent="Schau nochmal auf deine Teile.";(pick.closest("li,details")||pick.parentNode).appendChild(fb);}
+        }
+      };
+      pick.appendChild(b);
+    });
+  }
+  // Satz für Satz: der nächste erscheint, wenn alle Lücken des aktuellen richtig sind
+  function update(){
+    var li=active().querySelectorAll("li"), shown=true, allDone=true;
+    for(var i=0;i<li.length;i++){
+      li[i].hidden=!shown;
+      var open=li[i].querySelectorAll(".pick").length>0;
+      li[i].classList.toggle("done",!open);
+      if(open){shown=false;allDone=false;}
+    }
+    msg.textContent=allDone?"Super, alle Lücken stimmen! Jetzt lies deinem Partner alle Sätze laut vor.":"";
+  }
+  var orig={};
+  panels.forEach(function(p){orig[p.getAttribute("data-panel")]=p.innerHTML;});
+  function reset(){
+    var p=active(); p.innerHTML=orig[p.getAttribute("data-panel")];
+    p.querySelectorAll(".pick").forEach(build); update();
+  }
+  panels.forEach(function(p){p.querySelectorAll(".pick").forEach(build);});
+  document.getElementById("reset").onclick=reset;
+  tabs.forEach(function(t){t.onclick=function(){
+    tabs.forEach(function(x){x.setAttribute("aria-selected",x===t);});
+    panels.forEach(function(p){p.hidden=p.getAttribute("data-panel")!==t.getAttribute("data-p");});
+    update();
+  };});
+  update();
 })();
 </script>
 </body>
