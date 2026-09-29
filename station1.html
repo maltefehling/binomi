@@ -105,12 +105,12 @@
     <div id="s2pick">
       <div class="prompt">Wähle zuerst: Bist du <b>Partner A</b> oder <b>Partner B</b>?</div>
       <div class="pickrow">
-        <button class="bigpick" data-set="A">Ich bin <b>Partner A</b><span>Quadrat mit der Seite 5 + 2</span></button>
-        <button class="bigpick" data-set="B">Ich bin <b>Partner B</b><span>Quadrat mit der Seite 4 + 3</span></button>
+        <button class="bigpick" data-set="A">Ich bin <b>Partner A</b></button>
+        <button class="bigpick" data-set="B">Ich bin <b>Partner B</b></button>
       </div>
     </div>
     <div id="s2work" hidden>
-      <div class="prompt"><b id="s2who"></b> Ziehe die vier Teile an die richtige Stelle, sodass ein großes Quadrat entsteht.</div>
+      <div class="prompt"><b id="s2who"></b><br>Ziehe die vier Teile an die richtige Stelle, sodass ein großes Quadrat entsteht.</div>
       <div class="bar">
         <button class="btn" id="s2reset">Neu starten</button>
         <button class="btn" id="s2switch">Partner wechseln</button>
@@ -230,7 +230,7 @@ function Board(svg,opts){
       const t=el("text",{x:W/2,y:H/2,"text-anchor":"middle","dominant-baseline":"central"},p.g);
       t.textContent=opts.inner(p);
       if(W<60){t.setAttribute("x",W+14);t.setAttribute("text-anchor","start");}
-    }else if(!(opts.noRectLabels&&p.type==="ab")){
+    }else if(!opts.noLabels&&!(opts.noRectLabels&&p.type==="ab")){
       if(W>=70)el("text",{x:W/2,y:H-12,"text-anchor":"middle"},p.g).textContent=sideLabel(p.w);
       if(H>=70){const t=el("text",{x:28,y:H/2,"text-anchor":"middle",transform:`rotate(-90 28 ${H/2})`},p.g);t.textContent=sideLabel(p.h);}
     }
@@ -389,7 +389,7 @@ const m2=document.getElementById("m2");
 let set="A",s2reject=false;
 const SLOT=(a)=>({a2:[0,0],b2:[a,a],abH:[0,a],abV:[a,0]}); // richtige Stelle je Teil
 const b2=Board(document.getElementById("b2"),{
-  unit:"cm",noFrameLabel:true,noRectLabels:true,
+  ticks:true,noLabels:true,
   allowed:(p,gx,gy)=>{const t=SLOT(b2.a)[p.kind];return gx===t[0]&&gy===t[1];},
   onReject:()=>{s2reject=true;m2.className="msg warn";m2.textContent="Noch nicht die richtige Stelle. Tipp: Das blaue Quadrat gehört oben links.";},
   onChange(){
@@ -405,7 +405,7 @@ const b2=Board(document.getElementById("b2"),{
   }});
 function s2start(){
   const a=set==="A"?5:4,b=set==="A"?2:3;
-  document.getElementById("s2who").textContent="Partner "+set+":";
+  document.getElementById("s2who").textContent="Partner "+set+": Du berechnest ( "+a+" + "+b+" )².";
   document.getElementById("s2sum").hidden=true;document.getElementById("s2in").value="";
   const fb=document.getElementById("s2fb");fb.textContent="";fb.className="fb2";
   b2.setup(a,b,["a2","b2","abH","abV"]);b2.highlight(false);
