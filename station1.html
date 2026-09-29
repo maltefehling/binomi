@@ -69,6 +69,16 @@
   .toggles{display:flex;flex-direction:column;gap:6px;margin-top:12px}
   .toggles .btn{text-align:left}
   footer{color:var(--muted);font-size:13px;text-align:center;padding:8px}
+  .pickrow{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media (max-width:700px){.pickrow{grid-template-columns:1fr}}
+  .bigpick{border:2px solid var(--acc);background:var(--card);color:var(--ink);border-radius:16px;padding:28px 18px;font-size:26px;min-height:140px}
+  .bigpick b{color:var(--acc)}
+  .bigpick span{display:block;font-size:18px;color:var(--muted);margin-top:8px}
+  .sumbox{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-top:10px;font-size:19px}
+  .sumrow{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:10px;font-size:22px}
+  .sumrow input{width:110px;font-size:24px;padding:6px 10px;border:2px solid var(--line);border-radius:10px;text-align:center}
+  .fb2{min-height:28px;margin-top:10px;font-size:19px;font-weight:700}
+  .fb2.ok{color:var(--green-d)} .fb2.no{color:var(--red)}
 </style>
 </head>
 <body>
@@ -90,18 +100,29 @@
     <div class="msg" id="m1"></div>
   </section>
 
-  <!-- Stufe 2 -->
+  <!-- Stufe 2: Wie groß sind die fehlenden Teile? -->
   <section class="stage" id="s2">
-    <div class="prompt">Lege aus den vier Teilen <b>ein großes Quadrat</b> – ohne Lücken und ohne Überlappungen.<br>
-      Ziehen = verschieben · <b>kurz antippen = Rechteck drehen</b></div>
-    <div class="bar">
-      <button class="btn" data-set="A" aria-pressed="true">Set A (5 | 2)</button>
-      <button class="btn" data-set="B" aria-pressed="false">Set B (4 | 3)</button>
-      <button class="btn" id="s2reset">Neu starten</button>
-      <button class="btn" id="s2hl" aria-pressed="false">Rechtecke hervorheben</button>
+    <div id="s2pick">
+      <div class="prompt">Wähle zuerst: Bist du <b>Partner A</b> oder <b>Partner B</b>?</div>
+      <div class="pickrow">
+        <button class="bigpick" data-set="A">Ich bin <b>Partner A</b><span>Quadrat mit der Seite 5 + 2</span></button>
+        <button class="bigpick" data-set="B">Ich bin <b>Partner B</b><span>Quadrat mit der Seite 4 + 3</span></button>
+      </div>
     </div>
-    <svg class="board" id="b2" viewBox="0 0 1160 580"></svg>
-    <div class="msg" id="m2"></div>
+    <div id="s2work" hidden>
+      <div class="prompt"><b id="s2who"></b> Ziehe die vier Teile an die richtige Stelle, sodass ein großes Quadrat entsteht.</div>
+      <div class="bar">
+        <button class="btn" id="s2reset">Neu starten</button>
+        <button class="btn" id="s2switch">Partner wechseln</button>
+      </div>
+      <svg class="board" id="b2" viewBox="0 0 1160 580"></svg>
+      <div class="msg" id="m2"></div>
+      <div class="sumbox" id="s2sum" hidden>
+        <label for="s2in">Berechnet im Skript die Flächeninhalte. Gebt dann zur Kontrolle ein:</label>
+        <div class="sumrow"><b>Summe aller Teile =</b> <input id="s2in" type="number" inputmode="numeric" min="0" max="999"> <b>cm²</b> <button class="btn primary" id="s2check">Prüfen</button></div>
+        <div id="s2fb" class="fb2"></div>
+      </div>
+    </div>
   </section>
 
   <!-- Stufe 3 -->
@@ -129,7 +150,7 @@
     </div>
   </section>
 </main>
-<footer>Mathematik Klasse 8 · Die 1. binomische Formel am Quadrat</footer>
+<footer>Fehling · Erste binomische Formel</footer>
 
 <script>
 "use strict";
@@ -177,7 +198,7 @@ function Board(svg,opts){
       const hint={stroke:"#b8c2cc","stroke-width":1.5};
       el("line",{x1:FX+cut,y1:FY,x2:FX+cut,y2:FY+FS,...hint},svg);
       el("line",{x1:FX,y1:FY+cut,x2:FX+FS,y2:FY+cut,...hint},svg);
-    }else{
+    }else if(!opts.noFrameLabel){
       el("text",{x:FX+FS/2,y:FY-18,class:"lbl small"},svg).textContent=opts.unit?`${a} ${opts.unit} + ${b} ${opts.unit}`:`${a} + ${b} = ${n}`;
     }
     overlay=el("g",{},svg);
@@ -209,7 +230,7 @@ function Board(svg,opts){
       const t=el("text",{x:W/2,y:H/2,"text-anchor":"middle","dominant-baseline":"central"},p.g);
       t.textContent=opts.inner(p);
       if(W<60){t.setAttribute("x",W+14);t.setAttribute("text-anchor","start");}
-    }else{
+    }else if(!(opts.noRectLabels&&p.type==="ab")){
       if(W>=70)el("text",{x:W/2,y:H-12,"text-anchor":"middle"},p.g).textContent=sideLabel(p.w);
       if(H>=70){const t=el("text",{x:28,y:H/2,"text-anchor":"middle",transform:`rotate(-90 28 ${H/2})`},p.g);t.textContent=sideLabel(p.h);}
     }
@@ -363,23 +384,43 @@ document.getElementById("s1solve").onclick=()=>{
   m1.className="msg";m1.textContent="21² = 400 + 20 + 20 + 1 = 441  –  die fehlenden 40 stecken in den zwei Rechtecken.";
 };
 
-/* ---------- Stufe 2 ---------- */
+/* ---------- Stufe 2: Wie groß sind die fehlenden Teile? ---------- */
 const m2=document.getElementById("m2");
-let set="A";
+let set="A",s2reject=false;
+const SLOT=(a)=>({a2:[0,0],b2:[a,a],abH:[0,a],abV:[a,0]}); // richtige Stelle je Teil
 const b2=Board(document.getElementById("b2"),{
-  unit:"cm",rotate:true,
+  unit:"cm",noFrameLabel:true,noRectLabels:true,
+  allowed:(p,gx,gy)=>{const t=SLOT(b2.a)[p.kind];return gx===t[0]&&gy===t[1];},
+  onReject:()=>{s2reject=true;m2.className="msg warn";m2.textContent="Noch nicht die richtige Stelle. Tipp: Das blaue Quadrat gehört oben links.";},
   onChange(){
     if(!b2||!b2.pieces.length)return;
-    const full=b2.placedArea()===b2.n*b2.n;
-    m2.className="msg";
-    m2.textContent=full?`Geschafft! Dein Quadrat hat die Seite ${b2.a} cm + ${b2.b} cm = ${b2.n} cm. Berechne jetzt die Flächen auf dem Arbeitsblatt.`:"";
+    if(b2.allPlaced()){
+      b2.highlight(true);
+      m2.className="msg";m2.textContent="Geschafft! Die grünen Rechtecke sind die fehlenden Teile – sie fehlen, wenn man nur a² + b² rechnet.";
+      document.getElementById("s2sum").hidden=false;
+    }else{
+      if(s2reject){s2reject=false;return;}
+      m2.className="msg";m2.textContent="";
+    }
   }});
-const hlBtn=document.getElementById("s2hl");
-function s2start(){b2.setup(set==="A"?5:4,set==="A"?2:3,["a2","b2","abH","abV"]);b2.highlight(hlBtn.getAttribute("aria-pressed")==="true");}
-document.querySelectorAll("[data-set]").forEach(btn=>btn.onclick=()=>{
-  set=btn.dataset.set;document.querySelectorAll("[data-set]").forEach(x=>x.setAttribute("aria-pressed",x===btn));s2start();});
+function s2start(){
+  const a=set==="A"?5:4,b=set==="A"?2:3;
+  document.getElementById("s2who").textContent="Partner "+set+":";
+  document.getElementById("s2sum").hidden=true;document.getElementById("s2in").value="";
+  const fb=document.getElementById("s2fb");fb.textContent="";fb.className="fb2";
+  b2.setup(a,b,["a2","b2","abH","abV"]);b2.highlight(false);
+}
+document.querySelectorAll("#s2pick [data-set]").forEach(btn=>btn.onclick=()=>{
+  set=btn.dataset.set;document.getElementById("s2pick").hidden=true;document.getElementById("s2work").hidden=false;s2start();});
 document.getElementById("s2reset").onclick=s2start;
-hlBtn.onclick=()=>{const on=hlBtn.getAttribute("aria-pressed")!=="true";hlBtn.setAttribute("aria-pressed",on);b2.highlight(on);};
+document.getElementById("s2switch").onclick=()=>{document.getElementById("s2work").hidden=true;document.getElementById("s2pick").hidden=false;};
+document.getElementById("s2check").onclick=()=>{
+  const a=b2.a,b=b2.b,v=+document.getElementById("s2in").value,fb=document.getElementById("s2fb");
+  if(!document.getElementById("s2in").value){fb.className="fb2 no";fb.textContent="Gib zuerst eine Zahl ein.";return;}
+  if(v===(a+b)*(a+b)){fb.className="fb2 ok";fb.textContent=`Richtig! Alle Teile zusammen haben ${(a+b)*(a+b)} cm². Die zwei grünen Rechtecke haben zusammen ${2*a*b} cm² – genau das fehlt bei ${a}² + ${b}².`;}
+  else if(v===a*a+b*b){fb.className="fb2 no";fb.textContent=`Das sind nur die zwei Quadrate (${a}² + ${b}²). Die grünen Rechtecke fehlen noch!`;}
+  else{fb.className="fb2 no";fb.textContent="Noch nicht. Rechne jedes Teil mit Länge · Breite. Die grünen Rechtecke haben dieselben Seiten wie die Quadrate daneben.";}
+};
 
 /* ---------- Stufe 3 ---------- */
 const svg3=document.getElementById("b3"),ra=document.getElementById("ra"),rb=document.getElementById("rb");
@@ -426,7 +467,7 @@ tog("tHl","hl");tog("tWrong","wrong");tog("tVar","vars");
 const STATION="s1";
 document.getElementById(STATION).classList.add("on");
 if(STATION==="s1")s1start(true);
-if(STATION==="s2")s2start();
+
 if(STATION==="s3")render3();
 </script>
 </body>
