@@ -191,6 +191,7 @@ function Board(svg,opts){
       const LA=opts.labelA??a,LB=opts.labelB??b;
       lab(FX+cut/2,FY-22,LA);lab(FX+cut,FY-22,"+");lab(FX+cut+bOff,FY-22,LB);
       lab(FX-26,FY+cut/2,LA,true);lab(FX-26,FY+cut,"+");lab(FX-26,FY+cut+bOff,LB,true);
+      if(!opts.plainFrame){ // Teilstriche und helles Kreuz (in Station ② bewusst weggelassen)
       const tk={stroke:"#1b2a3a","stroke-width":3};
       el("line",{x1:FX+cut,y1:FY-6,x2:FX+cut,y2:FY+14,...tk},svg);
       el("line",{x1:FX-8,y1:FY+cut,x2:FX+14,y2:FY+cut,...tk},svg);
@@ -198,6 +199,7 @@ function Board(svg,opts){
       const hint={stroke:"#b8c2cc","stroke-width":1.5};
       el("line",{x1:FX+cut,y1:FY,x2:FX+cut,y2:FY+FS,...hint},svg);
       el("line",{x1:FX,y1:FY+cut,x2:FX+FS,y2:FY+cut,...hint},svg);
+      }
     }else if(!opts.noFrameLabel){
       el("text",{x:FX+FS/2,y:FY-18,class:"lbl small"},svg).textContent=opts.unit?`${a} ${opts.unit} + ${b} ${opts.unit}`:`${a} + ${b} = ${n}`;
     }
@@ -389,7 +391,7 @@ const m2=document.getElementById("m2");
 let set="A",s2reject=false;
 const SLOT=(a)=>({a2:[0,0],b2:[a,a],abH:[0,a],abV:[a,0]}); // richtige Stelle je Teil
 const b2=Board(document.getElementById("b2"),{
-  ticks:true,noLabels:true,
+  ticks:true,noLabels:true,plainFrame:true,
   allowed:(p,gx,gy)=>{const t=SLOT(b2.a)[p.kind];return gx===t[0]&&gy===t[1];},
   onReject:()=>{s2reject=true;m2.className="msg warn";m2.textContent="Noch nicht die richtige Stelle. Tipp: Das blaue Quadrat gehört oben links.";},
   onChange(){
