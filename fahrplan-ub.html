@@ -46,33 +46,33 @@
 <header>
   <h1>★★ Fahrplan · Erklär-Tandem</h1>
   <div class="tabs" role="tablist">
-    <button class="tab" role="tab" aria-selected="true" data-p="A">Partner A · Set A (5 | 2)</button>
-    <button class="tab" role="tab" aria-selected="false" data-p="B">Partner B · Set B (4 | 3)</button>
+    <button class="tab" role="tab" aria-selected="true" data-p="A">Partner A · 52²</button>
+    <button class="tab" role="tab" aria-selected="false" data-p="B">Partner B · 43²</button>
   </div>
 </header>
 <main>
-  <div class="hint">Erkläre Schritt für Schritt in <b>eigenen Sätzen</b>. Zeig dabei auf deine Legeteile. Die blauen Wörter helfen dir. Wenn du hängst, tippe auf <b>Joker</b>. Hake jeden Schritt ab, den du erklärt hast.</div>
+  <div class="hint">Erkläre Schritt für Schritt in <b>eigenen Sätzen</b>. Zeig dabei auf das Flächenbild in der App oder im Skript. Die blauen Wörter helfen dir. Wenn du hängst, tippe auf <b>Joker</b>. Hake jeden Schritt ab, den du erklärt hast.</div>
   <div id="plan"></div>
   <div class="msg" id="msg"></div>
   <button class="btn" id="reset">Von vorn</button>
-  <p class="foot">Mathematik Klasse 8 · Die 1. binomische Formel · Hilfe zum Erklär-Tandem</p>
+  <p class="foot">Fehling · Erste binomische Formel · Hilfe zum Erklär-Tandem</p>
 </main>
 <script>
 (function(){
   // Pro Set: Aufgabe und vier Schritte (Zeige … / Stichwörter / Joker-Satzanfang), dazu der Profi-Schritt
   var sets={
-    A:{task:'Erkläre deinem Partner mit Set A, warum <b class="nb">(5 + 2)² = 5² + 2²</b> nicht reicht.',
+    A:{task:'Erkläre deinem Partner, warum man <b class="nb">52²</b> nicht mit <b class="nb">50² + 2²</b> ausrechnen kann.',
        steps:[
-        ["auf die Seite des großen Quadrats",["Seite","5 + 2","7 cm"],"Die Seite ist …"],
+        ["auf die Seite des großen Quadrats",["Seite","50 + 2","52"],"Die Seite ist …"],
         ["nacheinander auf alle Teile",["vier Teile","großes Quadrat","kleines Quadrat","zwei Rechtecke"],"Das große Quadrat besteht aus …"],
-        ["auf die zwei grünen Rechtecke",["5 · 2","10 cm²","gleich groß"],"Jedes Rechteck ist …"],
-        ["auf die Lücken, die bei 5² + 2² bleiben",["zu wenig","es fehlen","zusammen 20 cm²"],"Deshalb reicht 5² + 2² nicht, weil …"]]},
-    B:{task:'Erkläre deinem Partner mit Set B, warum <b class="nb">(4 + 3)² = 4² + 3²</b> nicht reicht.',
+        ["auf die zwei grünen Rechtecke",["50 · 2","100","gleich groß"],"Jedes Rechteck ist …"],
+        ["auf die Lücken, die bei 50² + 2² bleiben",["zu wenig","es fehlen","zusammen 200"],"Deshalb reicht 50² + 2² nicht, weil …"]]},
+    B:{task:'Erkläre deinem Partner, warum man <b class="nb">43²</b> nicht mit <b class="nb">40² + 3²</b> ausrechnen kann.',
        steps:[
-        ["auf die Seite des großen Quadrats",["Seite","4 + 3","7 cm"],"Die Seite ist …"],
+        ["auf die Seite des großen Quadrats",["Seite","40 + 3","43"],"Die Seite ist …"],
         ["nacheinander auf alle Teile",["vier Teile","großes Quadrat","kleines Quadrat","zwei Rechtecke"],"Das große Quadrat besteht aus …"],
-        ["auf die zwei grünen Rechtecke",["4 · 3","12 cm²","gleich groß"],"Jedes Rechteck ist …"],
-        ["auf die Lücken, die bei 4² + 3² bleiben",["zu wenig","es fehlen","zusammen 24 cm²"],"Deshalb reicht 4² + 3² nicht, weil …"]]}
+        ["auf die zwei grünen Rechtecke",["40 · 3","120","gleich groß"],"Jedes Rechteck ist …"],
+        ["auf die Lücken, die bei 40² + 3² bleiben",["zu wenig","es fehlen","zusammen 240"],"Deshalb reicht 40² + 3² nicht, weil …"]]}
   };
   var pro=["an das Quadrat mit der Seite 20 + 1 (Seite 1 im Skript)",["21²","20 + 1","zwei Rechtecke 20 · 1","zusammen 40"],"21² ist nicht 401, weil …"];
   var cur="A", plan=document.getElementById("plan"), msg=document.getElementById("msg");
