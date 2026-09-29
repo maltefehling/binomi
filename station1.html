@@ -79,8 +79,8 @@
 <main>
   <!-- Stufe 1 -->
   <section class="stage" id="s1">
-    <div class="prompt">Die Rechnung sagt: <b>21² = 20² + 1²</b>. 21² ist die Fläche eines Quadrats mit der Seite <b>20 + 1</b>.<br>
-      Zieh das 20er-Quadrat und das 1er-Quadrat in das große Quadrat. <b>Reicht das?</b></div>
+    <div class="prompt"><b>21²</b> kann man sich als Quadrat mit der Seitenlänge <b>20 + 1</b> vorstellen.<br>
+      <b>Ziehe die Quadrate an die richtige Stelle.</b></div>
     <div class="bar">
       <button class="btn" id="s1intro">Herleitung nochmal zeigen</button>
       <button class="btn" id="s1reset">Neu starten</button>
@@ -247,6 +247,7 @@ function Board(svg,opts){
 
   function valid(p,gx,gy){
     if(gx<0||gy<0||gx+p.w>n||gy+p.h>n)return false;
+    if(opts.allowed&&!opts.allowed(p,gx,gy))return false;
     return pieces.every(q=>q===p||!q.placed||gx>=q.placed.gx+q.w||gx+p.w<=q.placed.gx||gy>=q.placed.gy+q.h||gy+p.h<=q.placed.gy);
   }
   function snapTo(p,gx,gy){p.placed={gx,gy};move(p,FX+gx*u,FY+gy*u,true);}
@@ -262,7 +263,7 @@ function Board(svg,opts){
       const gx=Math.min(Math.max(gx0+dx,0),n-p.w),gy=Math.min(Math.max(gy0+dy,0),n-p.h);
       if(valid(p,gx,gy)){const dist=Math.hypot(FX+gx*u-p.x,FY+gy*u-p.y);if(!best||dist<best.dist)best={gx,gy,dist};}
     }
-    if(best)snapTo(p,best.gx,best.gy);else move(p,p.home[0],p.home[1],true);
+    if(best)snapTo(p,best.gx,best.gy);else{move(p,p.home[0],p.home[1],true);if(opts.onReject)opts.onReject(p);}
   }
   let hlOn=false,introOn=false;
   // Herleitung: Die Seite des großen Quadrats wandert heraus und klappt sich zu einem Quadrat auf
@@ -279,16 +280,16 @@ function Board(svg,opts){
       const sx=FX+(c.kind==="a2"?0:a*u),sy=FY,col=c.kind==="a2"?"#3d6fb6":"#c77a12";
       const ln=el("line",{x1:sx,y1:sy,x2:sx+len,y2:sy,stroke:col,"stroke-width":12,"stroke-linecap":"round","stroke-opacity":0},tmp);
       if(c.say&&my===introId)c.say(c.t1);
-      await tween(600,k=>ln.setAttribute("stroke-opacity",k));
-      await wait(500);
-      await tween(900,k=>{const x=sx+(hx-sx)*k,y=sy+(hy-sy)*k;ln.setAttribute("x1",x);ln.setAttribute("x2",x+len);ln.setAttribute("y1",y);ln.setAttribute("y2",y);});
+      await tween(1000,k=>ln.setAttribute("stroke-opacity",k));
+      await wait(900);
+      await tween(1600,k=>{const x=sx+(hx-sx)*k,y=sy+(hy-sy)*k;ln.setAttribute("x1",x);ln.setAttribute("x2",x+len);ln.setAttribute("y1",y);ln.setAttribute("y2",y);});
       const rc=el("rect",{x:hx,y:hy,width:len,height:0,fill:COL[p.type],stroke:"#1b2a3a","stroke-width":2},tmp);
       tmp.appendChild(ln);
       if(c.say&&my===introId)c.say(c.t2);
-      await tween(1100,k=>rc.setAttribute("height",len*k));
+      await tween(1900,k=>rc.setAttribute("height",len*k));
       const big=len>=160,t=el("text",{x:big?hx+len/2:hx+len+16,y:hy+len/2,"font-size":32,"text-anchor":big?"middle":"start","dominant-baseline":"central",fill:"#1b2a3a"},tmp);
       t.textContent=c.label;
-      await wait(1300);
+      await wait(2200);
     }
     tmp.remove();
     if(my!==introId)return;
@@ -324,26 +325,29 @@ function Board(svg,opts){
 
 /* ---------- Stufe 1 ---------- */
 const m1=document.getElementById("m1");
-let s1solved=false;
+let s1solved=false,s1reject=false;
 const b1=Board(document.getElementById("b1"),{
   ticks:true,labelA:20,labelB:1, // gezeichnet 4 : 1, damit der Streifen sichtbar ist
+  // richtige Stelle: 20er-Quadrat oben links an den Seiten „20“, 1er-Quadrat unten rechts
+  allowed:(p,gx,gy)=>p.kind==="a2"?(gx===0&&gy===0):(gx===4&&gy===4),
+  onReject:()=>{s1reject=true;m1.className="msg warn";m1.textContent="Noch nicht die richtige Stelle – schau auf die Beschriftung 20 + 1 am großen Quadrat.";},
   inner:p=>p.kind==="a2"?"20² = 400":"1² = 1",
   locked:()=>s1solved,
   onChange(){
     if(!b1||!b1.pieces.length)return;
     if(s1solved)return;
     b1.divs(b1.allPlaced());
-    if(b1.allPlaced()){b1.pulse(true);m1.className="msg warn";m1.textContent="Das große Quadrat ist nicht voll! Was gehört noch hinein – und wie groß ist es?";}
-    else{b1.pulse(false);m1.className="msg";m1.textContent="";}
+    if(b1.allPlaced()){b1.pulse(true);m1.className="msg warn";m1.textContent="Jetzt siehst du: 20² + 1² reicht nicht aus, um 21² zu berechnen – das große Quadrat ist nicht voll. Zeichne die beiden Quadrate in das Flächenbild in deinem Skript.";}
+    else{b1.pulse(false);if(s1reject){s1reject=false;return;}m1.className="msg";m1.textContent="Ziehe die Quadrate an die richtige Stelle.";}
   }});
 const say=t=>{m1.className="msg";m1.textContent=t;};
 async function s1start(mitHerleitung){
   s1solved=false;b1.clearGhost();b1.setup(4,1,["a2","b2"]);
-  if(!mitHerleitung){say("Zieh das 20er-Quadrat und das 1er-Quadrat in das große Quadrat. Reicht das?");return;}
+  if(!mitHerleitung){say("Ziehe die Quadrate an die richtige Stelle.");return;}
   await b1.intro([
     {kind:"a2",label:"20 · 20 = 20²",say,t1:"Die Seite des großen Quadrats hat zuerst das Stück 20 …",t2:"… und das Stück 20 mal sich selbst ergibt das Quadrat 20 · 20 = 20² = 400."},
     {kind:"b2",label:"1 · 1 = 1²",say,t1:"Dann kommt das Stück 1 …",t2:"… und 1 mal sich selbst ergibt das Quadrat 1 · 1 = 1² = 1."}]);
-  if(b1.pieces.every(p=>p.g.style.opacity==="1"))say("Jetzt du: Zieh beide Quadrate in das große Quadrat. Reicht das?");
+  if(b1.pieces.every(p=>p.g.style.opacity==="1"))say("Jetzt du: Ziehe die Quadrate an die richtige Stelle.");
 }
 document.getElementById("s1reset").onclick=()=>s1start(false);
 document.getElementById("s1intro").onclick=()=>s1start(true);
