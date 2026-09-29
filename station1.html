@@ -173,6 +173,10 @@ function Board(svg,opts){
       const tk={stroke:"#1b2a3a","stroke-width":3};
       el("line",{x1:FX+cut,y1:FY-6,x2:FX+cut,y2:FY+14,...tk},svg);
       el("line",{x1:FX-8,y1:FY+cut,x2:FX+14,y2:FY+cut,...tk},svg);
+      // dünnes, helles Kreuz im Rahmen: die vier Teilflächen leicht vorstrukturiert (liegt unter den Quadraten)
+      const hint={stroke:"#b8c2cc","stroke-width":1.5};
+      el("line",{x1:FX+cut,y1:FY,x2:FX+cut,y2:FY+FS,...hint},svg);
+      el("line",{x1:FX,y1:FY+cut,x2:FX+FS,y2:FY+cut,...hint},svg);
     }else{
       el("text",{x:FX+FS/2,y:FY-18,class:"lbl small"},svg).textContent=opts.unit?`${a} ${opts.unit} + ${b} ${opts.unit}`:`${a} + ${b} = ${n}`;
     }
