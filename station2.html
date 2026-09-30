@@ -65,7 +65,7 @@ const put=(k,txt)=>{k.t.textContent=txt;return tween(500,e=>k.t.setAttribute("op
 const symb=(x,y,t,size=26)=>{const e=el("text",{x,y,"text-anchor":"middle","dominant-baseline":"central","font-size":size,fill:"var(--ink)"});e.textContent=t;return e;};
 
 function teil(x,y,w,h,col){
-  const r=el("rect",{x,y,width:w,height:h,fill:"#fff",stroke:"var(--ink)","stroke-width":3});
+  const r=el("rect",{x,y,width:w,height:h,fill:col,stroke:"var(--ink)","stroke-width":3}); // Farben wie im Skript
   const cx=x+w/2,cy=y+h/2;
   const f1=kasten(cx-44,cy-32,FW),dot=symb(cx,cy-32,"·",30),f2=kasten(cx+44,cy-32,FW);
   const eq=symb(cx-70,cy+30,"="),p=kasten(cx+16,cy+30,RW);
@@ -89,7 +89,7 @@ async function play(){
   const re2 =teil(X,  Y+A,A,B,"var(--green)");
   const sm  =teil(X+A,Y+A,B,B,"var(--orange)");
 
-  say("So sieht das leere Flächenbild aus – wie in deinem Skript.");
+  say("So sieht das Flächenbild aus – wie in deinem Skript.");
   await wait(2200); if(!alive())return;
 
   say("Zuerst zerlegst du die Zahl: 23 = 20 + 3. Die Zahlen kommen an die Seiten.");
@@ -105,7 +105,6 @@ async function play(){
   for(const [t,top,left,txt] of steps){
     say(txt);
     await Promise.all([blink(top,my),blink(left,my)]); if(!alive())return;
-    await tween(600,e=>t.r.setAttribute("fill",e<.5?"#fff":t.col));
     const x=+top.t.textContent,y=+left.t.textContent,[f,g]=x>=y?[x,y]:[y,x];
     await put(t.f1,String(f)); await put(t.f2,String(g)); await wait(500); if(!alive())return;
     await put(t.p,String(f*g)); await wait(2300); if(!alive())return;
