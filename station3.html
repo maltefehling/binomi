@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Flächenbild erstellen</title>
-<!-- Hilfe zu den Übungsaufgaben (Skript S. 3–4): Summanden aus Zahl und Variable einstellen,
+<!-- Hilfe zu den Übungsaufgaben (Skript S. 3–4), für schwache SuS ohne Fachwörter: vor/hinter dem Plus aus Zahl und Buchstabe einstellen,
      dann schrittweise aufdecken: Malaufgaben → Produkte → Summe. Seit 30.9.2026 eigene Seite (nicht mehr aus _vorlage.html). -->
 <style>
   :root{
@@ -45,17 +45,17 @@
 <body>
 <header><h1>Flächenbild erstellen</h1></header>
 <main>
-  <div class="prompt">Stelle den <b>1. Summanden</b> und den <b>2. Summanden</b> aus deiner Aufgabe ein. Dann deckst du Schritt für Schritt auf: erst die Malaufgaben, dann die Produkte, zum Schluss die Summe.</div>
+  <div class="prompt">Schau auf deine Aufgabe: Was steht in der Klammer <b style="color:var(--blue-d)">vor dem Plus</b>, was steht <b style="color:var(--orange-d)">hinter dem Plus</b>? Stelle beides unten ein. Dann deckst du Schritt für Schritt auf.<br><span style="color:var(--muted)">Beispiel: Bei (3x + 2)² steht vorne die Zahl 3 mit dem Buchstaben x, hinten nur die Zahl 2.</span></div>
   <div class="wrap">
     <svg id="s" viewBox="0 0 600 600" aria-label="Flächenbild"></svg>
     <div class="panel">
-      <div class="sm" id="sm1"><h2>1. Summand</h2></div>
-      <div class="sm" id="sm2"><h2>2. Summand</h2></div>
+      <div class="sm" id="sm1"><h2 style="color:var(--blue-d)">Vor dem Plus</h2></div>
+      <div class="sm" id="sm2"><h2 style="color:var(--orange-d)">Hinter dem Plus</h2></div>
       <div class="term" id="term"></div>
       <div class="steps">
         <button class="btn" id="b1">① Malaufgaben zeigen</button>
-        <button class="btn" id="b2" disabled>② Produkte zeigen</button>
-        <button class="btn" id="b3" disabled>③ Summe zeigen</button>
+        <button class="btn" id="b2" disabled>② Ergebnisse der Malaufgaben zeigen</button>
+        <button class="btn" id="b3" disabled>③ Alles zusammenzählen</button>
         <button class="btn ghost" id="b0">Von vorn</button>
       </div>
       <div class="sum" id="sum"></div>
@@ -82,7 +82,7 @@ function fmt(m){
 }
 const fmtSummand=s=>s.v?(s.c===1?s.v:s.c+s.v):String(s.c);
 
-// ---------- Eingabe: Zahl + Variable je Summand ----------
+// ---------- Eingabe: Zahl + Buchstabe vor bzw. hinter dem Plus (Alltagssprache, keine Fachwörter) ----------
 function buildInput(id,s){
   const box=document.getElementById(id);
   const row=document.createElement("div");row.className="row";
@@ -94,9 +94,11 @@ function buildInput(id,s){
   minus.onclick=()=>set(s.c-1);plus.onclick=()=>set(s.c+1);inp.onchange=()=>set(parseInt(inp.value,10));
   num.append(minus,inp,plus);
   const chips=document.createElement("div");chips.className="chips";
-  VARS.forEach(v=>{const b=document.createElement("button");b.className="chip";b.textContent=v||"ohne";b.setAttribute("aria-pressed",s.v===v);
+  VARS.forEach(v=>{const b=document.createElement("button");b.className="chip";b.textContent=v||"nur Zahl";b.setAttribute("aria-pressed",s.v===v);
     b.onclick=()=>{s.v=v;chips.querySelectorAll(".chip").forEach(x=>x.setAttribute("aria-pressed",x===b));reset();};chips.appendChild(b);});
-  row.append(num,chips);box.appendChild(row);
+  const l1=document.createElement("span");l1.textContent="Zahl";l1.style.cssText="font-size:15px;color:var(--muted);width:52px";
+  const l2=document.createElement("span");l2.textContent="Buchstabe";l2.style.cssText="font-size:15px;color:var(--muted)";
+  row.append(l1,num);const row2=document.createElement("div");row2.className="row";row2.append(l2,chips);box.append(row,row2);return;
 }
 
 // ---------- Flächenbild ----------
