@@ -63,18 +63,18 @@
   var sets={
     A:{task:'Erkläre deinem Partner, warum man <b class="nb">52²</b> nicht mit <b class="nb">50² + 2²</b> ausrechnen kann.',
        steps:[
-        ["auf die Seite des großen Quadrats",["Seite","50 + 2","52"],"Die Seite ist …"],
-        ["nacheinander auf alle Teile",["vier Teile","großes Quadrat","kleines Quadrat","zwei Rechtecke"],"Das große Quadrat besteht aus …"],
-        ["auf die zwei grünen Rechtecke",["50 · 2","100","gleich groß"],"Jedes Rechteck ist …"],
+        ["auf die Seite des ganzen Flächenbilds",["Seite","50 + 2","52"],"Die Seite ist …"],
+        ["nacheinander auf alle Teile",["vier Teile","blaues Quadrat","oranges Quadrat","zwei grüne Rechtecke"],"Das Flächenbild besteht aus …"],
+        ["auf die zwei grünen Rechtecke",["50 · 2","100","gleich groß"],"Jedes grüne Rechteck ist …"],
         ["auf die Lücken, die bei 50² + 2² bleiben",["zu wenig","es fehlen","zusammen 200"],"Deshalb reicht 50² + 2² nicht, weil …"]]},
     B:{task:'Erkläre deinem Partner, warum man <b class="nb">43²</b> nicht mit <b class="nb">40² + 3²</b> ausrechnen kann.',
        steps:[
-        ["auf die Seite des großen Quadrats",["Seite","40 + 3","43"],"Die Seite ist …"],
-        ["nacheinander auf alle Teile",["vier Teile","großes Quadrat","kleines Quadrat","zwei Rechtecke"],"Das große Quadrat besteht aus …"],
-        ["auf die zwei grünen Rechtecke",["40 · 3","120","gleich groß"],"Jedes Rechteck ist …"],
+        ["auf die Seite des ganzen Flächenbilds",["Seite","40 + 3","43"],"Die Seite ist …"],
+        ["nacheinander auf alle Teile",["vier Teile","blaues Quadrat","oranges Quadrat","zwei grüne Rechtecke"],"Das Flächenbild besteht aus …"],
+        ["auf die zwei grünen Rechtecke",["40 · 3","120","gleich groß"],"Jedes grüne Rechteck ist …"],
         ["auf die Lücken, die bei 40² + 3² bleiben",["zu wenig","es fehlen","zusammen 240"],"Deshalb reicht 40² + 3² nicht, weil …"]]}
   };
-  var pro=["an das Quadrat mit der Seite 20 + 1 (Seite 1 im Skript)",["21²","20 + 1","zwei Rechtecke 20 · 1","zusammen 40"],"21² ist nicht 401, weil …"];
+  var pro=["an das Quadrat mit der Seite 20 + 1 (Seite 1 im Skript)",["21²","20 + 1","zwei grüne Rechtecke 20 · 1","zusammen 40"],"21² ist nicht 401, weil …"];
   var cur="A", plan=document.getElementById("plan"), msg=document.getElementById("msg");
 
   function card(n,s,isPro){
