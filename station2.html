@@ -208,7 +208,9 @@ function Board(svg,opts){
     divs=el("g",{"pointer-events":"none"},svg);
     const A=a*u,B=b*u;
     const onlySquares=!kinds.some(k=>k.startsWith("ab"));
-    const homes={a2:[TX,TY],b2:onlySquares?[TX,TY+A+GAP]:[TX+A+GAP,TY],abH:[TX,TY+A+GAP],abV:[TX+A+GAP,TY+B+GAP]};
+    // mit Rechtecken bewusst durcheinander, damit die Ablage nicht schon die Lösung zeigt
+    const homes=onlySquares?{a2:[TX,TY],b2:[TX,TY+A+GAP]}
+      :{abH:[TX,TY],b2:[TX+A+GAP,TY],abV:[TX,TY+B+GAP],a2:[TX+B+GAP,TY+B+GAP]};
     pieces=kinds.map(k=>{
       const p={kind:k,type:k.startsWith("ab")?"ab":k,
         w:k==="a2"?a:k==="b2"?b:k==="abH"?a:b,
