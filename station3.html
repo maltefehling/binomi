@@ -3,487 +3,146 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<title>Flächenbilder mit a und b</title>
+<title>Flächenbild erstellen</title>
+<!-- Hilfe zu den Übungsaufgaben (Skript S. 3–4): Summanden aus Zahl und Variable einstellen,
+     dann schrittweise aufdecken: Malaufgaben → Produkte → Summe. Seit 30.9.2026 eigene Seite (nicht mehr aus _vorlage.html). -->
 <style>
   :root{
-    --blue:#bcd3f2; --blue-d:#3d6fb6;
-    --green:#c6e8c0; --green-d:#3f8f3a;
-    --orange:#fbd9a8; --orange-d:#c77a12;
+    --blue:#bcd3f2; --green:#c6e8c0; --orange:#fbd9a8;
+    --blue-d:#2e5d9f; --green-d:#3f8f3a; --orange-d:#c0700f;
     --ink:#1b2a3a; --muted:#5b6b7c; --acc:#1f4e79; --bg:#f4f7fb; --card:#ffffff; --line:#c9d6e5;
-    --red:#d64545;
   }
   *{box-sizing:border-box}
-  html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
-    -webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;-webkit-user-select:none;user-select:none}
   button,input{font:inherit;touch-action:manipulation}
-  header{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 16px;background:var(--acc);color:#fff}
-  header h1{font-size:19px;margin:0 12px 0 0;font-weight:700}
-  .tabs{display:flex;gap:6px;flex-wrap:wrap}
-  .tab{border:0;border-radius:10px;padding:10px 16px;background:rgba(255,255,255,.15);color:#fff;font-weight:600;font-size:16px}
-  .tab[aria-selected="true"]{background:#fff;color:var(--acc)}
-  main{padding:12px 16px 20px;max-width:1240px;margin:0 auto}
-  .prompt{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 16px;font-size:19px;line-height:1.4;margin-bottom:10px}
-  .prompt b{color:var(--acc)}
-  .bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px}
-  .btn{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:10px 16px;font-size:16px;font-weight:600;min-height:44px}
-  .btn.primary{background:var(--acc);color:#fff;border-color:var(--acc)}
-  .btn[aria-pressed="true"]{background:var(--green-d);color:#fff;border-color:var(--green-d)}
-  .stage{display:none}
-  .stage.on{display:block}
-  svg.board{width:100%;height:auto;display:block;background:var(--card);border:1px solid var(--line);border-radius:12px;touch-action:none}
-  .msg{min-height:30px;font-size:19px;font-weight:600;margin-top:10px;color:var(--acc)}
-  .msg.warn{color:var(--red)}
-  .piece{cursor:grab}
-  .piece rect.body{stroke:#1b2a3a;stroke-width:2}
-  .piece text{font-size:30px;fill:#1b2a3a;pointer-events:none}
-  .piece.dragging rect.body{stroke-width:3;filter:drop-shadow(0 6px 8px rgba(0,0,0,.25))}
-  .frame{stroke:#1b2a3a;stroke-width:3;stroke-dasharray:10 7}
-  .frame.pulse{animation:pulse 1.1s ease-in-out infinite}
-  @keyframes pulse{0%,100%{stroke:#1b2a3a}50%{stroke:var(--red);stroke-width:6}}
-  .hl{animation:hl 1s ease-in-out infinite}
-  @keyframes hl{0%,100%{fill:var(--green)}50%{fill:#7fcf74}}
-  .lbl{font-size:30px;fill:#1b2a3a;text-anchor:middle;dominant-baseline:central;pointer-events:none}
-  .lbl.small{font-size:24px}
-  .ghost{fill:var(--green);stroke:var(--green-d);stroke-width:2;stroke-dasharray:6 5;opacity:.9}
-  /* Stufe 3 */
-  .gen{display:grid;grid-template-columns:minmax(0,1fr) minmax(300px,420px);gap:14px;align-items:start}
-  @media (max-width:900px){.gen{grid-template-columns:1fr}}
-  #b3{width:min(100%, calc(100vh - 190px));margin:0 auto}
-  .panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
-  .slider{display:grid;grid-template-columns:34px 1fr 44px;align-items:center;gap:10px;margin:8px 0 14px}
-  .slider label{font-size:24px;font-weight:700}
-  .slider output{font-size:24px;font-weight:700;text-align:right}
-  input[type=range]{width:100%;height:44px;touch-action:pan-x;-webkit-appearance:none;appearance:none;background:transparent}
-  input[type=range]::-webkit-slider-runnable-track{height:10px;border-radius:5px;background:var(--line)}
-  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:36px;height:36px;border-radius:50%;background:var(--acc);margin-top:-13px;border:3px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.3)}
-  .presets{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
-  .presets .btn{padding:8px 12px;font-size:15px;min-height:40px}
-  .formula{font-size:22px;line-height:1.7;margin-top:6px}
-  .formula .row{white-space:nowrap}
-  .cA{background:var(--blue);padding:0 4px;border-radius:4px}
-  .cB{background:var(--orange);padding:0 4px;border-radius:4px}
-  .cAB{background:var(--green);padding:0 4px;border-radius:4px}
-  .miss{color:var(--red);font-weight:700}
-  .toggles{display:flex;flex-direction:column;gap:6px;margin-top:12px}
-  .toggles .btn{text-align:left}
-  footer{color:var(--muted);font-size:13px;text-align:center;padding:8px}
-  .pickrow{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-  @media (max-width:700px){.pickrow{grid-template-columns:1fr}}
-  .bigpick{border:2px solid var(--acc);background:var(--card);color:var(--ink);border-radius:16px;padding:28px 18px;font-size:26px;min-height:140px}
-  .bigpick b{color:var(--acc)}
-  .bigpick span{display:block;font-size:18px;color:var(--muted);margin-top:8px}
-  .sumbox{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-top:10px;font-size:19px}
-  .sumrow{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:10px;font-size:22px}
-  .sumrow input{width:110px;font-size:24px;padding:6px 10px;border:2px solid var(--line);border-radius:10px;text-align:center}
-  .fb2{min-height:28px;margin-top:10px;font-size:19px;font-weight:700}
-  .fb2.ok{color:var(--green-d)} .fb2.no{color:var(--red)}
+  header{padding:12px 16px;background:var(--acc);color:#fff}
+  header h1{font-size:20px;margin:0}
+  main{padding:12px 16px 20px;max-width:1100px;margin:0 auto}
+  .prompt{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 16px;font-size:18px;line-height:1.45;margin-bottom:12px}
+  .wrap{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start}
+  .panel{flex:1 1 300px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+  svg{flex:1 1 480px;max-width:600px;width:100%;height:auto;background:var(--card);border:1px solid var(--line);border-radius:12px}
+  .sm{margin-bottom:16px}
+  .sm h2{font-size:17px;margin:0 0 8px;color:var(--acc)}
+  .row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+  .num{display:flex;align-items:center;gap:6px}
+  .num button{width:44px;height:44px;border-radius:10px;border:1px solid var(--acc);background:#fff;color:var(--acc);font-size:22px;font-weight:700}
+  .num input{width:70px;height:44px;text-align:center;font-size:22px;font-weight:700;border:1px solid var(--line);border-radius:10px}
+  .chips{display:flex;gap:6px}
+  .chip{min-width:48px;height:44px;border-radius:10px;border:1px solid var(--line);background:#fff;font-size:20px;font-weight:700;color:var(--ink)}
+  .chip[aria-pressed="true"]{background:var(--acc);color:#fff;border-color:var(--acc)}
+  .term{font-size:26px;font-weight:700;color:var(--acc);margin:6px 0 14px}
+  .steps{display:flex;flex-direction:column;gap:8px}
+  .btn{border:1px solid var(--acc);background:var(--acc);color:#fff;border-radius:10px;padding:10px 16px;font-size:17px;font-weight:600;min-height:46px;text-align:left}
+  .btn[disabled]{opacity:.35}
+  .btn.ghost{background:#fff;color:var(--acc)}
+  .sum{font-size:22px;line-height:1.6;margin-top:14px;min-height:36px}
+  footer{color:var(--muted);font-size:13px;text-align:center;padding:10px 0 18px}
+  svg text{font-family:inherit}
 </style>
 </head>
 <body>
-<header>
-  <h1>Flächenbilder mit a und b</h1>
-</header>
-
+<header><h1>Flächenbild erstellen</h1></header>
 <main>
-  <!-- Stufe 1 -->
-  <section class="stage" id="s1">
-    <div class="prompt"><b>21²</b> kann man sich als Quadrat mit der Seitenlänge <b>20 + 1</b> vorstellen.<br>
-      <b>Ziehe die Quadrate an die richtige Stelle.</b></div>
-    <div class="bar">
-      <button class="btn" id="s1intro">Herleitung nochmal zeigen</button>
-      <button class="btn" id="s1reset">Neu starten</button>
-      <button class="btn primary" id="s1solve">Auflösen</button>
-    </div>
-    <svg class="board" id="b1" viewBox="0 0 1160 580"></svg>
-    <div class="msg" id="m1"></div>
-  </section>
-
-  <!-- Stufe 2: Wie groß sind die fehlenden Teile? -->
-  <section class="stage" id="s2">
-    <div id="s2pick">
-      <div class="prompt">Wähle zuerst: Bist du <b>Partner A</b> oder <b>Partner B</b>?</div>
-      <div class="pickrow">
-        <button class="bigpick" data-set="A">Ich bin <b>Partner A</b></button>
-        <button class="bigpick" data-set="B">Ich bin <b>Partner B</b></button>
+  <div class="prompt">Stelle den <b>1. Summanden</b> und den <b>2. Summanden</b> aus deiner Aufgabe ein. Dann deckst du Schritt für Schritt auf: erst die Malaufgaben, dann die Produkte, zum Schluss die Summe.</div>
+  <div class="wrap">
+    <svg id="s" viewBox="0 0 600 600" aria-label="Flächenbild"></svg>
+    <div class="panel">
+      <div class="sm" id="sm1"><h2>1. Summand</h2></div>
+      <div class="sm" id="sm2"><h2>2. Summand</h2></div>
+      <div class="term" id="term"></div>
+      <div class="steps">
+        <button class="btn" id="b1">① Malaufgaben zeigen</button>
+        <button class="btn" id="b2" disabled>② Produkte zeigen</button>
+        <button class="btn" id="b3" disabled>③ Summe zeigen</button>
+        <button class="btn ghost" id="b0">Von vorn</button>
       </div>
+      <div class="sum" id="sum"></div>
     </div>
-    <div id="s2work" hidden>
-      <div class="prompt"><b id="s2who"></b><br>Ziehe die vier Teile an die richtige Stelle, sodass ein großes Quadrat entsteht.</div>
-      <div class="bar">
-        <button class="btn" id="s2reset">Neu starten</button>
-        <button class="btn" id="s2switch">Partner wechseln</button>
-      </div>
-      <svg class="board" id="b2" viewBox="0 0 1160 580"></svg>
-      <div class="msg" id="m2"></div>
-      <div class="sumbox" id="s2sum" hidden>
-        <label for="s2in">Berechne im Skript mit Hilfe der Tabelle die Flächeninhalte. Gib dann zur Kontrolle ein:</label>
-        <div class="sumrow"><b>Summe aller Teile =</b> <input id="s2in" type="number" inputmode="numeric" min="0" max="9999"> <button class="btn primary" id="s2check">Prüfen</button></div>
-        <div id="s2fb" class="fb2"></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Stufe 3 -->
-  <section class="stage" id="s3">
-    <div class="prompt">Stelle a und b ein. Das Flächenbild zeigt dir alle vier Teile und die Rechnung dazu.</div>
-    <div class="gen">
-      <svg class="board" id="b3" viewBox="0 0 600 600"></svg>
-      <div class="panel">
-        <div class="presets">
-          <button class="btn" data-ab="50,2">Partner A</button>
-          <button class="btn" data-ab="40,3">Partner B</button>
-          <button class="btn" data-ab="20,1">21²</button>
-          <button class="btn" data-ab="30,1">31²</button>
-          <button class="btn" data-ab="40,1">41²</button>
-        </div>
-        <div class="slider"><label for="ra">a</label><input type="range" id="ra" min="1" max="50" value="5"><output id="oa">5</output></div>
-        <div class="slider"><label for="rb">b</label><input type="range" id="rb" min="1" max="12" value="2"><output id="ob">2</output></div>
-        <div class="formula" id="formula"></div>
-        <div class="toggles">
-          <button class="btn" id="tHl" aria-pressed="false">Rechtecke hervorheben</button>
-          <button class="btn" id="tWrong" aria-pressed="false">Falsche Rechnung: nur a² + b²</button>
-          <button class="btn" id="tVar" aria-pressed="false">Beschriftung mit Variablen</button>
-        </div>
-      </div>
-    </div>
-  </section>
+  </div>
 </main>
 <footer>Fehling · Erste binomische Formel</footer>
-
 <script>
 "use strict";
-const NS="http://www.w3.org/2000/svg";
-const COL={a2:"var(--blue)",b2:"var(--orange)",ab:"var(--green)"};
-const el=(tag,attrs={},parent)=>{const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e;};
+const NS="http://www.w3.org/2000/svg",svg=document.getElementById("s");
+const el=(t,a,p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);(p||svg).appendChild(e);return e;};
+const VARS=["","x","a","b"];
+const st={s1:{c:1,v:"x"},s2:{c:4,v:""},step:0};
 
-// iOS: Pinch-Zoom und Doppeltipp-Zoom unterdrücken
-["gesturestart","gesturechange","gestureend"].forEach(t=>document.addEventListener(t,e=>e.preventDefault(),{passive:false}));
-let lastTouchEnd=0;
-document.addEventListener("touchend",e=>{const now=Date.now();if(now-lastTouchEnd<350&&e.target.closest("svg"))e.preventDefault();lastTouchEnd=now;},{passive:false});
+// ---------- kleine Algebra: Monome als {c, vars:{x:2,…}} ----------
+const mono=s=>({c:s.c,vars:s.v?{[s.v]:1}:{}});
+const mul=(p,q)=>{const v={...p.vars};for(const k in q.vars)v[k]=(v[k]||0)+q.vars[k];return {c:p.c*q.c,vars:v};};
+const key=m=>Object.keys(m.vars).sort().map(k=>k+m.vars[k]).join("");
+const SUP={2:"²",3:"³"};
+function fmt(m){
+  const vs=Object.keys(m.vars).sort().map(k=>k+(m.vars[k]>1?SUP[m.vars[k]]:"")).join("");
+  if(!vs)return String(m.c);
+  return (m.c===1?"":String(m.c))+vs;
+}
+const fmtSummand=s=>s.v?(s.c===1?s.v:s.c+s.v):String(s.c);
 
-function addDefs(svg){
-  const d=el("defs",{},svg);
-  const p=el("pattern",{id:"hatch-"+svg.id,width:16,height:16,patternUnits:"userSpaceOnUse",patternTransform:"rotate(45)"},d);
-  el("rect",{width:16,height:16,fill:"#fff"},p);
-  el("line",{x1:0,y1:0,x2:0,y2:16,stroke:"#cfdbe8","stroke-width":6},p);
+// ---------- Eingabe: Zahl + Variable je Summand ----------
+function buildInput(id,s){
+  const box=document.getElementById(id);
+  const row=document.createElement("div");row.className="row";
+  const num=document.createElement("div");num.className="num";
+  const minus=document.createElement("button");minus.textContent="−";minus.setAttribute("aria-label","kleiner");
+  const inp=document.createElement("input");inp.type="number";inp.inputMode="numeric";inp.min=1;inp.max=99;inp.value=s.c;inp.setAttribute("aria-label","Zahl");
+  const plus=document.createElement("button");plus.textContent="+";plus.setAttribute("aria-label","größer");
+  const set=c=>{s.c=Math.max(1,Math.min(99,c||1));inp.value=s.c;reset();};
+  minus.onclick=()=>set(s.c-1);plus.onclick=()=>set(s.c+1);inp.onchange=()=>set(parseInt(inp.value,10));
+  num.append(minus,inp,plus);
+  const chips=document.createElement("div");chips.className="chips";
+  VARS.forEach(v=>{const b=document.createElement("button");b.className="chip";b.textContent=v||"ohne";b.setAttribute("aria-pressed",s.v===v);
+    b.onclick=()=>{s.v=v;chips.querySelectorAll(".chip").forEach(x=>x.setAttribute("aria-pressed",x===b));reset();};chips.appendChild(b);});
+  row.append(num,chips);box.appendChild(row);
 }
 
-/* ---------- Lege-Brett (Stufe 1 und 2) ---------- */
-function Board(svg,opts){
-  const FX=50,FY=44,FS=500,TX=570,TY=20,GAP=24;
-  let a,b,n,u,pieces=[],frame,layer,overlay,divs,onChange=opts.onChange||(()=>{});
-  const drags=new Map();
-
-  function toSvg(e){const pt=svg.createSVGPoint();pt.x=e.clientX;pt.y=e.clientY;return pt.matrixTransform(svg.getScreenCTM().inverse());}
-
-  function setup(na,nb,kinds){
-    introId++;introOn=false;
-    a=na;b=nb;n=a+b;u=FS/n;
-    svg.innerHTML="";addDefs(svg);
-    frame=el("rect",{x:FX,y:FY,width:FS,height:FS,class:"frame",fill:`url(#hatch-${svg.id})`},svg);
-    // Seitenbeschriftung des Rahmens
-    if(opts.ticks){
-      // Seite in a | b zerlegt: getrennte Beschriftung + kurze Teilstriche oben und links
-      const cut=a*u,lab=(x,y,t,rot)=>{const e=el("text",{x,y,class:"lbl"},svg);e.textContent=t;if(rot)e.setAttribute("transform",`rotate(-90 ${x} ${y})`);};
-      const bOff=Math.max((FS-cut)/2,28); // kleines Stück: Beschriftung etwas vom Pluszeichen abrücken
-      const LA=opts.labelA??a,LB=opts.labelB??b;
-      lab(FX+cut/2,FY-22,LA);lab(FX+cut,FY-22,"+");lab(FX+cut+bOff,FY-22,LB);
-      lab(FX-26,FY+cut/2,LA,true);lab(FX-26,FY+cut,"+");lab(FX-26,FY+cut+bOff,LB,true);
-      if(!opts.plainFrame){ // Teilstriche und helles Kreuz (in Station ② bewusst weggelassen)
-      const tk={stroke:"#1b2a3a","stroke-width":3};
-      el("line",{x1:FX+cut,y1:FY-6,x2:FX+cut,y2:FY+14,...tk},svg);
-      el("line",{x1:FX-8,y1:FY+cut,x2:FX+14,y2:FY+cut,...tk},svg);
-      // dünnes, helles Kreuz im Rahmen: die vier Teilflächen leicht vorstrukturiert (liegt unter den Quadraten)
-      const hint={stroke:"#b8c2cc","stroke-width":1.5};
-      el("line",{x1:FX+cut,y1:FY,x2:FX+cut,y2:FY+FS,...hint},svg);
-      el("line",{x1:FX,y1:FY+cut,x2:FX+FS,y2:FY+cut,...hint},svg);
-      }
-    }else if(!opts.noFrameLabel){
-      el("text",{x:FX+FS/2,y:FY-18,class:"lbl small"},svg).textContent=opts.unit?`${a} ${opts.unit} + ${b} ${opts.unit}`:`${a} + ${b} = ${n}`;
-    }
-    overlay=el("g",{},svg);
-    layer=el("g",{},svg);
-    divs=el("g",{"pointer-events":"none"},svg);
-    const A=a*u,B=b*u;
-    const onlySquares=!kinds.some(k=>k.startsWith("ab"));
-    // mit Rechtecken bewusst durcheinander, damit die Ablage nicht schon die Lösung zeigt
-    const homes=onlySquares?{a2:[TX,TY],b2:[TX,TY+A+GAP]}
-      :{abH:[TX,TY],b2:[TX+A+GAP,TY],abV:[TX,TY+B+GAP],a2:[TX+B+GAP,TY+B+GAP]};
-    pieces=kinds.map(k=>{
-      const p={kind:k,type:k.startsWith("ab")?"ab":k,
-        w:k==="a2"?a:k==="b2"?b:k==="abH"?a:b,
-        h:k==="a2"?a:k==="b2"?b:k==="abH"?b:a,
-        home:homes[k],x:homes[k][0],y:homes[k][1],placed:null};
-      p.g=el("g",{class:"piece"},layer);
-      draw(p);move(p,p.x,p.y);
-      p.g.addEventListener("pointerdown",ev=>down(ev,p));
-      return p;});
-    frame.classList.remove("pulse");
-    onChange();
-  }
-
-  function sideLabel(v){return opts.unit?`${v} ${opts.unit}`:`${v}`;}
-  function draw(p){
-    p.g.innerHTML="";
-    const W=p.w*u,H=p.h*u,pad=Math.max(0,(56-Math.min(W,H))/2);
-    el("rect",{x:-pad,y:-pad,width:W+2*pad,height:H+2*pad,fill:"transparent"},p.g); // große Trefferfläche für kleine Teile
-    p.body=el("rect",{x:0,y:0,width:W,height:H,fill:COL[p.type],class:"body"+(p.type==="ab"&&hlOn?" hl":"")},p.g);
-    if(opts.inner){
-      const t=el("text",{x:W/2,y:H/2,"text-anchor":"middle","dominant-baseline":"central"},p.g);
-      t.textContent=opts.inner(p);
-      if(W<60){t.setAttribute("x",W+14);t.setAttribute("text-anchor","start");}
-    }else if(!opts.noLabels&&!(opts.noRectLabels&&p.type==="ab")){
-      if(W>=70)el("text",{x:W/2,y:H-12,"text-anchor":"middle"},p.g).textContent=sideLabel(p.w);
-      if(H>=70){const t=el("text",{x:28,y:H/2,"text-anchor":"middle",transform:`rotate(-90 28 ${H/2})`},p.g);t.textContent=sideLabel(p.h);}
-    }
-  }
-  function move(p,x,y,anim){
-    p.x=x;p.y=y;
-    p.g.style.transition=anim?"transform .25s ease":"none";
-    p.g.style.transform=`translate(${x}px,${y}px)`;
-  }
-  function down(e,p){
-    if(introOn||(opts.locked&&opts.locked()))return;
-    e.preventDefault();
-    try{svg.setPointerCapture(e.pointerId);}catch(_){}
-    const s=toSvg(e);
-    layer.appendChild(p.g); // nach vorne
-    p.g.classList.add("dragging");
-    const wasPlaced=p.placed;p.placed=null;
-    drags.set(e.pointerId,{p,dx:s.x-p.x,dy:s.y-p.y,sx:e.clientX,sy:e.clientY,t:Date.now(),wasPlaced});
-  }
-  svg.addEventListener("pointermove",e=>{
-    const d=drags.get(e.pointerId);if(!d)return;e.preventDefault();
-    const s=toSvg(e);move(d.p,s.x-d.dx,s.y-d.dy);
-  });
-  function up(e,cancel){
-    const d=drags.get(e.pointerId);if(!d)return;drags.delete(e.pointerId);
-    const p=d.p;p.g.classList.remove("dragging");
-    const tap=Math.hypot(e.clientX-d.sx,e.clientY-d.sy)<10&&Date.now()-d.t<400;
-    if(cancel){p.placed=d.wasPlaced;if(p.placed)snapTo(p,p.placed.gx,p.placed.gy);else move(p,p.home[0],p.home[1],true);return;}
-    if(tap&&p.type==="ab"&&opts.rotate){ // drehen
-      [p.w,p.h]=[p.h,p.w];draw(p);
-      if(d.wasPlaced&&valid(p,d.wasPlaced.gx,d.wasPlaced.gy)){p.placed=d.wasPlaced;}
-      else if(d.wasPlaced){move(p,p.home[0],p.home[1],true);}
-      onChange();return;
-    }
-    drop(p);onChange();
-  }
-  svg.addEventListener("pointerup",e=>up(e,false));
-  svg.addEventListener("pointercancel",e=>up(e,true));
-
-  function valid(p,gx,gy){
-    if(gx<0||gy<0||gx+p.w>n||gy+p.h>n)return false;
-    if(opts.allowed&&!opts.allowed(p,gx,gy))return false;
-    return pieces.every(q=>q===p||!q.placed||gx>=q.placed.gx+q.w||gx+p.w<=q.placed.gx||gy>=q.placed.gy+q.h||gy+p.h<=q.placed.gy);
-  }
-  function snapTo(p,gx,gy){p.placed={gx,gy};move(p,FX+gx*u,FY+gy*u,true);}
-  function drop(p){
-    const cx=p.x+p.w*u/2,cy=p.y+p.h*u/2;
-    const inFrame=cx>FX-u/2&&cx<FX+FS+u/2&&cy>FY-u/2&&cy<FY+FS+u/2;
-    if(!inFrame){ // frei ablegen, aber im Bild halten
-      const x=Math.min(Math.max(p.x,0),1160-p.w*u),y=Math.min(Math.max(p.y,0),580-p.h*u);
-      move(p,x,y,true);return;}
-    // abgeschwächtes Einrasten: nur wenn das Teil schon nahe an einer passenden Stelle liegt
-    let best=null;
-    for(let gx=0;gx<=n-p.w;gx++)for(let gy=0;gy<=n-p.h;gy++)
-      if(valid(p,gx,gy)){const dist=Math.hypot(FX+gx*u-p.x,FY+gy*u-p.y);if(!best||dist<best.dist)best={gx,gy,dist};}
-    const SNAP=opts.snap??60;          // bis hierhin (SVG-Einheiten) zieht es das Teil an seinen Platz
-    if(best&&best.dist<=SNAP)snapTo(p,best.gx,best.gy);
-    else if(best&&best.dist<=2.2*SNAP){ // fast: liegen lassen, Schüler schiebt selbst nach
-      const x=Math.min(Math.max(p.x,0),1160-p.w*u),y=Math.min(Math.max(p.y,0),580-p.h*u);
-      move(p,x,y,true);if(opts.onNear)opts.onNear(p);}
-    else{move(p,p.home[0],p.home[1],true);if(opts.onReject)opts.onReject(p);}
-  }
-  let hlOn=false,introOn=false;
-  // Herleitung: Die Seite des großen Quadrats wandert heraus und klappt sich zu einem Quadrat auf
-  const tween=(ms,f)=>new Promise(res=>{const t0=performance.now();const step=t=>{const k=Math.min(1,(t-t0)/ms),e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;f(e);if(k<1)requestAnimationFrame(step);else res();};requestAnimationFrame(step);});
-  const wait=ms=>new Promise(res=>setTimeout(res,ms));
-  let introId=0;
-  async function intro(cfg){
-    const my=++introId;introOn=true;
-    pieces.forEach(p=>{p.g.style.opacity=0;});
-    const tmp=el("g",{"pointer-events":"none"},svg);
-    for(const c of cfg){
-      if(my!==introId)break;
-      const p=pieces.find(q=>q.kind===c.kind),len=p.w*u,[hx,hy]=p.home;
-      const sx=FX+(c.kind==="a2"?0:a*u),sy=FY,col=c.kind==="a2"?"#3d6fb6":"#c77a12";
-      const ln=el("line",{x1:sx,y1:sy,x2:sx+len,y2:sy,stroke:col,"stroke-width":12,"stroke-linecap":"round","stroke-opacity":0},tmp);
-      if(c.say&&my===introId)c.say(c.t1);
-      await tween(1000,k=>ln.setAttribute("stroke-opacity",k));
-      await wait(900);
-      await tween(1600,k=>{const x=sx+(hx-sx)*k,y=sy+(hy-sy)*k;ln.setAttribute("x1",x);ln.setAttribute("x2",x+len);ln.setAttribute("y1",y);ln.setAttribute("y2",y);});
-      const rc=el("rect",{x:hx,y:hy,width:len,height:0,fill:COL[p.type],stroke:"#1b2a3a","stroke-width":2},tmp);
-      tmp.appendChild(ln);
-      if(c.say&&my===introId)c.say(c.t2);
-      await tween(1900,k=>rc.setAttribute("height",len*k));
-      const big=len>=160,t=el("text",{x:big?hx+len/2:hx+len+16,y:hy+len/2,"font-size":32,"text-anchor":big?"middle":"start","dominant-baseline":"central",fill:"#1b2a3a"},tmp);
-      t.textContent=c.label;
-      await wait(2200);
-    }
-    tmp.remove();
-    if(my!==introId)return;
-    pieces.forEach(p=>{p.g.style.transition="opacity .4s";p.g.style.opacity=1;});
-    introOn=false;
-  }
-  return {
-    setup,intro,
-    get pieces(){return pieces},get a(){return a},get b(){return b},get n(){return n},
-    placedArea(){return pieces.filter(p=>p.placed).reduce((s,p)=>s+p.w*p.h,0);},
-    allPlaced(){return pieces.every(p=>p.placed);},
-    pulse(on){frame.classList.toggle("pulse",on);},
-    highlight(on){hlOn=on;pieces.forEach(draw);},
-    arrange(pos){pieces.forEach(p=>{const q=pos[p.kind];if(q)snapTo(p,q[0],q[1]);});},
-    ghost(rects){overlay.innerHTML="";rects.forEach(r=>{
-      el("rect",{x:FX+r.gx*u,y:FY+r.gy*u,width:r.w*u,height:r.h*u,class:"ghost"},overlay);
-      const cx=FX+(r.gx+r.w/2)*u,cy=FY+(r.gy+r.h/2)*u;
-      const t=el("text",{x:cx,y:cy,class:"lbl"},overlay);t.textContent=r.label;
-      if(r.w<r.h)t.setAttribute("transform",`rotate(-90 ${cx} ${cy})`);
-    });},
-    clearGhost(){if(overlay)overlay.innerHTML="";},
-    // durchgehende Teilungslinien an den Kanten des großen Quadrats
-    divs(on){
-      if(!divs)return;divs.innerHTML="";if(!on)return;
-      const big=pieces.find(p=>p.kind==="a2");if(!big||!big.placed)return;
-      const vx=big.placed.gx===0?a:n-a,hy=big.placed.gy===0?a:n-a;
-      const st={stroke:"var(--red)","stroke-width":3,"stroke-dasharray":"12 8"};
-      el("line",{x1:FX+vx*u,y1:FY,x2:FX+vx*u,y2:FY+FS,...st},divs);
-      el("line",{x1:FX,y1:FY+hy*u,x2:FX+FS,y2:FY+hy*u,...st},divs);
-    }
-  };
-}
-
-/* ---------- Stufe 1 ---------- */
-const m1=document.getElementById("m1");
-let s1solved=false,s1reject=false;
-const b1=Board(document.getElementById("b1"),{
-  ticks:true,labelA:20,labelB:1, // gezeichnet 4 : 1, damit der Streifen sichtbar ist
-  // richtige Stelle: 20er-Quadrat oben links an den Seiten „20“, 1er-Quadrat unten rechts
-  allowed:(p,gx,gy)=>p.kind==="a2"?(gx===0&&gy===0):(gx===4&&gy===4),
-  onNear:()=>{s1reject=true;m1.className="msg";m1.textContent="Fast! Schieb das Quadrat noch etwas genauer an seinen Platz.";},
-  onReject:()=>{s1reject=true;m1.className="msg warn";m1.textContent="Noch nicht die richtige Stelle – schau auf die Beschriftung 20 + 1 am großen Quadrat.";},
-  inner:p=>p.kind==="a2"?"20² = 400":"1² = 1",
-  locked:()=>s1solved,
-  onChange(){
-    if(!b1||!b1.pieces.length)return;
-    if(s1solved)return;
-    b1.divs(b1.allPlaced());
-    if(b1.allPlaced()){b1.pulse(true);m1.className="msg warn";m1.textContent="Jetzt siehst du: 20² + 1² reicht nicht aus, um 21² zu berechnen – das große Quadrat ist nicht voll. Zeichne die beiden Quadrate in das Flächenbild in deinem Skript.";}
-    else{b1.pulse(false);if(s1reject){s1reject=false;return;}m1.className="msg";m1.textContent="Ziehe die Quadrate an die richtige Stelle.";}
-  }});
-const say=t=>{m1.className="msg";m1.textContent=t;};
-async function s1start(mitHerleitung){
-  s1solved=false;b1.clearGhost();b1.setup(4,1,["a2","b2"]);
-  if(!mitHerleitung){say("Ziehe die Quadrate an die richtige Stelle.");return;}
-  await b1.intro([
-    {kind:"a2",label:"20 · 20 = 20²",say,t1:"Die Seite des großen Quadrats hat zuerst das Stück 20 …",t2:"… und das Stück 20 mal sich selbst ergibt das Quadrat 20 · 20 = 20² = 400."},
-    {kind:"b2",label:"1 · 1 = 1²",say,t1:"Dann kommt das Stück 1 …",t2:"… und 1 mal sich selbst ergibt das Quadrat 1 · 1 = 1² = 1."}]);
-  if(b1.pieces.every(p=>p.g.style.opacity==="1"))say("Jetzt du: Ziehe die Quadrate an die richtige Stelle.");
-}
-document.getElementById("s1reset").onclick=()=>s1start(false);
-document.getElementById("s1intro").onclick=()=>s1start(true);
-document.getElementById("s1solve").onclick=()=>{
-  if(s1solved)return;
-  b1.arrange({a2:[0,0],b2:[4,4]});
-  b1.pulse(false);s1solved=true;b1.divs(false);
-  setTimeout(()=>b1.ghost([{gx:4,gy:0,w:1,h:4,label:"20 · 1 = 20"},{gx:0,gy:4,w:4,h:1,label:"20 · 1 = 20"}]),260);
-  m1.className="msg";m1.textContent="21² = 400 + 20 + 20 + 1 = 441  –  die fehlenden 40 stecken in den zwei Rechtecken.";
-};
-
-/* ---------- Stufe 2: Wie groß sind die fehlenden Teile? ---------- */
-const m2=document.getElementById("m2");
-let set="A",s2reject=false;
-const SLOT=(a)=>({a2:[0,0],b2:[a,a],abH:[0,a],abV:[a,0]}); // richtige Stelle je Teil
-const REAL={A:[50,2],B:[40,3]}; // echte Zahlen: 52 = 50 + 2, 43 = 40 + 3
-const s2opts={
-  ticks:true,noLabels:true,plainFrame:true, // gezeichnet 4 : 1 wie Station ①, beschriftet mit den echten Zahlen
-  allowed:(p,gx,gy)=>{const t=SLOT(b2.a)[p.kind];return gx===t[0]&&gy===t[1];},
-  onNear:()=>{s2reject=true;m2.className="msg";m2.textContent="Fast! Schieb das Teil noch etwas genauer an seinen Platz.";},
-  onReject:p=>{s2reject=true;m2.className="msg warn";m2.textContent="Noch nicht die richtige Stelle. "+({
-    a2:"Tipp: Das blaue Quadrat gehört dorthin, wo oben und links die große Zahl steht.",
-    b2:"Tipp: Das orange Quadrat gehört dorthin, wo oben und links die kleine Zahl steht.",
-    abH:"Tipp: Ein grünes Rechteck ist so lang wie die große Zahl und so breit wie die kleine.",
-    abV:"Tipp: Ein grünes Rechteck ist so lang wie die große Zahl und so breit wie die kleine."})[p.kind];},
-  onChange(){
-    if(!b2||!b2.pieces.length)return;
-    if(b2.allPlaced()){
-      b2.highlight(true);
-      m2.className="msg";m2.textContent="Geschafft! Die grünen Rechtecke sind die fehlenden Teile – sie fehlen, wenn man nur die zwei Quadrate rechnet.";
-      document.getElementById("s2sum").hidden=false;
-    }else{
-      if(s2reject){s2reject=false;return;}
-      m2.className="msg";m2.textContent="";
-    }
-  }};
-const b2=Board(document.getElementById("b2"),s2opts);
-function s2start(){
-  const [a,b]=REAL[set];s2opts.labelA=a;s2opts.labelB=b;
-  document.getElementById("s2who").textContent="Partner "+set+": Du berechnest "+(a+b)+"².";
-  document.getElementById("s2sum").hidden=true;document.getElementById("s2in").value="";
-  const fb=document.getElementById("s2fb");fb.textContent="";fb.className="fb2";
-  b2.setup(4,1,["a2","b2","abH","abV"]);b2.highlight(false);
-}
-document.querySelectorAll("#s2pick [data-set]").forEach(btn=>btn.onclick=()=>{
-  set=btn.dataset.set;document.getElementById("s2pick").hidden=true;document.getElementById("s2work").hidden=false;s2start();});
-document.getElementById("s2reset").onclick=s2start;
-document.getElementById("s2switch").onclick=()=>{document.getElementById("s2work").hidden=true;document.getElementById("s2pick").hidden=false;};
-document.getElementById("s2check").onclick=()=>{
-  const [a,b]=REAL[set],v=+document.getElementById("s2in").value,fb=document.getElementById("s2fb");
-  if(!document.getElementById("s2in").value){fb.className="fb2 no";fb.textContent="Gib zuerst eine Zahl ein.";return;}
-  if(v===(a+b)*(a+b)){fb.className="fb2 ok";fb.textContent=`Richtig! Alle Teile zusammen: ${a+b}² = ${(a+b)*(a+b)}. Die zwei grünen Rechtecke haben zusammen ${2*a*b} – genau das fehlt bei ${a}² + ${b}².`;}
-  else if(v===a*a+b*b){fb.className="fb2 no";fb.textContent=`Das sind nur die zwei Quadrate (${a}² + ${b}²). Die grünen Rechtecke fehlen noch!`;}
-  else{fb.className="fb2 no";fb.textContent="Noch nicht. Rechne jedes Teil mit Länge · Breite. Schau auf die Zahlen am Rand: Ein grünes Rechteck ist so lang wie das blaue Quadrat und so breit wie das orange.";}
-};
-
-/* ---------- Stufe 3 ---------- */
-const svg3=document.getElementById("b3"),ra=document.getElementById("ra"),rb=document.getElementById("rb");
-const st={hl:false,wrong:false,vars:false};
-function render3(){
-  const a=+ra.value,b=+rb.value,n=a+b,S=500,O=70,u=S/n,B=Math.max(b*u,60),A=S-B; // dünne Streifen (z. B. 21²) nicht maßstabsgetreu, aber sichtbar
-  document.getElementById("oa").textContent=a;document.getElementById("ob").textContent=b;
-  svg3.innerHTML="";addDefs(svg3);
-  el("rect",{x:O,y:O,width:S,height:S,fill:"url(#hatch-b3)"},svg3);
+// ---------- Flächenbild ----------
+const X=110,Y=90,S=440,A=S*0.6,B=S-A;
+const COL={a2:"var(--blue)",ab:"var(--green)",b2:"var(--orange)"};
+function draw(){
+  svg.innerHTML="";
+  const s1=st.s1,s2=st.s2,t1=fmtSummand(s1),t2=fmtSummand(s2);
+  const lab=(x,y,t,size=28)=>{const e=el("text",{x,y,"text-anchor":"middle","dominant-baseline":"central","font-size":size,"font-weight":700,fill:"var(--ink)"});e.textContent=t;};
+  lab(X+A/2,Y-40,t1);lab(X+A,Y-40,"+",24);lab(X+A+B/2,Y-40,t2);
+  lab(X-50,Y+A/2,t1);lab(X-50,Y+A,"+",24);lab(X-50,Y+A+B/2,t2);
+  const m1=mono(s1),m2=mono(s2);
   const parts=[
-    {x:O,y:O,w:A,h:A,t:"a2",lab:st.vars?"a²":`${a*a}`},
-    {x:O+A,y:O,w:B,h:A,t:"ab",lab:st.vars?"a·b":`${a*b}`},
-    {x:O,y:O+A,w:A,h:B,t:"ab",lab:st.vars?"a·b":`${a*b}`},
-    {x:O+A,y:O+A,w:B,h:B,t:"b2",lab:st.vars?"b²":`${b*b}`}];
-  parts.forEach(p=>{
-    const missing=st.wrong&&p.t==="ab";
-    el("rect",{x:p.x,y:p.y,width:p.w,height:p.h,fill:missing?"url(#hatch-b3)":COL[p.t],stroke:missing?"var(--red)":"#1b2a3a","stroke-width":missing?3:2,"stroke-dasharray":missing?"8 6":"none",class:(!missing&&p.t==="ab"&&st.hl)?"hl":""},svg3);
-    const txt=missing?"fehlt!":p.lab;
-    if(p.w>=46&&p.h>=34){const t=el("text",{x:p.x+p.w/2,y:p.y+p.h/2,class:"lbl"+(p.w<90||p.h<60?" small":"")},svg3);t.textContent=txt;if(missing)t.setAttribute("fill","var(--red)");}
+    [X,Y,A,A,"a2",t1,t1,mul(m1,m1)],
+    [X+A,Y,B,A,"ab",t1,t2,mul(m1,m2)],
+    [X,Y+A,A,B,"ab",t1,t2,mul(m1,m2)],
+    [X+A,Y+A,B,B,"b2",t2,t2,mul(m2,m2)]];
+  parts.forEach(([x,y,w,h,k,f1,f2,p])=>{
+    el("rect",{x,y,width:w,height:h,fill:COL[k],stroke:"var(--ink)","stroke-width":3});
+    if(st.step>=1){const t=el("text",{x:x+w/2,y:y+h/2-(st.step>=2?20:0),"text-anchor":"middle","dominant-baseline":"central","font-size":24,fill:"var(--ink)"});t.textContent=f1+" · "+f2;}
+    if(st.step>=2){const t=el("text",{x:x+w/2,y:y+h/2+22,"text-anchor":"middle","dominant-baseline":"central","font-size":26,"font-weight":700,fill:"var(--ink)"});t.textContent="= "+fmt(p);}
   });
-  // Seitenbeschriftung
-  const side=(x,y,txt,rot)=>{const t=el("text",{x,y,class:"lbl"},svg3);t.textContent=txt;if(rot)t.setAttribute("transform",`rotate(-90 ${x} ${y})`);};
-  const bOff=Math.max(B/2,28);
-  side(O+A/2,O-26,st.vars?"a":a);side(O+A,O-26,"+");side(O+A+bOff,O-26,st.vars?"b":b);
-  side(O-30,O+A/2,st.vars?"a":a,true);side(O-30,O+A,"+");side(O-30,O+A+bOff,st.vars?"b":b,true);
-  el("line",{x1:O+A,y1:O-8,x2:O+A,y2:O+10,stroke:"#1b2a3a","stroke-width":3},svg3);
-  el("line",{x1:O-10,y1:O+A,x2:O+10,y2:O+A,stroke:"#1b2a3a","stroke-width":3},svg3);
-  // Formel
-  const f=document.getElementById("formula");
-  const ok=`<div class="row">(a + b)² = <span class="cA">a²</span> + <span class="cAB">2ab</span> + <span class="cB">b²</span></div>
-    <div class="row">(${a} + ${b})² = <span class="cA">${a}²</span> + <span class="cAB">2 · ${a} · ${b}</span> + <span class="cB">${b}²</span></div>
-    <div class="row"><b>${n*n}</b> = <span class="cA">${a*a}</span> + <span class="cAB">${2*a*b}</span> + <span class="cB">${b*b}</span></div>`;
-  const bad=`<div class="row">nur <span class="cA">${a}²</span> + <span class="cB">${b}²</span> = ${a*a+b*b} <span class="miss">✗</span></div>
-    <div class="row">richtig: (${a} + ${b})² = ${n}² = <b>${n*n}</b></div>
-    <div class="row miss">Es fehlen 2 · ${a} · ${b} = ${2*a*b}</div>`;
-  f.innerHTML=st.wrong?bad:ok;
+  document.getElementById("term").textContent="("+t1+" + "+t2+")²";
+  const sum=document.getElementById("sum");sum.innerHTML="";
+  if(st.step>=3){
+    const ps=parts.map(p=>p[7]);
+    const c=(txt,col)=>`<b style="color:var(--${col}-d)">${txt}</b>`;
+    // gleichartige Glieder zusammenfassen (die zwei grünen Rechtecke sind gleich)
+    const map=new Map();ps.forEach(p=>{const k=key(p);map.set(k,map.has(k)?{...p,c:map.get(k).c+p.c}:p);});
+    const zus=[...map.values()];
+    let line1=`(${t1} + ${t2})² = ${c(fmt(ps[0]),"blue")} + ${c(fmt(ps[1]),"green")} + ${c(fmt(ps[2]),"green")} + ${c(fmt(ps[3]),"orange")}`;
+    let line2;
+    if(zus.length===1&&key(zus[0])==="") line2=`= <b>${zus[0].c}</b>`;
+    else line2="= <b>"+zus.map(fmt).join(" + ")+"</b>";
+    sum.innerHTML=line1+"<br>"+line2;
+  }
+  document.getElementById("b1").disabled=st.step>=1;
+  document.getElementById("b2").disabled=st.step!==1;
+  document.getElementById("b3").disabled=st.step!==2;
 }
-[ra,rb].forEach(r=>r.addEventListener("input",render3));
-document.querySelectorAll("[data-ab]").forEach(btn=>btn.onclick=()=>{const [a,b]=btn.dataset.ab.split(",");ra.value=a;rb.value=b;render3();});
-const tog=(id,key)=>{const btn=document.getElementById(id);btn.onclick=()=>{st[key]=!st[key];btn.setAttribute("aria-pressed",st[key]);render3();};};
-tog("tHl","hl");tog("tWrong","wrong");tog("tVar","vars");
-
-/* ---------- Diese Seite zeigt genau eine Station ---------- */
-const STATION="s3";
-document.getElementById(STATION).classList.add("on");
-if(STATION==="s1")s1start(true);
-
-if(STATION==="s3")render3();
+function reset(){st.step=0;draw();}
+document.getElementById("b1").onclick=()=>{st.step=1;draw();};
+document.getElementById("b2").onclick=()=>{st.step=2;draw();};
+document.getElementById("b3").onclick=()=>{st.step=3;draw();};
+document.getElementById("b0").onclick=reset;
+buildInput("sm1",st.s1);buildInput("sm2",st.s2);draw();
 </script>
 </body>
 </html>
