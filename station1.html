@@ -286,13 +286,16 @@ function Board(svg,opts){
     if(!inFrame){ // frei ablegen, aber im Bild halten
       const x=Math.min(Math.max(p.x,0),1160-p.w*u),y=Math.min(Math.max(p.y,0),580-p.h*u);
       move(p,x,y,true);return;}
-    const gx0=Math.round((p.x-FX)/u),gy0=Math.round((p.y-FY)/u);
+    // abgeschwächtes Einrasten: nur wenn das Teil schon nahe an einer passenden Stelle liegt
     let best=null;
-    for(let r=0;r<=2&&!best;r++)for(let dx=-r;dx<=r;dx++)for(let dy=-r;dy<=r;dy++){
-      const gx=Math.min(Math.max(gx0+dx,0),n-p.w),gy=Math.min(Math.max(gy0+dy,0),n-p.h);
+    for(let gx=0;gx<=n-p.w;gx++)for(let gy=0;gy<=n-p.h;gy++)
       if(valid(p,gx,gy)){const dist=Math.hypot(FX+gx*u-p.x,FY+gy*u-p.y);if(!best||dist<best.dist)best={gx,gy,dist};}
-    }
-    if(best)snapTo(p,best.gx,best.gy);else{move(p,p.home[0],p.home[1],true);if(opts.onReject)opts.onReject(p);}
+    const SNAP=opts.snap??60;          // bis hierhin (SVG-Einheiten) zieht es das Teil an seinen Platz
+    if(best&&best.dist<=SNAP)snapTo(p,best.gx,best.gy);
+    else if(best&&best.dist<=2.2*SNAP){ // fast: liegen lassen, Schüler schiebt selbst nach
+      const x=Math.min(Math.max(p.x,0),1160-p.w*u),y=Math.min(Math.max(p.y,0),580-p.h*u);
+      move(p,x,y,true);if(opts.onNear)opts.onNear(p);}
+    else{move(p,p.home[0],p.home[1],true);if(opts.onReject)opts.onReject(p);}
   }
   let hlOn=false,introOn=false;
   // Herleitung: Die Seite des großen Quadrats wandert heraus und klappt sich zu einem Quadrat auf
@@ -359,6 +362,7 @@ const b1=Board(document.getElementById("b1"),{
   ticks:true,labelA:20,labelB:1, // gezeichnet 4 : 1, damit der Streifen sichtbar ist
   // richtige Stelle: 20er-Quadrat oben links an den Seiten „20“, 1er-Quadrat unten rechts
   allowed:(p,gx,gy)=>p.kind==="a2"?(gx===0&&gy===0):(gx===4&&gy===4),
+  onNear:()=>{s1reject=true;m1.className="msg";m1.textContent="Fast! Schieb das Quadrat noch etwas genauer an seinen Platz.";},
   onReject:()=>{s1reject=true;m1.className="msg warn";m1.textContent="Noch nicht die richtige Stelle – schau auf die Beschriftung 20 + 1 am großen Quadrat.";},
   inner:p=>p.kind==="a2"?"20² = 400":"1² = 1",
   locked:()=>s1solved,
@@ -396,7 +400,12 @@ const REAL={A:[50,2],B:[40,3]}; // echte Zahlen: 52 = 50 + 2, 43 = 40 + 3
 const s2opts={
   ticks:true,noLabels:true,plainFrame:true, // gezeichnet 4 : 1 wie Station ①, beschriftet mit den echten Zahlen
   allowed:(p,gx,gy)=>{const t=SLOT(b2.a)[p.kind];return gx===t[0]&&gy===t[1];},
-  onReject:()=>{s2reject=true;m2.className="msg warn";m2.textContent="Noch nicht die richtige Stelle. Tipp: Das blaue Quadrat gehört oben links an die Seiten mit der großen Zahl.";},
+  onNear:()=>{s2reject=true;m2.className="msg";m2.textContent="Fast! Schieb das Teil noch etwas genauer an seinen Platz.";},
+  onReject:p=>{s2reject=true;m2.className="msg warn";m2.textContent="Noch nicht die richtige Stelle. "+({
+    a2:"Tipp: Das blaue Quadrat gehört dorthin, wo oben und links die große Zahl steht.",
+    b2:"Tipp: Das orange Quadrat gehört dorthin, wo oben und links die kleine Zahl steht.",
+    abH:"Tipp: Ein grünes Rechteck ist so lang wie die große Zahl und so breit wie die kleine.",
+    abV:"Tipp: Ein grünes Rechteck ist so lang wie die große Zahl und so breit wie die kleine."})[p.kind];},
   onChange(){
     if(!b2||!b2.pieces.length)return;
     if(b2.allPlaced()){
