@@ -51,8 +51,9 @@
 const NS="http://www.w3.org/2000/svg",svg=document.getElementById("s"),cap=document.getElementById("cap");
 const tipBtn=document.getElementById("tipBtn"),tip=document.getElementById("tip");
 const el=(t,a,p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);(p||svg).appendChild(e);return e;};
-const tween=(ms,f)=>new Promise(r=>{const t0=performance.now();const s=t=>{const k=Math.min(1,(t-t0)/ms),e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;f(e);k<1?requestAnimationFrame(s):r();};requestAnimationFrame(s);});
-const wait=ms=>new Promise(r=>setTimeout(r,ms));
+const SLOW=1.8; // alle Pausen und Übergänge langsamer (Rückmeldung: lief zu schnell)
+const tween=(ms,f)=>new Promise(r=>{ms*=SLOW;const t0=performance.now();const s=t=>{const k=Math.min(1,(t-t0)/ms),e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;f(e);k<1?requestAnimationFrame(s):r();};requestAnimationFrame(s);});
+const wait=ms=>new Promise(r=>setTimeout(r,ms*SLOW));
 let run=0;
 
 // Geometrie wie im Skript (Verhältnis 3 : 2), zwei Bilder nebeneinander
@@ -137,7 +138,7 @@ async function play(){
   await tween(500,e=>[P.head,Q.head].forEach(h=>h.setAttribute("opacity",e)));
   await wait(3500); if(!alive())return;
 
-  say("Jetzt du: Übertrage das Flächenbild ins Skript und stelle die Formel für (a + b)² auf. Achte auf die zwei grünen Rechtecke!");
+  say("Vergleiche mit deinem Flächenbild im Skript. Hast du die zwei grünen Rechtecke zusammengefasst?");
   greens.forEach(r=>r.classList.add("pulse"));
   tipBtn.disabled=false;
 }
