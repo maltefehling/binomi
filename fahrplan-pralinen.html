@@ -46,8 +46,8 @@
 <header>
   <h1>★★ Fahrplan · Erklär-Tandem</h1>
   <div class="tabs" role="tablist">
-    <button class="tab" role="tab" aria-selected="true" data-p="A">Partner A&nbsp;&nbsp;Lenas Weg</button>
-    <button class="tab" role="tab" aria-selected="false" data-p="B">Partner B&nbsp;&nbsp;Toms Weg</button>
+    <button class="tab" role="tab" aria-selected="true" data-p="A">Partner A&nbsp;&nbsp;Toms Weg</button>
+    <button class="tab" role="tab" aria-selected="false" data-p="B">Partner B&nbsp;&nbsp;Lenas Weg</button>
   </div>
 </header>
 <main>
@@ -61,18 +61,18 @@
 (function(){
   // Pro Set: Aufgabe und vier Schritte (Zeige … / Stichwörter / Joker-Satzanfang)
   var sets={
-    A:{task:'Erkläre deinem Partner <b>Lenas Weg</b>: Wie zählt Lena die Pralinen in der Schachtel?',
+    A:{task:'Erkläre deinem Partner <b>Toms Weg</b>: Wie zählt Tom die Pralinen in der Schachtel?',
        steps:[
-        ["auf eine Reihe Pralinen",["eine Reihe","4 + 6","10"],"Lena zählt zuerst …"],
-        ["auf die Reihen untereinander",["Reihen","3 + 5","8"],"Dann zählt sie …"],
-        ["auf die ganze Schachtel",["Länge mal Breite","8 · 10","80"],"Zum Schluss rechnet sie …"],
-        ["auf deine Rechnung",["zuerst plus","dann mal"],"Lena rechnet also …"]]},
-    B:{task:'Erkläre deinem Partner <b>Toms Weg</b>: Wie zählt Tom die Pralinen in der Schachtel?',
+        ["auf eine Reihe Pralinen",["eine Reihe","4 + 6","10"],"Tom zählt zuerst …"],
+        ["auf die Reihen untereinander",["Reihen","3 + 5","8"],"Dann zählt er …"],
+        ["auf die ganze Schachtel",["Länge mal Breite","8 · 10","80"],"Zum Schluss rechnet er …"],
+        ["auf deine Rechnung",["zuerst plus","dann mal"],"Tom rechnet also …"]]},
+    B:{task:'Erkläre deinem Partner <b>Lenas Weg</b>: Wie zählt Lena die Pralinen in der Schachtel?',
        steps:[
-        ["nacheinander auf die vier Sorten",["vier Sorten","jede Sorte einzeln"],"Tom schaut zuerst …"],
+        ["nacheinander auf die vier Sorten",["vier Sorten","jede Sorte einzeln"],"Lena schaut zuerst …"],
         ["auf die zwei Sorten oben",["3 · 4 = 12","3 · 6 = 18"],"Oben sind es …"],
         ["auf die zwei Sorten unten",["5 · 4 = 20","5 · 6 = 30"],"Unten sind es …"],
-        ["auf deine Rechnung",["zuerst mal","dann plus","80"],"Tom rechnet also …"]]}
+        ["auf deine Rechnung",["zuerst mal","dann plus","80"],"Lena rechnet also …"]]}
   };
   var cur="A", plan=document.getElementById("plan"), msg=document.getElementById("msg");
 

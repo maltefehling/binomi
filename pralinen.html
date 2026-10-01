@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Zwei Wege – ein Ergebnis</title>
-<!-- Vorstunde I.2 Summen multiplizieren: Lenas Weg (Länge · Breite) und Toms Weg (Sorte für Sorte) an der Pralinenschachtel 8 × 10 -->
+<!-- Vorstunde I.2 Summen multiplizieren: Toms Weg (Länge · Breite) und Lenas Weg (Sorte für Sorte) an der Pralinenschachtel 8 × 10 -->
 <style>
   :root{
     --c1:#2e5d9f; --c2:#3f8f3a; --c3:#3f8f3a; --c4:#c0700f;
@@ -35,8 +35,8 @@
 <header><h1>Zwei Wege – ein Ergebnis</h1></header>
 <main>
   <div class="bar">
-    <button class="btn" id="bL" aria-pressed="false">Weg von Lena</button>
-    <button class="btn" id="bT" aria-pressed="false">Weg von Tom</button>
+    <button class="btn" id="bL" aria-pressed="false">Weg von Tom</button>
+    <button class="btn" id="bT" aria-pressed="false">Weg von Lena</button>
     <button class="btn" id="bV" aria-pressed="false" disabled>Beide Wege vergleichen</button>
   </div>
   <div class="wrap">
@@ -83,7 +83,7 @@ function setBtn(id){["bL","bT","bV"].forEach(b=>document.getElementById(b).setAt
 async function lena(){
   const my=++run;setBtn("bL");box();calc.innerHTML="";
   const say=t=>{if(my===run)cap.textContent=t;};
-  say("Lena zählt zuerst, wie viele Pralinen in eine Reihe passen.");
+  say("Tom zählt zuerst, wie viele Pralinen in eine Reihe passen.");
   await wait(1200);if(my!==run)return;
   await count([...Array(A)].map((_,c)=>[X0+c*C+C/2,Y0-24]),"var(--c1)",my);
   const t1=txt(X0+A*C/2,Y0-52,"4");await show(t1);if(my!==run)return;
@@ -92,7 +92,7 @@ async function lena(){
   const tp=txt(X0+A*C,Y0-52,"+");await show(tp);if(my!==run)return;
   calc.innerHTML="Länge: 4 + 6 = <b>10</b>";await wait(1600);if(my!==run)return;
 
-  say("Dann zählt sie, wie viele Reihen es sind.");
+  say("Dann zählt er, wie viele Reihen es sind.");
   await count([...Array(Cc)].map((_,r)=>[X0-24,Y0+r*C+C/2]),"var(--c1)",my);
   const t3=txt(X0-58,Y0+Cc*C/2,"3");await show(t3);if(my!==run)return;
   await count([...Array(D)].map((_,r)=>[X0-24,Y0+(Cc+r)*C+C/2]),"var(--c4)",my);
@@ -100,10 +100,10 @@ async function lena(){
   const tq=txt(X0-58,Y0+Cc*C,"+");await show(tq);if(my!==run)return;
   calc.innerHTML+="<br>Breite: 3 + 5 = <b>8</b>";await wait(1600);if(my!==run)return;
 
-  say("Zum Schluss rechnet sie Länge mal Breite.");
+  say("Zum Schluss rechnet er Länge mal Breite.");
   const f=frame(X0-2,Y0-2,COLS*C+4,ROWS*C+4,"var(--acc)");await show(f,600);if(my!==run)return;
   calc.innerHTML+="<br>(3 + 5) · (4 + 6) = 8 · 10 = <b>80</b>";
-  await wait(1200);say("Lena rechnet also zuerst plus, dann mal.");
+  await wait(1200);say("Tom rechnet also zuerst plus, dann mal.");
   seen.L=true;if(seen.T)document.getElementById("bV").disabled=false;
 }
 
@@ -115,7 +115,7 @@ const BLOCKS=[
 async function tom(){
   const my=++run;setBtn("bT");box();calc.innerHTML="";
   const say=t=>{if(my===run)cap.textContent=t;};
-  say("Tom rechnet zuerst aus, wie viele Pralinen es von jeder Sorte gibt.");
+  say("Lena rechnet zuerst aus, wie viele Pralinen es von jeder Sorte gibt.");
   await wait(1600);if(my!==run)return;
   const parts=[];
   for(const b of BLOCKS){
@@ -128,9 +128,9 @@ async function tom(){
     calc.innerHTML=parts.join(" + ");
     await wait(1500);if(my!==run)return;
   }
-  say("Dann addiert er die vier Sorten.");
+  say("Dann addiert sie die vier Sorten.");
   calc.innerHTML=parts.join(" + ")+" = <b>80</b>";
-  await wait(1400);say("Tom rechnet also zuerst mal, dann plus.");
+  await wait(1400);say("Lena rechnet also zuerst mal, dann plus.");
   seen.T=true;if(seen.L)document.getElementById("bV").disabled=false;
 }
 
@@ -139,7 +139,7 @@ async function vergleich(){
   cap.textContent="Beide Wege ergeben 80. Also gilt:";
   for(const b of BLOCKS){el("rect",{x:X0+b.x*C+3,y:Y0+b.y*C+3,width:b.w*C-6,height:b.h*C-6,rx:6,fill:"none",stroke:b.col,"stroke-width":5});}
   calc.innerHTML=`<b>(3 + 5) · (4 + 6)</b><br>= <span class="s1">3 · 4</span> + <span class="s2">3 · 6</span> + <span class="s2">5 · 4</span> + <span class="s4">5 · 6</span><br>
-    <span style="font-size:17px;color:var(--muted)">Lena: erst plus, dann mal · Tom: erst mal, dann plus</span>`;
+    <span style="font-size:17px;color:var(--muted)">Tom: erst plus, dann mal · Lena: erst mal, dann plus</span>`;
 }
 document.getElementById("bL").onclick=lena;
 document.getElementById("bT").onclick=tom;
