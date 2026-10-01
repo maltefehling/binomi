@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lückentext Tandem</title>
+<style>
+  :root{
+    --blue:#bcd3f2; --green:#c6e8c0; --green-d:#3f8f3a; --orange:#fbd9a8; --orange-bg:#fdf6ea; --pro:#eef0f3;
+    --ink:#1b2a3a; --muted:#5b6b7c; --acc:#1f4e79; --bg:#f4f7fb; --card:#ffffff; --line:#c9d6e5; --red:#d64545;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
+  button{font:inherit;touch-action:manipulation}
+  header{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:12px 16px;background:var(--acc);color:#fff}
+  header h1{font-size:20px;margin:0 12px 0 0}
+  .tabs{display:flex;gap:6px;flex-wrap:wrap}
+  .tab{border:0;border-radius:10px;padding:10px 16px;background:rgba(255,255,255,.15);color:#fff;font-weight:600;font-size:16px;min-height:44px}
+  .tab[aria-selected="true"]{background:#fff;color:var(--acc)}
+  main{padding:14px 16px 28px;max-width:860px;margin:0 auto}
+  .hint{background:var(--orange-bg);border:1px solid var(--orange);border-radius:12px;padding:10px 14px;font-size:17px;line-height:1.4;margin-bottom:14px}
+  .top{display:grid;grid-template-columns:minmax(0,1fr) 200px;gap:14px;align-items:center;margin-bottom:12px}
+  @media (max-width:600px){.top{grid-template-columns:1fr}.top svg{max-width:220px;margin:0 auto}}
+  .task{font-size:19px;line-height:1.4}
+  .task b{color:var(--acc)}
+  .top svg{width:100%;height:auto;display:block}
+  ol{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+  li{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px 14px 56px;position:relative;font-size:21px;line-height:2.1}
+  li::before{content:attr(data-n);position:absolute;left:14px;top:16px;width:30px;height:30px;border-radius:50%;background:var(--acc);color:#fff;font-size:17px;font-weight:700;display:grid;place-items:center;line-height:1}
+  li[hidden]{display:none}
+  li.done{border-color:var(--green-d)}
+  .nb{white-space:nowrap}
+  /* Lücke mit Auswahl */
+  .pick{display:inline-flex;gap:6px;vertical-align:middle;border-bottom:2px dashed var(--muted);padding:0 2px 3px}
+  .pick button{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:9px;padding:2px 12px;font-size:19px;font-weight:600;min-height:40px;white-space:nowrap}
+  .pick button.wrong{border-color:var(--red);color:var(--red);animation:shake .35s}
+  @keyframes shake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+  .filled{display:inline-block;background:var(--green);border-radius:8px;padding:0 8px;font-weight:700;white-space:nowrap}
+  .fb{display:block;font-size:16px;color:var(--red);line-height:1.3;min-height:0}
+  .msg{min-height:30px;font-size:20px;font-weight:700;color:var(--green-d);margin:14px 0 4px}
+  .bar{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .btn{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:10px 18px;font-size:17px;font-weight:600;min-height:44px}
+  details{background:var(--pro);border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin-top:18px;font-size:20px;line-height:2.1}
+  summary{font-weight:700;color:var(--acc);cursor:pointer;min-height:32px;line-height:1.5}
+  .foot{color:var(--muted);font-size:14px;margin-top:18px}
+</style>
+</head>
+<body>
+<header>
+  <h1>★ Lückentext · Erklär-Tandem</h1>
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" aria-selected="true" data-p="A">Partner A&nbsp;&nbsp;Lenas Weg</button>
+    <button class="tab" role="tab" aria-selected="false" data-p="B">Partner B&nbsp;&nbsp;Toms Weg</button>
+  </div>
+</header>
+<main>
+  <div class="hint">Tippe in jeder Lücke auf die richtige Möglichkeit. Schau dabei auf die Pralinenschachtel. <b>Am Ende liest du deinem Partner alle Sätze laut vor.</b></div>
+
+  <!-- Lücken: data-o = Möglichkeiten (mit | getrennt), data-k = Nummer der richtigen (ab 0) -->
+  <section data-panel="A">
+    <div class="top">
+      <div class="task">Erkläre deinem Partner <b>Lenas Weg</b>: Wie zählt Lena die Pralinen in der Schachtel?</div>
+      <svg viewBox="0 0 200 170" aria-label="Pralinenschachtel 4 plus 6 lang, 3 plus 5 breit"><rect x="40" y="24" width="56" height="42" fill="#fff" stroke="#2e5d9f" stroke-width="3"/><rect x="96" y="24" width="84" height="42" fill="#fff" stroke="#3f8f3a" stroke-width="3"/><rect x="40" y="66" width="56" height="70" fill="#fff" stroke="#3f8f3a" stroke-width="3"/><rect x="96" y="66" width="84" height="70" fill="#fff" stroke="#c0700f" stroke-width="3"/><text x="68" y="16" text-anchor="middle" font-size="14">4</text><text x="96" y="16" text-anchor="middle" font-size="14">+</text><text x="138" y="16" text-anchor="middle" font-size="14">6</text><text x="24" y="49" text-anchor="middle" font-size="14">3</text><text x="24" y="70" text-anchor="middle" font-size="14">+</text><text x="24" y="105" text-anchor="middle" font-size="14">5</text></svg>
+    </div>
+    <ol>
+      <li data-n="1">Lena zählt zuerst, wie viele Pralinen in <span class="pick" data-o="eine Reihe|eine Sorte" data-k="0"></span> passen: <span class="pick" data-o="4 + 6|4 · 6" data-k="0"></span> = 10.</li>
+      <li data-n="2">Dann zählt sie, wie viele <span class="pick" data-o="Reihen|Sorten" data-k="0"></span> es sind: 3 + 5 = <span class="pick" data-o="15|8" data-k="1"></span>.</li>
+      <li data-n="3">Zum Schluss rechnet sie Länge <span class="pick" data-o="plus|mal" data-k="1"></span> Breite: 8 · 10 = <span class="pick" data-o="80|18" data-k="0"></span>.</li>
+      <li data-n="4">Lena rechnet also zuerst <span class="pick" data-o="mal|plus" data-k="1"></span> und dann <span class="pick" data-o="mal|plus" data-k="0"></span>.</li>
+    </ol>
+  </section>
+
+  <section data-panel="B" hidden>
+    <div class="top">
+      <div class="task">Erkläre deinem Partner <b>Toms Weg</b>: Wie zählt Tom die Pralinen in der Schachtel?</div>
+      <svg viewBox="0 0 200 170" aria-label="Pralinenschachtel 4 plus 6 lang, 3 plus 5 breit"><rect x="40" y="24" width="56" height="42" fill="#fff" stroke="#2e5d9f" stroke-width="3"/><rect x="96" y="24" width="84" height="42" fill="#fff" stroke="#3f8f3a" stroke-width="3"/><rect x="40" y="66" width="56" height="70" fill="#fff" stroke="#3f8f3a" stroke-width="3"/><rect x="96" y="66" width="84" height="70" fill="#fff" stroke="#c0700f" stroke-width="3"/><text x="68" y="16" text-anchor="middle" font-size="14">4</text><text x="96" y="16" text-anchor="middle" font-size="14">+</text><text x="138" y="16" text-anchor="middle" font-size="14">6</text><text x="24" y="49" text-anchor="middle" font-size="14">3</text><text x="24" y="70" text-anchor="middle" font-size="14">+</text><text x="24" y="105" text-anchor="middle" font-size="14">5</text></svg>
+    </div>
+    <ol>
+      <li data-n="1">Tom rechnet zuerst aus, wie viele Pralinen es von <span class="pick" data-o="jeder Sorte|jeder Reihe" data-k="0"></span> gibt.</li>
+      <li data-n="2">Oben links sind es <span class="pick" data-o="3 + 4|3 · 4" data-k="1"></span> = 12, oben rechts 3 · 6 = <span class="pick" data-o="9|18" data-k="1"></span>.</li>
+      <li data-n="3">Unten links sind es 5 · 4 = 20, unten rechts <span class="pick" data-o="5 · 6|5 + 6" data-k="0"></span> = 30.</li>
+      <li data-n="4">Dann <span class="pick" data-o="multipliziert|addiert" data-k="1"></span> er die vier Sorten: 12 + 18 + 20 + 30 = 80.</li>
+      <li data-n="5">Tom rechnet also zuerst <span class="pick" data-o="mal|plus" data-k="0"></span> und dann <span class="pick" data-o="mal|plus" data-k="1"></span>.</li>
+    </ol>
+  </section>
+
+  <div class="msg" id="msg"></div>
+  <div class="bar"><button class="btn" id="reset">Von vorn</button></div>
+  <p class="foot">Fehling · Summen multiplizieren · Hilfe zum Erklär-Tandem</p>
+</main>
+<script>
+(function(){
+  var panels=document.querySelectorAll("[data-panel]"), tabs=document.querySelectorAll(".tab"), msg=document.getElementById("msg");
+  function active(){return document.querySelector("[data-panel]:not([hidden])");}
+
+  // Eine Lücke aufbauen: Auswahlknöpfe, richtige Wahl wird grün eingesetzt
+  function build(pick){
+    var opts=pick.getAttribute("data-o").split("|"), ok=+pick.getAttribute("data-k");
+    pick.className="pick"; pick.innerHTML="";
+    var fb=null;
+    opts.forEach(function(o,i){
+      var b=document.createElement("button"); b.type="button"; b.textContent=o;
+      b.onclick=function(){
+        if(i===ok){
+          var f=document.createElement("span"); f.className="filled"; f.textContent=o;
+          pick.replaceWith(f); if(fb)fb.remove(); update();
+        }else{
+          b.classList.remove("wrong"); void b.offsetWidth; b.classList.add("wrong");
+          if(!fb){fb=document.createElement("span");fb.className="fb";fb.textContent="Schau nochmal auf die Schachtel.";(pick.closest("li,details")||pick.parentNode).appendChild(fb);}
+        }
+      };
+      pick.appendChild(b);
+    });
+  }
+  // Satz für Satz: der nächste erscheint, wenn alle Lücken des aktuellen richtig sind
+  function update(){
+    var li=active().querySelectorAll("li"), shown=true, allDone=true;
+    for(var i=0;i<li.length;i++){
+      li[i].hidden=!shown;
+      var open=li[i].querySelectorAll(".pick").length>0;
+      li[i].classList.toggle("done",!open);
+      if(open){shown=false;allDone=false;}
+    }
+    msg.textContent=allDone?"Super, alle Lücken stimmen! Jetzt lies deinem Partner alle Sätze laut vor.":"";
+  }
+  var orig={};
+  panels.forEach(function(p){orig[p.getAttribute("data-panel")]=p.innerHTML;});
+  function reset(){
+    var p=active(); p.innerHTML=orig[p.getAttribute("data-panel")];
+    p.querySelectorAll(".pick").forEach(build); update();
+  }
+  panels.forEach(function(p){p.querySelectorAll(".pick").forEach(build);});
+  document.getElementById("reset").onclick=reset;
+  tabs.forEach(function(t){t.onclick=function(){
+    tabs.forEach(function(x){x.setAttribute("aria-selected",x===t);});
+    panels.forEach(function(p){p.hidden=p.getAttribute("data-panel")!==t.getAttribute("data-p");});
+    update();
+  };});
+  update();
+})();
+</script>
+</body>
+</html>
