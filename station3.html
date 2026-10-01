@@ -45,12 +45,13 @@
 <body>
 <header><h1>Flächenbild erstellen</h1></header>
 <main>
-  <div class="prompt">Schau auf deine Aufgabe: Was steht in der Klammer <b style="color:var(--blue-d)">vor dem Plus</b>, was steht <b style="color:var(--orange-d)">hinter dem Plus</b>? Stelle beides unten ein. Dann deckst du Schritt für Schritt auf.<br><span style="color:var(--muted)">Beispiel: Bei (3x + 2)² steht vorne die Zahl 3 mit dem Buchstaben x, hinten nur die Zahl 2.</span></div>
+  <div class="prompt">Schau auf deine Aufgabe: Was steht in der Klammer <b style="color:var(--blue-d)">vorne</b>, welches <b>Zeichen</b> steht in der Mitte (+ oder −), und was steht <b style="color:var(--orange-d)">hinten</b>? Stelle alles unten ein. Dann deckst du Schritt für Schritt auf.<br><span style="color:var(--muted)">Beispiel: Bei (3x − 2)² steht vorne die Zahl 3 mit dem Buchstaben x, in der Mitte ein Minus, hinten nur die Zahl 2.</span></div>
   <div class="wrap">
     <svg id="s" viewBox="0 0 600 600" aria-label="Flächenbild"></svg>
     <div class="panel">
-      <div class="sm" id="sm1"><h2 style="color:var(--blue-d)">Vor dem Plus</h2></div>
-      <div class="sm" id="sm2"><h2 style="color:var(--orange-d)">Hinter dem Plus</h2></div>
+      <div class="sm" id="sm1"><h2 style="color:var(--blue-d)">Vorne in der Klammer</h2></div>
+      <div class="sm" id="smop"><h2>Zeichen in der Mitte</h2><div class="chips" id="ops"></div></div>
+      <div class="sm" id="sm2"><h2 style="color:var(--orange-d)">Hinten in der Klammer</h2></div>
       <div class="term" id="term"></div>
       <div class="steps">
         <button class="btn" id="b1">① Malaufgaben zeigen</button>
@@ -68,7 +69,7 @@
 const NS="http://www.w3.org/2000/svg",svg=document.getElementById("s");
 const el=(t,a,p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);(p||svg).appendChild(e);return e;};
 const VARS=["","x","a","b"];
-const st={s1:{c:1,v:"x"},s2:{c:4,v:""},step:0};
+const st={s1:{c:1,v:"x"},s2:{c:4,v:""},op:"+",step:0};
 
 // ---------- kleine Algebra: Monome als {c, vars:{x:2,…}} ----------
 const mono=s=>({c:s.c,vars:s.v?{[s.v]:1}:{}});
@@ -77,9 +78,15 @@ const key=m=>Object.keys(m.vars).sort().map(k=>k+m.vars[k]).join("");
 const SUP={2:"²",3:"³"};
 function fmt(m){
   const vs=Object.keys(m.vars).sort().map(k=>k+(m.vars[k]>1?SUP[m.vars[k]]:"")).join("");
-  if(!vs)return String(m.c);
-  return (m.c===1?"":String(m.c))+vs;
+  const neg=m.c<0,c=Math.abs(m.c);
+  if(!vs)return (neg?"−":"")+c;
+  return (neg?"−":"")+(c===1?"":String(c))+vs;
 }
+// Glieder mit Vorzeichen aneinanderhängen: a² − 4x + 16
+const kette=(ts,f=(t,s)=>t)=>ts.map((m,i)=>{const t=fmt(m);const neg=t.startsWith("−");const body=neg?t.slice(1):t;
+  return (i===0?(neg?"−":""):(neg?" − ":" + "))+f(body,i);}).join("");
+// Faktor in der Malaufgabe: negative in Klammern
+const fak=m=>{const t=fmt(m);return t.startsWith("−")?"("+t+")":t;};
 const fmtSummand=s=>s.v?(s.c===1?s.v:s.c+s.v):String(s.c);
 
 // ---------- Eingabe: Zahl + Buchstabe vor bzw. hinter dem Plus (Alltagssprache, keine Fachwörter) ----------
@@ -106,22 +113,25 @@ const X=110,Y=90,S=440,A=S*0.6,B=S-A;
 const COL={a2:"var(--blue)",ab:"var(--green)",b2:"var(--orange)"};
 function draw(){
   svg.innerHTML="";
-  const s1=st.s1,s2=st.s2,t1=fmtSummand(s1),t2=fmtSummand(s2);
+  const s1=st.s1,s2=st.s2,t1=fmtSummand(s1),minus=st.op==="−";
+  const m1=mono(s1),m2=mono(s2);if(minus)m2.c=-m2.c;
+  const t2=minus?fmt(m2):fmtSummand(s2);
   const lab=(x,y,t,size=28)=>{const e=el("text",{x,y,"text-anchor":"middle","dominant-baseline":"central","font-size":size,"font-weight":700,fill:"var(--ink)"});e.textContent=t;};
-  lab(X+A/2,Y-40,t1);lab(X+A,Y-40,"+",24);lab(X+A+B/2,Y-40,t2);
-  lab(X-50,Y+A/2,t1);lab(X-50,Y+A,"+",24);lab(X-50,Y+A+B/2,t2);
-  const m1=mono(s1),m2=mono(s2);
+  // bei Minus: Seite mit Vorzeichen beschriften (Rechentabelle wie in der Vorstunde)
+  lab(X+A/2,Y-40,t1);if(!minus)lab(X+A,Y-40,"+",24);lab(X+A+B/2,Y-40,t2);
+  lab(X-50,Y+A/2,t1);if(!minus)lab(X-50,Y+A,"+",24);lab(X-50,Y+A+B/2,t2);
   const parts=[
-    [X,Y,A,A,"a2",t1,t1,mul(m1,m1)],
-    [X+A,Y,B,A,"ab",t1,t2,mul(m1,m2)],
-    [X,Y+A,A,B,"ab",t1,t2,mul(m1,m2)],
-    [X+A,Y+A,B,B,"b2",t2,t2,mul(m2,m2)]];
+    [X,Y,A,A,"a2",fak(m1),fak(m1),mul(m1,m1)],
+    [X+A,Y,B,A,"ab",fak(m1),fak(m2),mul(m1,m2)],
+    [X,Y+A,A,B,"ab",fak(m1),fak(m2),mul(m1,m2)],
+    [X+A,Y+A,B,B,"b2",fak(m2),fak(m2),mul(m2,m2)]];
   parts.forEach(([x,y,w,h,k,f1,f2,p])=>{
     el("rect",{x,y,width:w,height:h,fill:COL[k],stroke:"var(--ink)","stroke-width":3});
     if(st.step>=1){const t=el("text",{x:x+w/2,y:y+h/2-(st.step>=2?20:0),"text-anchor":"middle","dominant-baseline":"central","font-size":24,fill:"var(--ink)"});t.textContent=f1+" · "+f2;}
     if(st.step>=2){const t=el("text",{x:x+w/2,y:y+h/2+22,"text-anchor":"middle","dominant-baseline":"central","font-size":26,"font-weight":700,fill:"var(--ink)"});t.textContent="= "+fmt(p);}
   });
-  document.getElementById("term").textContent="("+t1+" + "+t2+")²";
+  const term="("+t1+(minus?" − "+fmtSummand(s2):" + "+t2)+")²";
+  document.getElementById("term").textContent=term;
   const sum=document.getElementById("sum");sum.innerHTML="";
   if(st.step>=3){
     const ps=parts.map(p=>p[7]);
@@ -129,10 +139,11 @@ function draw(){
     // gleichartige Glieder zusammenfassen (die zwei grünen Rechtecke sind gleich)
     const map=new Map();ps.forEach(p=>{const k=key(p);map.set(k,map.has(k)?{...p,c:map.get(k).c+p.c}:p);});
     const zus=[...map.values()];
-    let line1=`(${t1} + ${t2})² = ${c(fmt(ps[0]),"blue")} + ${c(fmt(ps[1]),"green")} + ${c(fmt(ps[2]),"green")} + ${c(fmt(ps[3]),"orange")}`;
+    const cols=["blue","green","green","orange"];
+    let line1=`${term} = `+kette(ps,(t,i)=>c(t,cols[i]));
     let line2;
-    if(zus.length===1&&key(zus[0])==="") line2=`= <b>${zus[0].c}</b>`;
-    else line2="= <b>"+zus.map(fmt).join(" + ")+"</b>";
+    if(zus.length===1&&key(zus[0])==="") line2=`= <b>${fmt(zus[0])}</b>`;
+    else line2="= <b>"+kette(zus.filter(z=>z.c!==0))+"</b>";
     sum.innerHTML=line1+"<br>"+line2;
   }
   document.getElementById("b1").disabled=st.step>=1;
@@ -144,7 +155,10 @@ document.getElementById("b1").onclick=()=>{st.step=1;draw();};
 document.getElementById("b2").onclick=()=>{st.step=2;draw();};
 document.getElementById("b3").onclick=()=>{st.step=3;draw();};
 document.getElementById("b0").onclick=reset;
-buildInput("sm1",st.s1);buildInput("sm2",st.s2);draw();
+buildInput("sm1",st.s1);buildInput("sm2",st.s2);
+(()=>{const box=document.getElementById("ops");["+","−"].forEach(o=>{const b=document.createElement("button");b.className="chip";b.textContent=o;b.setAttribute("aria-pressed",st.op===o);
+  b.onclick=()=>{st.op=o;box.querySelectorAll(".chip").forEach(x=>x.setAttribute("aria-pressed",x===b));reset();};box.appendChild(b);});})();
+draw();
 </script>
 </body>
 </html>
