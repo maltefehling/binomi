@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Von Zahlen zu Variablen: Minus</title>
-<!-- I.3b Zweite binomische Formel: 19² = (20 − 1)² und 48² = (50 − 2)² werden zu (a − b)². Vorlage: variablen.html. Früher: Die ausgefüllten Flächenbilder 52² und 43² werden zu einem Flächenbild mit a und b. Die Formel stellen die Schüler selbst auf. -->
+<!-- I.3b Zweite binomische Formel: (x − 2)² und (x − 5)² werden zu (a − b)². Vorlage: variablen.html. Früher: Die ausgefüllten Flächenbilder 52² und 43² werden zu einem Flächenbild mit a und b. Die Formel stellen die Schüler selbst auf. -->
 <style>
   :root{
     --blue:#bcd3f2; --green:#c6e8c0; --orange:#fbd9a8;
@@ -34,7 +34,7 @@
 <body>
 <header><h1>Von Zahlen zu Variablen</h1></header>
 <main>
-  <svg id="s" viewBox="0 0 1100 560" aria-label="Animation: Aus den Flächenbildern für 19² und 48² wird ein Flächenbild mit a und minus b"></svg>
+  <svg id="s" viewBox="0 0 1100 560" aria-label="Animation: Aus den Flächenbildern für (x − 2)² und (x − 5)² wird ein Flächenbild mit a und minus b"></svg>
   <div class="cap" id="cap"></div>
   <div class="bar">
     <button class="btn" id="again">Nochmal abspielen</button>
@@ -42,7 +42,7 @@
   </div>
   <div class="tip" id="tip" hidden>
     Die zwei grünen Felder sind <b>gleich</b>: jedes ist <b class="g">a · (−b) = −ab</b>.<br>
-    Zwei gleiche Felder: <b class="g">−ab − ab = −2ab</b> – so wie −20 − 20 = −40.<br>
+    Zwei gleiche Felder: <b class="g">−ab − ab = −2ab</b> – so wie −2x − 2x = −4x.<br>
     Das orange Feld ist <b>plus</b>: (−b) · (−b) = b², denn minus mal minus ist plus.
   </div>
 </main>
@@ -70,10 +70,10 @@ function kasten(g,cx,cy,w,txt){
 const sym=(g,x,y,t,size=FS)=>{const e=el("text",{x,y,"text-anchor":"middle","dominant-baseline":"central","font-size":size,fill:"var(--ink)"},g);e.textContent=t;return e;};
 
 // ein ausgefülltes Flächenbild für (a + b)² mit konkreten Zahlen
-function bild(X,Y,a,b,titel){
+function bild(X,Y,T,titel){ // T: Seiten und Felder als Text
   const g=el("g",{});
   const head=el("text",{x:X+S/2,y:Y-78,"text-anchor":"middle","font-size":24,"font-weight":700,fill:"var(--acc)"},g);head.textContent=titel;
-  const side={tA:kasten(g,X+A/2,Y-34,FW,zf(a)),tB:kasten(g,X+A+B/2,Y-34,FW,zf(b)),lA:kasten(g,X-44,Y+A/2,FW,zf(a)),lB:kasten(g,X-44,Y+A+B/2,FW,zf(b))};
+  const side={tA:kasten(g,X+A/2,Y-34,FW,T.a),tB:kasten(g,X+A+B/2,Y-34,FW,T.b),lA:kasten(g,X-44,Y+A/2,FW,T.a),lB:kasten(g,X-44,Y+A+B/2,FW,T.b)};
   // Minus gehört zur Zahl dahinter – deshalb kein Pluszeichen zwischen den Seitenstücken
   const teil=(x,y,w,h,col,f1,f2,p)=>{
     const r=el("rect",{x,y,width:w,height:h,fill:COLS[col],stroke:"var(--ink)","stroke-width":3},g);
@@ -83,10 +83,10 @@ function bild(X,Y,a,b,titel){
     return {r,t1,t2,tp};
   };
   const parts={
-    blue:  teil(X,  Y,  A,A,"blue",  kf(a),kf(a),zf(a*a)),
-    greenR:teil(X+A,Y,  B,A,"green", kf(a),kf(b),zf(a*b)),
-    greenU:teil(X,  Y+A,A,B,"green", kf(a),kf(b),zf(a*b)),
-    orange:teil(X+A,Y+A,B,B,"orange",kf(b),kf(b),zf(b*b))};
+    blue:  teil(X,  Y,  A,A,"blue",  T.a,T.a,T.aa),
+    greenR:teil(X+A,Y,  B,A,"green", T.a,"("+T.b+")",T.ab),
+    greenU:teil(X,  Y+A,A,B,"green", T.a,"("+T.b+")",T.ab),
+    orange:teil(X+A,Y+A,B,B,"orange","("+T.b+")","("+T.b+")",T.bb)};
   return {g,head,side,parts};
 }
 // Text in einem Kästchen austauschen (ausblenden – neu – einblenden)
@@ -102,18 +102,18 @@ async function play(){
   const my=++run; svg.innerHTML=""; tip.hidden=true; tipBtn.disabled=true;
   const say=t=>{if(my===run)cap.textContent=t;};
   const alive=()=>my===run;
-  const P=bild(110,120,20,-1,"19² = (20 − 1)²"), Q=bild(660,120,50,-2,"48² = (50 − 2)²");
+  const P=bild(110,120,{a:"x",b:"−2",aa:"x²",ab:"−2x",bb:"4"},"Partner A   (x − 2)²"), Q=bild(660,120,{a:"x",b:"−5",aa:"x²",ab:"−5x",bb:"25"},"Partner B   (x − 5)²");
   const both=f=>[f(P),f(Q)];
 
-  say("Das sind zwei ausgefüllte Flächenbilder: 19² und 48². Das Minus gehört zur Zahl dahinter.");
+  say("Das sind eure ausgefüllten Flächenbilder von Partner A und Partner B. Das Minus gehört zur Zahl dahinter.");
   await wait(3200); if(!alive())return;
 
-  say("Die Zahlen sind verschieden. Aber in jedem Bild sind die zwei grünen Felder gleich und negativ – und das orange Feld ist positiv.");
+  say("Die Zahlen sind verschieden. Aber in beiden Bildern sind die zwei grünen Felder gleich und minus – und das orange Feld ist plus.");
   const greens=[P.parts.greenR.r,P.parts.greenU.r,Q.parts.greenR.r,Q.parts.greenU.r];
   greens.forEach(r=>r.classList.add("pulse"));
   await wait(4200); greens.forEach(r=>r.classList.remove("pulse")); if(!alive())return;
 
-  say("Jetzt verschwinden die Zahlen außen: Die große Zahl heißt ab jetzt a, die kleine Zahl mit Minus heißt −b.");
+  say("Jetzt wird es allgemein: Aus x wird a, und aus der Zahl mit Minus wird −b.");
   await wait(1600); if(!alive())return;
   await swap([P.side.tA,P.side.lA,Q.side.tA,Q.side.lA],"a"); if(!alive())return;
   await swap([P.side.tB,P.side.lB,Q.side.tB,Q.side.lB],"−b"); if(!alive())return;
