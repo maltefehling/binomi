@@ -8,7 +8,7 @@
      wird zu (a + b) · (c + d). Aufbau wie variablen.html in der UB-Stunde. -->
 <style>
   :root{
-    --c1:#bcd3f2; --c2:#c6e8c0; --c4:#fbd9a8;
+    --c1:#bcd3f2; --c2:#c6e8c0; --c3:#e2d6f0; --c4:#fbd9a8;
     --ink:#1b2a3a; --muted:#5b6b7c; --acc:#1f4e79; --bg:#f4f7fb; --card:#ffffff; --line:#c9d6e5; --mark:#d64545;
   }
   *{box-sizing:border-box}
@@ -78,7 +78,7 @@ async function play(){
   const P={
     ac:teil(X,Y,Wc,Ha,"var(--c1)","3","4","12"),
     ad:teil(X+Wc,Y,Wd,Ha,"var(--c2)","3","6","18"),
-    bc:teil(X,Y+Ha,Wc,Hb,"var(--c2)","5","4","20"),
+    bc:teil(X,Y+Ha,Wc,Hb,"var(--c3)","5","4","20"),
     bd:teil(X+Wc,Y+Ha,Wd,Hb,"var(--c4)","5","6","30")};
 
   say("Das ist das Flächenbild der Pralinenschachtel: 3 + 5 Reihen, 4 + 6 Pralinen pro Reihe.");

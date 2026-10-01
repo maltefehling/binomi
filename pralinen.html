@@ -7,7 +7,7 @@
 <!-- Vorstunde I.2 Summen multiplizieren: Toms Weg (Länge · Breite) und Lenas Weg (Sorte für Sorte) an der Pralinenschachtel 8 × 10 -->
 <style>
   :root{
-    --c1:#2e5d9f; --c2:#3f8f3a; --c3:#3f8f3a; --c4:#c0700f;
+    --c1:#2e5d9f; --c2:#3f8f3a; --c3:#7b4fa0; --c4:#c0700f;
     --ink:#1b2a3a; --muted:#5b6b7c; --acc:#1f4e79; --bg:#f4f7fb; --card:#ffffff; --line:#c9d6e5; --mark:#d64545;
   }
   *{box-sizing:border-box}
@@ -26,7 +26,7 @@
   .side{flex:1 1 280px}
   .cap{min-height:90px;font-size:21px;font-weight:600;color:var(--acc);line-height:1.4;margin:4px 0 12px}
   .calc{font-size:23px;line-height:1.7;min-height:80px}
-  .calc .s1{color:var(--c1);font-weight:700}.calc .s2{color:var(--c2);font-weight:700}.calc .s4{color:var(--c4);font-weight:700}
+  .calc .s1{color:var(--c1);font-weight:700}.calc .s2{color:var(--c2);font-weight:700}.calc .s3{color:var(--c3);font-weight:700}.calc .s4{color:var(--c4);font-weight:700}
   footer{color:var(--muted);font-size:13px;text-align:center;padding:10px 0 18px}
   svg text{font-family:inherit}
 </style>
@@ -110,7 +110,7 @@ async function lena(){
 const BLOCKS=[
   {x:0,y:0,w:A,h:Cc,col:"var(--c1)",cls:"s1",t:"3 · 4 = 12",name:"Oben links"},
   {x:A,y:0,w:B,h:Cc,col:"var(--c2)",cls:"s2",t:"3 · 6 = 18",name:"Oben rechts"},
-  {x:0,y:Cc,w:A,h:D,col:"var(--c3)",cls:"s2",t:"5 · 4 = 20",name:"Unten links"},
+  {x:0,y:Cc,w:A,h:D,col:"var(--c3)",cls:"s3",t:"5 · 4 = 20",name:"Unten links"},
   {x:A,y:Cc,w:B,h:D,col:"var(--c4)",cls:"s4",t:"5 · 6 = 30",name:"Unten rechts"}];
 async function tom(){
   const my=++run;setBtn("bT");box();calc.innerHTML="";
@@ -138,7 +138,7 @@ async function vergleich(){
   const my=++run;setBtn("bV");box();
   cap.textContent="Beide Wege ergeben 80. Also gilt:";
   for(const b of BLOCKS){el("rect",{x:X0+b.x*C+3,y:Y0+b.y*C+3,width:b.w*C-6,height:b.h*C-6,rx:6,fill:"none",stroke:b.col,"stroke-width":5});}
-  calc.innerHTML=`<b>(3 + 5) · (4 + 6)</b><br>= <span class="s1">3 · 4</span> + <span class="s2">3 · 6</span> + <span class="s2">5 · 4</span> + <span class="s4">5 · 6</span><br>
+  calc.innerHTML=`<b>(3 + 5) · (4 + 6)</b><br>= <span class="s1">3 · 4</span> + <span class="s2">3 · 6</span> + <span class="s3">5 · 4</span> + <span class="s4">5 · 6</span><br>
     <span style="font-size:17px;color:var(--muted)">Tom: erst plus, dann mal · Lena: erst mal, dann plus</span>`;
 }
 document.getElementById("bL").onclick=lena;
