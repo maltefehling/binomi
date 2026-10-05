@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Von Zahlen zu Variablen: Minus</title>
+<!-- I.3b Zweite binomische Formel (neu ab 5.10.2026): Die Pralinenschachteln (10 − 1)² und (10 − 2)² werden zu (a − b)². Kopie von variablen2.html, das für die alte Fassung mit (x − 2)² und (x − 5)² bleibt. -->
+<style>
+  :root{
+    --blue:#bcd3f2; --green:#c6e8c0; --orange:#fbd9a8;
+    --ink:#1b2a3a; --muted:#5b6b7c; --acc:#1f4e79; --bg:#f4f7fb; --card:#ffffff; --line:#c9d6e5; --mark:#d64545;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;-webkit-user-select:none;user-select:none}
+  button{font:inherit;touch-action:manipulation}
+  header{padding:12px 16px;background:var(--acc);color:#fff}
+  header h1{font-size:20px;margin:0}
+  main{padding:12px 16px 20px;max-width:1100px;margin:0 auto}
+  svg{width:100%;height:auto;display:block;background:var(--card);border:1px solid var(--line);border-radius:12px}
+  .cap{min-height:66px;font-size:22px;font-weight:600;color:var(--acc);margin:14px 0 10px;line-height:1.4}
+  .bar{display:flex;gap:10px;flex-wrap:wrap}
+  .btn{border:1px solid var(--acc);background:var(--acc);color:#fff;border-radius:10px;padding:10px 18px;font-size:17px;font-weight:600;min-height:44px}
+  .btn.ghost{background:#fff;color:var(--acc)}
+  .btn[disabled]{opacity:.4}
+  .tip{margin-top:14px;padding:12px 16px;border-radius:10px;background:#fdf6ea;border:1px solid #fbd9a8;font-size:21px;line-height:1.5}
+  .tip b.g{color:#3f8f3a}
+  footer{color:var(--muted);font-size:13px;text-align:center;padding:10px 0 18px}
+  svg text{font-family:inherit}
+  .pulse{animation:pulse 1s ease-in-out infinite}
+  @keyframes pulse{0%,100%{stroke-width:3}50%{stroke-width:9}}
+</style>
+</head>
+<body>
+<header><h1>Von Zahlen zu Variablen</h1></header>
+<main>
+  <svg id="s" viewBox="0 0 1100 560" aria-label="Animation: Aus den Flächenbildern für (10 − 1)² und (10 − 2)² wird ein Flächenbild mit a und minus b"></svg>
+  <div class="cap" id="cap"></div>
+  <div class="bar">
+    <button class="btn" id="again">Nochmal abspielen</button>
+    <button class="btn ghost" id="tipBtn" disabled>Tipp: die grünen Felder</button>
+  </div>
+  <div class="tip" id="tip" hidden>
+    Die zwei grünen Felder sind <b>gleich</b>: jedes ist <b class="g">a · (−b) = −ab</b>.<br>
+    Zwei gleiche Felder: <b class="g">−ab − ab = −2ab</b> – so wie −20 − 20 = −40.<br>
+    Das orange Feld ist <b>plus</b>: (−b) · (−b) = b², denn minus mal minus ist plus.
+  </div>
+</main>
+<footer>Fehling · Zweite binomische Formel</footer>
+<script>
+"use strict";
+const NS="http://www.w3.org/2000/svg",svg=document.getElementById("s"),cap=document.getElementById("cap");
+const tipBtn=document.getElementById("tipBtn"),tip=document.getElementById("tip");
+const el=(t,a,p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);(p||svg).appendChild(e);return e;};
+const SLOW=1.8; // alle Pausen und Übergänge langsamer (Rückmeldung: lief zu schnell)
+const tween=(ms,f)=>new Promise(r=>{ms*=SLOW;const t0=performance.now();const s=t=>{const k=Math.min(1,(t-t0)/ms),e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;f(e);k<1?requestAnimationFrame(s):r();};requestAnimationFrame(s);});
+const wait=ms=>new Promise(r=>setTimeout(r,ms*SLOW));
+let run=0;
+
+// Geometrie wie im Skript (Verhältnis 3 : 2), zwei Bilder nebeneinander
+const S=330,A=S*0.6,B=S-A,FW=54,FH=36,RW=84,FS=20;
+const zf=n=>n<0?"−"+(-n):String(n), kf=n=>n<0?"(−"+(-n)+")":String(n); // Zahl mit Vorzeichen / als Faktor
+const COLS={blue:"var(--blue)",green:"var(--green)",orange:"var(--orange)"};
+
+function kasten(g,cx,cy,w,txt){
+  el("rect",{x:cx-w/2,y:cy-FH/2,width:w,height:FH,rx:4,fill:"#fff",stroke:"#6b7785","stroke-width":1.5},g);
+  const t=el("text",{x:cx,y:cy+1,"text-anchor":"middle","dominant-baseline":"central","font-size":FS,"font-weight":600,fill:"var(--ink)"},g);
+  t.textContent=txt;return t;
+}
+const sym=(g,x,y,t,size=FS)=>{const e=el("text",{x,y,"text-anchor":"middle","dominant-baseline":"central","font-size":size,fill:"var(--ink)"},g);e.textContent=t;return e;};
+
+// ein ausgefülltes Flächenbild für (a + b)² mit konkreten Zahlen
+function bild(X,Y,T,titel){ // T: Seiten und Felder als Text
+  const g=el("g",{});
+  const head=el("text",{x:X+S/2,y:Y-78,"text-anchor":"middle","font-size":24,"font-weight":700,fill:"var(--acc)"},g);head.textContent=titel;
+  const side={tA:kasten(g,X+A/2,Y-34,FW,T.a),tB:kasten(g,X+A+B/2,Y-34,FW,T.b),lA:kasten(g,X-44,Y+A/2,FW,T.a),lB:kasten(g,X-44,Y+A+B/2,FW,T.b)};
+  // Minus gehört zur Zahl dahinter – deshalb kein Pluszeichen zwischen den Seitenstücken
+  const teil=(x,y,w,h,col,f1,f2,p)=>{
+    const r=el("rect",{x,y,width:w,height:h,fill:COLS[col],stroke:"var(--ink)","stroke-width":3},g);
+    const cx=x+w/2,cy=y+h/2;
+    const t1=kasten(g,cx-36,cy-24,FW,f1);sym(g,cx,cy-24,"·",24);const t2=kasten(g,cx+36,cy-24,FW,f2);
+    sym(g,cx-54,cy+22,"=");const tp=kasten(g,cx+12,cy+22,RW,p);
+    return {r,t1,t2,tp};
+  };
+  const parts={
+    blue:  teil(X,  Y,  A,A,"blue",  T.a,T.a,T.aa),
+    greenR:teil(X+A,Y,  B,A,"green", T.a,"("+T.b+")",T.ab),
+    greenU:teil(X,  Y+A,A,B,"green", T.a,"("+T.b+")",T.ab),
+    orange:teil(X+A,Y+A,B,B,"orange","("+T.b+")","("+T.b+")",T.bb)};
+  return {g,head,side,parts};
+}
+// Text in einem Kästchen austauschen (ausblenden – neu – einblenden)
+async function swapPairs(pairs,ms=450){
+  await tween(ms,e=>pairs.forEach(([t])=>t.setAttribute("opacity",1-e)));
+  pairs.forEach(([t,txt])=>{t.textContent=txt;t.setAttribute("fill","var(--mark)");});
+  await tween(ms,e=>pairs.forEach(([t])=>t.setAttribute("opacity",e)));
+  await wait(500);pairs.forEach(([t])=>t.setAttribute("fill","var(--ink)"));
+}
+const swap=(list,txt,ms)=>swapPairs(list.map(t=>[t,txt]),ms);
+
+async function play(){
+  const my=++run; svg.innerHTML=""; tip.hidden=true; tipBtn.disabled=true;
+  const say=t=>{if(my===run)cap.textContent=t;};
+  const alive=()=>my===run;
+  const P=bild(110,120,{a:"10",b:"−1",aa:"100",ab:"−10",bb:"1"},"Tom   (10 − 1)²"), Q=bild(660,120,{a:"10",b:"−2",aa:"100",ab:"−20",bb:"4"},"Lena   (10 − 2)²");
+  const both=f=>[f(P),f(Q)];
+
+  say("Das sind die Flächenbilder von Toms und Lenas Schachtel. Das Minus gehört zur Zahl dahinter.");
+  await wait(3200); if(!alive())return;
+
+  say("Die Zahlen sind verschieden. Aber in beiden Bildern sind die zwei grünen Streifen gleich und minus – und die orange Ecke ist plus.");
+  const greens=[P.parts.greenR.r,P.parts.greenU.r,Q.parts.greenR.r,Q.parts.greenU.r];
+  greens.forEach(r=>r.classList.add("pulse"));
+  await wait(4200); greens.forEach(r=>r.classList.remove("pulse")); if(!alive())return;
+
+  say("Jetzt wird es allgemein: Aus der 10 wird a, und aus der Zahl mit Minus wird −b.");
+  await wait(1600); if(!alive())return;
+  await swap([P.side.tA,P.side.lA,Q.side.tA,Q.side.lA],"a"); if(!alive())return;
+  await swap([P.side.tB,P.side.lB,Q.side.tB,Q.side.lB],"−b"); if(!alive())return;
+  await wait(1400); if(!alive())return;
+
+  const schritte=[
+    ["blue",  "a","a","a²","Blaues Feld: a · a = a²"],
+    ["greenR","a","(−b)","−ab","Grünes Feld: a · (−b) = −ab"],
+    ["greenU","a","(−b)","−ab","Das andere grüne Feld ist genauso: a · (−b) = −ab"],
+    ["orange","(−b)","(−b)","b²","Oranges Feld: (−b) · (−b) = b² – die Ecke wurde doppelt abgezogen, darum ist sie plus."]];
+  for(const [k,f1,f2,p,txt] of schritte){
+    say(txt);
+    const ps=both(X=>X.parts[k]);
+    ps.forEach(x=>x.r.classList.add("pulse"));
+    await swapPairs(ps.flatMap(x=>[[x.t1,f1],[x.t2,f2]])); if(!alive())return;
+    await wait(500); if(!alive())return;
+    await swap(ps.map(x=>x.tp),p); if(!alive())return;
+    await wait(1500); ps.forEach(x=>x.r.classList.remove("pulse")); if(!alive())return;
+  }
+
+  say("Jetzt sehen beide Flächenbilder gleich aus! Mit a und b passt das Bild zu jeder Schachtel.");
+  await tween(500,e=>[P.head,Q.head].forEach(h=>h.setAttribute("opacity",1-e)));
+  [P.head,Q.head].forEach(h=>h.textContent="(a − b)²");
+  await tween(500,e=>[P.head,Q.head].forEach(h=>h.setAttribute("opacity",e)));
+  await wait(3500); if(!alive())return;
+
+  say("Vergleiche mit deinem Flächenbild im Skript. Hast du die zwei grünen Felder zusammengefasst – und auf die Vorzeichen geachtet?");
+  greens.forEach(r=>r.classList.add("pulse"));
+  tipBtn.disabled=false;
+}
+document.getElementById("again").onclick=play;
+tipBtn.onclick=()=>{tip.hidden=!tip.hidden;};
+play();
+</script>
+</body>
+</html>
