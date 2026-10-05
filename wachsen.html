@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Die Schachtel wächst</title>
-<!-- I.2 Summen multiplizieren, Kontrolle zum Einstieg: Die Schachtel aus I.1, 3 · (4 + 6), bekommt unten 5 Reihen
+<!-- I.2 Summen multiplizieren, Kontrolle zum Einstieg: Die Schachtel aus I.1a, 3 · (4 + 6), bekommt unten 5 Reihen
      mit zwei neuen Sorten. Dann wird sie zum Flächenbild mit vier Feldern: (3 + 5) · (4 + 6) = 12 + 18 + 20 + 30 = 80. -->
 <style>
   :root{
@@ -62,7 +62,7 @@ function praline(g,r,c,sorte){
 async function play(){
   const my=++run;const alive=()=>my===run;const say=t=>{if(alive())cap.textContent=t;};
   svg.innerHTML="";calc.innerHTML="";
-  // 1. die Schachtel aus I.1
+  // 1. die Schachtel aus I.1a
   const rahmen=el("rect",{x:X0-6,y:Y0-6,width:(A+B)*C+12,height:R1*C+12,rx:8,fill:"#f6efe6",stroke:"#8a6a4a","stroke-width":3});
   const oben=el("g",{});for(let r=0;r<R1;r++)for(let c=0;c<A+B;c++)praline(oben,r,c,c<A?"truffel":"herz");
   const lab=[txt(X0+A*C/2,Y0-30,"4"),txt(X0+A*C,Y0-30,"+",{size:18}),txt(X0+(A+B/2)*C,Y0-30,"6"),txt(X0-30,Y0+R1*C/2,"3")];
