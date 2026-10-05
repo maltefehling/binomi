@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Von Zahlen zu Variablen</title>
-<!-- I.1 Ausmultiplizieren: Kontrolle zur Verallgemeinerung. Das Flächenbild der Pralinenschachtel 3 · (4 + 5)
+<!-- I.1 Ausmultiplizieren: Kontrolle zur Verallgemeinerung. Das Flächenbild der Pralinenschachtel 3 · (4 + 6)
      wird zu a · (b + c). Aufbau wie variablen-vorstunde.html (I.2). -->
 <style>
   :root{
@@ -48,8 +48,8 @@ const tween=(ms,f)=>new Promise(r=>{ms*=SLOW;const t0=performance.now();const s=
 const wait=ms=>new Promise(r=>setTimeout(r,ms*SLOW));
 let run=0;
 
-// Schachtel 9 lang (4 + 5), 3 hoch – wie im Skript
-const X=110,Y=130,U=56,Wc=4*U,Wd=5*U,Ha=3*U,FW=50,FH=36,RW=86,FS=21;
+// Schachtel 10 lang (4 + 6), 3 hoch – wie im Skript
+const X=110,Y=130,U=50,Wc=4*U,Wd=6*U,Ha=3*U,FW=50,FH=36,RW=86,FS=21;
 function kasten(cx,cy,w,txt){
   el("rect",{x:cx-w/2,y:cy-FH/2,width:w,height:FH,rx:4,fill:"#fff",stroke:"#6b7785","stroke-width":1.5});
   const t=el("text",{x:cx,y:cy+1,"text-anchor":"middle","dominant-baseline":"central","font-size":FS,"font-weight":600,fill:"var(--ink)"});t.textContent=txt;return t;
@@ -72,14 +72,14 @@ function teil(x,y,w,h,col,f1,f2,p){
 async function play(){
   const my=++run;svg.innerHTML="";
   const say=t=>{if(my===run)cap.textContent=t;};const alive=()=>my===run;
-  const head=el("text",{x:X+(Wc+Wd)/2,y:40,"text-anchor":"middle","font-size":26,"font-weight":700,fill:"var(--acc)"});head.textContent="3 · (4 + 5)";
-  const top={b:kasten(X+Wc/2,Y-32,FW,"4"),c:kasten(X+Wc+Wd/2,Y-32,FW,"5")};sym(X+Wc,Y-32,"+");
+  const head=el("text",{x:X+(Wc+Wd)/2,y:40,"text-anchor":"middle","font-size":26,"font-weight":700,fill:"var(--acc)"});head.textContent="3 · (4 + 6)";
+  const top={b:kasten(X+Wc/2,Y-32,FW,"4"),c:kasten(X+Wc+Wd/2,Y-32,FW,"6")};sym(X+Wc,Y-32,"+");
   const left={a:kasten(X-44,Y+Ha/2,FW,"3")};
   const P={
     ab:teil(X,Y,Wc,Ha,"var(--c1)","3","4","12"),
-    ac:teil(X+Wc,Y,Wd,Ha,"var(--c2)","3","5","15")};
+    ac:teil(X+Wc,Y,Wd,Ha,"var(--c2)","3","6","18")};
 
-  say("Das ist das Flächenbild der Pralinenschachtel: 3 Reihen, 4 + 5 Pralinen pro Reihe.");
+  say("Das ist das Flächenbild der Pralinenschachtel: 3 Reihen, 4 + 6 Pralinen pro Reihe.");
   await wait(3200);if(!alive())return;
   say("Andere Schachteln haben andere Zahlen. Es bleiben aber immer zwei Sorten – zwei Felder.");
   await wait(3200);if(!alive())return;

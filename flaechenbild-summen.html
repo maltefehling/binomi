@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Flächenbild erstellen</title>
+<!-- I.2 Summen multiplizieren, Hilfe zur Übung: beide Klammern einstellen (je zwei Teile mit Vorzeichen),
+     dann schrittweise aufdecken: Malaufgaben → Ergebnisse → zusammenfassen. Vier Felder: blau, grün, lila, orange (wie in I.2). -->
+<style>
+  :root{
+    --blue:#bcd3f2; --green:#c6e8c0; --lila:#e2d6f0; --orange:#fbd9a8; --blue-d:#2e5d9f; --green-d:#3f8f3a; --lila-d:#7b4fa0; --orange-d:#c0700f;
+    --ink:#1b2a3a; --muted:#5b6b7c; --acc:#1f4e79; --bg:#f4f7fb; --card:#ffffff; --line:#c9d6e5;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;-webkit-user-select:none;user-select:none}
+  button,input{font:inherit;touch-action:manipulation}
+  header{padding:12px 16px;background:var(--acc);color:#fff}
+  header h1{font-size:20px;margin:0}
+  main{padding:12px 16px 20px;max-width:1100px;margin:0 auto}
+  .prompt{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 16px;font-size:18px;line-height:1.45;margin-bottom:12px}
+  .wrap{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start}
+  .left{flex:1 1 480px;max-width:620px}
+  .panel{flex:1 1 320px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+  svg{width:100%;height:auto;display:block;background:var(--card);border:1px solid var(--line);border-radius:12px}
+  .sm{margin-bottom:14px}
+  .sm h2{font-size:17px;margin:0 0 8px;color:var(--acc)}
+  .row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+  .lab{font-size:15px;color:var(--muted);width:78px}
+  .num{display:flex;align-items:center;gap:6px}
+  .num button{width:44px;height:44px;border-radius:10px;border:1px solid var(--acc);background:#fff;color:var(--acc);font-size:22px;font-weight:700}
+  .num input{width:70px;height:44px;text-align:center;font-size:22px;font-weight:700;border:1px solid var(--line);border-radius:10px}
+  .chips{display:flex;gap:6px;flex-wrap:wrap}
+  .chip{min-width:48px;height:44px;border-radius:10px;border:1px solid var(--line);background:#fff;font-size:20px;font-weight:700;color:var(--ink);padding:0 10px}
+  .chip[aria-pressed="true"]{background:var(--acc);color:#fff;border-color:var(--acc)}
+  .term{font-size:28px;font-weight:700;color:var(--acc);margin:12px 0}
+  .steps{display:flex;flex-direction:column;gap:8px}
+  .btn{border:1px solid var(--acc);background:var(--acc);color:#fff;border-radius:10px;padding:10px 16px;font-size:17px;font-weight:600;min-height:46px;text-align:left}
+  .btn[disabled]{opacity:.35}
+  .btn.ghost{background:#fff;color:var(--acc)}
+  .sum{font-size:24px;line-height:1.6;margin-top:14px;min-height:40px}
+  footer{color:var(--muted);font-size:13px;text-align:center;padding:10px 0 18px}
+  svg text{font-family:inherit}
+</style>
+</head>
+<body>
+<header><h1>Flächenbild erstellen</h1></header>
+<main>
+  <div class="prompt">Schau auf deine Aufgabe und stelle rechts beide Klammern ein: Was steht <b>vorne</b>, welches <b>Zeichen</b> steht in der Mitte, und was steht <b>hinten</b>? Dann deckst du Schritt für Schritt auf.<br><span style="color:var(--muted)">Beispiel: Bei (x − 2) · (y + 5) steht in der ersten Klammer vorne x, dann ein Minus und hinten die Zahl 2.</span></div>
+  <div class="wrap">
+    <div class="left">
+      <svg id="s" viewBox="0 0 600 500" aria-label="Flächenbild mit vier Feldern"></svg>
+      <div class="term" id="term"></div>
+      <div class="sum" id="sum"></div>
+    </div>
+    <div class="panel">
+      <div class="sm"><h2>Erste Klammer (links)</h2><div id="k1"></div></div>
+      <div class="sm"><h2>Zweite Klammer (oben)</h2><div id="k2"></div></div>
+      <div class="steps">
+        <button class="btn" id="b1">① Malaufgaben zeigen</button>
+        <button class="btn" id="b2" disabled>② Ergebnisse der Malaufgaben zeigen</button>
+        <button class="btn" id="b3" disabled>③ Zusammenzählen und zusammenfassen</button>
+        <button class="btn ghost" id="b0">Von vorn</button>
+      </div>
+    </div>
+  </div>
+</main>
+<footer>Fehling · Summen multiplizieren</footer>
+<script>
+"use strict";
+const NS="http://www.w3.org/2000/svg",svg=document.getElementById("s");
+const el=(t,a,p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);(p||svg).appendChild(e);return e;};
+const VARS=["","x","a","b","y"];
+// Startwerte: (x − 2) · (y + 5) wie Aufgabe 1
+const st={k:[{v:{neg:false,c:1,v:"x"},op:"−",h:{c:2,v:""}},{v:{neg:false,c:1,v:"y"},op:"+",h:{c:5,v:""}}],step:0};
+
+// ---------- kleine Algebra ----------
+const mono=s=>({c:(s.neg?-1:1)*s.c,vars:s.v?{[s.v]:1}:{}});
+const mul=(p,q)=>{const v={...p.vars};for(const k in q.vars)v[k]=(v[k]||0)+q.vars[k];return {c:p.c*q.c,vars:v};};
+function fmt(m){
+  const vs=Object.keys(m.vars).sort().map(k=>k+(m.vars[k]===2?"²":m.vars[k]>2?m.vars[k]:"")).join("");
+  const neg=m.c<0,c=Math.abs(m.c);
+  if(!vs)return (neg?"−":"")+c;
+  return (neg?"−":"")+(c===1?"":String(c))+vs;
+}
+const fak=m=>{const t=fmt(m);return t.startsWith("−")?"("+t+")":t;};
+const kette=(ts,f=t=>t)=>ts.map((m,i)=>{const t=fmt(m);const neg=t.startsWith("−");const body=neg?t.slice(1):t;
+  return (i===0?(neg?"−":""):(neg?" − ":" + "))+f(body,i);}).join("");
+
+// ---------- Eingabe: je Klammer vorne (Vorzeichen, Zahl, Buchstabe), Zeichen, hinten (Zahl, Buchstabe) ----------
+function chipRow(parent,label,opts,get,set){
+  const r=document.createElement("div");r.className="row";
+  const l=document.createElement("span");l.className="lab";l.textContent=label;r.appendChild(l);
+  const ch=document.createElement("div");ch.className="chips";
+  opts.forEach(([t,v])=>{const b=document.createElement("button");b.className="chip";b.textContent=t;b.setAttribute("aria-pressed",get()===v);
+    b.onclick=()=>{set(v);ch.querySelectorAll(".chip").forEach(x=>x.setAttribute("aria-pressed",x===b));reset();};ch.appendChild(b);});
+  r.appendChild(ch);parent.appendChild(r);
+}
+function numRow(parent,label,s){
+  const row=document.createElement("div");row.className="row";
+  const l1=document.createElement("span");l1.className="lab";l1.textContent=label;
+  const num=document.createElement("div");num.className="num";
+  const minus=document.createElement("button");minus.textContent="−";minus.setAttribute("aria-label","kleiner");
+  const inp=document.createElement("input");inp.type="number";inp.inputMode="numeric";inp.min=1;inp.max=99;inp.value=s.c;inp.setAttribute("aria-label","Zahl");
+  const plus=document.createElement("button");plus.textContent="+";plus.setAttribute("aria-label","größer");
+  const set=c=>{s.c=Math.max(1,Math.min(99,c||1));inp.value=s.c;reset();};
+  minus.onclick=()=>set(s.c-1);plus.onclick=()=>set(s.c+1);inp.onchange=()=>set(parseInt(inp.value,10));
+  num.append(minus,inp,plus);row.append(l1,num);parent.appendChild(row);
+}
+function buildK(id,k){
+  const box=document.getElementById(id);
+  chipRow(box,"vorne ±",[["+",false],["−",true]],()=>k.v.neg,v=>k.v.neg=v);
+  numRow(box,"vorne Zahl",k.v);
+  chipRow(box,"Buchstabe",VARS.map(v=>[v||"keiner",v]),()=>k.v.v,v=>k.v.v=v);
+  chipRow(box,"Zeichen",[["+","+"],["−","−"]],()=>k.op,v=>k.op=v);
+  numRow(box,"hinten Zahl",k.h);
+  chipRow(box,"Buchstabe",VARS.map(v=>[v||"keiner",v]),()=>k.h.v,v=>k.h.v=v);
+}
+
+// ---------- Flächenbild: zwei Zeilen, zwei Spalten ----------
+const X=100,Y=80,W1=230,W2=230,H1=180,H2=180;
+const key=m=>Object.keys(m.vars).sort().map(k=>k+m.vars[k]).join("");
+function teile(k){return [mono(k.v),mono({neg:k.op==="−",c:k.h.c,v:k.h.v})];}
+const klammer=k=>"("+fmt(mono(k.v))+(k.op==="−"?" − ":" + ")+fmt({c:k.h.c,vars:k.h.v?{[k.h.v]:1}:{}})+")";
+function draw(){
+  svg.innerHTML="";
+  const [l1,l2]=teile(st.k[0]),[o1,o2]=teile(st.k[1]);
+  const lab=(x,y,t,size=30)=>{const e=el("text",{x,y,"text-anchor":"middle","dominant-baseline":"central","font-size":size,"font-weight":700,fill:"var(--ink)"});e.textContent=t;};
+  lab(X+W1/2,Y-38,fmt(o1));lab(X+W1+W2/2,Y-38,fmt(o2));if(o2.c>0)lab(X+W1,Y-38,"+",24);
+  lab(X-50,Y+H1/2,fmt(l1));lab(X-50,Y+H1+H2/2,fmt(l2));if(l2.c>0)lab(X-50,Y+H1,"+",24);
+  const parts=[[X,Y,W1,H1,"blue",l1,o1],[X+W1,Y,W2,H1,"green",l1,o2],[X,Y+H1,W1,H2,"lila",l2,o1],[X+W1,Y+H1,W2,H2,"orange",l2,o2]];
+  parts.forEach(([x,y,w,h,col,a,b])=>{
+    el("rect",{x,y,width:w,height:h,fill:`var(--${col})`,stroke:"var(--ink)","stroke-width":3});
+    if(st.step>=1){const t=el("text",{x:x+w/2,y:y+h/2-(st.step>=2?24:0),"text-anchor":"middle","dominant-baseline":"central","font-size":26,fill:"var(--ink)"});t.textContent=fak(a)+" · "+fak(b);}
+    if(st.step>=2){const t=el("text",{x:x+w/2,y:y+h/2+24,"text-anchor":"middle","dominant-baseline":"central","font-size":30,"font-weight":700,fill:"var(--ink)"});t.textContent="= "+fmt(mul(a,b));}
+  });
+  const term=klammer(st.k[0])+" · "+klammer(st.k[1]);
+  document.getElementById("term").textContent=term;
+  const sum=document.getElementById("sum");sum.innerHTML="";
+  if(st.step>=3){
+    const ps=parts.map(p=>mul(p[5],p[6])),cols=["blue","green","lila","orange"];
+    const map=new Map();ps.forEach(p=>{const k=key(p);map.set(k,map.has(k)?{...p,c:map.get(k).c+p.c}:p);});
+    const zus=[...map.values()].filter(z=>z.c!==0);
+    sum.innerHTML="= "+kette(ps,(t,i)=>`<b style="color:var(--${cols[i]}-d)">${t}</b>`)+(zus.length<4?"<br>= <b>"+(zus.length?kette(zus):"0")+"</b>":"");
+  }
+  document.getElementById("b1").disabled=st.step>=1;
+  document.getElementById("b2").disabled=st.step!==1;
+  document.getElementById("b3").disabled=st.step!==2;
+}
+function reset(){st.step=0;draw();}
+document.getElementById("b1").onclick=()=>{st.step=1;draw();};
+document.getElementById("b2").onclick=()=>{st.step=2;draw();};
+document.getElementById("b3").onclick=()=>{st.step=3;draw();};
+document.getElementById("b0").onclick=reset;
+buildK("k1",st.k[0]);buildK("k2",st.k[1]);
+draw();
+</script>
+</body>
+</html>
