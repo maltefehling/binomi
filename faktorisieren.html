@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Wie findet man die Klammer?</title>
+<!-- I.4 Faktorisieren mit binomischen Formeln: Flächenbild rückwärts wie in I.1b. Die Teile des Terms wandern ins Flächenbild:
+     a² ins blaue Feld (Seite a), b² ins orange Feld (Seite b), das Mittelstück teilt sich auf zwei grüne Felder, Probe a · b.
+     Drei Beispiele: x² + 6x + 9 · x² − 10x + 25 · x² − 49 (grüne Felder heben sich auf). -->
+<style>
+  :root{
+    --f1:#bcd3f2; --f2:#c6e8c0; --f3:#fbd9a8; --c1:#2e5d9f; --c2:#3f8f3a; --c3:#c0700f; --hl:#d64545;
+    --ink:#1b2a3a; --muted:#5b6b7c; --acc:#1f4e79; --bg:#f4f7fb; --card:#ffffff; --line:#c9d6e5;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;-webkit-user-select:none;user-select:none}
+  button{font:inherit;touch-action:manipulation}
+  header{padding:12px 16px;background:var(--acc);color:#fff}
+  header h1{font-size:20px;margin:0}
+  main{padding:12px 16px 20px;max-width:1100px;margin:0 auto}
+  .bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+  .btn{border:1px solid var(--acc);background:#fff;color:var(--acc);border-radius:10px;padding:10px 16px;font-size:17px;font-weight:700;min-height:46px}
+  .btn[aria-pressed="true"]{background:var(--acc);color:#fff}
+  .wrap{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start}
+  svg{flex:1 1 520px;max-width:640px;width:100%;height:auto;background:var(--card);border:1px solid var(--line);border-radius:12px}
+  .side{flex:1 1 280px}
+  .cap{min-height:110px;font-size:21px;font-weight:600;color:var(--acc);line-height:1.4;margin:4px 0 12px}
+  .calc{font-size:25px;line-height:1.7;min-height:80px}
+  .calc .ok{color:var(--c2);font-weight:700}
+  footer{color:var(--muted);font-size:13px;text-align:center;padding:10px 0 18px}
+  svg text{font-family:inherit}
+</style>
+</head>
+<body>
+<header><h1>Wie findet man die Klammer?</h1></header>
+<main>
+  <div class="bar" id="bar"></div>
+  <div class="wrap">
+    <svg id="s" viewBox="0 0 600 440" aria-label="Flächenbild: Aus den Teilen eines Terms werden die Seiten gesucht"></svg>
+    <div class="side">
+      <div class="cap" id="cap"></div>
+      <div class="calc" id="calc"></div>
+    </div>
+  </div>
+</main>
+<footer>Fehling · Faktorisieren mit binomischen Formeln</footer>
+<script>
+"use strict";
+const NS="http://www.w3.org/2000/svg",svg=document.getElementById("s"),cap=document.getElementById("cap"),calc=document.getElementById("calc");
+const el=(t,a,p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);(p||svg).appendChild(e);return e;};
+const SLOW=1.5;
+const ease=k=>k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;
+const tween=(ms,f)=>new Promise(r=>{ms*=SLOW;const t0=performance.now();const s=t=>{const k=Math.min(1,(t-t0)/ms);f(ease(k));k<1?requestAnimationFrame(s):r();};requestAnimationFrame(s);});
+const wait=ms=>new Promise(r=>setTimeout(r,ms*SLOW));
+let run=0;
+const BSP=[
+ {name:"x² + 6x + 9",parts:["x²","+ 6x","+ 9"],top:["x","3"],left:["x","3"],plus:true,g:["3x","3x"],orange:"9",
+  sq2:"9 ist auch ein Quadrat: 3 · 3. Die zweite Seite ist 3.",
+  mid:"Das Mittelstück 6x teilt sich auf zwei gleiche grüne Felder: 6x = 3x + 3x.",
+  probe:"x · 3 = 3x",res:"(x + 3)²"},
+ {name:"x² − 10x + 25",parts:["x²","− 10x","+ 25"],top:["x","−5"],left:["x","−5"],plus:false,g:["−5x","−5x"],orange:"25",
+  sq2:"25 = 5 · 5. Das Mittelstück ist minus – also nehmen wir −5: (−5) · (−5) = 25.",
+  mid:"Das Mittelstück −10x teilt sich auf zwei gleiche grüne Felder: −10x = −5x − 5x.",
+  probe:"x · (−5) = −5x",res:"(x − 5)²"},
+ {name:"x² − 49",parts:["x²","− 49"],top:["x","−7"],left:["x","7"],plus:false,g:["−7x","7x"],orange:"−49",
+  sq2:"49 = 7 · 7. Weil −49 minus ist, braucht man einmal 7 und einmal −7: 7 · (−7) = −49.",
+  mid:"Es gibt kein Mittelstück. Dann müssen sich die grünen Felder aufheben: −7x + 7x = 0.",
+  probe:"−7x + 7x = 0",res:"(x + 7) · (x − 7)"}];
+
+const X=170,Y=130,A=150,B=100;
+const F={blue:[X,Y,A,A],g1:[X+A,Y,B,A],g2:[X,Y+A,A,B],orange:[X+A,Y+A,B,B]};
+const ctr=k=>[F[k][0]+F[k][2]/2,F[k][1]+F[k][3]/2];
+const txt=(x,y,t,o={})=>{const e=el("text",{x,y,"text-anchor":"middle","dominant-baseline":"central","font-size":o.size||26,"font-weight":o.w||700,fill:o.fill||"var(--ink)",opacity:o.op??1});e.textContent=t;return e;};
+const fade=(els,to,ms=450)=>{const f=els.map(e=>+(e.getAttribute("opacity")??1));return tween(ms,k=>els.forEach((e,i)=>e.setAttribute("opacity",f[i]+(to-f[i])*k)));};
+const move=(e,x1,y1,ms=900)=>{const x0=+e.getAttribute("x"),y0=+e.getAttribute("y");return tween(ms,k=>{e.setAttribute("x",x0+(x1-x0)*k);e.setAttribute("y",y0+(y1-y0)*k);});};
+const fill=(r,c)=>{r.setAttribute("fill",c);};
+
+async function play(b){
+  const my=++run;const alive=()=>my===run;const say=t=>{if(alive())cap.textContent=t;};
+  document.querySelectorAll("#bar .btn").forEach((x,i)=>x.setAttribute("aria-pressed",i===b));
+  svg.innerHTML="";calc.innerHTML="";
+  const E=BSP[b];
+  const R={};for(const k in F){const [x,y,w,h]=F[k];R[k]=el("rect",{x,y,width:w,height:h,fill:"#f7f9fc",stroke:"var(--ink)","stroke-width":2.5});}
+  const slot=(x,y)=>el("rect",{x:x-30,y:y-18,width:60,height:36,rx:6,fill:"#fff",stroke:"#8a97a6","stroke-width":1.5,"stroke-dasharray":"5 4"});
+  const S={t1:[X+A/2,Y-34],t2:[X+A+B/2,Y-34],l1:[X-42,Y+A/2],l2:[X-42,Y+A+B/2]};
+  const slots=Object.values(S).map(([x,y])=>slot(x,y));
+  // Term oben als einzelne Teile
+  const w=E.parts.map(p=>p.length*15+18),tot=w.reduce((a,c)=>a+c,0);let x=300-tot/2;
+  const chips=E.parts.map((p,i)=>{const e=txt(x+w[i]/2,48,p,{size:30});x+=w[i];return e;});
+  say(`Gegeben ist ${E.name}. Gesucht ist die Klammer: Wie lang sind die Seiten?`);
+  calc.innerHTML=`${E.name} = ?`;
+  await wait(2600);if(!alive())return;
+
+  // 1. a² ins blaue Feld
+  say("x² ist ein Quadrat: x · x. Es kommt ins blaue Feld – die erste Seite ist x.");
+  await move(chips[0],...ctr("blue"));fill(R.blue,"var(--f1)");if(!alive())return;
+  const s1=[txt(...S.t1,E.top[0],{op:0,size:22}),txt(...S.l1,E.left[0],{op:0,size:22})];await fade(s1,1);
+  await wait(1800);if(!alive())return;
+
+  // 2. b² ins orange Feld
+  const last=chips[chips.length-1];
+  say(E.sq2);
+  await move(last,...ctr("orange"));last.textContent=E.orange;fill(R.orange,"var(--f3)");if(!alive())return;
+  const s2=[txt(...S.t2,E.top[1],{op:0,size:22}),txt(...S.l2,E.left[1],{op:0,size:22})];await fade(s2,1);
+  if(E.plus)await fade([txt(X+A,S.t1[1],"+",{op:0,size:20}),txt(S.l1[0],Y+A,"+",{op:0,size:20})],1);
+  else if(E.left[1][0]!=="−")await fade([txt(S.l1[0],Y+A,"+",{op:0,size:20})],1);
+  await wait(2600);if(!alive())return;
+
+  // 3. Mittelstück auf zwei grüne Felder
+  say(E.mid);
+  const g1=txt(...ctr("g1"),E.g[0],{op:0,fill:"var(--c2)"}),g2=txt(...ctr("g2"),E.g[1],{op:0,fill:"var(--c2)"});
+  if(chips.length===3){
+    const m=chips[1];await move(m,X+A,Y+A-0,700);if(!alive())return;
+    await Promise.all([fade([m],0,400),fade([g1,g2],1,600)]);
+  }else await fade([g1,g2],1,600);
+  fill(R.g1,"var(--f2)");fill(R.g2,"var(--f2)");
+  await wait(2400);if(!alive())return;
+
+  // 4. Probe
+  say("Probe: Passt das grüne Feld zu den Seiten?");
+  const pr=el("rect",{x:F.g1[0]+3,y:F.g1[1]+3,width:F.g1[2]-6,height:F.g1[3]-6,fill:"none",stroke:"var(--hl)","stroke-width":5});
+  if(chips.length===2){const p2=el("rect",{x:F.g2[0]+3,y:F.g2[1]+3,width:F.g2[2]-6,height:F.g2[3]-6,fill:"none",stroke:"var(--hl)","stroke-width":5});}
+  calc.innerHTML=`Probe: <span class="ok">${E.probe} ✓</span>`;
+  await wait(2400);if(!alive())return;
+
+  // 5. Ergebnis
+  slots.forEach(s=>s.setAttribute("stroke-dasharray","none"));
+  calc.innerHTML+=`<br>${E.name}<br>= <b>${E.res}</b>`;
+  say(b<2?"Fertig: Die Seiten stehen am Rand. Das ist die Klammer.":"Fertig: Zwei Quadrate mit Minus dazwischen – das ist die dritte binomische Formel.");
+}
+const bar=document.getElementById("bar");
+BSP.forEach((b,i)=>{const x=document.createElement("button");x.className="btn";x.textContent="Beispiel "+(i+1)+":  "+b.name;x.onclick=()=>play(i);bar.appendChild(x);});
+play(0);
+</script>
+</body>
+</html>
