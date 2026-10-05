@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Von Zahlen zu Variablen</title>
+<!-- I.1 Ausmultiplizieren: Kontrolle zur Verallgemeinerung. Das Flächenbild der Pralinenschachtel 3 · (4 + 5)
+     wird zu a · (b + c). Aufbau wie variablen-vorstunde.html (I.2). -->
+<style>
+  :root{
+    --c1:#bcd3f2; --c2:#c6e8c0;
+    --ink:#1b2a3a; --muted:#5b6b7c; --acc:#1f4e79; --bg:#f4f7fb; --card:#ffffff; --line:#c9d6e5; --mark:#d64545;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;-webkit-user-select:none;user-select:none}
+  button{font:inherit;touch-action:manipulation}
+  header{padding:12px 16px;background:var(--acc);color:#fff}
+  header h1{font-size:20px;margin:0}
+  main{padding:12px 16px 20px;max-width:1100px;margin:0 auto}
+  .wrap{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start}
+  svg{flex:1 1 520px;max-width:640px;width:100%;height:auto;background:var(--card);border:1px solid var(--line);border-radius:12px}
+  .side{flex:1 1 280px}
+  .cap{min-height:96px;font-size:22px;font-weight:600;color:var(--acc);margin:4px 0 12px;line-height:1.4}
+  .btn{border:1px solid var(--acc);background:var(--acc);color:#fff;border-radius:10px;padding:10px 18px;font-size:17px;font-weight:600;min-height:44px}
+  footer{color:var(--muted);font-size:13px;text-align:center;padding:10px 0 18px}
+  svg text{font-family:inherit}
+</style>
+</head>
+<body>
+<header><h1>Von Zahlen zu Variablen</h1></header>
+<main>
+  <div class="wrap">
+    <svg id="s" viewBox="0 0 640 330" aria-label="Flächenbild der Pralinenschachtel wird zu einem Flächenbild mit a, b und c"></svg>
+    <div class="side">
+      <div class="cap" id="cap"></div>
+      <button class="btn" id="again">Nochmal abspielen</button>
+    </div>
+  </div>
+</main>
+<footer>Fehling · Ausmultiplizieren</footer>
+<script>
+"use strict";
+const NS="http://www.w3.org/2000/svg",svg=document.getElementById("s"),cap=document.getElementById("cap");
+const el=(t,a,p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);(p||svg).appendChild(e);return e;};
+const SLOW=1.8;
+const tween=(ms,f)=>new Promise(r=>{ms*=SLOW;const t0=performance.now();const s=t=>{const k=Math.min(1,(t-t0)/ms),e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;f(e);k<1?requestAnimationFrame(s):r();};requestAnimationFrame(s);});
+const wait=ms=>new Promise(r=>setTimeout(r,ms*SLOW));
+let run=0;
+
+// Schachtel 9 lang (4 + 5), 3 hoch – wie im Skript
+const X=110,Y=130,U=56,Wc=4*U,Wd=5*U,Ha=3*U,FW=50,FH=36,RW=86,FS=21;
+function kasten(cx,cy,w,txt){
+  el("rect",{x:cx-w/2,y:cy-FH/2,width:w,height:FH,rx:4,fill:"#fff",stroke:"#6b7785","stroke-width":1.5});
+  const t=el("text",{x:cx,y:cy+1,"text-anchor":"middle","dominant-baseline":"central","font-size":FS,"font-weight":600,fill:"var(--ink)"});t.textContent=txt;return t;
+}
+const sym=(x,y,t,size=FS)=>{const e=el("text",{x,y,"text-anchor":"middle","dominant-baseline":"central","font-size":size,fill:"var(--ink)"});e.textContent=t;return e;};
+async function swapPairs(pairs,ms=450){
+  await tween(ms,e=>pairs.forEach(([t])=>t.setAttribute("opacity",1-e)));
+  pairs.forEach(([t,txt])=>{t.textContent=txt;t.setAttribute("fill","var(--mark)");});
+  await tween(ms,e=>pairs.forEach(([t])=>t.setAttribute("opacity",e)));
+  await wait(500);pairs.forEach(([t])=>t.setAttribute("fill","var(--ink)"));
+}
+function teil(x,y,w,h,col,f1,f2,p){
+  const r=el("rect",{x,y,width:w,height:h,fill:col,stroke:"var(--ink)","stroke-width":3});
+  const cx=x+w/2,cy=y+h/2;
+  const t1=kasten(cx-34,cy-22,FW,f1);sym(cx,cy-22,"·",24);const t2=kasten(cx+34,cy-22,FW,f2);
+  sym(cx-56,cy+22,"=");const tp=kasten(cx+12,cy+22,RW,p);
+  return {r,t1,t2,tp};
+}
+
+async function play(){
+  const my=++run;svg.innerHTML="";
+  const say=t=>{if(my===run)cap.textContent=t;};const alive=()=>my===run;
+  const head=el("text",{x:X+(Wc+Wd)/2,y:40,"text-anchor":"middle","font-size":26,"font-weight":700,fill:"var(--acc)"});head.textContent="3 · (4 + 5)";
+  const top={b:kasten(X+Wc/2,Y-32,FW,"4"),c:kasten(X+Wc+Wd/2,Y-32,FW,"5")};sym(X+Wc,Y-32,"+");
+  const left={a:kasten(X-44,Y+Ha/2,FW,"3")};
+  const P={
+    ab:teil(X,Y,Wc,Ha,"var(--c1)","3","4","12"),
+    ac:teil(X+Wc,Y,Wd,Ha,"var(--c2)","3","5","15")};
+
+  say("Das ist das Flächenbild der Pralinenschachtel: 3 Reihen, 4 + 5 Pralinen pro Reihe.");
+  await wait(3200);if(!alive())return;
+  say("Andere Schachteln haben andere Zahlen. Es bleiben aber immer zwei Sorten – zwei Felder.");
+  await wait(3200);if(!alive())return;
+  say("Deshalb ersetzen wir die Zahlen außen durch Variablen: links a, oben b und c.");
+  await wait(1400);if(!alive())return;
+  await swapPairs([[left.a,"a"]]);if(!alive())return;
+  await swapPairs([[top.b,"b"],[top.c,"c"]]);if(!alive())return;
+  await wait(1200);if(!alive())return;
+
+  const schritte=[["ab","a","b","ab"],["ac","a","c","ac"]];
+  for(const [k,f1,f2,p] of schritte){
+    say(`Feld: ${f1} · ${f2} = ${p}`);
+    const x=P[k];x.r.setAttribute("stroke","var(--mark)");
+    await swapPairs([[x.t1,f1],[x.t2,f2]]);if(!alive())return;
+    await wait(400);await swapPairs([[x.tp,p]]);if(!alive())return;
+    await wait(1200);x.r.setAttribute("stroke","var(--ink)");if(!alive())return;
+  }
+  await tween(500,e=>head.setAttribute("opacity",1-e));head.textContent="a · (b + c) = ab + ac";await tween(500,e=>head.setAttribute("opacity",e));
+  say("Vergleiche mit deinem Flächenbild im Skript. Hast du beide Felder?");
+}
+document.getElementById("again").onclick=play;
+play();
+</script>
+</body>
+</html>

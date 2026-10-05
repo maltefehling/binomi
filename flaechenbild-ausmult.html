@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Flächenbild erstellen</title>
+<!-- I.1 Ausmultiplizieren, Hilfe zur Übung: Faktor vor der Klammer und die zwei Teile in der Klammer einstellen (mit Vorzeichen),
+     dann schrittweise aufdecken: Malaufgaben → Ergebnisse → zusammenschreiben. Aufbau wie station3.html, aber eine Zeile mit zwei Feldern. -->
+<style>
+  :root{
+    --blue:#bcd3f2; --green:#c6e8c0; --blue-d:#2e5d9f; --green-d:#3f8f3a;
+    --ink:#1b2a3a; --muted:#5b6b7c; --acc:#1f4e79; --bg:#f4f7fb; --card:#ffffff; --line:#c9d6e5;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;-webkit-user-select:none;user-select:none}
+  button,input{font:inherit;touch-action:manipulation}
+  header{padding:12px 16px;background:var(--acc);color:#fff}
+  header h1{font-size:20px;margin:0}
+  main{padding:12px 16px 20px;max-width:1100px;margin:0 auto}
+  .prompt{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 16px;font-size:18px;line-height:1.45;margin-bottom:12px}
+  .wrap{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start}
+  .left{flex:1 1 480px;max-width:620px}
+  .panel{flex:1 1 300px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+  svg{width:100%;height:auto;display:block;background:var(--card);border:1px solid var(--line);border-radius:12px}
+  .sm{margin-bottom:14px}
+  .sm h2{font-size:17px;margin:0 0 8px;color:var(--acc)}
+  .row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+  .lab{font-size:15px;color:var(--muted);width:78px}
+  .num{display:flex;align-items:center;gap:6px}
+  .num button{width:44px;height:44px;border-radius:10px;border:1px solid var(--acc);background:#fff;color:var(--acc);font-size:22px;font-weight:700}
+  .num input{width:70px;height:44px;text-align:center;font-size:22px;font-weight:700;border:1px solid var(--line);border-radius:10px}
+  .chips{display:flex;gap:6px;flex-wrap:wrap}
+  .chip{min-width:48px;height:44px;border-radius:10px;border:1px solid var(--line);background:#fff;font-size:20px;font-weight:700;color:var(--ink);padding:0 10px}
+  .chip[aria-pressed="true"]{background:var(--acc);color:#fff;border-color:var(--acc)}
+  .term{font-size:28px;font-weight:700;color:var(--acc);margin:12px 0}
+  .steps{display:flex;flex-direction:column;gap:8px}
+  .btn{border:1px solid var(--acc);background:var(--acc);color:#fff;border-radius:10px;padding:10px 16px;font-size:17px;font-weight:600;min-height:46px;text-align:left}
+  .btn[disabled]{opacity:.35}
+  .btn.ghost{background:#fff;color:var(--acc)}
+  .sum{font-size:24px;line-height:1.6;margin-top:14px;min-height:40px}
+  footer{color:var(--muted);font-size:13px;text-align:center;padding:10px 0 18px}
+  svg text{font-family:inherit}
+</style>
+</head>
+<body>
+<header><h1>Flächenbild erstellen</h1></header>
+<main>
+  <div class="prompt">Schau auf deine Aufgabe und stelle rechts ein: Was steht <b>vor der Klammer</b>? Was steht in der Klammer <b style="color:var(--blue-d)">vorne</b>, welches <b>Zeichen</b> steht in der Mitte, und was steht <b style="color:var(--green-d)">hinten</b>? Dann deckst du Schritt für Schritt auf.<br><span style="color:var(--muted)">Beispiel: Bei −2 · (3b − 5) steht vor der Klammer Minus 2, vorne die Zahl 3 mit dem Buchstaben b, in der Mitte ein Minus, hinten die Zahl 5.</span></div>
+  <div class="wrap">
+    <div class="left">
+      <svg id="s" viewBox="0 0 600 360" aria-label="Flächenbild"></svg>
+      <div class="term" id="term"></div>
+      <div class="sum" id="sum"></div>
+    </div>
+    <div class="panel">
+      <div class="sm" id="smf"><h2>Vor der Klammer</h2></div>
+      <div class="sm" id="sm1"><h2 style="color:var(--blue-d)">Vorne in der Klammer</h2></div>
+      <div class="sm"><h2>Zeichen in der Mitte</h2><div class="chips" id="ops"></div></div>
+      <div class="sm" id="sm2"><h2 style="color:var(--green-d)">Hinten in der Klammer</h2></div>
+      <div class="steps">
+        <button class="btn" id="b1">① Malaufgaben zeigen</button>
+        <button class="btn" id="b2" disabled>② Ergebnisse der Malaufgaben zeigen</button>
+        <button class="btn" id="b3" disabled>③ Alles zusammenschreiben</button>
+        <button class="btn ghost" id="b0">Von vorn</button>
+      </div>
+    </div>
+  </div>
+</main>
+<footer>Fehling · Ausmultiplizieren</footer>
+<script>
+"use strict";
+const NS="http://www.w3.org/2000/svg",svg=document.getElementById("s");
+const el=(t,a,p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);(p||svg).appendChild(e);return e;};
+const VARS=["","x","a","b","y"];
+// Startwerte: 4 · (x + 6) wie Aufgabe 1
+const st={f:{neg:false,c:4,v:""},s1:{neg:false,c:1,v:"x"},s2:{c:6,v:""},op:"+",step:0};
+
+// ---------- kleine Algebra ----------
+const mono=s=>({c:(s.neg?-1:1)*s.c,vars:s.v?{[s.v]:1}:{}});
+const mul=(p,q)=>{const v={...p.vars};for(const k in q.vars)v[k]=(v[k]||0)+q.vars[k];return {c:p.c*q.c,vars:v};};
+function fmt(m){
+  const vs=Object.keys(m.vars).sort().map(k=>k+(m.vars[k]===2?"²":m.vars[k]>2?m.vars[k]:"")).join("");
+  const neg=m.c<0,c=Math.abs(m.c);
+  if(!vs)return (neg?"−":"")+c;
+  return (neg?"−":"")+(c===1?"":String(c))+vs;
+}
+const fak=m=>{const t=fmt(m);return t.startsWith("−")?"("+t+")":t;};
+const kette=(ts,f=t=>t)=>ts.map((m,i)=>{const t=fmt(m);const neg=t.startsWith("−");const body=neg?t.slice(1):t;
+  return (i===0?(neg?"−":""):(neg?" − ":" + "))+f(body,i);}).join("");
+
+// ---------- Eingabe ----------
+function buildInput(id,s,withSign){
+  const box=document.getElementById(id);
+  if(withSign){
+    const r=document.createElement("div");r.className="row";
+    const l=document.createElement("span");l.className="lab";l.textContent="Vorzeichen";
+    const ch=document.createElement("div");ch.className="chips";
+    [["plus",false],["minus",true]].forEach(([t,v])=>{const b=document.createElement("button");b.className="chip";b.textContent=v?"−":"+";b.setAttribute("aria-label",t);b.setAttribute("aria-pressed",s.neg===v);
+      b.onclick=()=>{s.neg=v;ch.querySelectorAll(".chip").forEach(x=>x.setAttribute("aria-pressed",x===b));reset();};ch.appendChild(b);});
+    r.append(l,ch);box.appendChild(r);
+  }
+  const row=document.createElement("div");row.className="row";
+  const l1=document.createElement("span");l1.className="lab";l1.textContent="Zahl";
+  const num=document.createElement("div");num.className="num";
+  const minus=document.createElement("button");minus.textContent="−";minus.setAttribute("aria-label","kleiner");
+  const inp=document.createElement("input");inp.type="number";inp.inputMode="numeric";inp.min=1;inp.max=99;inp.value=s.c;inp.setAttribute("aria-label","Zahl");
+  const plus=document.createElement("button");plus.textContent="+";plus.setAttribute("aria-label","größer");
+  const set=c=>{s.c=Math.max(1,Math.min(99,c||1));inp.value=s.c;reset();};
+  minus.onclick=()=>set(s.c-1);plus.onclick=()=>set(s.c+1);inp.onchange=()=>set(parseInt(inp.value,10));
+  num.append(minus,inp,plus);row.append(l1,num);
+  const row2=document.createElement("div");row2.className="row";
+  const l2=document.createElement("span");l2.className="lab";l2.textContent="Buchstabe";
+  const chips=document.createElement("div");chips.className="chips";
+  VARS.forEach(v=>{const b=document.createElement("button");b.className="chip";b.textContent=v||"keiner";b.setAttribute("aria-pressed",s.v===v);
+    b.onclick=()=>{s.v=v;chips.querySelectorAll(".chip").forEach(x=>x.setAttribute("aria-pressed",x===b));reset();};chips.appendChild(b);});
+  row2.append(l2,chips);box.append(row,row2);
+}
+
+// ---------- Flächenbild: eine Zeile, zwei Felder ----------
+const X=100,Y=80,W1=230,W2=250,H=220;
+function draw(){
+  svg.innerHTML="";
+  const mf=mono(st.f),m1=mono(st.s1),m2=mono({neg:st.op==="−",c:st.s2.c,v:st.s2.v});
+  const lab=(x,y,t,size=30)=>{const e=el("text",{x,y,"text-anchor":"middle","dominant-baseline":"central","font-size":size,"font-weight":700,fill:"var(--ink)"});e.textContent=t;};
+  // Seiten mit Vorzeichen beschriften (Rechentabelle), Plus nur zwischen zwei positiven Teilen
+  lab(X+W1/2,Y-38,fmt(m1));lab(X+W1+W2/2,Y-38,fmt(m2));if(m2.c>0)lab(X+W1,Y-38,"+",24);
+  lab(X-48,Y+H/2,fmt(mf));
+  const parts=[[X,W1,"var(--blue)",m1],[X+W1,W2,"var(--green)",m2]];
+  parts.forEach(([x,w,col,m])=>{
+    el("rect",{x,y:Y,width:w,height:H,fill:col,stroke:"var(--ink)","stroke-width":3});
+    if(st.step>=1){const t=el("text",{x:x+w/2,y:Y+H/2-(st.step>=2?24:0),"text-anchor":"middle","dominant-baseline":"central","font-size":27,fill:"var(--ink)"});t.textContent=fak(mf)+" · "+fak(m);}
+    if(st.step>=2){const t=el("text",{x:x+w/2,y:Y+H/2+24,"text-anchor":"middle","dominant-baseline":"central","font-size":30,"font-weight":700,fill:"var(--ink)"});t.textContent="= "+fmt(mul(mf,m));}
+  });
+  const inner=fmt(m1)+(st.op==="−"?" − ":" + ")+fmt({c:st.s2.c,vars:st.s2.v?{[st.s2.v]:1}:{}});
+  const term=fmt(mf)+" · ("+inner+")";
+  document.getElementById("term").textContent=term;
+  const sum=document.getElementById("sum");sum.innerHTML="";
+  if(st.step>=3){
+    const ps=[mul(mf,m1),mul(mf,m2)],cols=["blue","green"];
+    sum.innerHTML="= <b>"+kette(ps,(t,i)=>`<span style="color:var(--${cols[i]}-d)">${t}</span>`)+"</b>";
+  }
+  document.getElementById("b1").disabled=st.step>=1;
+  document.getElementById("b2").disabled=st.step!==1;
+  document.getElementById("b3").disabled=st.step!==2;
+}
+function reset(){st.step=0;draw();}
+document.getElementById("b1").onclick=()=>{st.step=1;draw();};
+document.getElementById("b2").onclick=()=>{st.step=2;draw();};
+document.getElementById("b3").onclick=()=>{st.step=3;draw();};
+document.getElementById("b0").onclick=reset;
+buildInput("smf",st.f,true);buildInput("sm1",st.s1,true);buildInput("sm2",st.s2,false);
+(()=>{const box=document.getElementById("ops");["+","−"].forEach(o=>{const b=document.createElement("button");b.className="chip";b.textContent=o;b.setAttribute("aria-pressed",st.op===o);
+  b.onclick=()=>{st.op=o;box.querySelectorAll(".chip").forEach(x=>x.setAttribute("aria-pressed",x===b));reset();};box.appendChild(b);});})();
+draw();
+</script>
+</body>
+</html>
