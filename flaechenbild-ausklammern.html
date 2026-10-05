@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Ausklammern Schritt für Schritt</title>
+<!-- I.1b Ausklammern, Hilfe zur Übung: Die SuS stellen ihre zwei Teile ein; dieselbe Animation wie zerlegen-ausklammern.html
+     zerlegt die Felder, markiert das Gemeinsame und schreibt es an den Rand. -->
+<style>
+  :root{
+    --f1:#bcd3f2; --f2:#c6e8c0; --c1:#2e5d9f; --c2:#3f8f3a; --hl:#c0700f; --hlbg:#fde7c8;
+    --ink:#1b2a3a; --muted:#5b6b7c; --acc:#1f4e79; --bg:#f4f7fb; --card:#ffffff; --line:#c9d6e5;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;-webkit-user-select:none;user-select:none}
+  button{font:inherit;touch-action:manipulation}
+  header{padding:12px 16px;background:var(--acc);color:#fff}
+  header h1{font-size:20px;margin:0}
+  main{padding:12px 16px 20px;max-width:1100px;margin:0 auto}
+  .bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+  .btn{border:1px solid var(--acc);background:#fff;color:var(--acc);border-radius:10px;padding:10px 16px;font-size:17px;font-weight:700;min-height:46px}
+  .btn[aria-pressed="true"]{background:var(--acc);color:#fff}
+  .wrap{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start}
+  svg{flex:1 1 560px;max-width:700px;width:100%;height:auto;background:var(--card);border:1px solid var(--line);border-radius:12px}
+  .side{flex:1 1 280px}
+  .cap{min-height:96px;font-size:21px;font-weight:600;color:var(--acc);line-height:1.4;margin:4px 0 12px}
+  .calc{font-size:25px;line-height:1.7;min-height:80px}
+  .calc .h{color:var(--hl);font-weight:700}
+  .calc small{font-size:18px;color:var(--muted)}
+  .prompt{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 16px;font-size:18px;line-height:1.45;margin-bottom:12px}
+  .inp{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+  .teil{flex:1 1 300px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+  .teil h2{font-size:17px;margin:0 0 8px}
+  .row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+  .lab{font-size:15px;color:var(--muted);width:78px}
+  .num{display:flex;align-items:center;gap:6px}
+  .num button{width:44px;height:44px;border-radius:10px;border:1px solid var(--acc);background:#fff;color:var(--acc);font-size:22px;font-weight:700}
+  .num input{width:70px;height:44px;text-align:center;font-size:22px;font-weight:700;border:1px solid var(--line);border-radius:10px}
+  .chip{min-width:48px;height:44px;border-radius:10px;border:1px solid var(--line);background:#fff;font-size:20px;font-weight:700;color:var(--ink);padding:0 10px}
+  .chip[aria-pressed="true"]{background:var(--acc);color:#fff;border-color:var(--acc)}
+  .go{border:1px solid var(--acc);background:var(--acc);color:#fff;border-radius:10px;padding:10px 18px;font-size:18px;font-weight:700;min-height:48px;margin-bottom:12px}
+  footer{color:var(--muted);font-size:13px;text-align:center;padding:10px 0 18px}
+  svg text{font-family:inherit}
+</style>
+</head>
+<body>
+<header><h1>Ausklammern Schritt für Schritt</h1></header>
+<main>
+  <div class="prompt">Schau auf deine Aufgabe und stelle die zwei Teile ein, die mit + oder − verbunden sind. Buchstaben: einmal tippen = x, zweimal = x², dreimal = weg. Dann tippe auf <b>Ausklammern zeigen</b>.<br><span style="color:var(--muted)">Beispiel: Bei 32x + 2xy ist der erste Teil die Zahl 32 mit x, der zweite Teil die Zahl 2 mit x und y.</span></div>
+  <div class="inp"><div class="teil" id="in1"><h2 style="color:var(--c1)">Erster Teil</h2></div><div class="teil" id="in2"><h2 style="color:var(--c2)">Zweiter Teil</h2></div></div>
+  <button class="go" id="go">Ausklammern zeigen</button>
+  <div class="wrap">
+    <svg id="s" viewBox="0 0 640 330" aria-label="Flächenbild mit zwei Feldern, die Seiten werden gesucht"></svg>
+    <div class="side">
+      <div class="cap" id="cap"></div>
+      <div class="calc" id="calc"></div>
+    </div>
+  </div>
+</main>
+<footer>Fehling · Ausklammern</footer>
+<script>
+"use strict";
+const NS="http://www.w3.org/2000/svg",svg=document.getElementById("s"),cap=document.getElementById("cap"),calc=document.getElementById("calc");
+const el=(t,a,p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);(p||svg).appendChild(e);return e;};
+const SLOW=1.5;
+const ease=k=>k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;
+const tween=(ms,f)=>new Promise(r=>{ms*=SLOW;const t0=performance.now();const s=t=>{const k=Math.min(1,(t-t0)/ms);f(ease(k));k<1?requestAnimationFrame(s):r();};requestAnimationFrame(s);});
+const wait=ms=>new Promise(r=>setTimeout(r,ms*SLOW));
+let run=0;
+
+// ---------- kleine Algebra: Teil = {c: Zahl mit Vorzeichen, v: {x:1, y:1}} ----------
+const primes=n=>{const f=[];n=Math.abs(n);for(let d=2;n>1;d++)while(n%d===0){f.push(String(d));n/=d;}return f;};
+const zerlege=t=>{const f=primes(t.c);Object.keys(t.v).sort().forEach(k=>{for(let i=0;i<t.v[k];i++)f.push(k);});return f.length?f:["1"];};
+function prod(list){let n=1;const v={};list.forEach(s=>{if(/\d/.test(s))n*=+s;else v[s]=(v[s]||0)+1;});
+  const vs=Object.keys(v).sort().map(k=>k+(v[k]===2?"²":v[k]>2?v[k]:"")).join("");return (n===1&&vs?"":String(n))+vs;}
+const term=t=>(t.c<0?"−":"")+prod(zerlege(t));
+// gemeinsame Bausteine: Paare von Positionen in beiden Listen
+function paare(f1,f2){const frei=f2.map(()=>true),p=[];f1.forEach((s,i)=>{const j=f2.findIndex((x,k)=>frei[k]&&x===s);if(j>=0){frei[j]=false;p.push([i,j]);}});return p;}
+
+const BSP=[];
+
+// ---------- Flächenbild ----------
+const X=165,Y=110,W1=220,W2=220,H=150,FS=28;
+const LEFT=[X-75,Y+H/2],TOP=[[X+W1/2,Y-40],[X+W1+W2/2,Y-40]];
+const txt=(x,y,t,o={})=>{const e=el("text",{x,y,"text-anchor":"middle","dominant-baseline":"central","font-size":o.size||FS,"font-weight":o.w||600,fill:o.fill||"var(--ink)",opacity:o.op??1});e.textContent=t;return e;};
+const fade=(els,to,ms=400)=>{const from=els.map(e=>+e.getAttribute("opacity"));return tween(ms,k=>els.forEach((e,i)=>e.setAttribute("opacity",from[i]+(to-from[i])*k)));};
+const move=(e,x1,y1,ms=900)=>{const x0=+e.getAttribute("x"),y0=+e.getAttribute("y");return tween(ms,k=>{e.setAttribute("x",x0+(x1-x0)*k);e.setAttribute("y",y0+(y1-y0)*k);});};
+function slot(x,y,w=70){return el("rect",{x:x-w/2,y:y-22,width:w,height:44,rx:6,fill:"#fff",stroke:"#8a97a6","stroke-width":1.5,"stroke-dasharray":"5 4"});}
+
+// Bausteine eines Feldes als Reihe: [Vorzeichen] a · b · c
+function reihe(cx,cy,f,neg){
+  const items=[];if(neg)items.push({s:"−",sign:true});
+  f.forEach((s,i)=>{if(i)items.push({s:"·",dot:true});items.push({s,i});});
+  let w=items.map(it=>it.dot?20:it.sign?22:(it.s.length*16+14));let tot=w.reduce((a,b)=>a+b,0);
+  const sc=Math.min(1,(W1-24)/tot);w=w.map(v=>v*sc);tot*=sc;
+  let x=cx-tot/2;const chips=[];let sign=null;const dots=[];
+  items.forEach((it,k)=>{const xm=x+w[k]/2;const e=txt(xm,cy,it.s,{op:0,size:Math.round(FS*Math.max(sc,.75))});
+    if(it.dot)dots.push(e);else if(it.sign)sign=e;else chips[it.i]=e;x+=w[k];});
+  return {chips,dots,sign};
+}
+
+// Bausteine am Zielort als „2 · 3“ aufstellen, kurz zeigen, dann zum Produkt „6“ zusammenfassen
+function lagen(cx,list){const w=list.map(t=>t.length*16+14),tot=w.reduce((a,b)=>a+b,0)+20*(list.length-1);let x=cx-tot/2;
+  return w.map((wi,k)=>{const m=x+wi/2;x+=wi+20;return m;});}
+async function hinUndZusammen(cx,cy,list,gruppen,endText,o,alive){
+  const xs=lagen(cx,list);
+  await Promise.all(gruppen.flatMap(g=>g.map((e,k)=>move(e,xs[k],cy))));if(!alive())return null;
+  gruppen.slice(1).forEach(g=>g.forEach(e=>e.remove()));
+  const dots=xs.slice(1).map((x,k)=>txt((xs[k]+x)/2,cy,"·",{op:0,fill:o.fill||"var(--ink)"}));
+  await fade(dots,1,300);await wait(list.length>1?900:300);if(!alive())return null;
+  const fin=txt(cx,cy,endText,{fill:o.fill||"var(--ink)",w:o.w||600,op:0});
+  await Promise.all([fade([...gruppen[0],...dots],0,350),fade([fin],1,350)]);
+  gruppen[0].forEach(e=>e.remove());dots.forEach(e=>e.remove());return fin;
+}
+
+async function play(b){
+  const my=++run;const alive=()=>my===run;const say=t=>{if(alive())cap.textContent=t;};
+  document.querySelectorAll("#bar .btn").forEach((x,i)=>x.setAttribute("aria-pressed",i===b));
+  svg.innerHTML="";calc.innerHTML="";
+  const [t1,t2]=BSP[b].t;
+  el("rect",{x:X,y:Y,width:W1,height:H,fill:"var(--f1)",stroke:"var(--ink)","stroke-width":3});
+  el("rect",{x:X+W1,y:Y,width:W2,height:H,fill:"var(--f2)",stroke:"var(--ink)","stroke-width":3});
+  const sl=[slot(...LEFT,96),slot(...TOP[0],90),slot(...TOP[1],90)];
+  const p1=txt(X+W1/2,Y+H/2,term(t1),{size:34,w:700}),p2=txt(X+W1+W2/2,Y+H/2,term(t2),{size:34,w:700});
+  say("Die Felder sind bekannt: "+term(t1)+" und "+term(t2)+". Gesucht sind die Seiten am Rand.");
+  calc.innerHTML=`${BSP[b].name} = ? · ( ? ${t2.c<0?"−":"+"} ? )`;
+  await wait(2600);if(!alive())return;
+
+  // 1. zerlegen
+  say("Zuerst zerlegen wir jedes Feld in kleine Malaufgaben.");
+  const f1=zerlege(t1),f2=zerlege(t2);
+  const r1=reihe(X+W1/2,Y+H/2,f1,t1.c<0),r2=reihe(X+W1+W2/2,Y+H/2,f2,t2.c<0);
+  await fade([p1,p2],0,500);if(!alive())return;
+  const all=r=>[...r.chips,...r.dots,...(r.sign?[r.sign]:[])];
+  await fade([...all(r1),...all(r2)],1,600);if(!alive())return;
+  calc.innerHTML=`${term(t1)} = ${(t1.c<0?"−":"")+f1.join(" · ")}<br>${term(t2)} = ${(t2.c<0?"−":"")+f2.join(" · ")}`;
+  await wait(2200);if(!alive())return;
+
+  // 2. Gemeinsames markieren
+  say("Was steckt in beiden Feldern? Diese Teile leuchten auf.");
+  const pp=paare(f1,f2),bg=[];
+  for(const [i,j] of pp){
+    for(const e of [r1.chips[i],r2.chips[j]]){
+      const bb=e.getBBox();const r=el("rect",{x:bb.x-6,y:bb.y-3,width:bb.width+12,height:bb.height+6,rx:8,fill:"var(--hlbg)",stroke:"var(--hl)","stroke-width":2,opacity:0});
+      svg.insertBefore(r,e);bg.push(r);e.setAttribute("fill","var(--hl)");e.setAttribute("font-weight",800);
+      fade([r],1,300);
+    }
+    await wait(900);if(!alive())return;
+  }
+  if(!pp.length){say("In den beiden Feldern steckt nichts Gemeinsames. Hier kann man nichts ausklammern.");calc.innerHTML="";return;}
+  const gem=pp.map(([i])=>f1[i]);
+  calc.innerHTML=`gemeinsam: <span class="h">${gem.join(" · ")}</span>`;
+  await wait(1600);if(!alive())return;
+
+  // 3. Gemeinsames an den linken Rand
+  say("Der gemeinsame Teil kommt an den linken Rand.");
+  await fade(bg,0,300);
+  const g1=pp.map(([i])=>r1.chips[i]),g2=pp.map(([,j])=>r2.chips[j]);
+  const gemText=prod(gem);
+  await fade([...r1.dots,...r2.dots],0,300);
+  const L=await hinUndZusammen(LEFT[0],LEFT[1],gem,[g1,g2],gemText,{fill:"var(--hl)",w:800},alive);if(!L)return;
+  await wait(900);if(!alive())return;
+
+  // 4. Rest an den oberen Rand
+  say("Was übrig bleibt, kommt oben an den Rand.");
+  const rest=(f,r,idx)=>f.map((s,k)=>({s,e:r.chips[k]})).filter((_,k)=>!pp.some(p=>p[idx]===k));
+  const R1=rest(f1,r1,0),R2=rest(f2,r2,1);
+  const s1=(t1.c<0?"−":"")+(R1.length?prod(R1.map(o=>o.s)):"1"),s2=(t2.c<0?"−":"")+(R2.length?prod(R2.map(o=>o.s)):"1");
+  if(r1.sign)r1.sign.remove();
+  if(r2.sign)fade([r2.sign],0,300);
+  // bleibt in einem Feld nichts übrig, steht dort eine 1
+  const eins=(R,i)=>{if(R.length)return [];const e=txt(TOP[i][0],TOP[i][1],"1",{op:0});return [e];};
+  const e1=eins(R1,0),e2=eins(R2,1);
+  const [T1,T2]=await Promise.all([
+    R1.length?hinUndZusammen(TOP[0][0],TOP[0][1],R1.map(o=>o.s),[R1.map(o=>o.e)],s1,{},alive):Promise.resolve(e1[0]),
+    R2.length?hinUndZusammen(TOP[1][0],TOP[1][1],R2.map(o=>o.s),[R2.map(o=>o.e)],s2,{},alive):Promise.resolve(e2[0])]);
+  if(!alive())return;
+  if(r2.sign)r2.sign.remove();
+  await fade([...e1,...e2],1,300);
+  const extra=t2.c>0?[txt(X+W1,TOP[0][1],"+",{op:0,size:24})]:[];
+  await fade(extra,1,300);if(!alive())return;
+  sl.forEach(s=>s.setAttribute("stroke-dasharray","none"));
+
+  // 5. Felder wieder zeigen, Ergebnis und Probe
+  await fade([p1,p2],1,500);if(!alive())return;
+  const inner=s1+(s2.startsWith("−")?" − "+s2.slice(1):" + "+s2);
+  calc.innerHTML=`${BSP[b].name}<br>= <span class="h">${gemText}</span> · ( ${inner} )<br><small>Probe: ${gemText} · ${s1} = ${term(t1)} und ${gemText} · ${s2.startsWith("−")?"("+s2+")":s2} = ${term(t2)} ✓</small>`;
+  say("Fertig: Links steht der gemeinsame Teil, oben der Rest. Vergleiche mit deiner Lösung.");
+}
+// ---------- Eingabe ----------
+const ein=[{neg:false,c:12,v:{}},{neg:true,c:2,v:{b:1}}];
+function baue(id,t,zeichen){
+  const box=document.getElementById(id);
+  const r0=document.createElement("div");r0.className="row";
+  const l0=document.createElement("span");l0.className="lab";l0.textContent=zeichen?"Zeichen davor":"Vorzeichen";r0.appendChild(l0);
+  [["+",false],["−",true]].forEach(([t0,v])=>{const b=document.createElement("button");b.className="chip";b.textContent=t0;b.setAttribute("aria-pressed",t.neg===v);
+    b.onclick=()=>{t.neg=v;r0.querySelectorAll(".chip").forEach(x=>x.setAttribute("aria-pressed",x===b));};r0.appendChild(b);});
+  const r1=document.createElement("div");r1.className="row";
+  const l1=document.createElement("span");l1.className="lab";l1.textContent="Zahl";
+  const num=document.createElement("div");num.className="num";
+  const mi=document.createElement("button");mi.textContent="−";mi.setAttribute("aria-label","kleiner");
+  const inp=document.createElement("input");inp.type="number";inp.inputMode="numeric";inp.min=1;inp.max=99;inp.value=t.c;inp.setAttribute("aria-label","Zahl");
+  const pl=document.createElement("button");pl.textContent="+";pl.setAttribute("aria-label","größer");
+  const set=c=>{t.c=Math.max(1,Math.min(99,c||1));inp.value=t.c;};
+  mi.onclick=()=>set(t.c-1);pl.onclick=()=>set(t.c+1);inp.onchange=()=>set(parseInt(inp.value,10));
+  num.append(mi,inp,pl);r1.append(l1,num);
+  const r2=document.createElement("div");r2.className="row";
+  const l2=document.createElement("span");l2.className="lab";l2.textContent="Buchstaben";r2.appendChild(l2);
+  ["x","y","a","b"].forEach(k=>{const b=document.createElement("button");b.className="chip";
+    const zeig=()=>{const n=t.v[k]||0;b.textContent=n===2?k+"²":k;b.setAttribute("aria-pressed",n>0);};
+    b.onclick=()=>{const n=((t.v[k]||0)+1)%3;if(n)t.v[k]=n;else delete t.v[k];zeig();};zeig();r2.appendChild(b);});
+  box.append(r0,r1,r2);
+}
+baue("in1",ein[0],false);baue("in2",ein[1],true);
+document.getElementById("go").onclick=()=>{
+  const t=ein.map(e=>({c:(e.neg?-1:1)*e.c,v:{...e.v}}));
+  const n2=prod(zerlege({c:t[1].c,v:t[1].v}));
+  BSP[0]={name:term(t[0])+(t[1].c<0?" − ":" + ")+n2,t};play(0);
+};
+</script>
+</body>
+</html>
