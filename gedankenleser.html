@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Die Gedankenlese-Maschine</title>
+<!-- I.5 Gleichungen mit Klammern, Einstieg am Beamer: Die SuS rechnen (x + 3)² − x² zu ihrer gedachten Zahl,
+     die Lehrkraft tippt nur das Ergebnis ein, die Maschine rechnet (Ergebnis − 9) : 6 zurück. Die Lehrkraft muss nicht im Kopf rechnen. -->
+<style>
+  :root{--acc:#1f4e79;--ink:#1b2a3a;--muted:#5b6b7c;--bg:#0f2236;--card:#16324f;--glow:#7fd3ff;--gold:#ffd166;}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:radial-gradient(circle at 50% 30%,#1d4266,var(--bg) 70%);color:#fff;min-height:100%;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;-webkit-user-select:none;user-select:none}
+  button,input{font:inherit;touch-action:manipulation}
+  main{max-width:1000px;margin:0 auto;padding:18px 16px 28px;display:flex;gap:22px;flex-wrap:wrap;align-items:flex-start}
+  h1{width:100%;text-align:center;font-size:34px;margin:6px 0 4px;letter-spacing:.5px}
+  .regeln{flex:1 1 360px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.18);border-radius:16px;padding:16px 20px;font-size:22px;line-height:1.55}
+  .regeln ol{margin:6px 0 0 0;padding-left:28px}
+  .regeln b{color:var(--gold)}
+  .maschine{flex:1 1 380px;display:flex;flex-direction:column;align-items:center;gap:14px}
+  .kugel{width:240px;height:240px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#bfeaff,#3a8ec2 45%,#123a5c 80%);
+    box-shadow:0 0 40px rgba(127,211,255,.45),inset 0 0 30px rgba(255,255,255,.25);display:grid;place-items:center;font-size:92px;font-weight:800;color:#fff;text-shadow:0 0 18px #fff}
+  .kugel.denkt{animation:puls .6s ease-in-out infinite alternate}
+  @keyframes puls{from{transform:scale(1);box-shadow:0 0 30px rgba(127,211,255,.4)}to{transform:scale(1.06);box-shadow:0 0 70px rgba(255,209,102,.8)}}
+  .anzeige{min-height:40px;font-size:24px;text-align:center;color:var(--glow)}
+  .eingabe{display:flex;gap:10px;align-items:center}
+  .eingabe input{width:150px;height:60px;font-size:34px;text-align:center;border-radius:12px;border:2px solid var(--glow);background:#0b1a2a;color:#fff}
+  .btn{height:60px;padding:0 22px;border-radius:12px;border:0;background:var(--gold);color:#1b2a3a;font-size:22px;font-weight:800}
+  .btn.ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.4);font-size:18px;height:48px}
+  .tasten{display:grid;grid-template-columns:repeat(3,72px);gap:8px}
+  .tasten button{height:56px;border-radius:10px;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.1);color:#fff;font-size:26px;font-weight:700}
+  footer{width:100%;text-align:center;color:rgba(255,255,255,.5);font-size:13px;margin-top:8px}
+</style>
+</head>
+<body>
+<main>
+  <h1>Die Gedankenlese-Maschine</h1>
+  <div class="regeln">
+    <ol>
+      <li>Denk dir eine Zahl zwischen <b>1 und 20</b>. Verrate sie niemandem!</li>
+      <li>Addiere <b>3</b>.</li>
+      <li>Nimm das Ergebnis <b>mal sich selbst</b>.</li>
+      <li>Ziehe deine Zahl <b>mal sich selbst</b> ab.</li>
+      <li>Nenne nur das <b>Ergebnis</b>.</li>
+    </ol>
+  </div>
+  <div class="maschine">
+    <div class="kugel" id="kugel">?</div>
+    <div class="anzeige" id="anz">Ergebnis eintippen</div>
+    <div class="eingabe"><input id="inp" inputmode="numeric" readonly aria-label="Ergebnis"><button class="btn" id="go">Gedanken lesen</button></div>
+    <div class="tasten" id="tasten"></div>
+    <button class="btn ghost" id="neu">Neue Runde</button>
+  </div>
+  <footer>Fehling · Gleichungen mit Klammern</footer>
+</main>
+<script>
+"use strict";
+const inp=document.getElementById("inp"),kugel=document.getElementById("kugel"),anz=document.getElementById("anz");
+const tasten=document.getElementById("tasten");
+["1","2","3","4","5","6","7","8","9","⌫","0","C"].forEach(t=>{const b=document.createElement("button");b.textContent=t;
+  b.onclick=()=>{if(t==="⌫")inp.value=inp.value.slice(0,-1);else if(t==="C")inp.value="";else if(inp.value.length<4)inp.value+=t;};tasten.appendChild(b);});
+const sätze=["Ich spüre etwas …","Die Gedanken werden klarer …","Gleich hab ich's …"];
+document.getElementById("go").onclick=async()=>{
+  const e=parseInt(inp.value,10);if(!e)return;
+  kugel.textContent="";kugel.classList.add("denkt");
+  for(const s of sätze){anz.textContent=s;await new Promise(r=>setTimeout(r,900));}
+  kugel.classList.remove("denkt");
+  const z=(e-9)/6;
+  if(Number.isInteger(z)&&z>=1&&z<=20){kugel.textContent=z;anz.textContent="Du hast an "+z+" gedacht!";}
+  else{kugel.textContent="?";anz.textContent="Hm … da hat sich wohl jemand verrechnet. Rechne nochmal nach!";}
+};
+document.getElementById("neu").onclick=()=>{inp.value="";kugel.textContent="?";anz.textContent="Ergebnis eintippen";};
+</script>
+</body>
+</html>

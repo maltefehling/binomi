@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Warum fällt das x² weg?</title>
+<!-- I.5 Gleichungen mit Klammern: (x + 3)² − x² als Flächenbild. Das Quadrat x² wächst zu (x + 3)², dann wird das alte Quadrat
+     herausgenommen – übrig bleibt ein L-Streifen 3x + 3x + 9 = 6x + 9 (vgl. Umpacken in I.3c). -->
+<style>
+  :root{
+    --f1:#bcd3f2; --f2:#c6e8c0; --f3:#fbd9a8; --c1:#2e5d9f; --c2:#3f8f3a; --c3:#c0700f; --cut:#d64545;
+    --ink:#1b2a3a; --muted:#5b6b7c; --acc:#1f4e79; --bg:#f4f7fb; --card:#ffffff; --line:#c9d6e5;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;-webkit-user-select:none;user-select:none}
+  button{font:inherit;touch-action:manipulation}
+  header{padding:12px 16px;background:var(--acc);color:#fff}
+  header h1{font-size:20px;margin:0}
+  main{padding:12px 16px 20px;max-width:1100px;margin:0 auto}
+  .btn{border:1px solid var(--acc);background:var(--acc);color:#fff;border-radius:10px;padding:10px 18px;font-size:17px;font-weight:700;min-height:46px;margin-bottom:12px}
+  .wrap{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start}
+  svg{flex:1 1 480px;max-width:600px;width:100%;height:auto;background:var(--card);border:1px solid var(--line);border-radius:12px}
+  .side{flex:1 1 280px}
+  .cap{min-height:100px;font-size:21px;font-weight:600;color:var(--acc);line-height:1.4;margin:4px 0 12px}
+  .calc{font-size:25px;line-height:1.7;min-height:80px}
+  .calc .g{color:var(--c2);font-weight:700}.calc .o{color:var(--c3);font-weight:700}.calc .b{color:var(--c1);font-weight:700}
+  .calc s{color:var(--cut)}
+  footer{color:var(--muted);font-size:13px;text-align:center;padding:10px 0 18px}
+  svg text{font-family:inherit}
+</style>
+</head>
+<body>
+<header><h1>Warum fällt das x² weg?</h1></header>
+<main>
+  <button class="btn" id="go">Abspielen</button>
+  <div class="wrap">
+    <svg id="s" viewBox="0 0 540 460" aria-label="Flächenbild: Ein Quadrat wächst, das alte Quadrat wird herausgenommen"></svg>
+    <div class="side">
+      <div class="cap" id="cap">Tippe auf „Abspielen“.</div>
+      <div class="calc" id="calc"></div>
+    </div>
+  </div>
+</main>
+<footer>Fehling · Gleichungen mit Klammern</footer>
+<script>
+"use strict";
+const NS="http://www.w3.org/2000/svg",svg=document.getElementById("s"),cap=document.getElementById("cap"),calc=document.getElementById("calc");
+const el=(t,a,p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);(p||svg).appendChild(e);return e;};
+const SLOW=1.4;
+const ease=k=>k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;
+const tween=(ms,f)=>new Promise(r=>{ms*=SLOW;const t0=performance.now();const s=t=>{const k=Math.min(1,(t-t0)/ms);f(ease(k));k<1?requestAnimationFrame(s):r();};requestAnimationFrame(s);});
+const wait=ms=>new Promise(r=>setTimeout(r,ms*SLOW));
+let run=0;
+const X=110,Y=70,A=250,B=90;
+const txt=(x,y,t,o={})=>{const e=el("text",{x,y,"text-anchor":"middle","dominant-baseline":"central","font-size":o.size||26,"font-weight":o.w||700,fill:o.fill||"var(--ink)",opacity:o.op??0});e.textContent=t;return e;};
+const fade=(els,to,ms=500)=>{const f=els.map(e=>+(e.getAttribute("opacity")??1));return tween(ms,k=>els.forEach((e,i)=>e.setAttribute("opacity",f[i]+(to-f[i])*k)));};
+async function play(){
+  const my=++run;const alive=()=>my===run;const say=t=>{if(alive())cap.textContent=t;};
+  svg.innerHTML="";calc.innerHTML="";
+  // 1. deine Zahl als Quadrat
+  const q=el("rect",{x:X,y:Y,width:A,height:A,fill:"var(--f1)",stroke:"var(--ink)","stroke-width":3,opacity:0});
+  const lq=[txt(X+A/2,Y+A/2,"x²",{size:34}),txt(X+A/2,Y-24,"x"),txt(X-26,Y+A/2,"x")];
+  say("Deine Zahl heißt x. „Mal sich selbst“ ist ein Quadrat mit der Seite x: x².");
+  await fade([q,...lq],1,700);await wait(2200);if(!alive())return;
+  // 2. plus 3, dann mal sich selbst: das Quadrat wächst
+  say("Du addierst 3 und nimmst das Ergebnis mal sich selbst: Das Quadrat wächst auf die Seite x + 3.");
+  const g1=el("rect",{x:X+A,y:Y,width:B,height:A,fill:"var(--f2)",stroke:"var(--ink)","stroke-width":3,opacity:0});
+  const g2=el("rect",{x:X,y:Y+A,width:A,height:B,fill:"var(--f2)",stroke:"var(--ink)","stroke-width":3,opacity:0});
+  const o=el("rect",{x:X+A,y:Y+A,width:B,height:B,fill:"var(--f3)",stroke:"var(--ink)","stroke-width":3,opacity:0});
+  const lg=[txt(X+A+B/2,Y+A/2,"3x",{fill:"var(--c2)"}),txt(X+A/2,Y+A+B/2,"3x",{fill:"var(--c2)"}),txt(X+A+B/2,Y+A+B/2,"9",{fill:"var(--c3)"}),
+    txt(X+A+B/2,Y-24,"3"),txt(X-26,Y+A+B/2,"3"),txt(X+A,Y-24,"+",{size:20}),txt(X-26,Y+A,"+",{size:20})];
+  await fade([g1,g2,o,...lg],1,900);if(!alive())return;
+  calc.innerHTML=`(x + 3)² = <span class="b">x²</span> + <span class="g">3x + 3x</span> + <span class="o">9</span>`;
+  await wait(2600);if(!alive())return;
+  // 3. minus x²: das alte Quadrat wird herausgenommen
+  say("Jetzt ziehst du deine Zahl mal sich selbst ab – also genau das blaue Quadrat x².");
+  const cut=el("rect",{x:X+3,y:Y+3,width:A-6,height:A-6,fill:"none",stroke:"var(--cut)","stroke-width":5,"stroke-dasharray":"10 6"});
+  await wait(1600);if(!alive())return;
+  await tween(1200,k=>{q.setAttribute("transform",`translate(${-k*60},${-k*40})`);lq[0].setAttribute("transform",`translate(${-k*60},${-k*40})`);q.setAttribute("opacity",1-k);lq[0].setAttribute("opacity",1-k);cut.setAttribute("opacity",1-k);});
+  if(!alive())return;
+  calc.innerHTML=`(x + 3)² − x²<br>= <s>x²</s> + <span class="g">3x + 3x</span> + <span class="o">9</span> <s>− x²</s>`;
+  await wait(2200);if(!alive())return;
+  // 4. L-Streifen
+  say("Übrig bleibt nur der L-Streifen. Das x² ist ganz weggefallen!");
+  el("path",{d:`M${X+A},${Y} h${B} v${A+B} h${-(A+B)} v${-B} h${A} Z`,fill:"none",stroke:"var(--acc)","stroke-width":5});
+  calc.innerHTML+=`<br>= <span class="g">6x</span> + <span class="o">9</span>`;
+  await wait(2400);if(!alive())return;
+  say("Darum rechnet die Maschine: Ergebnis = 6 · Zahl + 9. Zurück geht es mit einer Gleichung.");
+  calc.innerHTML+=`<br><span style="font-size:20px;color:var(--muted)">Beispiel: 6x + 9 = 69 → x = 10</span>`;
+}
+document.getElementById("go").onclick=()=>{document.getElementById("go").textContent="Nochmal abspielen";play();};
+</script>
+</body>
+</html>
