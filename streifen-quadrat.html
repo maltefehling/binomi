@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Streifen gegen Quadrat</title>
+<!-- II.2a Satz vom Nullprodukt: quadratisches Aufwärmfeld x · x (rot) wird um 4 m verlängert (grüner Streifen 4 · x).
+     Doppelt so groß ⇔ Streifen = Quadrat ⇔ x² = 4x. Kontrolle nach der Tabelle im Skript: Gleich groß bei x = 0 und x = 4.
+     Farben wie die Lego-Steine: rot = x², grün = bx. -->
+<style>
+  :root{--rot:#e06666;--rotH:#f6d0d0;--rotD:#b33c3c;--gr:#7cc46f;--grH:#d6efd0;--grD:#3f8f3a;
+    --ink:#1b2a3a;--muted:#5b6b7c;--acc:#1f4e79;--bg:#f4f7fb;--card:#fff;--line:#c9d6e5;--sand:#f3e6c2}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;-webkit-user-select:none;user-select:none}
+  button,input{font:inherit;touch-action:manipulation}
+  header{padding:12px 16px;background:var(--acc);color:#fff}
+  header h1{font-size:20px;margin:0}
+  main{padding:12px 16px 20px;max-width:1100px;margin:0 auto}
+  .wrap{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start}
+  svg{flex:1 1 440px;max-width:620px;width:100%;height:auto;background:var(--card);border:1px solid var(--line);border-radius:12px}
+  .side{flex:1 1 260px;min-width:0}
+  .ctl{display:flex;align-items:center;gap:10px;margin:4px 0 14px}
+  .ctl button{width:56px;height:56px;border-radius:12px;border:2px solid var(--acc);background:#fff;color:var(--acc);font-size:28px;font-weight:700}
+  .ctl input{flex:1;min-width:0;height:44px;accent-color:var(--acc)}
+  .xwert{font-size:30px;font-weight:800;color:var(--acc);margin-bottom:6px}
+  .zeile{display:flex;justify-content:space-between;align-items:center;font-size:22px;padding:10px 14px;border-radius:12px;margin-bottom:8px;font-variant-numeric:tabular-nums}
+  .q{background:var(--rotH);border:1px solid var(--rot)} .s{background:var(--grH);border:1px solid var(--gr)}
+  .zeile b{font-size:26px}
+  .vgl{font-size:24px;font-weight:800;text-align:center;padding:12px;border-radius:12px;background:#fff;border:1px solid var(--line);min-height:62px}
+  .vgl.gleich{background:#fff3c4;border-color:#e0b400}
+  footer{color:var(--muted);font-size:13px;text-align:center;padding:10px 0 18px}
+  svg text{font-family:inherit}
+</style>
+</head>
+<body>
+<header><h1>Streifen gegen Quadrat</h1></header>
+<main>
+  <div class="wrap">
+    <svg id="s" viewBox="0 0 520 360" aria-label="Rotes Quadrat x mal x und grüner Streifen 4 mal x"></svg>
+    <div class="side">
+      <div class="xwert" id="xw">x = 2 m</div>
+      <div class="ctl"><button id="minus" aria-label="kleiner">−</button><input id="r" type="range" min="0" max="8" step="0.5" value="2"><button id="plus" aria-label="größer">+</button></div>
+      <div class="zeile q"><span>Quadrat  x · x</span><b id="qw"></b></div>
+      <div class="zeile s"><span>Streifen  4 · x</span><b id="sw"></b></div>
+      <div class="vgl" id="vgl"></div>
+    </div>
+  </div>
+</main>
+<footer>Fehling · Satz vom Nullprodukt</footer>
+<script>
+"use strict";
+const NS="http://www.w3.org/2000/svg",svg=document.getElementById("s");
+const el=(t,a)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);svg.appendChild(e);return e;};
+const fmt=v=>(Math.round(v*100)/100).toString().replace(".",",");
+const PX=34,X0=50,Y0=320; // 1 m = 34 px, unten links
+el("rect",{x:0,y:0,width:520,height:360,fill:"var(--sand)",opacity:.45});
+const q=el("rect",{fill:"var(--rotH)",stroke:"var(--rotD)","stroke-width":2.5});
+const s=el("rect",{fill:"var(--grH)",stroke:"var(--grD)","stroke-width":2.5});
+const tq=el("text",{"text-anchor":"middle","dominant-baseline":"central","font-size":22,"font-weight":700,fill:"var(--rotD)"});
+const ts=el("text",{"text-anchor":"middle","dominant-baseline":"central","font-size":22,"font-weight":700,fill:"var(--grD)"});
+const lx=el("text",{"text-anchor":"middle","font-size":20,fill:"var(--acc)","font-style":"italic"});
+const l4=el("text",{"text-anchor":"middle","font-size":20,fill:"var(--acc)"});
+const ly=el("text",{"text-anchor":"end","dominant-baseline":"central","font-size":20,fill:"var(--acc)","font-style":"italic"});
+const r=document.getElementById("r");
+function zeige(){
+  const x=+r.value,w=x*PX;
+  q.setAttribute("x",X0);q.setAttribute("y",Y0-w);q.setAttribute("width",w);q.setAttribute("height",w);
+  s.setAttribute("x",X0+w);s.setAttribute("y",Y0-w);s.setAttribute("width",4*PX);s.setAttribute("height",w);
+  const sicht=x>=1;
+  tq.setAttribute("x",X0+w/2);tq.setAttribute("y",Y0-w/2);tq.textContent=sicht?"x²":"";
+  ts.setAttribute("x",X0+w+2*PX);ts.setAttribute("y",Y0-w/2);ts.textContent=sicht?"4x":"";
+  lx.setAttribute("x",X0+w/2);lx.setAttribute("y",Y0+26);lx.textContent=x>0?"x":"";
+  l4.setAttribute("x",X0+w+2*PX);l4.setAttribute("y",Y0+26);l4.textContent="4 m";
+  ly.setAttribute("x",X0-8);ly.setAttribute("y",Y0-w/2);ly.textContent=x>0?"x":"";
+  document.getElementById("xw").textContent="x = "+fmt(x)+" m";
+  const Q=x*x,S=4*x;
+  document.getElementById("qw").textContent=fmt(Q)+" m²";
+  document.getElementById("sw").textContent=fmt(S)+" m²";
+  const v=document.getElementById("vgl");
+  v.classList.toggle("gleich",Q===S);
+  v.textContent=Q===S?(x===0?"gleich groß – aber dann gibt es gar kein Feld":"gleich groß → das neue Feld ist doppelt so groß!"):(Q<S?"Das Quadrat ist kleiner als der Streifen.":"Das Quadrat ist größer als der Streifen.");
+}
+r.addEventListener("input",zeige);
+document.getElementById("minus").onclick=()=>{r.value=Math.max(0,+r.value-0.5);zeige();};
+document.getElementById("plus").onclick=()=>{r.value=Math.min(8,+r.value+0.5);zeige();};
+zeige();
+</script>
+</body>
+</html>
