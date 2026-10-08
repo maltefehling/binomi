@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<title>Stein-Sortierer</title>
+<!-- II.3c Den richtigen Weg wählen: Eine zufällige quadratische Gleichung erscheint (teils ungeordnet). Schritt 1: Welche Steine
+     sind da (nach dem Ordnen)? Schritt 2: Welcher Weg passt? Rückmeldung mit Begründung, Zähler. abc-Formel geht immer –
+     bei einfachen Gleichungen gibt es dafür „geht, aber umständlich“. Farben wie die Lego-Steine: rot x², grün bx, blau Zahl. -->
+<style>
+  :root{--rot:#e06666;--rotD:#b33c3c;--gr:#7cc46f;--grD:#3f8f3a;--bl:#6fa3dc;--blD:#2e5d9f;
+    --ink:#1b2a3a;--muted:#5b6b7c;--acc:#1f4e79;--bg:#f4f7fb;--card:#fff;--line:#c9d6e5;--ok:#3f8f3a;--okH:#e8f4e6;--mid:#c0700f;--midH:#fdf6ea;--no:#b03a2e;--noH:#fbe3e0}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;-webkit-user-select:none;user-select:none}
+  button{font:inherit;touch-action:manipulation}
+  header{padding:12px 16px;background:var(--acc);color:#fff;display:flex;justify-content:space-between;align-items:center}
+  header h1{font-size:20px;margin:0}
+  #zaehler{font-size:16px;font-weight:700}
+  main{padding:12px 16px 24px;max-width:760px;margin:0 auto}
+  .gl{font-size:34px;font-weight:700;text-align:center;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 10px;margin-bottom:14px;font-variant-numeric:tabular-nums}
+  .frage{font-size:18px;font-weight:700;color:var(--acc);margin:6px 0 8px}
+  .steine{display:flex;gap:10px;margin-bottom:10px}
+  .stein{flex:1;min-height:70px;border-radius:12px;border:3px solid #ccc;background:#f2f2f2;color:#aaa;font-size:24px;font-weight:800}
+  .stein.r.on{background:var(--rot);border-color:var(--rotD);color:#fff}
+  .stein.g.on{background:var(--gr);border-color:var(--grD);color:#fff}
+  .stein.b.on{background:var(--bl);border-color:var(--blD);color:#fff}
+  .wege{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+  .weg{min-height:60px;border-radius:12px;border:2px solid var(--acc);background:#fff;color:var(--acc);font-size:17px;font-weight:700;padding:6px}
+  .weg:disabled{opacity:.45}
+  .pruefen,.weiter{width:100%;min-height:54px;border-radius:12px;border:none;background:var(--acc);color:#fff;font-size:19px;font-weight:700;margin:4px 0 10px}
+  .weiter{background:#3f8f3a}
+  .rm{border-radius:12px;padding:10px 14px;font-size:18px;line-height:1.45;margin-bottom:10px}
+  .rm.ok{background:var(--okH);border:1px solid var(--ok)} .rm.mid{background:var(--midH);border:1px solid var(--mid)} .rm.no{background:var(--noH);border:1px solid var(--no)}
+  [hidden]{display:none!important}
+  footer{color:var(--muted);font-size:13px;text-align:center;padding:14px 0}
+</style>
+</head>
+<body>
+<header><h1>Stein-Sortierer</h1><span id="zaehler">0 von 0 richtig</span></header>
+<main>
+  <div class="gl" id="gl"></div>
+  <div id="schritt1">
+    <div class="frage">1. Welche Steine sind da, wenn alles auf einer Seite steht? Tippe sie an.</div>
+    <div class="steine"><button class="stein r" data-s="r">x²</button><button class="stein g" data-s="g">bx</button><button class="stein b" data-s="b">Zahl</button></div>
+    <button class="pruefen" id="p1">Steine prüfen</button>
+  </div>
+  <div class="rm" id="rm1" hidden></div>
+  <div id="schritt2" hidden>
+    <div class="frage">2. Welcher Weg ist am schnellsten?</div>
+    <div class="wege">
+      <button class="weg" data-w="wurzel">Wurzel ziehen</button>
+      <button class="weg" data-w="null">Ausklammern + Nullprodukt</button>
+      <button class="weg" data-w="binom">Binomische Formel</button>
+      <button class="weg" data-w="abc">abc-Formel</button>
+    </div>
+  </div>
+  <div class="rm" id="rm2" hidden></div>
+  <button class="weiter" id="weiter" hidden>Nächste Gleichung</button>
+</main>
+<footer>Fehling · Den richtigen Weg wählen</footer>
+<script>
+"use strict";
+const $=id=>document.getElementById(id);
+const R=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const pick=l=>l[R(0,l.length-1)];
+const fz=n=>n<0?"− "+(-n):String(n);                 // Zahl mit Rechenzeichen-Minus
+const term=(a,b,c)=>{let t=(a===1?"":a===-1?"−":a)+"x²";      // ax² + bx + c als Text
+  if(b)t+=(b>0?" + ":" − ")+(Math.abs(b)===1?"":Math.abs(b))+"x";
+  if(c)t+=(c>0?" + ":" − ")+Math.abs(c);return t;};
+// Gleichung erzeugen: Text, Steine nach dem Ordnen, bester Weg, Begründung
+function neu(){
+  const typ=pick(["wurzel","wurzel","null","null","binom","abc","abc","klammer"]);
+  if(typ==="wurzel"){const a=pick([1,1,2,3,4,5]),k=R(2,9),A=a===1?"":a;
+    return Object.assign(pick([{t:`${A}x² = ${a*k*k}`},{t:`${A}x² − ${a*k*k} = 0`},{t:`x² + ${R(1,20)} = 0`}]),{s:"rb",w:"wurzel",
+      g:"Grün fehlt – es gibt kein x allein. Also x² allein stellen und die Wurzel ziehen."});}
+  if(typ==="null"){const a=pick([1,1,2,3]),b=R(2,9)*pick([1,-1]);
+    return Object.assign(pick([{t:`${term(a,a*b,0)} = 0`},{t:`${a===1?"":a}x² = ${a*b<0?"−":""}${Math.abs(a*b)}x`}]),{s:"rg",w:"null",
+      g:"Blau fehlt – es gibt keine Zahl allein. Also x ausklammern und den Satz vom Nullprodukt nutzen."});}
+  if(typ==="binom"){const b=R(1,7)*pick([1,-1]);let k;do{k=pick([4,9,16,25,36,49]);}while(k===b*b);   // sonst fällt die Zahl beim Ordnen weg
+    return {t:`${term(1,2*b,b*b)} = ${k}`,s:"rgb",w:"binom",
+      g:`Alle drei Steine – und links steht eine binomische Formel: ${term(1,2*b,b*b)} = ( x ${b>0?"+":"−"} ${Math.abs(b)} )². Also faktorisieren und die Wurzel ziehen.`};}
+  if(typ==="klammer"){const b=R(1,6)*pick([1,-1]),k=pick([4,9,16,25,36]);
+    return {t:`( x ${b>0?"+":"−"} ${Math.abs(b)} )² = ${k}`,s:"rgb",w:"wurzel",
+      g:"Hier steht schon eine Klammer im Quadrat = Zahl. Nicht ausmultiplizieren – sofort die Wurzel ziehen (wie in II.1b)."};}
+  let a,b,c;do{a=pick([1,1,1,2,3]);b=R(-9,9);c=R(-20,20);}while(!b||!c||(a===1&&b%2===0&&c===(b/2)*(b/2)));
+  return {t:`${term(a,b,c)} = 0`,s:"rgb",w:"abc",g:"Alle drei Steine und keine binomische Formel. Also die abc-Formel (oder die Ecke ergänzen)."};
+}
+let G,ok=0,alle=0,sel=new Set();
+function start(){
+  G=neu();sel.clear();$("gl").textContent=G.t;
+  document.querySelectorAll(".stein").forEach(b=>b.classList.remove("on"));
+  $("schritt1").hidden=false;$("rm1").hidden=true;$("schritt2").hidden=true;$("rm2").hidden=true;$("weiter").hidden=true;
+  document.querySelectorAll(".weg").forEach(b=>b.disabled=false);
+}
+document.querySelectorAll(".stein").forEach(b=>b.onclick=()=>{const s=b.dataset.s;sel.has(s)?sel.delete(s):sel.add(s);b.classList.toggle("on");});
+$("p1").onclick=()=>{
+  const ich=["r","g","b"].filter(s=>sel.has(s)).join(""),soll=G.s,r=$("rm1");r.hidden=false;
+  const namen={r:"rot",g:"grün",b:"blau"},txt=[...soll].map(s=>namen[s]).join(", ");
+  if(ich===soll){r.className="rm ok";r.innerHTML=`<b>Richtig:</b> ${txt}.`;}
+  else{r.className="rm no";r.innerHTML=`<b>Nicht ganz.</b> Da sind: ${txt}. `+(G.t.startsWith("(")?"Tipp: Eine Klammer im Quadrat enthält ausmultipliziert alle drei Steine.":"Tipp: Stell dir vor, alles steht auf einer Seite und rechts steht 0.");
+    document.querySelectorAll(".stein").forEach(b=>b.classList.toggle("on",soll.includes(b.dataset.s)));}
+  $("schritt1").hidden=true;$("schritt2").hidden=false;
+};
+document.querySelectorAll(".weg").forEach(b=>b.onclick=()=>{
+  const w=b.dataset.w,r=$("rm2");r.hidden=false;alle++;
+  if(w===G.w){ok++;r.className="rm ok";r.innerHTML="<b>Richtig!</b> "+G.g;}
+  else if(w==="abc"&&G.w!=="abc"){r.className="rm mid";r.innerHTML="<b>Geht – aber umständlich.</b> Die abc-Formel funktioniert immer. Schneller: "+G.g;}
+  else if(w==="binom"&&G.w==="abc"){r.className="rm no";r.innerHTML="<b>Leider nicht.</b> Prüfe: Ist die Zahl am Ende b², das Mittelstück 2 · b · x? Hier nicht. "+G.g;}
+  else{r.className="rm no";r.innerHTML="<b>Leider nicht.</b> "+G.g;}
+  $("zaehler").textContent=`${ok} von ${alle} richtig`;
+  document.querySelectorAll(".weg").forEach(x=>x.disabled=true);$("weiter").hidden=false;
+});
+$("weiter").onclick=start;
+start();
+</script>
+</body>
+</html>
