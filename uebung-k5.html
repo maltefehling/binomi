@@ -43,6 +43,8 @@
   .loes .grid span{background:#fff;border:1px solid var(--line);border-radius:8px;padding:6px 8px;text-align:center;font-size:19px}
   .loes[hidden]{display:none}
   footer{color:var(--muted);font-size:13px;text-align:center;margin-top:24px}
+  .fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;font-size:.82em;line-height:1.15;margin:0 2px}
+  .fr>span:first-child{border-bottom:1.5px solid currentColor;padding:0 3px}
 </style>
 </head>
 <body>
@@ -60,7 +62,7 @@
 <script>
 "use strict";
 const D={"erinnerung": ["1. Klammern auflösen (ausmultiplizieren oder binomische Formel).", "2. Zusammenfassen – das x² fällt weg.", "3. Umformen, bis x allein steht.", "4. Probe: Lösung in die Ausgangsgleichung einsetzen.", "Minus vor einer Klammer mit Hochzahl: erst die Formel in Klammern schreiben, dann dreht das Minus jedes Vorzeichen um."], "a1": {"t": "Löse die Gleichung und mach die Probe: 4 · (x − 2) = 2x + 6", "loes": ["x = 7", "20 = 20"], "falsch": ["x = 4", "x = 2"], "mix": ["x = 7", "x = 4", "20 = 20", "x = 2"]}, "stufen": {"1": {"name": "Mit Hilfe", "aufg": [{"t": "Löse. Tipp: Zuerst die Klammer auflösen.", "sub": ["3 · (x + 5) = 27", "2 · (x − 1) = x + 4", "5x − (x + 3) = 13"]}, {"t": "Ben löst 2 · (x + 3) = 14 so: 2x + 3 = 14, also x = 5,5. Finde seinen Fehler und rechne richtig.", "tag": "v", "idee": "Er hat die 3 nicht mal 2 genommen. Richtig: 2x + 6 = 14, also x = 4."}, {"t": "Wiederholung: Multipliziere aus: (x + 4)²", "tag": "w"}, {"t": "Probe ohne Lösen: Ist x = 3 eine Lösung von 2 · (x + 1) = 8?", "tag": "v", "idee": "Einsetzen: 2 · 4 = 8. Ja, x = 3 ist eine Lösung."}], "mix": ["x² + 16", "x² + 8x + 16", "x = 4", "x = 6", "x = 5,5", "x = 9", "x = 3", "ja"]}, "2": {"name": "Sicher rechnen", "aufg": [{"t": "Löse. Das x² fällt jedes Mal weg.", "sub": ["(x + 3) · (x + 2) = x² + 26", "(x − 5)² = x² − 5", "x² − (x − 4)² = 32"]}, {"t": "Ist x = 2 eine Lösung von (x + 1)² = x² + 5? Prüfe durch Einsetzen.", "tag": "v", "idee": "Links: 3² = 9. Rechts: 4 + 5 = 9. Ja, x = 2 ist eine Lösung."}, {"t": "Wiederholung: Faktorisiere: x² − 64", "tag": "w"}, {"t": "Zahlenrätsel: Denk dir eine Zahl, addiere 4, nimm das Ergebnis mal sich selbst und ziehe die Zahl mal sich selbst ab. Es kommt 56 heraus. Welche Zahl war es? Stelle eine Gleichung auf."}], "mix": ["x = 3", "x = 5", "x = 7", "(x − 8)²", "ja", "x = 6", "x = 2", "x = −3", "x = −2", "x = 4", "(x + 8) · (x − 8)"]}, "3": {"name": "Knifflig", "aufg": [{"t": "Löse.", "sub": ["(x + 4)² − (x − 2)² = 60", "(2x + 1) · (2x − 1) = 4x² + 2x"]}, {"t": "Ein Quadrat wird an jeder Seite um 3 cm länger. Seine Fläche wächst dadurch um 51 cm². Wie lang war die Seite vorher?"}, {"t": "Warum hat die Gleichung (x + 2)² = x² + 4x + 4 unendlich viele Lösungen?", "tag": "v", "idee": "Rechts steht genau die binomische Formel von links. Beide Seiten sind immer gleich – jede Zahl ist eine Lösung."}, {"t": "Wiederholung: Klammere aus und faktorisiere: 3x² − 27", "tag": "w"}], "mix": ["x = 4", "x = −0,5", "x = 0,5", "7 cm", "8 cm", "x = 6", "3 · (x − 3)²", "3 · (x + 3) · (x − 3)"]}}};
-const esc=s=>s.replace(/&/g,"&amp;").replace(/</g,"&lt;");
+const esc=s=>s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/\{([^{}\/]+)\/([^{}]+)\}/g,'<span class="fr"><span>$1</span><span>$2</span></span>');
 const tagHtml=t=>t==="v"?'<span class="tag v">💡 Verständnis</span>':t==="w"?'<span class="tag w">↩ Wiederholung</span>':"";
 function aufgabe(nr,a){
   const d=document.createElement("div");d.className="aufg";

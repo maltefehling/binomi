@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Hauptnenner Schritt für Schritt</title>
+<!-- I.6 Bruchgleichungen: Hauptnenner durch Zerlegen. Jeder Nenner zerfällt in kleinste Malaufgaben, die Bausteine wandern
+     in den Hauptnenner-Korb; was schon im Korb liegt, wird nicht noch einmal genommen. Gleiches Bild wie das Zerlegen in I.1b.
+     MODUS=beispiele: drei feste Beispiele · MODUS=eingabe: eigene Nenner (Hilfe zur Übung). -->
+<style>
+  :root{--korb:#fdf6ea;--korbL:#fbd9a8;--hl:#c0700f;--hlbg:#fde7c8;--n1:#2e5d9f;--n2:#3f8f3a;--n3:#7b4fa0;
+    --ink:#1b2a3a;--muted:#5b6b7c;--acc:#1f4e79;--bg:#f4f7fb;--card:#fff;--line:#c9d6e5}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;-webkit-user-select:none;user-select:none}
+  button,input{font:inherit;touch-action:manipulation}
+  header{padding:12px 16px;background:var(--acc);color:#fff}
+  header h1{font-size:20px;margin:0}
+  main{padding:12px 16px 20px;max-width:1100px;margin:0 auto}
+  .bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+  .btn{border:1px solid var(--acc);background:#fff;color:var(--acc);border-radius:10px;padding:10px 16px;font-size:17px;font-weight:700;min-height:46px}
+  .btn[aria-pressed="true"],.btn.voll{background:var(--acc);color:#fff}
+  .wrap{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start}
+  svg{flex:1 1 520px;max-width:640px;width:100%;height:auto;background:var(--card);border:1px solid var(--line);border-radius:12px}
+  .side{flex:1 1 280px}
+  .cap{min-height:96px;font-size:21px;font-weight:600;color:var(--acc);line-height:1.4;margin:4px 0 12px}
+  .calc{font-size:24px;line-height:1.7;min-height:60px}
+  .calc .h{color:var(--hl);font-weight:800}
+  .calc small{font-size:18px;color:var(--muted)}
+  .eing{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+  .nen{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .nen b{font-size:16px;min-width:74px}
+  .nen input{width:64px;height:44px;text-align:center;font-size:22px;font-weight:700;border:1px solid var(--line);border-radius:10px}
+  .chip{min-width:48px;height:44px;border-radius:10px;border:1px solid var(--line);background:#fff;font-size:20px;font-weight:700;color:var(--ink);padding:0 10px}
+  .chip[aria-pressed="true"]{background:var(--acc);color:#fff;border-color:var(--acc)}
+  .prompt{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;font-size:18px;line-height:1.45;margin-bottom:12px}
+  footer{color:var(--muted);font-size:13px;text-align:center;padding:10px 0 18px}
+  svg text{font-family:inherit}
+</style>
+</head>
+<body>
+<header><h1>Hauptnenner Schritt für Schritt</h1></header>
+<main>
+  <div class="prompt">Stelle die Nenner aus deiner Aufgabe ein: die Zahl und ob ein x dabei ist. Dann tippe auf <b>Hauptnenner zeigen</b>.</div>
+  <div class="eing" id="eing"></div>
+  <div class="bar"><button class="btn" id="dritter">+ dritter Nenner</button><button class="btn voll" id="go">Hauptnenner zeigen</button></div>
+  <div class="wrap">
+    <svg id="s" viewBox="0 0 600 400" aria-label="Nenner werden zerlegt, die Bausteine wandern in den Hauptnenner-Korb"></svg>
+    <div class="side"><div class="cap" id="cap"></div><div class="calc" id="calc"></div></div>
+  </div>
+</main>
+<footer>Fehling · Bruchgleichungen</footer>
+<script>
+"use strict";
+const MODUS="eingabe";
+const NS="http://www.w3.org/2000/svg",svg=document.getElementById("s"),cap=document.getElementById("cap"),calc=document.getElementById("calc");
+const el=(t,a,p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);(p||svg).appendChild(e);return e;};
+const SLOW=1.4;
+const ease=k=>k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;
+const tween=(ms,f)=>new Promise(r=>{ms*=SLOW;const t0=performance.now();const s=t=>{const k=Math.min(1,(t-t0)/ms);f(ease(k));k<1?requestAnimationFrame(s):r();};requestAnimationFrame(s);});
+const wait=ms=>new Promise(r=>setTimeout(r,ms*SLOW));
+let run=0;
+// ---------- Bausteine: Nenner = {c: Zahl, x: Exponent} ----------
+const primes=n=>{const f=[];for(let d=2;n>1;d++)while(n%d===0){f.push(String(d));n/=d;}return f;};
+const zerlege=t=>{const f=primes(t.c);for(let i=0;i<t.x;i++)f.push("x");return f.length?f:["1"];};
+const name=t=>(t.c===1&&t.x?"":String(t.c))+(t.x?"x"+(t.x>1?"²":""):"");
+function prod(l){let n=1,x=0;l.forEach(s=>{if(s==="x")x++;else if(s!=="1")n*=+s;});return (n===1&&x?"":String(n))+(x?"x"+(x>1?"²":""):"");}
+const COL=["var(--n1)","var(--n2)","var(--n3)"];
+const txt=(x,y,t,o={})=>{const e=el("text",{x,y,"text-anchor":"middle","dominant-baseline":"central","font-size":o.size||26,"font-weight":o.w||700,fill:o.fill||"var(--ink)",opacity:o.op??1});e.textContent=t;return e;};
+const fade=(els,to,ms=400)=>{const f=els.map(e=>+(e.getAttribute("opacity")??1));return tween(ms,k=>els.forEach((e,i)=>e.setAttribute("opacity",f[i]+(to-f[i])*k)));};
+const move=(e,x1,y1,ms=800)=>{const x0=+e.getAttribute("x"),y0=+e.getAttribute("y");return tween(ms,k=>{e.setAttribute("x",x0+(x1-x0)*k);e.setAttribute("y",y0+(y1-y0)*k);});};
+const reihe=(cx,n)=>{const w=44;return [...Array(n)].map((_,i)=>cx+(i-(n-1)/2)*w);};
+
+async function play(N){
+  const my=++run;const alive=()=>my===run;const say=t=>{if(alive())cap.textContent=t;};
+  svg.innerHTML="";calc.innerHTML="";
+  const n=N.length,xs=N.map((_,i)=>600*(i+1)/(n+1));
+  // Korb
+  el("rect",{x:60,y:270,width:480,height:100,rx:18,fill:"var(--korb)",stroke:"var(--korbL)","stroke-width":3});
+  txt(300,292,"Hauptnenner-Korb",{size:17,fill:"var(--muted)",w:600});
+  const karten=N.map((t,i)=>{el("rect",{x:xs[i]-46,y:30,width:92,height:56,rx:10,fill:"#fff",stroke:COL[i],"stroke-width":3});return txt(xs[i],58,name(t),{fill:COL[i],size:30});});
+  say(`Die Nenner sind ${N.map(name).join(" und ")}. Welche Zahl reicht für alle?`);
+  await wait(2200);if(!alive())return;
+  // 1. zerlegen
+  say("Zuerst zerlegen wir jeden Nenner in kleinste Malaufgaben – wie beim Ausklammern.");
+  const F=N.map(zerlege);
+  const chips=F.map((f,i)=>{const p=reihe(xs[i],f.length);return f.map((s,k)=>txt(p[k],150,s,{op:0,fill:COL[i]}));});
+  const dots=F.map((f,i)=>{const p=reihe(xs[i],f.length);return p.slice(1).map((x,k)=>txt((p[k]+x)/2,150,"·",{op:0,size:22}));});
+  await fade([...chips.flat(),...dots.flat()],1,600);if(!alive())return;
+  calc.innerHTML=N.map((t,i)=>`${name(t)} = ${F[i].join(" · ")}`).join("<br>");
+  await wait(2200);if(!alive())return;
+  await fade(dots.flat(),0,300);
+  // 2. sammeln
+  const korb=[];const korbEls=[];
+  const korbPos=()=>reihe(300,korb.length);
+  const neuOrdnen=async()=>{const p=korbPos();await Promise.all(korbEls.map((e,k)=>move(e,p[k],330,400)));};
+  for(let i=0;i<n;i++){
+    const rest=[...korb];
+    say(i===0?`Alle Bausteine von ${name(N[0])} kommen in den Korb.`:`Jetzt ${name(N[i])}: Was schon im Korb liegt, brauchen wir nicht noch einmal.`);
+    for(let k=0;k<F[i].length;k++){
+      const s=F[i][k],e=chips[i][k];
+      const j=rest.indexOf(s);
+      if(i>0&&j>=0){
+        rest.splice(j,1);
+        e.setAttribute("fill","var(--hl)");const bb=e.getBBox();
+        const r=el("rect",{x:bb.x-6,y:bb.y-3,width:bb.width+12,height:bb.height+6,rx:8,fill:"var(--hlbg)",stroke:"var(--hl)","stroke-width":2});svg.insertBefore(r,e);
+        await wait(700);if(!alive())return;
+        await fade([e,r],0.15,500);
+      }else{
+        korb.push(s);korbEls.push(e);
+        const p=korbPos();await move(e,p[p.length-1],330,700);await neuOrdnen();if(!alive())return;
+      }
+    }
+    await wait(900);if(!alive())return;
+  }
+  // 3. Ergebnis
+  const p=korbPos();const kd=p.slice(1).map((x,k)=>txt((p[k]+x)/2,330,"·",{op:0,size:22}));await fade(kd,1,300);
+  const hn=prod(korb),alle=prod(F.flat());
+  const sortiert=[...korb].sort((a,b)=>(a==="x")-(b==="x")||a-b);calc.innerHTML=`Hauptnenner: ${sortiert.join(" · ")} = <span class="h">${hn}</span>`+(alle!==hn?`<br><small>Alle Nenner mal: ${N.map(name).join(" · ")} = ${alle} – das geht auch, ist aber größer als nötig.</small>`:"");
+  say("Im Korb liegt der Hauptnenner: Er passt zu allen Nennern – und ist so klein wie möglich.");
+}
+const ein=[{c:4,x:0},{c:6,x:1}];let drei=false;
+function baue(){
+  const box=document.getElementById("eing");box.innerHTML="";
+  (drei?[0,1,2]:[0,1]).forEach(i=>{if(!ein[i])ein[i]={c:1,x:1};const t=ein[i];
+    const d=document.createElement("div");d.className="nen";d.innerHTML=`<b style="color:${["#2e5d9f","#3f8f3a","#7b4fa0"][i]}">${i+1}. Nenner</b>`;
+    const inp=document.createElement("input");inp.type="number";inp.inputMode="numeric";inp.min=1;inp.max=99;inp.value=t.c;inp.setAttribute("aria-label","Zahl");
+    inp.onchange=()=>{t.c=Math.max(1,Math.min(99,parseInt(inp.value,10)||1));inp.value=t.c;};
+    const b=document.createElement("button");b.className="chip";b.textContent="mit x";b.setAttribute("aria-pressed",t.x>0);
+    b.onclick=()=>{t.x=t.x?0:1;b.setAttribute("aria-pressed",t.x>0);};
+    d.append(inp,b);box.appendChild(d);});
+}
+document.getElementById("dritter").onclick=e=>{drei=!drei;e.target.textContent=drei?"– dritter Nenner":"+ dritter Nenner";baue();};
+document.getElementById("go").onclick=()=>play((drei?ein.slice(0,3):ein.slice(0,2)).map(t=>({c:t.c,x:t.x})));
+baue();
+</script>
+</body>
+</html>
