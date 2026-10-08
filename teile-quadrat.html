@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Passen die Teile zu einem Quadrat?</title>
+<!-- II.2b Binomische Formel rückwärts: Feldhälfte x² (rot), zwei Randstreifen b · x (grün), Ecke b² (blau) wandern zu (x + b)² zusammen.
+     ?ecke=fehlt (II.2c Quadratische Ergänzung): Die Ecke fehlt (Geräteschuppen) – nach dem Zusammensetzen wird sie ergänzt.
+     Farben wie die Lego-Steine: rot = x², grün = bx, blau = Zahl. Die Lehrkraft rechnet nichts. -->
+<style>
+  :root{--rot:#e06666;--rotH:#f6d0d0;--rotD:#b33c3c;--grH:#d6efd0;--grD:#3f8f3a;--blH:#d3e3f6;--blD:#2e5d9f;
+    --ink:#1b2a3a;--muted:#5b6b7c;--acc:#1f4e79;--bg:#f4f7fb;--card:#fff;--line:#c9d6e5;--sand:#f3e6c2}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;-webkit-user-select:none;user-select:none}
+  button{font:inherit;touch-action:manipulation}
+  header{padding:12px 16px;background:var(--acc);color:#fff}
+  header h1{font-size:20px;margin:0}
+  main{padding:12px 16px 20px;max-width:1100px;margin:0 auto}
+  .wrap{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start}
+  svg{flex:1 1 420px;max-width:580px;width:100%;height:auto;background:var(--card);border:1px solid var(--line);border-radius:12px}
+  .side{flex:1 1 260px;min-width:0}
+  .lbl{font-size:15px;color:var(--muted);margin:2px 0 6px}
+  .row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+  .b{border:2px solid var(--acc);background:#fff;color:var(--acc);border-radius:10px;min-width:56px;min-height:48px;font-size:19px;font-weight:700}
+  .b.on{background:var(--acc);color:#fff}
+  .go{border:none;background:#3f8f3a;color:#fff;border-radius:12px;min-height:56px;font-size:20px;font-weight:700;padding:8px 18px;width:100%;margin:2px 0 10px}
+  .go:disabled{opacity:.45}
+  .cap{font-size:20px;font-weight:600;color:var(--acc);line-height:1.4;min-height:58px;margin:4px 0 8px}
+  .term{font-size:25px;line-height:1.6;background:#fff;border:1px solid var(--line);border-radius:12px;padding:8px 14px;min-height:58px}
+  .r{color:var(--rotD);font-weight:700}.g{color:var(--grD);font-weight:700}.bl{color:var(--blD);font-weight:700}
+  footer{color:var(--muted);font-size:13px;text-align:center;padding:10px 0 18px}
+  svg text{font-family:inherit}
+</style>
+</head>
+<body>
+<header><h1 id="h1">Passen die Teile zu einem Quadrat?</h1></header>
+<main>
+  <div class="wrap">
+    <svg id="s" viewBox="0 0 560 560" aria-label="Flächenbild: Quadrat, zwei Streifen und eine Ecke"></svg>
+    <div class="side">
+      <div class="lbl">Breite des Randes b</div>
+      <div class="row" id="bs"></div>
+      <button class="go" id="go">Zusammensetzen</button>
+      <button class="go" id="erg" hidden>Ecke ergänzen</button>
+      <div class="cap" id="cap"></div>
+      <div class="term" id="term"></div>
+    </div>
+  </div>
+</main>
+<footer>Fehling · II Quadratische Gleichungen</footer>
+<script>
+"use strict";
+const FEHLT=new URLSearchParams(location.search).get("ecke")==="fehlt";
+if(FEHLT){document.getElementById("h1").textContent="Die fehlende Ecke";document.title="Die fehlende Ecke";}
+const NS="http://www.w3.org/2000/svg",svg=document.getElementById("s"),cap=document.getElementById("cap"),term=document.getElementById("term");
+const el=(t,a,p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);(p||svg).appendChild(e);return e;};
+const ease=k=>k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;
+const tween=(ms,f)=>new Promise(r=>{const t0=performance.now();const s=t=>{const k=Math.min(1,(t-t0)/ms);f(ease(k));k<1?requestAnimationFrame(s):r();};requestAnimationFrame(s);});
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+const U=40,X=6*U,OX=84,OY=70;          // x wird 6 Einheiten breit gezeichnet, 1 m Rand = 40 px
+let B=3,run=0;
+// ein Teil = Gruppe aus Rechteck + Beschriftung, verschiebbar über transform
+function teil(w,h,fill,stroke,txt,col){
+  const g=el("g",{});el("rect",{x:0,y:0,width:w,height:h,fill,stroke,"stroke-width":2.5,rx:2},g);
+  const t=el("text",{x:w/2,y:h/2,"text-anchor":"middle","dominant-baseline":"central","font-size":Math.min(26,Math.max(15,Math.min(w,h)*0.45)),"font-weight":700,fill:col},g);t.textContent=txt;
+  g.pos=[0,0];g.setPos=(x,y)=>{g.pos=[x,y];g.setAttribute("transform",`translate(${x},${y})`);};return g;
+}
+const move=(g,x,y,ms=900)=>{const [x0,y0]=g.pos;return tween(ms,k=>g.setPos(x0+(x-x0)*k,y0+(y-y0)*k));};
+let T={};
+function aufbau(){
+  run++;svg.innerHTML="";const b=B*U;
+  el("rect",{x:0,y:0,width:560,height:560,fill:"var(--sand)",opacity:.35});
+  T.q=teil(X,X,"var(--rotH)","var(--rotD)","x²","var(--rotD)");
+  T.s1=teil(b,X,"var(--grH)","var(--grD)",B+"x","var(--grD)");
+  T.s2=teil(X,b,"var(--grH)","var(--grD)",B+"x","var(--grD)");
+  T.e=FEHLT?null:teil(b,b,"var(--blH)","var(--blD)",String(B*B),"var(--blD)");
+  // Lieferzustand: auseinander
+  T.q.setPos(OX-30,OY-40);T.s1.setPos(OX+X+30,OY-40);T.s2.setPos(OX-10,OY+X+20);
+  if(T.e)T.e.setPos(OX+X+40,OY+X+20);
+  T.rahmen=el("rect",{x:OX,y:OY,width:X+b,height:X+b,fill:"none",stroke:"var(--acc)","stroke-width":3,"stroke-dasharray":"8 6",opacity:0});
+  T.lx=el("text",{x:OX+(X+b)/2,y:OY-16,"text-anchor":"middle","font-size":22,"font-weight":700,fill:"var(--acc)",opacity:0});T.lx.textContent="x + "+B;
+  T.ly=el("text",{x:OX-14,y:OY+(X+b)/2,"text-anchor":"end","dominant-baseline":"central","font-size":22,"font-weight":700,fill:"var(--acc)",opacity:0});T.ly.textContent="x + "+B;
+  T.loch=el("rect",{x:OX+X,y:OY+X,width:b,height:b,fill:"#fff",stroke:"var(--blD)","stroke-width":2.5,"stroke-dasharray":"6 5",opacity:0});
+  T.lochT=el("text",{x:OX+X+b/2,y:OY+X+b/2,"text-anchor":"middle","dominant-baseline":"central","font-size":20,"font-weight":700,fill:"var(--blD)",opacity:0});T.lochT.textContent="?";
+  const summe=FEHLT?`<span class="r">x²</span> + <span class="g">${B}x</span> + <span class="g">${B}x</span>`:`<span class="r">x²</span> + <span class="g">${B}x</span> + <span class="g">${B}x</span> + <span class="bl">${B*B}</span>`;
+  term.innerHTML=summe;
+  cap.textContent=FEHLT?"Die Teile ohne Ecke – dort steht der Geräteschuppen.":"So wird der Sand geliefert: vier Teile.";
+  document.getElementById("go").disabled=false;document.getElementById("erg").hidden=true;
+}
+const fade=(e,to,ms=500)=>{const f=+e.getAttribute("opacity");return tween(ms,k=>e.setAttribute("opacity",f+(to-f)*k));};
+document.getElementById("go").onclick=async()=>{
+  const my=run,b=B*U;document.getElementById("go").disabled=true;
+  cap.textContent="Die Teile wandern zusammen …";
+  await Promise.all([move(T.q,OX,OY),move(T.s1,OX+X,OY),move(T.s2,OX,OY+X)]);
+  if(my!==run)return;
+  if(T.e){await move(T.e,OX+X,OY+X,700);if(my!==run)return;
+    await Promise.all([fade(T.rahmen,1),fade(T.lx,1),fade(T.ly,1)]);
+    cap.textContent="Ein Quadrat mit der Seite x + "+B+"!";
+    term.innerHTML=`<span class="r">x²</span> + <span class="g">${2*B}x</span> + <span class="bl">${B*B}</span> = <span style="white-space:nowrap">( x + ${B} )²</span>`;
+  }else{
+    await Promise.all([fade(T.loch,1),fade(T.lochT,1)]);
+    cap.textContent="Fast ein Quadrat – aber die Ecke fehlt. Wie groß ist sie?";
+    term.innerHTML=`<span class="r">x²</span> + <span class="g">${2*B}x</span>   … es fehlen ${B} · ${B}`;
+    document.getElementById("erg").hidden=false;
+  }
+};
+document.getElementById("erg").onclick=async()=>{
+  const my=run,b=B*U;document.getElementById("erg").hidden=true;
+  T.e=teil(b,b,"var(--blH)","var(--blD)",String(B*B),"var(--blD)");T.e.setPos(OX+X+60,OY+X+40);T.e.setAttribute("opacity",0);
+  await tween(400,k=>T.e.setAttribute("opacity",k));await move(T.e,OX+X,OY+X,800);if(my!==run)return;
+  T.loch.setAttribute("opacity",0);T.lochT.setAttribute("opacity",0);
+  await Promise.all([fade(T.rahmen,1),fade(T.lx,1),fade(T.ly,1)]);
+  cap.textContent="Ecke ergänzt: + "+(B*B)+". Jetzt ist es ein Quadrat mit der Seite x + "+B+".";
+  term.innerHTML=`<span class="r">x²</span> + <span class="g">${2*B}x</span> <span class="bl">+ ${B*B}</span> = <span style="white-space:nowrap">( x + ${B} )²</span>`;
+};
+const bs=document.getElementById("bs");
+[1,2,3,4,5].forEach(n=>{const b=document.createElement("button");b.className="b"+(n===B?" on":"");b.textContent=n+" m";
+  b.onclick=()=>{B=n;[...bs.children].forEach(x=>x.classList.toggle("on",x===b));aufbau();};bs.appendChild(b);});
+aufbau();
+</script>
+</body>
+</html>
