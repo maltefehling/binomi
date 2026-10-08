@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Übung Kapitel 5 · Gleichungen mit Klammern</title>
+<!-- Gesamtskript I Terme und Gleichungen: Online-Übung nach dem Kapitel (QR-Code im Skript). Nur Aufgaben – gerechnet wird im Heft.
+     Aufbau wie „I.3a Vermischte Übungen“: Aufgabe 1 für alle, dann ★ / ★★ / ★★★. Lösungen gemischt mit typischen Fehlern. -->
+<style>
+  :root{--ink:#1b2a3a;--muted:#5b6b7c;--acc:#1f4e79;--bg:#f4f7fb;--card:#fff;--line:#c9d6e5;
+    --merk:#dde8f5;--merkL:#a9c1e0;--auf:#e8f4e6;--aufL:#c6e8c0;--hilf:#fdf6ea;--hilfL:#fbd9a8;--grau:#f2f2f2;--rot:#b03a2e;--gruen:#3f8f3a}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
+  button{font:inherit;touch-action:manipulation}
+  header{padding:12px 16px;background:var(--acc);color:#fff}
+  header h1{font-size:20px;margin:0}
+  main{max-width:880px;margin:0 auto;padding:14px 16px 32px}
+  .hinweis{background:var(--auf);border:1px solid var(--aufL);border-radius:12px;padding:10px 14px;font-size:18px;line-height:1.45;margin-bottom:12px}
+  details.erin{background:var(--merk);border:1px solid var(--merkL);border-radius:12px;padding:10px 14px;margin-bottom:14px;font-size:18px;line-height:1.5}
+  details.erin summary{font-weight:700;color:var(--acc);cursor:pointer;min-height:30px}
+  details.erin ul{margin:6px 0 0;padding-left:22px}
+  h2{font-size:21px;color:var(--acc);margin:18px 0 8px;padding-bottom:4px;border-bottom:2px solid var(--acc)}
+  .aufg{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:10px}
+  .aufg .kopf{font-weight:700;color:var(--acc);font-size:18px;margin-bottom:4px}
+  .aufg .txt{font-size:20px;line-height:1.45}
+  .aufg ol{margin:6px 0 0;padding-left:0;list-style:none;display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:6px 18px}
+  .aufg li{font-size:21px;line-height:1.5;white-space:nowrap;overflow-x:auto}
+  .aufg li b{color:var(--muted);font-weight:600;margin-right:6px}
+  .tag{display:inline-block;font-size:14px;font-weight:700;border-radius:8px;padding:2px 8px;margin-left:8px;vertical-align:middle}
+  .tag.v{background:#fff3c4;color:#7a5b00}.tag.w{background:#e2d6f0;color:#4f2f7a}
+  details.idee{margin-top:8px;font-size:18px}
+  details.idee summary{color:var(--acc);cursor:pointer;font-weight:600}
+  details.idee div{background:var(--grau);border-radius:8px;padding:8px 10px;margin-top:6px;line-height:1.45}
+  .wahl{display:flex;gap:10px;flex-wrap:wrap;margin:6px 0 10px}
+  .wahl button{flex:1 1 200px;border:2px solid var(--acc);background:#fff;color:var(--acc);border-radius:12px;padding:12px 14px;font-size:19px;font-weight:700;min-height:56px;text-align:left}
+  .wahl button[aria-pressed="true"]{background:var(--acc);color:#fff}
+  .wahl small{display:block;font-weight:500;font-size:15px;opacity:.85}
+  .stufe[hidden]{display:none}
+  .loesbtn{border:1px solid var(--hilfL);background:var(--hilf);color:var(--ink);border-radius:10px;padding:10px 16px;font-size:18px;font-weight:700;min-height:48px;margin-top:4px}
+  .loes{background:var(--hilf);border:1px solid var(--hilfL);border-radius:12px;padding:10px 14px;margin-top:8px}
+  .loes p{margin:0 0 8px;font-size:16px;color:var(--rot);font-weight:700}
+  .loes .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:6px}
+  .loes .grid span{background:#fff;border:1px solid var(--line);border-radius:8px;padding:6px 8px;text-align:center;font-size:19px}
+  .loes[hidden]{display:none}
+  footer{color:var(--muted);font-size:13px;text-align:center;margin-top:24px}
+</style>
+</head>
+<body>
+<header><h1>Übung Kapitel 5 · Gleichungen mit Klammern</h1></header>
+<main>
+  <div class="hinweis"><b>Rechne alle Aufgaben in deinem Heft.</b> Schreibe die Nummer der Aufgabe dazu. Kontrolliere erst am Ende mit den Lösungen.</div>
+  <details class="erin"><summary>Erinnerung: Das brauchst du</summary><ul id="erin"></ul></details>
+  <h2>Aufgabe 1 · für alle</h2>
+  <div id="a1"></div>
+  <h2>Jetzt wählst du dein Niveau</h2>
+  <div class="wahl" id="wahl"></div>
+  <div id="stufen"></div>
+  <footer>Fehling · I Terme und Gleichungen</footer>
+</main>
+<script>
+"use strict";
+const D={"erinnerung": ["1. Klammern auflösen (ausmultiplizieren oder binomische Formel).", "2. Zusammenfassen – das x² fällt weg.", "3. Umformen, bis x allein steht.", "4. Probe: Lösung in die Ausgangsgleichung einsetzen.", "Minus vor einer Klammer mit Hochzahl: erst die Formel in Klammern schreiben, dann dreht das Minus jedes Vorzeichen um."], "a1": {"t": "Löse die Gleichung und mach die Probe: 4 · (x − 2) = 2x + 6", "loes": ["x = 7", "20 = 20"], "falsch": ["x = 4", "x = 2"], "mix": ["x = 7", "x = 4", "20 = 20", "x = 2"]}, "stufen": {"1": {"name": "Mit Hilfe", "aufg": [{"t": "Löse. Tipp: Zuerst die Klammer auflösen.", "sub": ["3 · (x + 5) = 27", "2 · (x − 1) = x + 4", "5x − (x + 3) = 13"]}, {"t": "Ben löst 2 · (x + 3) = 14 so: 2x + 3 = 14, also x = 5,5. Finde seinen Fehler und rechne richtig.", "tag": "v", "idee": "Er hat die 3 nicht mal 2 genommen. Richtig: 2x + 6 = 14, also x = 4."}, {"t": "Wiederholung: Multipliziere aus: (x + 4)²", "tag": "w"}, {"t": "Probe ohne Lösen: Ist x = 3 eine Lösung von 2 · (x + 1) = 8?", "tag": "v", "idee": "Einsetzen: 2 · 4 = 8. Ja, x = 3 ist eine Lösung."}], "mix": ["x² + 16", "x² + 8x + 16", "x = 4", "x = 6", "x = 5,5", "x = 9", "x = 3", "ja"]}, "2": {"name": "Sicher rechnen", "aufg": [{"t": "Löse. Das x² fällt jedes Mal weg.", "sub": ["(x + 3) · (x + 2) = x² + 26", "(x − 5)² = x² − 5", "x² − (x − 4)² = 32"]}, {"t": "Ist x = 2 eine Lösung von (x + 1)² = x² + 5? Prüfe durch Einsetzen.", "tag": "v", "idee": "Links: 3² = 9. Rechts: 4 + 5 = 9. Ja, x = 2 ist eine Lösung."}, {"t": "Wiederholung: Faktorisiere: x² − 64", "tag": "w"}, {"t": "Zahlenrätsel: Denk dir eine Zahl, addiere 4, nimm das Ergebnis mal sich selbst und ziehe die Zahl mal sich selbst ab. Es kommt 56 heraus. Welche Zahl war es? Stelle eine Gleichung auf."}], "mix": ["x = 3", "x = 5", "x = 7", "(x − 8)²", "ja", "x = 6", "x = 2", "x = −3", "x = −2", "x = 4", "(x + 8) · (x − 8)"]}, "3": {"name": "Knifflig", "aufg": [{"t": "Löse.", "sub": ["(x + 4)² − (x − 2)² = 60", "(2x + 1) · (2x − 1) = 4x² + 2x"]}, {"t": "Ein Quadrat wird an jeder Seite um 3 cm länger. Seine Fläche wächst dadurch um 51 cm². Wie lang war die Seite vorher?"}, {"t": "Warum hat die Gleichung (x + 2)² = x² + 4x + 4 unendlich viele Lösungen?", "tag": "v", "idee": "Rechts steht genau die binomische Formel von links. Beide Seiten sind immer gleich – jede Zahl ist eine Lösung."}, {"t": "Wiederholung: Klammere aus und faktorisiere: 3x² − 27", "tag": "w"}], "mix": ["x = 4", "x = −0,5", "x = 0,5", "7 cm", "8 cm", "x = 6", "3 · (x − 3)²", "3 · (x + 3) · (x − 3)"]}}};
+const esc=s=>s.replace(/&/g,"&amp;").replace(/</g,"&lt;");
+const tagHtml=t=>t==="v"?'<span class="tag v">💡 Verständnis</span>':t==="w"?'<span class="tag w">↩ Wiederholung</span>':"";
+function aufgabe(nr,a){
+  const d=document.createElement("div");d.className="aufg";
+  let h=`<div class="kopf">Aufgabe ${nr}${tagHtml(a.tag)}</div><div class="txt">${esc(a.tag==="w"?a.t.replace(/^Wiederholung: /,""):a.t)}</div>`;
+  if(a.sub)h+="<ol>"+a.sub.map((s,i)=>`<li><b>${"abcdefgh"[i]})</b>${esc(s)}</li>`).join("")+"</ol>";
+  if(a.idee)h+=`<details class="idee"><summary>Lösungsidee anzeigen</summary><div>${esc(a.idee)}</div></details>`;
+  d.innerHTML=h;return d;
+}
+function loesung(l){
+  const box=document.createElement("div");
+  const b=document.createElement("button");b.className="loesbtn";b.textContent="Lösungen anzeigen";
+  const w=document.createElement("div");w.className="loes";w.hidden=true;
+  w.innerHTML='<p>Achtung: Nicht alle Ergebnisse stimmen! Findest du dein Ergebnis nicht, suche den Fehler in deiner Rechnung.</p><div class="grid">'+l.map(x=>`<span>${esc(x)}</span>`).join("")+"</div>";
+  b.onclick=()=>{w.hidden=!w.hidden;b.textContent=w.hidden?"Lösungen anzeigen":"Lösungen ausblenden";};
+  box.append(b,w);return box;
+}
+document.getElementById("erin").innerHTML=D.erinnerung.map(e=>"<li>"+esc(e)+"</li>").join("");
+const a1=document.getElementById("a1");a1.append(aufgabe(1,D.a1),loesung(D.a1.mix));
+const wahl=document.getElementById("wahl"),st=document.getElementById("stufen");
+const S=[["1","★"],["2","★★"],["3","★★★"]];
+S.forEach(([k,stern])=>{
+  const s=D.stufen[k];
+  const b=document.createElement("button");b.setAttribute("aria-pressed","false");b.innerHTML=`${stern}  ${esc(s.name)}<small>${["Mit Tipps in den Aufgaben","Ohne Tipps, auch mit Minus","Mehrere Werkzeuge, mehr Nachdenken"][k-1]}</small>`;
+  const sec=document.createElement("section");sec.className="stufe";sec.hidden=true;
+  const h=document.createElement("h2");h.textContent=stern+"  "+s.name;sec.appendChild(h);
+  s.aufg.forEach((a,i)=>sec.appendChild(aufgabe(stern+" "+(i+2),a)));
+  sec.appendChild(loesung(s.mix));
+  b.onclick=()=>{wahl.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b));st.querySelectorAll(".stufe").forEach(x=>x.hidden=x!==sec);};
+  wahl.appendChild(b);st.appendChild(sec);
+});
+</script>
+</body>
+</html>

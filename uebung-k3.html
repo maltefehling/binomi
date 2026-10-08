@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Übung Kapitel 3 · Binomische Formeln</title>
+<!-- Gesamtskript I Terme und Gleichungen: Online-Übung nach dem Kapitel (QR-Code im Skript). Nur Aufgaben – gerechnet wird im Heft.
+     Aufbau wie „I.3a Vermischte Übungen“: Aufgabe 1 für alle, dann ★ / ★★ / ★★★. Lösungen gemischt mit typischen Fehlern. -->
+<style>
+  :root{--ink:#1b2a3a;--muted:#5b6b7c;--acc:#1f4e79;--bg:#f4f7fb;--card:#fff;--line:#c9d6e5;
+    --merk:#dde8f5;--merkL:#a9c1e0;--auf:#e8f4e6;--aufL:#c6e8c0;--hilf:#fdf6ea;--hilfL:#fbd9a8;--grau:#f2f2f2;--rot:#b03a2e;--gruen:#3f8f3a}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
+  button{font:inherit;touch-action:manipulation}
+  header{padding:12px 16px;background:var(--acc);color:#fff}
+  header h1{font-size:20px;margin:0}
+  main{max-width:880px;margin:0 auto;padding:14px 16px 32px}
+  .hinweis{background:var(--auf);border:1px solid var(--aufL);border-radius:12px;padding:10px 14px;font-size:18px;line-height:1.45;margin-bottom:12px}
+  details.erin{background:var(--merk);border:1px solid var(--merkL);border-radius:12px;padding:10px 14px;margin-bottom:14px;font-size:18px;line-height:1.5}
+  details.erin summary{font-weight:700;color:var(--acc);cursor:pointer;min-height:30px}
+  details.erin ul{margin:6px 0 0;padding-left:22px}
+  h2{font-size:21px;color:var(--acc);margin:18px 0 8px;padding-bottom:4px;border-bottom:2px solid var(--acc)}
+  .aufg{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:10px}
+  .aufg .kopf{font-weight:700;color:var(--acc);font-size:18px;margin-bottom:4px}
+  .aufg .txt{font-size:20px;line-height:1.45}
+  .aufg ol{margin:6px 0 0;padding-left:0;list-style:none;display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:6px 18px}
+  .aufg li{font-size:21px;line-height:1.5;white-space:nowrap;overflow-x:auto}
+  .aufg li b{color:var(--muted);font-weight:600;margin-right:6px}
+  .tag{display:inline-block;font-size:14px;font-weight:700;border-radius:8px;padding:2px 8px;margin-left:8px;vertical-align:middle}
+  .tag.v{background:#fff3c4;color:#7a5b00}.tag.w{background:#e2d6f0;color:#4f2f7a}
+  details.idee{margin-top:8px;font-size:18px}
+  details.idee summary{color:var(--acc);cursor:pointer;font-weight:600}
+  details.idee div{background:var(--grau);border-radius:8px;padding:8px 10px;margin-top:6px;line-height:1.45}
+  .wahl{display:flex;gap:10px;flex-wrap:wrap;margin:6px 0 10px}
+  .wahl button{flex:1 1 200px;border:2px solid var(--acc);background:#fff;color:var(--acc);border-radius:12px;padding:12px 14px;font-size:19px;font-weight:700;min-height:56px;text-align:left}
+  .wahl button[aria-pressed="true"]{background:var(--acc);color:#fff}
+  .wahl small{display:block;font-weight:500;font-size:15px;opacity:.85}
+  .stufe[hidden]{display:none}
+  .loesbtn{border:1px solid var(--hilfL);background:var(--hilf);color:var(--ink);border-radius:10px;padding:10px 16px;font-size:18px;font-weight:700;min-height:48px;margin-top:4px}
+  .loes{background:var(--hilf);border:1px solid var(--hilfL);border-radius:12px;padding:10px 14px;margin-top:8px}
+  .loes p{margin:0 0 8px;font-size:16px;color:var(--rot);font-weight:700}
+  .loes .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:6px}
+  .loes .grid span{background:#fff;border:1px solid var(--line);border-radius:8px;padding:6px 8px;text-align:center;font-size:19px}
+  .loes[hidden]{display:none}
+  footer{color:var(--muted);font-size:13px;text-align:center;margin-top:24px}
+</style>
+</head>
+<body>
+<header><h1>Übung Kapitel 3 · Binomische Formeln</h1></header>
+<main>
+  <div class="hinweis"><b>Rechne alle Aufgaben in deinem Heft.</b> Schreibe die Nummer der Aufgabe dazu. Kontrolliere erst am Ende mit den Lösungen.</div>
+  <details class="erin"><summary>Erinnerung: Das brauchst du</summary><ul id="erin"></ul></details>
+  <h2>Aufgabe 1 · für alle</h2>
+  <div id="a1"></div>
+  <h2>Jetzt wählst du dein Niveau</h2>
+  <div class="wahl" id="wahl"></div>
+  <div id="stufen"></div>
+  <footer>Fehling · I Terme und Gleichungen</footer>
+</main>
+<script>
+"use strict";
+const D={"erinnerung": ["1. Formel: (a + b)² = a² + 2ab + b²", "2. Formel: (a − b)² = a² − 2ab + b²", "3. Formel: (a + b) · (a − b) = a² − b²", "Achtung: (a + b)² ist nicht a² + b² – sonst fehlen die zwei Rechtecke."], "a1": {"t": "Welche Formel passt – oder ist es gar keine binomische Formel? Entscheide zuerst, dann rechne.", "sub": ["(x + 6)²", "(a − 4)²", "(y + 3) · (y − 3)", "(x + 2) · (y + 3)"], "loes": ["x² + 12x + 36", "a² − 8a + 16", "y² − 9", "xy + 3x + 2y + 6"], "falsch": ["x² + 36", "a² − 16", "y² + 9", "x² + 6"], "mix": ["y² − 9", "a² − 16", "xy + 3x + 2y + 6", "a² − 8a + 16", "y² + 9", "x² + 12x + 36", "x² + 6", "x² + 36"]}, "stufen": {"1": {"name": "Mit Hilfe", "aufg": [{"t": "Rechne mit der passenden Formel. Tipp: (x + 5)² = x² + 2 · x · 5 + 5².", "sub": ["(x + 5)²", "(a − 3)²", "(b + 7) · (b − 7)"]}, {"t": "Stimmt das? Wenn nicht, schreibe es richtig auf.", "sub": ["(x + 4)² = x² + 16", "(y − 2)² = y² − 4y + 4"], "tag": "v", "idee": "a) falsch: Es fehlen die zwei Rechtecke 2 · x · 4 = 8x. b) richtig."}, {"t": "Kopfrechnen wie ein Profi.", "sub": ["21²", "19²", "21 · 19"]}, {"t": "Wiederholung: Multipliziere aus.", "sub": ["4 · (x − 2)", "(x + 1) · (y + 6)"], "tag": "w"}], "mix": ["x² + 8x + 16", "x² + 25", "xy + 6x + y + 6", "b² + 49", "361", "4x − 2", "441", "401", "a² − 9", "xy + 6", "b² − 49", "399", "a² − 6a + 9", "4x − 8", "x² + 10x + 25"]}, "2": {"name": "Sicher rechnen", "aufg": [{"t": "Rechne mit der passenden Formel.", "sub": ["(2x + 3)²", "(3a − 1)²", "(5x + 2y) · (5x − 2y)"]}, {"t": "Lücken füllen.", "sub": ["(x + ___)² = x² + 10x + ___", "(___ − 4)² = 9a² − ___ + 16"]}, {"t": "Kopfrechnen.", "sub": ["49²", "102 · 98"]}, {"t": "Wiederholung: Multipliziere aus bzw. klammere aus.", "sub": ["(x − 2) · (y + 7)", "9x² − 6x"], "tag": "w"}, {"t": "Ben rechnet (3a − 1)² = 9a² − 1. Erkläre ihm, was fehlt.", "tag": "v", "idee": "Es fehlt das doppelte Produkt: 2 · 3a · 1 = 6a. Richtig: 9a² − 6a + 1."}], "mix": ["9a² − 1", "9a² − 6a + 1", "9996", "2401", "25x² − 2y²", "10 und 25", "4x² + 9", "3x · (3x − 2)", "4x² + 12x + 9", "xy + 7x − 2y − 14", "2041", "3a und 24a", "3 · (3x² − 2x)", "5 und 25", "10004", "25x² − 4y²"]}, "3": {"name": "Knifflig", "aufg": [{"t": "Vereinfache.", "sub": ["(x + 3)² − (x − 3)²", "3 · (x + 2)²"]}, {"t": "Minus vor der Klammer: −(2a − 5)². Tipp: erst die Formel in Klammern, dann das Minus."}, {"t": "Wie rechnet man 999 · 1001 im Kopf? Welche Formel hilft?"}, {"t": "Wiederholung: (2x − 1) · (x + 4)", "tag": "w"}, {"t": "Für welche Zahl x gilt (x + 5)² = x² + 25? Begründe mit der binomischen Formel.", "tag": "v", "idee": "(x + 5)² = x² + 10x + 25. Das ist nur dann x² + 25, wenn 10x = 0 ist – also nur für x = 0."}], "mix": ["12x", "für alle Zahlen", "2x² + 9x − 4", "3x² + 12x + 12", "18", "−4a² − 20a + 25", "x = 0", "3x² + 12", "2x² + 7x − 4", "999 999", "−4a² + 20a − 25", "999 001"]}}};
+const esc=s=>s.replace(/&/g,"&amp;").replace(/</g,"&lt;");
+const tagHtml=t=>t==="v"?'<span class="tag v">💡 Verständnis</span>':t==="w"?'<span class="tag w">↩ Wiederholung</span>':"";
+function aufgabe(nr,a){
+  const d=document.createElement("div");d.className="aufg";
+  let h=`<div class="kopf">Aufgabe ${nr}${tagHtml(a.tag)}</div><div class="txt">${esc(a.tag==="w"?a.t.replace(/^Wiederholung: /,""):a.t)}</div>`;
+  if(a.sub)h+="<ol>"+a.sub.map((s,i)=>`<li><b>${"abcdefgh"[i]})</b>${esc(s)}</li>`).join("")+"</ol>";
+  if(a.idee)h+=`<details class="idee"><summary>Lösungsidee anzeigen</summary><div>${esc(a.idee)}</div></details>`;
+  d.innerHTML=h;return d;
+}
+function loesung(l){
+  const box=document.createElement("div");
+  const b=document.createElement("button");b.className="loesbtn";b.textContent="Lösungen anzeigen";
+  const w=document.createElement("div");w.className="loes";w.hidden=true;
+  w.innerHTML='<p>Achtung: Nicht alle Ergebnisse stimmen! Findest du dein Ergebnis nicht, suche den Fehler in deiner Rechnung.</p><div class="grid">'+l.map(x=>`<span>${esc(x)}</span>`).join("")+"</div>";
+  b.onclick=()=>{w.hidden=!w.hidden;b.textContent=w.hidden?"Lösungen anzeigen":"Lösungen ausblenden";};
+  box.append(b,w);return box;
+}
+document.getElementById("erin").innerHTML=D.erinnerung.map(e=>"<li>"+esc(e)+"</li>").join("");
+const a1=document.getElementById("a1");a1.append(aufgabe(1,D.a1),loesung(D.a1.mix));
+const wahl=document.getElementById("wahl"),st=document.getElementById("stufen");
+const S=[["1","★"],["2","★★"],["3","★★★"]];
+S.forEach(([k,stern])=>{
+  const s=D.stufen[k];
+  const b=document.createElement("button");b.setAttribute("aria-pressed","false");b.innerHTML=`${stern}  ${esc(s.name)}<small>${["Mit Tipps in den Aufgaben","Ohne Tipps, auch mit Minus","Mehrere Werkzeuge, mehr Nachdenken"][k-1]}</small>`;
+  const sec=document.createElement("section");sec.className="stufe";sec.hidden=true;
+  const h=document.createElement("h2");h.textContent=stern+"  "+s.name;sec.appendChild(h);
+  s.aufg.forEach((a,i)=>sec.appendChild(aufgabe(stern+" "+(i+2),a)));
+  sec.appendChild(loesung(s.mix));
+  b.onclick=()=>{wahl.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b));st.querySelectorAll(".stufe").forEach(x=>x.hidden=x!==sec);};
+  wahl.appendChild(b);st.appendChild(sec);
+});
+</script>
+</body>
+</html>
