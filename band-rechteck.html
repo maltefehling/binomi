@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>40 m Absperrband</title>
+<!-- II.3b Anzahl der Lösungen: Rechteck mit 40 m Umfang, Seiten x und 20 − x. Schieberegler verformt das Rechteck,
+     die Fläche wird live angezeigt. Wunschflächen 96 / 100 / 120 m²: Treffer werden gesammelt (96 → zweimal, 100 → einmal, 120 → nie).
+     Die Lehrkraft rechnet nichts. -->
+<style>
+  :root{--band:#e0b400;--feld:#f3e6c2;--feldD:#c9b06a;--ink:#1b2a3a;--muted:#5b6b7c;--acc:#1f4e79;--bg:#f4f7fb;--card:#fff;--line:#c9d6e5;--ok:#3f8f3a;--okH:#d6efd0}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;-webkit-user-select:none;user-select:none}
+  button,input{font:inherit;touch-action:manipulation}
+  header{padding:12px 16px;background:var(--acc);color:#fff}
+  header h1{font-size:20px;margin:0}
+  main{padding:12px 16px 20px;max-width:1100px;margin:0 auto}
+  .wrap{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start}
+  svg{flex:1 1 420px;max-width:560px;width:100%;height:auto;background:var(--card);border:1px solid var(--line);border-radius:12px}
+  .side{flex:1 1 260px;min-width:0}
+  .lbl{font-size:15px;color:var(--muted);margin:2px 0 6px}
+  .row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+  .w{flex:1;border:2px solid var(--acc);background:#fff;color:var(--acc);border-radius:10px;min-height:52px;font-size:18px;font-weight:700}
+  .w.on{background:var(--acc);color:#fff}
+  .ctl{display:flex;align-items:center;gap:10px;margin:4px 0 12px}
+  .ctl button{width:54px;height:54px;border-radius:12px;border:2px solid var(--acc);background:#fff;color:var(--acc);font-size:26px;font-weight:700}
+  .ctl input{flex:1;min-width:0;height:44px;accent-color:var(--acc)}
+  .zahl{font-size:22px;padding:8px 14px;background:#fff;border:1px solid var(--line);border-radius:12px;margin-bottom:8px;font-variant-numeric:tabular-nums}
+  .zahl b{font-size:28px}
+  .zahl.treffer{background:var(--okH);border-color:var(--ok)}
+  .treffer-liste{font-size:19px;background:#fff3c4;border:1px solid #e0b400;border-radius:12px;padding:10px 14px;min-height:50px}
+  footer{color:var(--muted);font-size:13px;text-align:center;padding:10px 0 18px}
+  svg text{font-family:inherit}
+</style>
+</head>
+<body>
+<header><h1>Wie viel Fläche passt in 40 m Band?</h1></header>
+<main>
+  <div class="wrap">
+    <svg id="s" viewBox="0 0 520 440" aria-label="Rechteck mit 40 m Umfang"></svg>
+    <div class="side">
+      <div class="lbl">Wunschfläche</div>
+      <div class="row" id="ws"></div>
+      <div class="lbl">Seite x verschieben</div>
+      <div class="ctl"><button id="minus" aria-label="kleiner">−</button><input id="r" type="range" min="0" max="20" step="0.5" value="4"><button id="plus" aria-label="größer">+</button></div>
+      <div class="zahl" id="seiten"></div>
+      <div class="zahl" id="flaeche"></div>
+      <div class="treffer-liste" id="tl"></div>
+    </div>
+  </div>
+</main>
+<footer>Fehling · Anzahl der Lösungen</footer>
+<script>
+"use strict";
+const NS="http://www.w3.org/2000/svg",svg=document.getElementById("s");
+const el=(t,a)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);svg.appendChild(e);return e;};
+const fmt=v=>(Math.round(v*100)/100).toString().replace(".",",");
+const PX=19,X0=60,Y0=400;                    // 1 m = 19 px, unten links
+el("rect",{x:0,y:0,width:520,height:440,fill:"#eef5e8"});
+const feld=el("rect",{fill:"var(--feld)",stroke:"var(--band)","stroke-width":5,"stroke-dasharray":"14 6"});
+const ta=el("text",{"text-anchor":"middle","dominant-baseline":"central","font-size":26,"font-weight":700,fill:"var(--ink)"});
+const lx=el("text",{"text-anchor":"middle","font-size":20,fill:"var(--acc)","font-weight":700});
+const ly=el("text",{"text-anchor":"end","dominant-baseline":"central","font-size":20,fill:"var(--acc)","font-weight":700});
+const r=document.getElementById("r");
+let ziel=96,treffer={96:new Set(),100:new Set(),120:new Set()};
+function zeige(){
+  const x=+r.value,y=20-x,A=x*y;
+  feld.setAttribute("x",X0);feld.setAttribute("y",Y0-y*PX);feld.setAttribute("width",x*PX);feld.setAttribute("height",y*PX);
+  ta.setAttribute("x",X0+x*PX/2);ta.setAttribute("y",Y0-y*PX/2);ta.textContent=(x>1.5&&y>1.5)?fmt(A)+" m²":"";
+  lx.setAttribute("x",X0+x*PX/2);lx.setAttribute("y",Y0+28);lx.textContent=x>0?"x = "+fmt(x)+" m":"";
+  ly.setAttribute("x",X0-8);ly.setAttribute("y",Y0-y*PX/2);ly.textContent=y>0?fmt(y)+" m":"";
+  document.getElementById("seiten").innerHTML=`Seiten: <b>${fmt(x)} m</b> × <b>${fmt(y)} m</b>`;
+  const z=document.getElementById("flaeche");z.innerHTML=`Fläche: <b>${fmt(A)} m²</b>`;
+  const hit=Math.abs(A-ziel)<1e-9;z.classList.toggle("treffer",hit);
+  if(hit)treffer[ziel].add(x);
+  const t=[...treffer[ziel]].sort((p,q)=>p-q);
+  document.getElementById("tl").innerHTML=t.length?`<b>${ziel} m²</b> gefunden bei: `+t.map(v=>"x = "+fmt(v)+" m").join(",  "):`<b>${ziel} m²</b> noch nicht gefunden – schieb weiter.`;
+}
+const ws=document.getElementById("ws");
+[96,100,120].forEach(n=>{const b=document.createElement("button");b.className="w"+(n===ziel?" on":"");b.textContent=n+" m²";
+  b.onclick=()=>{ziel=n;[...ws.children].forEach(x=>x.classList.toggle("on",x===b));zeige();};ws.appendChild(b);});
+r.addEventListener("input",zeige);
+document.getElementById("minus").onclick=()=>{r.value=Math.max(0,+r.value-0.5);zeige();};
+document.getElementById("plus").onclick=()=>{r.value=Math.min(20,+r.value+0.5);zeige();};
+zeige();
+</script>
+</body>
+</html>
