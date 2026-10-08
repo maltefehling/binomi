@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Übung Kapitel II.1 · Reinquadratische Gleichungen</title>
+<!-- Kapitel II Quadratische Gleichungen: Online-Übung nach dem Buchkapitel (QR-Code im Skript). Nur Aufgaben – gerechnet wird im Heft.
+     Aufbau wie „I.3a Vermischte Übungen“: Aufgabe 1 für alle, dann ★ / ★★ / ★★★. Lösungen gemischt mit typischen Fehlern. -->
+<style>
+  :root{--ink:#1b2a3a;--muted:#5b6b7c;--acc:#1f4e79;--bg:#f4f7fb;--card:#fff;--line:#c9d6e5;
+    --merk:#dde8f5;--merkL:#a9c1e0;--auf:#e8f4e6;--aufL:#c6e8c0;--hilf:#fdf6ea;--hilfL:#fbd9a8;--grau:#f2f2f2;--rot:#b03a2e;--gruen:#3f8f3a}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
+  button{font:inherit;touch-action:manipulation}
+  header{padding:12px 16px;background:var(--acc);color:#fff}
+  header h1{font-size:20px;margin:0}
+  main{max-width:880px;margin:0 auto;padding:14px 16px 32px}
+  .hinweis{background:var(--auf);border:1px solid var(--aufL);border-radius:12px;padding:10px 14px;font-size:18px;line-height:1.45;margin-bottom:12px}
+  details.erin{background:var(--merk);border:1px solid var(--merkL);border-radius:12px;padding:10px 14px;margin-bottom:14px;font-size:18px;line-height:1.5}
+  details.erin summary{font-weight:700;color:var(--acc);cursor:pointer;min-height:30px}
+  details.erin ul{margin:6px 0 0;padding-left:22px}
+  h2{font-size:21px;color:var(--acc);margin:18px 0 8px;padding-bottom:4px;border-bottom:2px solid var(--acc)}
+  .aufg{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:10px}
+  .aufg .kopf{font-weight:700;color:var(--acc);font-size:18px;margin-bottom:4px}
+  .aufg .txt{font-size:20px;line-height:1.45}
+  .aufg ol{margin:6px 0 0;padding-left:0;list-style:none;display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:6px 18px}
+  .aufg li{font-size:21px;line-height:1.5;white-space:nowrap;overflow-x:auto}
+  .aufg li b{color:var(--muted);font-weight:600;margin-right:6px}
+  .tag{display:inline-block;font-size:14px;font-weight:700;border-radius:8px;padding:2px 8px;margin-left:8px;vertical-align:middle}
+  .tag.v{background:#fff3c4;color:#7a5b00}.tag.w{background:#e2d6f0;color:#4f2f7a}
+  details.idee{margin-top:8px;font-size:18px}
+  details.idee summary{color:var(--acc);cursor:pointer;font-weight:600}
+  details.idee div{background:var(--grau);border-radius:8px;padding:8px 10px;margin-top:6px;line-height:1.45}
+  .wahl{display:flex;gap:10px;flex-wrap:wrap;margin:6px 0 10px}
+  .wahl button{flex:1 1 200px;border:2px solid var(--acc);background:#fff;color:var(--acc);border-radius:12px;padding:12px 14px;font-size:19px;font-weight:700;min-height:56px;text-align:left}
+  .wahl button[aria-pressed="true"]{background:var(--acc);color:#fff}
+  .wahl small{display:block;font-weight:500;font-size:15px;opacity:.85}
+  .stufe[hidden]{display:none}
+  .loesbtn{border:1px solid var(--hilfL);background:var(--hilf);color:var(--ink);border-radius:10px;padding:10px 16px;font-size:18px;font-weight:700;min-height:48px;margin-top:4px}
+  .loes{background:var(--hilf);border:1px solid var(--hilfL);border-radius:12px;padding:10px 14px;margin-top:8px}
+  .loes p{margin:0 0 8px;font-size:16px;color:var(--rot);font-weight:700}
+  .loes .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:6px}
+  .loes .grid span{background:#fff;border:1px solid var(--line);border-radius:8px;padding:6px 8px;text-align:center;font-size:19px}
+  .loes[hidden]{display:none}
+  footer{color:var(--muted);font-size:13px;text-align:center;margin-top:24px}
+</style>
+</head>
+<body>
+<header><h1>Übung Kapitel II.1 · Reinquadratische Gleichungen</h1></header>
+<main>
+  <div class="hinweis"><b>Rechne alle Aufgaben in deinem Heft.</b> Schreibe die Nummer der Aufgabe dazu. Kontrolliere erst am Ende mit den Lösungen.</div>
+  <details class="erin"><summary>Erinnerung: Das brauchst du</summary><ul id="erin"></ul></details>
+  <h2>Aufgabe 1 · für alle</h2>
+  <div id="a1"></div>
+  <h2>Jetzt wählst du dein Niveau</h2>
+  <div class="wahl" id="wahl"></div>
+  <div id="stufen"></div>
+  <footer>Fehling · II Quadratische Gleichungen</footer>
+</main>
+<script>
+"use strict";
+const D={"erinnerung": ["Reinquadratisch: Es kommen nur x² und Zahlen vor (roter und blauer Stein).", "Erst x² allein stellen, dann die Wurzel ziehen: x² = 49 → x = 7 oder x = −7, also L = { −7 ; 7 }.", "x² = 0 hat nur die Lösung 0. x² = −4 hat keine Lösung, denn eine Zahl mal sich selbst ist nie negativ: L = { }.", "Klammer im Quadrat stehen lassen: ( x + 3 )² = 25 → x + 3 = 5 oder x + 3 = −5.", "Nie die Wurzel aus einer Summe ziehen: Aus x² + 9 wird nicht x + 3.", "Bei Längen und Flächen zählt nur die positive Lösung."], "a1": {"t": "Erst entscheiden: Kannst du sofort die Wurzel ziehen, musst du erst umformen, oder lässt du eine Klammer stehen? Löse dann.", "sub": ["x² = 81", "4x² − 36 = 0", "( x − 2 )² = 49", "x² + 16 = 0"], "loes": ["L = { −9 ; 9 }", "L = { −3 ; 3 }", "L = { −5 ; 9 }", "L = { }"], "falsch": ["L = { 9 }", "L = { −6 ; 6 }", "L = { −9 ; 5 }", "L = { −4 ; 4 }"], "mix": ["L = { −5 ; 9 }", "L = { −3 ; 3 }", "L = { −6 ; 6 }", "L = { −4 ; 4 }", "L = { 9 }", "L = { −9 ; 5 }", "L = { }", "L = { −9 ; 9 }"]}, "stufen": {"1": {"name": "Mit Hilfe", "aufg": [{"t": "Löse. Tipp: Welche Zahl mal sich selbst ergibt die Zahl rechts? Denk an die negative Lösung.", "sub": ["x² = 36", "x² = 100", "x² = 0,25", "x² = 0"]}, {"t": "Stelle zuerst x² allein. Tipp: Rechne wie bei einer normalen Gleichung – erst plus/minus, dann mal/geteilt.", "sub": ["x² + 5 = 30", "2x² = 98", "x² − 7 = −7"]}, {"t": "Ohne Rechnen: Welche Gleichung hat keine Lösung?", "sub": ["x² = 12", "x² = −12", "x² − 12 = 0"], "tag": "v", "idee": "b) x² = −12 hat keine Lösung: Eine Zahl mal sich selbst ist nie negativ. a) und c) haben zwei Lösungen (bei c ist x² = 12)."}, {"t": "Ein quadratischer Sandkasten ist 9 m² groß. Wie lang ist eine Seite? Tipp: Nur die positive Lösung passt."}, {"t": "Wiederholung: Multipliziere aus: ( x + 4 )²", "tag": "w"}], "mix": ["L = { −5,92 ; 5,92 }", "L = { −7 ; 7 }", "L = { −6 ; 6 }", "L = { −10 ; 10 }", "L = { −0,05 ; 0,05 }", "L = { −5 ; 5 }", "3 m", "L = { −0,5 ; 0,5 }", "L = { 0 }", "4,5 m", "L = { −49 ; 49 }", "x² + 16", "L = { 6 }", "x² + 8x + 16"]}, "2": {"name": "Sicher rechnen", "aufg": [{"t": "Löse.", "sub": ["3x² − 48 = 0", "5x² + 20 = 0", "x² : 4 = 9", "7 − x² = −18"]}, {"t": "Lass die Klammer stehen und ziehe die Wurzel.", "sub": ["( x + 3 )² = 64", "( x − 5 )² = 9", "( 2 + x )² = 0"]}, {"t": "Tom rechnet: x² + 49 = 0  →  x² = 49  →  L = { −7 ; 7 }. Stimmt das?", "tag": "v", "idee": "Nein. Beim Umstellen wird aus + 49 auf der anderen Seite − 49: x² = −49. Eine Zahl mal sich selbst ist nie negativ, also L = { }."}, {"t": "Rund um eine quadratische Feldhälfte kommen 2,5 m Auslaufzone. Die quadratische Sandfläche ist 169 m² groß. Wie lang ist eine Seite der Feldhälfte?"}, {"t": "Wiederholung: Schreibe als Klammer im Quadrat (binomische Formel rückwärts): x² − 10x + 25", "tag": "w"}], "mix": ["L = { }", "8 m", "10,5 m", "L = { 5 }", "L = { −8 ; −2 }", "L = { −5 ; 5 }", "L = { −2 ; 2 }", "L = { −4 ; 4 }", "L = { −2 }", "L = { −6 ; 6 }", "L = { 2 ; 8 }", "L = { 2 }", "( x − 5 )²", "L = { −1,5 ; 1,5 }", "L = { −11 ; 5 }", "( x − 25 )²"]}, "3": {"name": "Knifflig", "aufg": [{"t": "Löse.", "sub": ["2 · ( x − 1 )² = 72", "( x + 4 )² − 10 = 39", "3 · ( x + 2 )² + 12 = 0", "( 2x − 1 )² = 25"]}, {"t": "Wiederholung: Löse die Klammer mit der binomischen Formel auf und fasse zusammen. Löse dann: ( x + 3 )² − 6x = 34", "tag": "w"}, {"t": "Für welche Zahl k hat ( x − 3 )² = k genau eine Lösung? Für welche Zahlen k hat sie gar keine Lösung?", "tag": "v", "idee": "Für k = 0: x − 3 = 0, also nur x = 3. Für jede negative Zahl k gibt es keine Lösung, denn eine Klammer im Quadrat ist nie negativ."}, {"t": "Ein quadratisches Aufwärmfeld wird vergrößert: Jede Seite wird 2 m länger. Das neue Feld ist 100 m² groß. Wie lang war eine Seite vorher? Wie viele m² sind dazugekommen?"}, {"t": "Rückwärts: Finde eine Gleichung der Form ( x + a )² = b mit den Lösungen 1 und −7.", "tag": "v", "idee": "Genau in der Mitte zwischen 1 und −7 liegt −3, also steht x + 3 in der Klammer. Von −3 bis 1 sind es 4, also ist b = 4² = 16: ( x + 3 )² = 16."}], "mix": ["36 m²", "( x − 3 )² = 16", "L = { −5 ; 7 }", "4 m²", "L = { −11 ; 3 }", "8 m", "k = 0", "L = { 7 }", "L = { −3 ; 2 }", "L = { −2 ; 3 }", "L = { −5,83 ; 5,83 }", "L = { }", "L = { −11 ; −3 }", "L = { −2 ; 2 }", "L = { −5 ; 5 }", "( x + 3 )² = 16"]}}, "untertitel": ["Mit Tipps in den Aufgaben", "Ohne Tipps, auch mit Klammern", "Mehrere Schritte, mehr Nachdenken"]};
+const esc=s=>s.replace(/&/g,"&amp;").replace(/</g,"&lt;");
+const tagHtml=t=>t==="v"?'<span class="tag v">💡 Verständnis</span>':t==="w"?'<span class="tag w">↩ Wiederholung</span>':"";
+function aufgabe(nr,a){
+  const d=document.createElement("div");d.className="aufg";
+  let h=`<div class="kopf">Aufgabe ${nr}${tagHtml(a.tag)}</div><div class="txt">${esc(a.tag==="w"?a.t.replace(/^Wiederholung: /,""):a.t)}</div>`;
+  if(a.sub)h+="<ol>"+a.sub.map((s,i)=>`<li><b>${"abcdefgh"[i]})</b>${esc(s)}</li>`).join("")+"</ol>";
+  if(a.idee)h+=`<details class="idee"><summary>Lösungsidee anzeigen</summary><div>${esc(a.idee)}</div></details>`;
+  d.innerHTML=h;return d;
+}
+function loesung(l){
+  const box=document.createElement("div");
+  const b=document.createElement("button");b.className="loesbtn";b.textContent="Lösungen anzeigen";
+  const w=document.createElement("div");w.className="loes";w.hidden=true;
+  w.innerHTML='<p>Achtung: Nicht alle Ergebnisse stimmen! Findest du dein Ergebnis nicht, suche den Fehler in deiner Rechnung.</p><div class="grid">'+l.map(x=>`<span>${esc(x)}</span>`).join("")+"</div>";
+  b.onclick=()=>{w.hidden=!w.hidden;b.textContent=w.hidden?"Lösungen anzeigen":"Lösungen ausblenden";};
+  box.append(b,w);return box;
+}
+document.getElementById("erin").innerHTML=D.erinnerung.map(e=>"<li>"+esc(e)+"</li>").join("");
+const a1=document.getElementById("a1");a1.append(aufgabe(1,D.a1),loesung(D.a1.mix));
+const wahl=document.getElementById("wahl"),st=document.getElementById("stufen");
+const S=[["1","★"],["2","★★"],["3","★★★"]];
+S.forEach(([k,stern])=>{
+  const s=D.stufen[k];
+  const b=document.createElement("button");b.setAttribute("aria-pressed","false");b.innerHTML=`${stern}  ${esc(s.name)}<small>${D.untertitel[k-1]}</small>`;
+  const sec=document.createElement("section");sec.className="stufe";sec.hidden=true;
+  const h=document.createElement("h2");h.textContent=stern+"  "+s.name;sec.appendChild(h);
+  s.aufg.forEach((a,i)=>sec.appendChild(aufgabe(stern+" "+(i+2),a)));
+  sec.appendChild(loesung(s.mix));
+  b.onclick=()=>{wahl.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b));st.querySelectorAll(".stufe").forEach(x=>x.hidden=x!==sec);};
+  wahl.appendChild(b);st.appendChild(sec);
+});
+</script>
+</body>
+</html>
