@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Übung Kapitel 1 · Ausmultiplizieren und Ausklammern</title>
-<!-- Gesamtskript I Terme und Gleichungen: Online-Übung nach dem Kapitel (QR-Code im Skript). Nur Aufgaben – gerechnet wird im Heft.
+<title>Übung Kapitel I.1 · Ausmultiplizieren und Ausklammern</title>
+<!-- Kapitel I Terme und Gleichungen: Online-Übung nach dem Buchkapitel (QR-Code im Skript). Nur Aufgaben – gerechnet wird im Heft.
      Aufbau wie „I.3a Vermischte Übungen“: Aufgabe 1 für alle, dann ★ / ★★ / ★★★. Lösungen gemischt mit typischen Fehlern. -->
 <style>
   :root{--ink:#1b2a3a;--muted:#5b6b7c;--acc:#1f4e79;--bg:#f4f7fb;--card:#fff;--line:#c9d6e5;
@@ -15,7 +15,7 @@
   header{padding:12px 16px;background:var(--acc);color:#fff}
   header h1{font-size:20px;margin:0}
   main{max-width:880px;margin:0 auto;padding:14px 16px 32px}
-  .hinweis{background:var(--auf);border:1px solid var(--aufL);border-radius:12px;padding:10px 14px;font-size:18px;line-height:1.45;margin-bottom:12px}
+  .hinweis{background:#fff;border:1px solid #bfbfbf;border-radius:12px;padding:10px 14px;font-size:18px;line-height:1.45;margin-bottom:12px}
   details.erin{background:var(--merk);border:1px solid var(--merkL);border-radius:12px;padding:10px 14px;margin-bottom:14px;font-size:18px;line-height:1.5}
   details.erin summary{font-weight:700;color:var(--acc);cursor:pointer;min-height:30px}
   details.erin ul{margin:6px 0 0;padding-left:22px}
@@ -43,56 +43,69 @@
   .loes .grid span{background:#fff;border:1px solid var(--line);border-radius:8px;padding:6px 8px;text-align:center;font-size:19px}
   .loes[hidden]{display:none}
   footer{color:var(--muted);font-size:13px;text-align:center;margin-top:24px}
+  .frage{font-size:18px;font-weight:700;color:var(--acc);margin:4px 0 2px}
+  .teilkopf{font-size:22px;font-weight:800;color:var(--acc);margin:14px 0 8px}
+  .teil[hidden]{display:none}
   .fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;font-size:.82em;line-height:1.15;margin:0 2px}
   .fr>span:first-child{border-bottom:1.5px solid currentColor;padding:0 3px}
 </style>
 </head>
 <body>
-<header><h1>Übung Kapitel 1 · Ausmultiplizieren und Ausklammern</h1></header>
+<header><h1>Übung Kapitel I.1 · Ausmultiplizieren und Ausklammern</h1></header>
 <main>
-  <div class="hinweis"><b>Rechne alle Aufgaben in deinem Heft.</b> Schreibe die Nummer der Aufgabe dazu. Kontrolliere erst am Ende mit den Lösungen.</div>
-  <details class="erin"><summary>Erinnerung: Das brauchst du</summary><ul id="erin"></ul></details>
-  <h2>Aufgabe 1 · für alle</h2>
-  <div id="a1"></div>
-  <h2>Jetzt wählst du dein Niveau</h2>
-  <div class="wahl" id="wahl"></div>
-  <div id="stufen"></div>
+  <div class="hinweis">✎ <b>Rechne alle Aufgaben in deinem Heft.</b> Schreibe die Nummer der Aufgabe dazu. Kontrolliere erst am Ende mit den Lösungen.</div>
+  <div id="teilwahl" hidden><div class="frage">Welche Stunde hattet ihr zuletzt?</div><div class="wahl" id="tw"></div></div>
+  <div id="teile"></div>
   <footer>Fehling · I Terme und Gleichungen</footer>
 </main>
 <script>
 "use strict";
-const D={"erinnerung": ["Ausmultiplizieren: a · (b + c) = ab + ac – jeder Teil der Klammer wird mal genommen.", "Minus vor der Klammer dreht alle Vorzeichen um: −(x − 4) = −x + 4.", "Ausklammern: Das Gemeinsame kommt vor die Klammer – so viel wie möglich: 6x + 9 = 3 · (2x + 3).", "Probe beim Ausklammern: wieder ausmultiplizieren."], "a1": {"t": "Ausmultiplizieren oder ausklammern? Entscheide zuerst, dann rechne.", "sub": ["4 · (x + 7)", "6x + 15", "−3 · (2a − 5)", "8xy − 12x"], "loes": ["4x + 28", "3 · (2x + 5)", "−6a + 15", "4x · (2y − 3)"], "falsch": ["4x + 7", "3 · (2x + 15)", "−6a − 15", "2x · (4y − 6)"], "mix": ["−6a + 15", "3 · (2x + 5)", "3 · (2x + 15)", "2x · (4y − 6)", "4x + 7", "−6a − 15", "4x · (2y − 3)", "4x + 28"]}, "stufen": {"1": {"name": "Mit Hilfe", "aufg": [{"t": "Multipliziere aus. Tipp: Jeder Teil der Klammer wird mal genommen, z. B. 5 · (x + 3) = 5 · x + 5 · 3.", "sub": ["5 · (x + 3)", "2 · (4a − 1)", "x · (x + 6)"]}, {"t": "Klammere aus. Tipp: Welche Zahl steckt in beiden Teilen?", "sub": ["3x + 12", "10a − 15", "7y + 7"]}, {"t": "Stimmt das? Wenn nicht, schreibe es richtig auf.", "sub": ["4 · (x + 2) = 4x + 2", "6a + 9 = 3 · (2a + 3)", "−(x + 5) = −x + 5"], "tag": "v", "idee": "a) falsch: Auch die 2 wird mal 4 genommen. b) richtig. c) falsch: Das Minus dreht beide Vorzeichen um."}, {"t": "Probe mit Zahlen: Setze x = 2 ein. Ist 3 · (x + 4) gleich 3x + 12?", "tag": "v", "idee": "Links: 3 · 6 = 18. Rechts: 6 + 12 = 18. Beide Seiten sind gleich."}], "mix": ["8a − 1", "7 · (y + 1)", "5x + 15", "8a − 2", "5x + 3", "5 · (2a − 3)", "4x + 8", "x² + 6x", "3 · (x + 4)", "3 · (x + 12)", "2x + 6", "−x + 5", "18 = 18", "7y", "−x − 5"]}, "2": {"name": "Sicher rechnen", "aufg": [{"t": "Multipliziere aus und fasse zusammen.", "sub": ["−4 · (3x − 2)", "2x · (5 − 3y)", "−(a − 7) + 2a"]}, {"t": "Klammere so viel wie möglich aus.", "sub": ["12xy + 18x", "15a² − 10a", "4x + 8y − 12"]}, {"t": "Rückwärts: Was fehlt?", "sub": ["___ · (x + 5) = 3x + 15", "2x · (___ + ___) = 6x² + 10x", "−2 · (___ − ___) = −8a + 6"]}, {"t": "Mia klammert bei 8x + 12 die 2 aus: 2 · (4x + 6). Ist das falsch? Was ist besser?", "tag": "v", "idee": "Gerechnet ist es richtig (Probe: 8x + 12). Aber in der Klammer steckt noch eine 2. Fertig ist 4 · (2x + 3)."}], "mix": ["10x − 6xy", "3x + 5", "4 · (x + 8y − 12)", "3a − 7", "2x · (6y + 9)", "6x · (2y + 3)", "−12x − 8", "−12x + 8", "3", "a + 7", "4 · (x + 2y − 3)", "5 · (3a² − 2a)", "4a − 3", "10x − 3y", "5a · (3a − 2)", "4a + 3"]}, "3": {"name": "Knifflig", "aufg": [{"t": "Vereinfache.", "sub": ["3 · (x + 4) − 2 · (x − 5)", "5x − (2x + 3) + 4 · (x − 1)"]}, {"t": "Klammere so viel wie möglich aus.", "sub": ["6a²b − 9ab² + 3ab", "−4x − 8   (klammere eine negative Zahl aus)"]}, {"t": "Teile.", "sub": ["(18x − 12) : 6", "(15a² + 5a) : 5a"]}, {"t": "Lea sagt: „Beim Ausklammern kann ich immer eine Probe machen.“ Wie geht diese Probe? Zeige es an 12x − 18 = 6 · (2x − 3).", "tag": "v", "idee": "Man multipliziert die Klammer wieder aus: 6 · 2x − 6 · 3 = 12x − 18. Kommt der Ausgangsterm heraus, stimmt es."}], "mix": ["3ab · (2a − 3b)", "7x − 3", "x + 22", "3x − 12", "3a + 1", "7x − 7", "x + 2", "−4 · (x − 2)", "−4 · (x + 2)", "3ab · (2a − 3b + 1)", "3a", "3x − 2"]}}};
+// D.teile: ein Teil pro Stunde eines aufgeteilten Buchkapitels (z. B. II.2a/b/c); Stundenauswahl nur bei aufgeteilten Kapiteln (D.mehrteilig).
+const D={"untertitel": ["Mit Tipps in den Aufgaben", "Ohne Tipps, auch mit Minus", "Mehrere Werkzeuge, mehr Nachdenken"], "mehrteilig": true, "teile": [{"name": "Teil I.1a · Ausmultiplizieren", "stunde": "I.1a", "kurz": "Ausmultiplizieren", "erinnerung": ["Ausmultiplizieren: a · (b + c) = ab + ac – jeder Teil der Klammer wird mal genommen.", "Im Flächenbild sind das zwei Felder, bei den Bögen zwei Bögen.", "Minus vor der Klammer dreht alle Vorzeichen um: −2 · (x − 5) = −2x + 10."], "a1": {"t": "Multipliziere aus – mit Flächenbild oder Bögen.", "sub": ["6 · (x + 2)", "x · (y + 4)", "−2 · (a − 5)"], "loes": ["6x + 12", "xy + 4x", "−2a + 10"], "falsch": ["6x + 2", "xy + 4", "−2a − 10"], "mix": ["−2a + 10", "−2a − 10", "xy + 4x", "6x + 2", "6x + 12", "xy + 4"]}, "stufen": {"1": {"name": "Mit Hilfe", "aufg": [{"t": "Multipliziere aus. Tipp: 3 · (x + 5) = 3 · x + 3 · 5.", "sub": ["3 · (x + 5)", "4 · (2a + 1)", "y · (y + 3)"]}, {"t": "Stimmt das? Wenn nicht, schreibe es richtig auf.", "sub": ["5 · (x + 4) = 5x + 4", "2 · (3 + y) = 6 + 2y"], "tag": "v", "idee": "a) falsch: Auch die 4 wird mal 5 genommen – es fehlt ein Feld. b) richtig."}, {"t": "Probe mit Zahlen: Setze x = 3 ein. Ist 4 · (x + 2) gleich 4x + 8?", "tag": "v", "idee": "Links: 4 · 5 = 20. Rechts: 12 + 8 = 20. Beide Seiten sind gleich."}, {"t": "Wiederholung: Fasse zusammen: 3x + 5 + 2x − 1", "tag": "w"}], "mix": ["y² + 3y", "3x + 5", "3x + 15", "8a + 4", "5x + 4", "20 = 20", "5x + 20", "6x + 4", "2y + 3", "8a + 1"]}, "2": {"name": "Sicher rechnen", "aufg": [{"t": "Multipliziere aus.", "sub": ["−3 · (2x − 4)", "5a · (2 − b)", "−(x + 7)"]}, {"t": "Multipliziere aus und fasse zusammen: 2 · (x + 3) + 4x"}, {"t": "Rückwärts: Was fehlt?", "sub": ["___ · (a + 6) = 4a + 24", "3 · (___ − ___) = 6x − 9"]}, {"t": "Ben rechnet −2 · (x − 5) = −2x − 10. Erkläre ihm seinen Fehler.", "tag": "v", "idee": "(−2) · (−5) ist plus 10, denn minus mal minus ist plus. Richtig: −2x + 10."}, {"t": "Wiederholung: Löse 3x + 4 = 19", "tag": "w"}], "mix": ["−x + 7", "6x + 3", "10a − 5ab", "x = 5", "2x − 9", "−6x + 12", "6x + 6", "−x − 7", "2x − 3", "10a − b", "4", "−6x − 12"]}, "3": {"name": "Knifflig", "aufg": [{"t": "Vereinfache.", "sub": ["4 · (x + 2) − 3 · (x − 1)", "x · (x + 5) − 2x"]}, {"t": "Ein Rechteck ist 3 cm breit und (x + 7) cm lang. Schreibe die Fläche mit und ohne Klammer."}, {"t": "Für welche Zahl x gilt 2 · (x + 4) = 2x + 4? Begründe.", "tag": "v", "idee": "Links steht 2x + 8, rechts 2x + 4. Die Seiten unterscheiden sich immer um 4 – für keine Zahl."}, {"t": "Wiederholung: Löse 5x − 3 = 2x + 9", "tag": "w"}], "mix": ["für keine Zahl", "x + 11", "3x + 7", "für x = 0", "x² + 7x", "x² + 3x", "x + 5", "3 · (x + 7) = 3x + 21", "x = 2", "x = 4"]}}}, {"name": "Teil I.1b · Ausklammern (gemischt mit Ausmultiplizieren)", "stunde": "I.1b", "kurz": "Ausklammern", "erinnerung": ["Ausmultiplizieren: a · (b + c) = ab + ac – jeder Teil der Klammer wird mal genommen.", "Minus vor der Klammer dreht alle Vorzeichen um: −(x − 4) = −x + 4.", "Ausklammern: Das Gemeinsame kommt vor die Klammer – so viel wie möglich: 6x + 9 = 3 · (2x + 3).", "Probe beim Ausklammern: wieder ausmultiplizieren."], "a1": {"t": "Ausmultiplizieren oder ausklammern? Entscheide zuerst, dann rechne.", "sub": ["4 · (x + 7)", "6x + 15", "−3 · (2a − 5)", "8xy − 12x"], "loes": ["4x + 28", "3 · (2x + 5)", "−6a + 15", "4x · (2y − 3)"], "falsch": ["4x + 7", "3 · (2x + 15)", "−6a − 15", "2x · (4y − 6)"], "mix": ["4x + 28", "−6a + 15", "3 · (2x + 15)", "4x · (2y − 3)", "3 · (2x + 5)", "4x + 7", "2x · (4y − 6)", "−6a − 15"]}, "stufen": {"1": {"name": "Mit Hilfe", "aufg": [{"t": "Multipliziere aus. Tipp: Jeder Teil der Klammer wird mal genommen, z. B. 5 · (x + 3) = 5 · x + 5 · 3.", "sub": ["5 · (x + 3)", "2 · (4a − 1)", "x · (x + 6)"]}, {"t": "Klammere aus. Tipp: Welche Zahl steckt in beiden Teilen?", "sub": ["3x + 12", "10a − 15", "7y + 7"]}, {"t": "Stimmt das? Wenn nicht, schreibe es richtig auf.", "sub": ["4 · (x + 2) = 4x + 2", "6a + 9 = 3 · (2a + 3)", "−(x + 5) = −x + 5"], "tag": "v", "idee": "a) falsch: Auch die 2 wird mal 4 genommen. b) richtig. c) falsch: Das Minus dreht beide Vorzeichen um."}, {"t": "Probe mit Zahlen: Setze x = 2 ein. Ist 3 · (x + 4) gleich 3x + 12?", "tag": "v", "idee": "Links: 3 · 6 = 18. Rechts: 6 + 12 = 18. Beide Seiten sind gleich."}], "mix": ["2x + 6", "5 · (2a − 3)", "5x + 15", "18 = 18", "8a − 1", "8a − 2", "3 · (x + 12)", "x² + 6x", "5x + 3", "4x + 8", "−x + 5", "−x − 5", "7 · (y + 1)", "3 · (x + 4)", "7y"]}, "2": {"name": "Sicher rechnen", "aufg": [{"t": "Multipliziere aus und fasse zusammen.", "sub": ["−4 · (3x − 2)", "2x · (5 − 3y)", "−(a − 7) + 2a"]}, {"t": "Klammere so viel wie möglich aus.", "sub": ["12xy + 18x", "15a² − 10a", "4x + 8y − 12"]}, {"t": "Rückwärts: Was fehlt?", "sub": ["___ · (x + 5) = 3x + 15", "2x · (___ + ___) = 6x² + 10x", "−2 · (___ − ___) = −8a + 6"]}, {"t": "Mia klammert bei 8x + 12 die 2 aus: 2 · (4x + 6). Ist das falsch? Was ist besser?", "tag": "v", "idee": "Gerechnet ist es richtig (Probe: 8x + 12). Aber in der Klammer steckt noch eine 2. Fertig ist 4 · (2x + 3)."}], "mix": ["4a − 3", "4 · (x + 2y − 3)", "−12x + 8", "6x · (2y + 3)", "4 · (x + 8y − 12)", "10x − 6xy", "3a − 7", "a + 7", "3", "3x + 5", "5a · (3a − 2)", "2x · (6y + 9)", "−12x − 8", "10x − 3y", "5 · (3a² − 2a)", "4a + 3"]}, "3": {"name": "Knifflig", "aufg": [{"t": "Vereinfache.", "sub": ["3 · (x + 4) − 2 · (x − 5)", "5x − (2x + 3) + 4 · (x − 1)"]}, {"t": "Klammere so viel wie möglich aus.", "sub": ["6a²b − 9ab² + 3ab", "−4x − 8   (klammere eine negative Zahl aus)"]}, {"t": "Teile.", "sub": ["(18x − 12) : 6", "(15a² + 5a) : 5a"]}, {"t": "Lea sagt: „Beim Ausklammern kann ich immer eine Probe machen.“ Wie geht diese Probe? Zeige es an 12x − 18 = 6 · (2x − 3).", "tag": "v", "idee": "Man multipliziert die Klammer wieder aus: 6 · 2x − 6 · 3 = 12x − 18. Kommt der Ausgangsterm heraus, stimmt es."}], "mix": ["x + 2", "3a + 1", "3ab · (2a − 3b)", "−4 · (x + 2)", "7x − 7", "3ab · (2a − 3b + 1)", "−4 · (x − 2)", "7x − 3", "3a", "3x − 2", "3x − 12", "x + 22"]}}}]};
 const esc=s=>s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/\{([^{}\/]+)\/([^{}]+)\}/g,'<span class="fr"><span>$1</span><span>$2</span></span>');
+const el=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e;};
 const tagHtml=t=>t==="v"?'<span class="tag v">💡 Verständnis</span>':t==="w"?'<span class="tag w">↩ Wiederholung</span>':"";
 function aufgabe(nr,a){
-  const d=document.createElement("div");d.className="aufg";
   let h=`<div class="kopf">Aufgabe ${nr}${tagHtml(a.tag)}</div><div class="txt">${esc(a.tag==="w"?a.t.replace(/^Wiederholung: /,""):a.t)}</div>`;
   if(a.sub)h+="<ol>"+a.sub.map((s,i)=>`<li><b>${"abcdefgh"[i]})</b>${esc(s)}</li>`).join("")+"</ol>";
   if(a.idee)h+=`<details class="idee"><summary>Lösungsidee anzeigen</summary><div>${esc(a.idee)}</div></details>`;
-  d.innerHTML=h;return d;
+  return el("div","aufg",h);
 }
 function loesung(l){
-  const box=document.createElement("div");
-  const b=document.createElement("button");b.className="loesbtn";b.textContent="Lösungen anzeigen";
-  const w=document.createElement("div");w.className="loes";w.hidden=true;
-  w.innerHTML='<p>Achtung: Nicht alle Ergebnisse stimmen! Findest du dein Ergebnis nicht, suche den Fehler in deiner Rechnung.</p><div class="grid">'+l.map(x=>`<span>${esc(x)}</span>`).join("")+"</div>";
+  const box=el("div");
+  const b=el("button","loesbtn");b.textContent="Lösungen anzeigen";
+  const w=el("div","loes",'<p>Achtung: Nicht alle Ergebnisse stimmen! Findest du dein Ergebnis nicht, suche den Fehler in deiner Rechnung.</p><div class="grid">'+l.map(x=>`<span>${esc(x)}</span>`).join("")+"</div>");w.hidden=true;
   b.onclick=()=>{w.hidden=!w.hidden;b.textContent=w.hidden?"Lösungen anzeigen":"Lösungen ausblenden";};
   box.append(b,w);return box;
 }
-document.getElementById("erin").innerHTML=D.erinnerung.map(e=>"<li>"+esc(e)+"</li>").join("");
-const a1=document.getElementById("a1");a1.append(aufgabe(1,D.a1),loesung(D.a1.mix));
-const wahl=document.getElementById("wahl"),st=document.getElementById("stufen");
-const S=[["1","★"],["2","★★"],["3","★★★"]];
-S.forEach(([k,stern])=>{
-  const s=D.stufen[k];
-  const b=document.createElement("button");b.setAttribute("aria-pressed","false");b.innerHTML=`${stern}  ${esc(s.name)}<small>${["Mit Tipps in den Aufgaben","Ohne Tipps, auch mit Minus","Mehrere Werkzeuge, mehr Nachdenken"][k-1]}</small>`;
-  const sec=document.createElement("section");sec.className="stufe";sec.hidden=true;
-  const h=document.createElement("h2");h.textContent=stern+"  "+s.name;sec.appendChild(h);
-  s.aufg.forEach((a,i)=>sec.appendChild(aufgabe(stern+" "+(i+2),a)));
-  sec.appendChild(loesung(s.mix));
-  b.onclick=()=>{wahl.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b));st.querySelectorAll(".stufe").forEach(x=>x.hidden=x!==sec);};
-  wahl.appendChild(b);st.appendChild(sec);
-});
+function teil(T){
+  const root=el("section","teil");
+  if(D.mehrteilig)root.appendChild(el("div","teilkopf",esc(T.name)));
+  root.appendChild(el("details","erin",`<summary>Erinnerung: Das brauchst du</summary><ul>${T.erinnerung.map(e=>"<li>"+esc(e)+"</li>").join("")}</ul>`));
+  root.appendChild(el("h2","","Aufgabe 1 · für alle"));
+  root.append(aufgabe(1,T.a1),loesung(T.a1.mix));
+  root.appendChild(el("h2","","Jetzt wählst du dein Niveau"));
+  const wahl=el("div","wahl"),st=el("div");root.append(wahl,st);
+  [["1","★"],["2","★★"],["3","★★★"]].forEach(([k,stern])=>{
+    const s=T.stufen[k];
+    const b=el("button","",`${stern}  ${esc(s.name)}<small>${D.untertitel[k-1]}</small>`);b.setAttribute("aria-pressed","false");
+    const sec=el("section","stufe");sec.hidden=true;
+    sec.appendChild(el("h2","",esc(stern+"  "+s.name)));
+    s.aufg.forEach((a,i)=>sec.appendChild(aufgabe(stern+" "+(i+2),a)));
+    sec.appendChild(loesung(s.mix));
+    b.onclick=()=>{wahl.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b));st.querySelectorAll(".stufe").forEach(x=>x.hidden=x!==sec);};
+    wahl.appendChild(b);st.appendChild(sec);
+  });
+  return root;
+}
+const box=document.getElementById("teile"),secs=D.teile.map(teil);
+secs.forEach(s=>box.appendChild(s));
+if(D.mehrteilig){
+  document.getElementById("teilwahl").hidden=false;const tw=document.getElementById("tw");
+  const zeig=i=>{secs.forEach((s,j)=>s.hidden=j!==i);tw.querySelectorAll("button").forEach((b,j)=>b.setAttribute("aria-pressed",j===i));};
+  D.teile.forEach((T,i)=>{const b=el("button","",esc(T.stunde)+`<small>${esc(T.kurz)}</small>`);b.onclick=()=>zeig(i);tw.appendChild(b);});
+  zeig(D.teile.length-1);
+}
 </script>
 </body>
 </html>

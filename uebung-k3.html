@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Übung Kapitel 3 · Binomische Formeln</title>
-<!-- Gesamtskript I Terme und Gleichungen: Online-Übung nach dem Kapitel (QR-Code im Skript). Nur Aufgaben – gerechnet wird im Heft.
+<title>Übung Kapitel I.3 · Binomische Formeln</title>
+<!-- Kapitel I Terme und Gleichungen: Online-Übung nach dem Buchkapitel (QR-Code im Skript). Nur Aufgaben – gerechnet wird im Heft.
      Aufbau wie „I.3a Vermischte Übungen“: Aufgabe 1 für alle, dann ★ / ★★ / ★★★. Lösungen gemischt mit typischen Fehlern. -->
 <style>
   :root{--ink:#1b2a3a;--muted:#5b6b7c;--acc:#1f4e79;--bg:#f4f7fb;--card:#fff;--line:#c9d6e5;
@@ -15,7 +15,7 @@
   header{padding:12px 16px;background:var(--acc);color:#fff}
   header h1{font-size:20px;margin:0}
   main{max-width:880px;margin:0 auto;padding:14px 16px 32px}
-  .hinweis{background:var(--auf);border:1px solid var(--aufL);border-radius:12px;padding:10px 14px;font-size:18px;line-height:1.45;margin-bottom:12px}
+  .hinweis{background:#fff;border:1px solid #bfbfbf;border-radius:12px;padding:10px 14px;font-size:18px;line-height:1.45;margin-bottom:12px}
   details.erin{background:var(--merk);border:1px solid var(--merkL);border-radius:12px;padding:10px 14px;margin-bottom:14px;font-size:18px;line-height:1.5}
   details.erin summary{font-weight:700;color:var(--acc);cursor:pointer;min-height:30px}
   details.erin ul{margin:6px 0 0;padding-left:22px}
@@ -43,56 +43,69 @@
   .loes .grid span{background:#fff;border:1px solid var(--line);border-radius:8px;padding:6px 8px;text-align:center;font-size:19px}
   .loes[hidden]{display:none}
   footer{color:var(--muted);font-size:13px;text-align:center;margin-top:24px}
+  .frage{font-size:18px;font-weight:700;color:var(--acc);margin:4px 0 2px}
+  .teilkopf{font-size:22px;font-weight:800;color:var(--acc);margin:14px 0 8px}
+  .teil[hidden]{display:none}
   .fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;font-size:.82em;line-height:1.15;margin:0 2px}
   .fr>span:first-child{border-bottom:1.5px solid currentColor;padding:0 3px}
 </style>
 </head>
 <body>
-<header><h1>Übung Kapitel 3 · Binomische Formeln</h1></header>
+<header><h1>Übung Kapitel I.3 · Binomische Formeln</h1></header>
 <main>
-  <div class="hinweis"><b>Rechne alle Aufgaben in deinem Heft.</b> Schreibe die Nummer der Aufgabe dazu. Kontrolliere erst am Ende mit den Lösungen.</div>
-  <details class="erin"><summary>Erinnerung: Das brauchst du</summary><ul id="erin"></ul></details>
-  <h2>Aufgabe 1 · für alle</h2>
-  <div id="a1"></div>
-  <h2>Jetzt wählst du dein Niveau</h2>
-  <div class="wahl" id="wahl"></div>
-  <div id="stufen"></div>
+  <div class="hinweis">✎ <b>Rechne alle Aufgaben in deinem Heft.</b> Schreibe die Nummer der Aufgabe dazu. Kontrolliere erst am Ende mit den Lösungen.</div>
+  <div id="teilwahl" hidden><div class="frage">Welche Stunde hattet ihr zuletzt?</div><div class="wahl" id="tw"></div></div>
+  <div id="teile"></div>
   <footer>Fehling · I Terme und Gleichungen</footer>
 </main>
 <script>
 "use strict";
-const D={"erinnerung": ["1. Formel: (a + b)² = a² + 2ab + b²", "2. Formel: (a − b)² = a² − 2ab + b²", "3. Formel: (a + b) · (a − b) = a² − b²", "Achtung: (a + b)² ist nicht a² + b² – sonst fehlen die zwei Rechtecke."], "a1": {"t": "Welche Formel passt – oder ist es gar keine binomische Formel? Entscheide zuerst, dann rechne.", "sub": ["(x + 6)²", "(a − 4)²", "(y + 3) · (y − 3)", "(x + 2) · (y + 3)"], "loes": ["x² + 12x + 36", "a² − 8a + 16", "y² − 9", "xy + 3x + 2y + 6"], "falsch": ["x² + 36", "a² − 16", "y² + 9", "x² + 6"], "mix": ["y² − 9", "a² − 16", "xy + 3x + 2y + 6", "a² − 8a + 16", "y² + 9", "x² + 12x + 36", "x² + 6", "x² + 36"]}, "stufen": {"1": {"name": "Mit Hilfe", "aufg": [{"t": "Rechne mit der passenden Formel. Tipp: (x + 5)² = x² + 2 · x · 5 + 5².", "sub": ["(x + 5)²", "(a − 3)²", "(b + 7) · (b − 7)"]}, {"t": "Stimmt das? Wenn nicht, schreibe es richtig auf.", "sub": ["(x + 4)² = x² + 16", "(y − 2)² = y² − 4y + 4"], "tag": "v", "idee": "a) falsch: Es fehlen die zwei Rechtecke 2 · x · 4 = 8x. b) richtig."}, {"t": "Kopfrechnen wie ein Profi.", "sub": ["21²", "19²", "21 · 19"]}, {"t": "Wiederholung: Multipliziere aus.", "sub": ["4 · (x − 2)", "(x + 1) · (y + 6)"], "tag": "w"}], "mix": ["x² + 8x + 16", "x² + 25", "xy + 6x + y + 6", "b² + 49", "361", "4x − 2", "441", "401", "a² − 9", "xy + 6", "b² − 49", "399", "a² − 6a + 9", "4x − 8", "x² + 10x + 25"]}, "2": {"name": "Sicher rechnen", "aufg": [{"t": "Rechne mit der passenden Formel.", "sub": ["(2x + 3)²", "(3a − 1)²", "(5x + 2y) · (5x − 2y)"]}, {"t": "Lücken füllen.", "sub": ["(x + ___)² = x² + 10x + ___", "(___ − 4)² = 9a² − ___ + 16"]}, {"t": "Kopfrechnen.", "sub": ["49²", "102 · 98"]}, {"t": "Wiederholung: Multipliziere aus bzw. klammere aus.", "sub": ["(x − 2) · (y + 7)", "9x² − 6x"], "tag": "w"}, {"t": "Ben rechnet (3a − 1)² = 9a² − 1. Erkläre ihm, was fehlt.", "tag": "v", "idee": "Es fehlt das doppelte Produkt: 2 · 3a · 1 = 6a. Richtig: 9a² − 6a + 1."}], "mix": ["9a² − 1", "9a² − 6a + 1", "9996", "2401", "25x² − 2y²", "10 und 25", "4x² + 9", "3x · (3x − 2)", "4x² + 12x + 9", "xy + 7x − 2y − 14", "2041", "3a und 24a", "3 · (3x² − 2x)", "5 und 25", "10004", "25x² − 4y²"]}, "3": {"name": "Knifflig", "aufg": [{"t": "Vereinfache.", "sub": ["(x + 3)² − (x − 3)²", "3 · (x + 2)²"]}, {"t": "Minus vor der Klammer: −(2a − 5)². Tipp: erst die Formel in Klammern, dann das Minus."}, {"t": "Wie rechnet man 999 · 1001 im Kopf? Welche Formel hilft?"}, {"t": "Wiederholung: (2x − 1) · (x + 4)", "tag": "w"}, {"t": "Für welche Zahl x gilt (x + 5)² = x² + 25? Begründe mit der binomischen Formel.", "tag": "v", "idee": "(x + 5)² = x² + 10x + 25. Das ist nur dann x² + 25, wenn 10x = 0 ist – also nur für x = 0."}], "mix": ["12x", "für alle Zahlen", "2x² + 9x − 4", "3x² + 12x + 12", "18", "−4a² − 20a + 25", "x = 0", "3x² + 12", "2x² + 7x − 4", "999 999", "−4a² + 20a − 25", "999 001"]}}};
+// D.teile: ein Teil pro Stunde eines aufgeteilten Buchkapitels (z. B. II.2a/b/c); Stundenauswahl nur bei aufgeteilten Kapiteln (D.mehrteilig).
+const D={"untertitel": ["Mit Tipps in den Aufgaben", "Ohne Tipps, auch mit Minus", "Mehrere Werkzeuge, mehr Nachdenken"], "mehrteilig": true, "teile": [{"name": "Teil I.3a · Erste binomische Formel", "stunde": "I.3a", "kurz": "Erste binomische Formel", "erinnerung": ["(a + b)² = a² + 2ab + b²", "Im Flächenbild: ein blaues Quadrat a², zwei gleiche grüne Rechtecke ab, ein oranges Quadrat b².", "Achtung: (a + b)² ist nicht a² + b² – sonst fehlen die zwei Rechtecke."], "a1": {"t": "Rechne mit dem Flächenbild oder mit der Formel.", "sub": ["(x + 2)²", "(a + 7)²", "51²"], "loes": ["x² + 4x + 4", "a² + 14a + 49", "2601"], "falsch": ["x² + 4", "a² + 49", "2501"], "mix": ["a² + 14a + 49", "x² + 4", "2501", "x² + 4x + 4", "2601", "a² + 49"]}, "stufen": {"1": {"name": "Mit Hilfe", "aufg": [{"t": "Rechne. Tipp: (x + 1)² = x² + 2 · x · 1 + 1².", "sub": ["(x + 1)²", "(y + 6)²", "(5 + a)²"]}, {"t": "Stimmt das? (x + 3)² = x² + 9", "tag": "v", "idee": "Nein. Es fehlen die zwei Rechtecke 3x und 3x. Richtig: x² + 6x + 9."}, {"t": "Kopfrechnen wie ein Profi.", "sub": ["31²", "22²"]}, {"t": "Wiederholung: Multipliziere aus: (x + 2) · (y + 3)", "tag": "w"}], "mix": ["x² + 6x + 9", "484", "y² + 36", "25 + a²", "961", "404", "901", "xy + 6", "25 + 10a + a²", "xy + 3x + 2y + 6", "y² + 12y + 36", "x² + 1", "x² + 2x + 1"]}, "2": {"name": "Sicher rechnen", "aufg": [{"t": "Rechne.", "sub": ["(2x + 1)²", "(3a + 4)²", "(x + 5y)²"]}, {"t": "Lücken füllen.", "sub": ["(x + ___)² = x² + 8x + ___", "(___ + 3)² = 4a² + ___ + 9"]}, {"t": "Kopfrechnen.", "sub": ["61²", "101²"]}, {"t": "Lena sagt: „(a + b)² hat drei Glieder, (a + b) · (c + d) aber vier.“ Warum ist das so?", "tag": "v", "idee": "Bei (a + b)² sind die zwei grünen Felder gleich (ab). Man fasst sie zusammen: ab + ab = 2ab."}, {"t": "Wiederholung: Klammere aus: 6x + 9", "tag": "w"}], "mix": ["x² + 25y²", "10101", "9a² + 12a + 16", "4 und 8", "10201", "4x² + 1", "3721", "4x² + 4x + 1", "3 · (2x + 3)", "3621", "2a und 12a", "x² + 10xy + 25y²", "4 und 16", "9a² + 24a + 16"]}, "3": {"name": "Knifflig", "aufg": [{"t": "Vereinfache.", "sub": ["(x + 3)² − x²", "(x + 1)² + (x + 2)²"]}, {"t": "Rückwärts: Welche Klammer gehört zu x² + 20x + 100?"}, {"t": "Warum ist 21² genau um 41 größer als 20²? Erkläre am Flächenbild.", "tag": "v", "idee": "Zum Quadrat 20 · 20 kommen zwei Rechtecke 20 · 1 und ein kleines Quadrat 1 · 1 dazu: 20 + 20 + 1 = 41."}, {"t": "Wiederholung: 2 · (x + 4) − (x − 3)", "tag": "w"}], "mix": ["(x + 20)²", "6x + 9", "9", "x + 11", "x + 5", "2x² + 6x + 5", "2x² + 5", "(x + 10)²"]}}}, {"name": "Teil I.3b · Zweite binomische Formel (mit der ersten gemischt)", "stunde": "I.3b", "kurz": "Zweite binomische Formel", "erinnerung": ["(a − b)² = a² − 2ab + b²", "Die zwei grünen Streifen werden abgezogen, die Ecke b² kommt wieder dazu – sie wurde doppelt abgezogen.", "(a + b)² = a² + 2ab + b² – erst schauen: Plus oder Minus in der Klammer?"], "a1": {"t": "Rechne.", "sub": ["(x − 3)²", "(a − 5)²", "19²"], "loes": ["x² − 6x + 9", "a² − 10a + 25", "361"], "falsch": ["x² − 9", "a² − 10a − 25", "381"], "mix": ["x² − 6x + 9", "a² − 10a + 25", "381", "361", "x² − 9", "a² − 10a − 25"]}, "stufen": {"1": {"name": "Mit Hilfe", "aufg": [{"t": "Rechne. Tipp: (x − 1)² = x² − 2 · x · 1 + 1².", "sub": ["(x − 1)²", "(y − 4)²", "(6 − a)²"]}, {"t": "Stimmt das? (x − 2)² = x² − 4x − 4", "tag": "v", "idee": "Nein. Die Ecke 2 · 2 = 4 ist plus – sie wurde doppelt abgezogen. Richtig: x² − 4x + 4."}, {"t": "Kopfrechnen.", "sub": ["29²", "49²"]}, {"t": "Wiederholung: (x + 6)²", "tag": "w"}], "mix": ["36 − a²", "x² − 1", "2399", "36 − 12a + a²", "899", "x² − 4x + 4", "x² − 2x + 1", "841", "x² + 12x + 36", "y² − 8y + 16", "y² − 16", "x² + 36", "2401"]}, "2": {"name": "Sicher rechnen", "aufg": [{"t": "Rechne.", "sub": ["(2x − 3)²", "(5a − 1)²", "(3x − 2y)²"]}, {"t": "Lücken füllen: (x − ___)² = x² − 14x + ___"}, {"t": "Erst entscheiden: erste oder zweite Formel?", "sub": ["(y + 8)²", "(y − 8)²"]}, {"t": "Tom sagt: „(a − b)² ist dasselbe wie (b − a)².“ Stimmt das?", "tag": "v", "idee": "Ja. Beide ergeben a² − 2ab + b². Probe mit Zahlen: (5 − 2)² = 9 und (2 − 5)² = 9."}, {"t": "Wiederholung: Klammere aus: 4x² − 10x", "tag": "w"}], "mix": ["14 und 49", "25a² − 10a + 1", "7 und 49", "y² − 16y + 64", "y² + 16y + 64", "4x² − 9", "25a² − 1", "9x² − 4y²", "y² − 64", "4x² − 12x + 9", "2 · (2x² − 5x)", "9x² − 12xy + 4y²", "2x · (2x − 5)"]}, "3": {"name": "Knifflig", "aufg": [{"t": "Vereinfache.", "sub": ["(x + 2)² − (x − 2)²", "(x − 3)² + 6x"]}, {"t": "Kopfrechnen: 98²"}, {"t": "Für welche Zahl x gilt (x − 1)² = x² + 1?", "tag": "v", "idee": "(x − 1)² = x² − 2x + 1. Das ist x² + 1 nur, wenn −2x = 0 ist – also für x = 0."}, {"t": "Wiederholung: (x − 2) · (y + 5)", "tag": "w"}], "mix": ["x² + 9", "x = 0", "für alle Zahlen", "8x", "x² − 12x + 9", "xy + 5x − 2y − 10", "9604", "xy − 10", "0", "9404"]}}}, {"name": "Teil I.3c · Dritte binomische Formel (alle drei gemischt)", "stunde": "I.3c", "kurz": "Dritte binomische Formel", "erinnerung": ["1. Formel: (a + b)² = a² + 2ab + b²", "2. Formel: (a − b)² = a² − 2ab + b²", "3. Formel: (a + b) · (a − b) = a² − b²", "Achtung: (a + b)² ist nicht a² + b² – sonst fehlen die zwei Rechtecke."], "a1": {"t": "Welche Formel passt – oder ist es gar keine binomische Formel? Entscheide zuerst, dann rechne.", "sub": ["(x + 6)²", "(a − 4)²", "(y + 3) · (y − 3)", "(x + 2) · (y + 3)"], "loes": ["x² + 12x + 36", "a² − 8a + 16", "y² − 9", "xy + 3x + 2y + 6"], "falsch": ["x² + 36", "a² − 16", "y² + 9", "x² + 6"], "mix": ["xy + 3x + 2y + 6", "a² − 8a + 16", "y² + 9", "x² + 12x + 36", "x² + 36", "a² − 16", "x² + 6", "y² − 9"]}, "stufen": {"1": {"name": "Mit Hilfe", "aufg": [{"t": "Rechne mit der passenden Formel. Tipp: (x + 5)² = x² + 2 · x · 5 + 5².", "sub": ["(x + 5)²", "(a − 3)²", "(b + 7) · (b − 7)"]}, {"t": "Stimmt das? Wenn nicht, schreibe es richtig auf.", "sub": ["(x + 4)² = x² + 16", "(y − 2)² = y² − 4y + 4"], "tag": "v", "idee": "a) falsch: Es fehlen die zwei Rechtecke 2 · x · 4 = 8x. b) richtig."}, {"t": "Kopfrechnen wie ein Profi.", "sub": ["21²", "19²", "21 · 19"]}, {"t": "Wiederholung: Multipliziere aus.", "sub": ["4 · (x − 2)", "(x + 1) · (y + 6)"], "tag": "w"}], "mix": ["xy + 6", "a² − 9", "a² − 6a + 9", "4x − 8", "401", "441", "b² + 49", "xy + 6x + y + 6", "x² + 8x + 16", "x² + 25", "361", "399", "b² − 49", "x² + 10x + 25", "4x − 2"]}, "2": {"name": "Sicher rechnen", "aufg": [{"t": "Rechne mit der passenden Formel.", "sub": ["(2x + 3)²", "(3a − 1)²", "(5x + 2y) · (5x − 2y)"]}, {"t": "Lücken füllen.", "sub": ["(x + ___)² = x² + 10x + ___", "(___ − 4)² = 9a² − ___ + 16"]}, {"t": "Kopfrechnen.", "sub": ["49²", "102 · 98"]}, {"t": "Wiederholung: Multipliziere aus bzw. klammere aus.", "sub": ["(x − 2) · (y + 7)", "9x² − 6x"], "tag": "w"}, {"t": "Ben rechnet (3a − 1)² = 9a² − 1. Erkläre ihm, was fehlt.", "tag": "v", "idee": "Es fehlt das doppelte Produkt: 2 · 3a · 1 = 6a. Richtig: 9a² − 6a + 1."}], "mix": ["2401", "2041", "xy + 7x − 2y − 14", "3 · (3x² − 2x)", "4x² + 12x + 9", "4x² + 9", "25x² − 2y²", "9996", "25x² − 4y²", "9a² − 1", "3a und 24a", "10 und 25", "10004", "5 und 25", "9a² − 6a + 1", "3x · (3x − 2)"]}, "3": {"name": "Knifflig", "aufg": [{"t": "Vereinfache.", "sub": ["(x + 3)² − (x − 3)²", "3 · (x + 2)²"]}, {"t": "Minus vor der Klammer: −(2a − 5)². Tipp: erst die Formel in Klammern, dann das Minus."}, {"t": "Wie rechnet man 999 · 1001 im Kopf? Welche Formel hilft?"}, {"t": "Wiederholung: (2x − 1) · (x + 4)", "tag": "w"}, {"t": "Für welche Zahl x gilt (x + 5)² = x² + 25? Begründe mit der binomischen Formel.", "tag": "v", "idee": "(x + 5)² = x² + 10x + 25. Das ist nur dann x² + 25, wenn 10x = 0 ist – also nur für x = 0."}], "mix": ["x = 0", "999 001", "12x", "3x² + 12x + 12", "2x² + 7x − 4", "3x² + 12", "18", "999 999", "−4a² − 20a + 25", "−4a² + 20a − 25", "für alle Zahlen", "2x² + 9x − 4"]}}}]};
 const esc=s=>s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/\{([^{}\/]+)\/([^{}]+)\}/g,'<span class="fr"><span>$1</span><span>$2</span></span>');
+const el=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e;};
 const tagHtml=t=>t==="v"?'<span class="tag v">💡 Verständnis</span>':t==="w"?'<span class="tag w">↩ Wiederholung</span>':"";
 function aufgabe(nr,a){
-  const d=document.createElement("div");d.className="aufg";
   let h=`<div class="kopf">Aufgabe ${nr}${tagHtml(a.tag)}</div><div class="txt">${esc(a.tag==="w"?a.t.replace(/^Wiederholung: /,""):a.t)}</div>`;
   if(a.sub)h+="<ol>"+a.sub.map((s,i)=>`<li><b>${"abcdefgh"[i]})</b>${esc(s)}</li>`).join("")+"</ol>";
   if(a.idee)h+=`<details class="idee"><summary>Lösungsidee anzeigen</summary><div>${esc(a.idee)}</div></details>`;
-  d.innerHTML=h;return d;
+  return el("div","aufg",h);
 }
 function loesung(l){
-  const box=document.createElement("div");
-  const b=document.createElement("button");b.className="loesbtn";b.textContent="Lösungen anzeigen";
-  const w=document.createElement("div");w.className="loes";w.hidden=true;
-  w.innerHTML='<p>Achtung: Nicht alle Ergebnisse stimmen! Findest du dein Ergebnis nicht, suche den Fehler in deiner Rechnung.</p><div class="grid">'+l.map(x=>`<span>${esc(x)}</span>`).join("")+"</div>";
+  const box=el("div");
+  const b=el("button","loesbtn");b.textContent="Lösungen anzeigen";
+  const w=el("div","loes",'<p>Achtung: Nicht alle Ergebnisse stimmen! Findest du dein Ergebnis nicht, suche den Fehler in deiner Rechnung.</p><div class="grid">'+l.map(x=>`<span>${esc(x)}</span>`).join("")+"</div>");w.hidden=true;
   b.onclick=()=>{w.hidden=!w.hidden;b.textContent=w.hidden?"Lösungen anzeigen":"Lösungen ausblenden";};
   box.append(b,w);return box;
 }
-document.getElementById("erin").innerHTML=D.erinnerung.map(e=>"<li>"+esc(e)+"</li>").join("");
-const a1=document.getElementById("a1");a1.append(aufgabe(1,D.a1),loesung(D.a1.mix));
-const wahl=document.getElementById("wahl"),st=document.getElementById("stufen");
-const S=[["1","★"],["2","★★"],["3","★★★"]];
-S.forEach(([k,stern])=>{
-  const s=D.stufen[k];
-  const b=document.createElement("button");b.setAttribute("aria-pressed","false");b.innerHTML=`${stern}  ${esc(s.name)}<small>${["Mit Tipps in den Aufgaben","Ohne Tipps, auch mit Minus","Mehrere Werkzeuge, mehr Nachdenken"][k-1]}</small>`;
-  const sec=document.createElement("section");sec.className="stufe";sec.hidden=true;
-  const h=document.createElement("h2");h.textContent=stern+"  "+s.name;sec.appendChild(h);
-  s.aufg.forEach((a,i)=>sec.appendChild(aufgabe(stern+" "+(i+2),a)));
-  sec.appendChild(loesung(s.mix));
-  b.onclick=()=>{wahl.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b));st.querySelectorAll(".stufe").forEach(x=>x.hidden=x!==sec);};
-  wahl.appendChild(b);st.appendChild(sec);
-});
+function teil(T){
+  const root=el("section","teil");
+  if(D.mehrteilig)root.appendChild(el("div","teilkopf",esc(T.name)));
+  root.appendChild(el("details","erin",`<summary>Erinnerung: Das brauchst du</summary><ul>${T.erinnerung.map(e=>"<li>"+esc(e)+"</li>").join("")}</ul>`));
+  root.appendChild(el("h2","","Aufgabe 1 · für alle"));
+  root.append(aufgabe(1,T.a1),loesung(T.a1.mix));
+  root.appendChild(el("h2","","Jetzt wählst du dein Niveau"));
+  const wahl=el("div","wahl"),st=el("div");root.append(wahl,st);
+  [["1","★"],["2","★★"],["3","★★★"]].forEach(([k,stern])=>{
+    const s=T.stufen[k];
+    const b=el("button","",`${stern}  ${esc(s.name)}<small>${D.untertitel[k-1]}</small>`);b.setAttribute("aria-pressed","false");
+    const sec=el("section","stufe");sec.hidden=true;
+    sec.appendChild(el("h2","",esc(stern+"  "+s.name)));
+    s.aufg.forEach((a,i)=>sec.appendChild(aufgabe(stern+" "+(i+2),a)));
+    sec.appendChild(loesung(s.mix));
+    b.onclick=()=>{wahl.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b));st.querySelectorAll(".stufe").forEach(x=>x.hidden=x!==sec);};
+    wahl.appendChild(b);st.appendChild(sec);
+  });
+  return root;
+}
+const box=document.getElementById("teile"),secs=D.teile.map(teil);
+secs.forEach(s=>box.appendChild(s));
+if(D.mehrteilig){
+  document.getElementById("teilwahl").hidden=false;const tw=document.getElementById("tw");
+  const zeig=i=>{secs.forEach((s,j)=>s.hidden=j!==i);tw.querySelectorAll("button").forEach((b,j)=>b.setAttribute("aria-pressed",j===i));};
+  D.teile.forEach((T,i)=>{const b=el("button","",esc(T.stunde)+`<small>${esc(T.kurz)}</small>`);b.onclick=()=>zeig(i);tw.appendChild(b);});
+  zeig(D.teile.length-1);
+}
 </script>
 </body>
 </html>
