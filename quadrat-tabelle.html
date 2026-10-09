@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Hilfe: Zahlen quadrieren</title>
+<!-- II.1a Reinquadratische Gleichungen, Seite „Gibt es immer zwei Lösungen?“: Hilfe zur Wertetabelle x → x².
+     Vorgemacht wird nur x = −3: Spalte farbig markieren, beide −3 wandern nach unten in die Rechnung ( −3 ) · ( −3 ),
+     Minus mal Minus gibt Plus → 9, die 9 wandert in die x²-Zeile. Die anderen Zahlen rechnen die SuS selbst. -->
+<style>
+  :root{--hl:#c0700f;--hlH:#fde7c8;--ink:#1b2a3a;--muted:#5b6b7c;--acc:#1f4e79;--bg:#f4f7fb;--card:#fff;--line:#c9d6e5;--rotD:#b33c3c;--hilf:#fdf6ea;--hilfL:#fbd9a8}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;-webkit-user-select:none;user-select:none}
+  button{font:inherit;touch-action:manipulation}
+  header{padding:12px 16px;background:var(--acc);color:#fff}
+  header h1{font-size:20px;margin:0}
+  main{padding:12px 16px 20px;max-width:900px;margin:0 auto}
+  .btn{border:none;background:#3f8f3a;color:#fff;border-radius:12px;min-height:52px;font-size:19px;font-weight:700;padding:8px 22px;margin-bottom:12px}
+  svg{width:100%;height:auto;background:var(--card);border:1px solid var(--line);border-radius:12px;display:block}
+  .cap{font-size:21px;font-weight:600;color:var(--acc);line-height:1.4;min-height:64px;margin:12px 0 8px}
+  .tipp{background:var(--hilf);border:1px solid var(--hilfL);border-radius:12px;padding:10px 14px;font-size:18px;line-height:1.45}
+  footer{color:var(--muted);font-size:13px;text-align:center;padding:12px 0}
+  svg text{font-family:inherit}
+</style>
+</head>
+<body>
+<header><h1>Hilfe: Wie rechne ich x² aus?</h1></header>
+<main>
+  <button class="btn" id="go">Abspielen</button>
+  <svg id="s" viewBox="0 0 640 330" aria-label="Wertetabelle: x = −3 wird quadriert"></svg>
+  <div class="cap" id="cap">Tippe auf „Abspielen“. Wir rechnen x² für x = −3 vor.</div>
+  <div class="tipp"><b>Jetzt du:</b> Rechne die anderen Zahlen genauso: Zahl in Klammern setzen, mal sich selbst nehmen. <b>Achtung:</b> Minus mal Minus gibt Plus.</div>
+</main>
+<footer>Fehling · Reinquadratische Gleichungen</footer>
+<script>
+"use strict";
+const NS="http://www.w3.org/2000/svg",svg=document.getElementById("s"),cap=document.getElementById("cap");
+const el=(t,a,p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);(p||svg).appendChild(e);return e;};
+const SLOW=1.3;
+const ease=k=>k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;
+const tween=(ms,f)=>new Promise(r=>{ms*=SLOW;const t0=performance.now();const s=t=>{const k=Math.min(1,(t-t0)/ms);f(ease(k));k<1?requestAnimationFrame(s):r();};requestAnimationFrame(s);});
+const wait=ms=>new Promise(r=>setTimeout(r,ms*SLOW));
+const txt=(x,y,t,o={})=>{const e=el("text",{x,y,"text-anchor":"middle","dominant-baseline":"central","font-size":o.size||28,"font-weight":o.w||700,fill:o.fill||"var(--ink)",opacity:o.op??1});e.textContent=t;return e;};
+const fade=(e,to,ms=400)=>{const f=+(e.getAttribute("opacity")??1);return tween(ms,k=>e.setAttribute("opacity",f+(to-f)*k));};
+const move=(e,x1,y1,ms=900)=>{const x0=+e.getAttribute("x"),y0=+e.getAttribute("y");return tween(ms,k=>{e.setAttribute("x",x0+(x1-x0)*k);e.setAttribute("y",y0+(y1-y0)*k);});};
+const X0=30,LW=100,CW=85,Y0=30,RH=58,WERTE=["−3","−1","0","1","3","…"];
+const cx=i=>X0+LW+CW*i+CW/2;
+let run=0;
+function tabelle(){
+  svg.innerHTML="";
+  const g={};
+  // Rahmen
+  el("rect",{x:X0,y:Y0,width:LW+CW*6,height:RH*2,fill:"#fff",stroke:"var(--line)","stroke-width":2});
+  g.col=el("rect",{x:X0+LW,y:Y0,width:CW,height:RH*2,fill:"var(--hlH)",stroke:"var(--hl)","stroke-width":3,opacity:0});
+  el("line",{x1:X0,x2:X0+LW+CW*6,y1:Y0+RH,y2:Y0+RH,stroke:"var(--line)","stroke-width":2});
+  for(let i=0;i<=6;i++)el("line",{x1:X0+LW+CW*i,x2:X0+LW+CW*i,y1:Y0,y2:Y0+2*RH,stroke:"var(--line)","stroke-width":2});
+  txt(X0+LW/2,Y0+RH/2,"x",{fill:"var(--acc)"});txt(X0+LW/2,Y0+RH*1.5,"x²",{fill:"var(--acc)"});
+  g.kopf=WERTE.map((w,i)=>txt(cx(i),Y0+RH/2,w));
+  return g;
+}
+async function play(){
+  const my=++run;const alive=()=>my===run;const say=t=>{if(alive())cap.textContent=t;};
+  const g=tabelle();
+  say("Wir nehmen die erste Zahl: x = −3.");
+  await fade(g.col,1,600);g.kopf[0].setAttribute("fill","var(--hl)");if(!alive())return;
+  await wait(1200);if(!alive())return;
+  // Rechnung unten
+  say("x² heißt: x mal sich selbst. Die −3 kommt zweimal nach unten – jedes Mal in Klammern.");
+  const Y=250;
+  const t0=txt(150,Y,"x²  =",{op:0,size:32});await fade(t0,1,400);
+  const k1=txt(cx(0),Y0+RH/2,"−3",{fill:"var(--hl)",size:28}),k2=txt(cx(0),Y0+RH/2,"−3",{fill:"var(--hl)",size:28});
+  const kl=[txt(225,Y,"(",{op:0,size:34}),txt(285,Y,")",{op:0,size:34}),txt(315,Y,"·",{op:0,size:32}),txt(345,Y,"(",{op:0,size:34}),txt(405,Y,")",{op:0,size:34})];
+  await Promise.all([move(k1,255,Y),move(k2,375,Y)]);if(!alive())return;
+  k1.setAttribute("font-size",32);k2.setAttribute("font-size",32);
+  await Promise.all(kl.map(e=>fade(e,1,400)));if(!alive())return;
+  await wait(1600);if(!alive())return;
+  say("Minus mal Minus gibt Plus: ( −3 ) · ( −3 ) = 9.");
+  const gl=txt(445,Y,"=",{op:0,size:32}),erg=txt(490,Y,"9",{op:0,size:36,fill:"var(--hl)"});
+  await fade(gl,1,300);await fade(erg,1,500);if(!alive())return;
+  const hin=txt(320,Y+52,"Minus mal Minus gibt Plus",{op:0,size:20,w:600,fill:"var(--rotD)"});await fade(hin,1,400);
+  await wait(1800);if(!alive())return;
+  say("Das Ergebnis tragen wir unten in die x²-Zeile ein.");
+  const neu=txt(490,Y,"9",{size:36,fill:"var(--hl)"});
+  await move(neu,cx(0),Y0+RH*1.5,1000);if(!alive())return;
+  neu.setAttribute("font-size",28);
+  await wait(800);if(!alive())return;
+  say("Fertig: Zu x = −3 gehört x² = 9. Jetzt rechnest du die anderen Zahlen.");
+}
+document.getElementById("go").onclick=()=>{document.getElementById("go").textContent="Nochmal";play();};
+tabelle();
+</script>
+</body>
+</html>
