@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Übung Kapitel I.4 · Faktorisieren mit binomischen Formeln</title>
 <!-- Kapitel I Terme und Gleichungen: Online-Übung nach dem Buchkapitel (QR-Code im Skript). Nur Aufgaben – gerechnet wird im Heft.
-     Aufbau wie „I.3a Vermischte Übungen“: Aufgabe 1 für alle, dann ★ / ★★ / ★★★. Lösungen gemischt mit typischen Fehlern. -->
+     Aufbau: Aufgabe 1 für alle, dann ★ / ★★ / ★★★. Tipp zu jeder Aufgabe, Lösungen je Stufe erst nach Rückfrage. -->
 <style>
   :root{--ink:#1b2a3a;--muted:#5b6b7c;--acc:#1f4e79;--bg:#f4f7fb;--card:#fff;--line:#c9d6e5;
     --merk:#dde8f5;--merkL:#a9c1e0;--auf:#e8f4e6;--aufL:#c6e8c0;--hilf:#fdf6ea;--hilfL:#fbd9a8;--grau:#f2f2f2;--rot:#b03a2e;--gruen:#3f8f3a}
@@ -42,19 +42,30 @@
   .loes .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:6px}
   .loes .grid span{background:#fff;border:1px solid var(--line);border-radius:8px;padding:6px 8px;text-align:center;font-size:19px}
   .loes[hidden]{display:none}
+  details.tipp{margin-top:8px;font-size:18px}
+  details.tipp summary{display:inline-block;cursor:pointer;font-weight:700;color:#6d4a9e;background:#f1eaf8;border:1px solid #b79bd6;border-radius:10px;padding:6px 12px;min-height:40px;list-style:none}
+  details.tipp summary::-webkit-details-marker{display:none}
+  details.tipp div{background:#f1eaf8;border-radius:8px;padding:8px 10px;margin-top:6px;line-height:1.45}
+  .frag{background:#fff;border:2px solid var(--acc);border-radius:12px;padding:12px 14px;margin-top:8px;font-size:19px}
+  .frag[hidden]{display:none}
+  .frag p{margin:0 0 10px;font-weight:700;color:var(--acc)}
+  .frag button{border-radius:10px;padding:10px 16px;font-size:17px;font-weight:700;min-height:46px;margin:0 8px 6px 0;border:2px solid var(--acc)}
+  .frag .ja{background:var(--acc);color:#fff}.frag .nein{background:#fff;color:var(--acc)}
+  .loes .zeile{background:#fff;border:1px solid var(--line);border-radius:8px;padding:8px 10px;margin-bottom:6px;font-size:19px;line-height:1.5}
+  .loes .zeile b{color:var(--acc)}
+  .loes .warum{display:block;font-size:16px;color:var(--muted);margin-top:2px}
   footer{color:var(--muted);font-size:13px;text-align:center;margin-top:24px}
   .frage{font-size:18px;font-weight:700;color:var(--acc);margin:4px 0 2px}
   .teilkopf{font-size:22px;font-weight:800;color:var(--acc);margin:14px 0 8px}
   .teil[hidden]{display:none}
   .fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;font-size:.82em;line-height:1.15;margin:0 2px}
   .fr>span:first-child{border-bottom:1.5px solid currentColor;padding:0 3px}
-  .rot{color:#d0021b;font-weight:800}
 </style>
 </head>
 <body>
 <header><h1>Übung Kapitel I.4 · Faktorisieren mit binomischen Formeln</h1></header>
 <main>
-  <div class="hinweis">✎ <b>Rechne alle Aufgaben in deinem Heft.</b> Schreibe die Nummer der Aufgabe dazu. Kontrolliere erst am Ende mit den Lösungen.</div>
+  <div class="hinweis">✎ <b>Rechne alle Aufgaben in deinem Heft.</b> Schreibe die Nummer der Aufgabe dazu. Wenn du nicht weiterkommst, hilft dir der Tipp. Die Lösungen findest du am Ende jeder Stufe.</div>
   <div id="teilwahl" hidden><div class="frage">Welche Stunde hattet ihr zuletzt?</div><div class="wahl" id="tw"></div></div>
   <div id="teile"></div>
   <footer>Fehling · I Terme und Gleichungen</footer>
@@ -62,29 +73,36 @@
 <script>
 "use strict";
 // D.teile: ein Teil pro Stunde eines aufgeteilten Buchkapitels (z. B. II.2a/b/c); Stundenauswahl nur bei aufgeteilten Kapiteln (D.mehrteilig).
-const D={"untertitel": ["Mit Tipps in den Aufgaben", "Ohne Tipps, auch mit Minus", "Mehrere Werkzeuge, mehr Nachdenken"], "mehrteilig": false, "teile": [{"name": "", "stunde": "", "kurz": "", "erinnerung": ["1. Suche die zwei Quadrate a² und b².", "2. Lies die Seiten a und b ab.", "3. Prüfe das Mittelstück: Ist es genau 2 · a · b?", "4. Schreibe die Klammer – und mach die Probe durch Ausmultiplizieren.", "Zwei Quadrate mit Minus dazwischen: a² − b² = (a + b) · (a − b)."], "a1": {"t": "Welche Formel steckt drin – oder keine? Faktorisiere, wenn es geht.", "sub": ["x² + 8x + 16", "y² − 36", "a² − 10a + 25", "4x² − 12x + 9", "x² + 4x + 9"], "loes": ["(x + 4)²", "(y + 6) · (y − 6)", "(a − 5)²", "(2x − 3)²", "keine binomische Formel"], "falsch": ["(x + 8)²", "(y − 6)²", "(a + 5)²", "(4x − 3)²", "(x + 3)²"], "mix": ["(x + 3)²", "(x + 8)²", "(2x − 3)²", "keine binomische Formel", "(y − 6)²", "(a − 5)²", "(y + 6) · (y − 6)", "(x + 4)²", "(4x − 3)²", "(a + 5)²"]}, "stufen": {"1": {"name": "Mit Hilfe", "aufg": [{"t": "Faktorisiere. Tipp: Suche zuerst die zwei Quadrate.", "sub": ["x² + 6x + 9", "a² − 4a + 4", "x² − 25"]}, {"t": "Fülle die Lücken. Beispiele: x² + 6x + 9 = (x + 3)², denn 9 = 3 · 3. Und y² − 25 = (y + 5) · (y − 5), denn 25 = 5 · 5.", "sub": ["x² + 14x + 49 = (x + ___)²", "y² − 16 = (y + ___) · (y − ___)"]}, {"t": "Wiederholung: Multipliziere aus bzw. klammere aus.", "sub": ["(x + 3) · (x − 2)", "5x² + 10x"], "tag": "w"}, {"t": "Stimmt das? x² + 9 = (x + 3)²", "tag": "v", "idee": "Nein. (x + 3)² = x² + 6x + 9 – das Mittelstück 6x fehlt. x² + 9 kann man nicht faktorisieren."}], "mix": ["(a − 2)²", "x² − 6", "(a + 2)²", "(x + 3)²", "49", "(x − 5)²", "(x + 9)²", "4 und 4", "5 · (x² + 2x)", "(x + 5) · (x − 5)", "7", "x² + x − 6", "5x · (x + 2)"]}, "2": {"name": "Sicher rechnen", "aufg": [{"t": "Faktorisiere.", "sub": ["4x² + 12x + 9", "9a² − 24a + 16", "16x² − 49"]}, {"t": "Fülle die Lücken. Beispiel: x² + 8x + 16 = (x + 4)², denn das Mittelglied ist 2 · x · 4 = 8x.", "sub": ["x² + ___ + 36 = (x + 6)²", "25a² − ___ + 1 = (5a − 1)²"]}, {"t": "Tim faktorisiert x² + 10x + 16 = (x + 4)². Stimmt das? Mach die Probe.", "tag": "v", "idee": "Nein. (x + 4)² = x² + 8x + 16. Das Mittelstück passt nicht."}, {"t": "Wiederholung: Multipliziere aus.", "sub": ["(2x − 1)²", "(a + 3) · (b − 2)"], "tag": "w"}], "mix": ["(3a + 4)²", "4x² + 1", "(4x + 3)²", "ab − 2a + 3b − 6", "ab − 6", "5a", "4x² − 4x + 1", "(4x + 7) · (4x − 7)", "(4x − 7)²", "12x", "10a", "(2x + 3)²", "(3a − 4)²", "6x"]}, "3": {"name": "Knifflig", "aufg": [{"t": "Klammere zuerst aus, dann faktorisiere.", "sub": ["2x² − 8", "3a² + 12a + 12", "5x² − 30x + 45"]}, {"t": "Für welche Zahlen k ist x² + kx + 49 eine binomische Formel?"}, {"t": "Rechne geschickt mit einer binomischen Formel: 37² − 33²"}, {"t": "Wiederholung: Vereinfache: (x − 4)² + 8x", "tag": "w"}, {"t": "Warum kann man x² + 6x + 8 nicht mit einer binomischen Formel faktorisieren?", "tag": "v", "idee": "8 ist keine Quadratzahl. Wäre es (x + 3)², müsste hinten 9 stehen."}], "mix": ["160", "3 · (a + 2)²", "k = 7", "k = 14 oder k = −14", "x² + 8x − 16", "2 · (x − 2)²", "5 · (x + 3)²", "x² + 16", "3 · (a + 4)²", "5 · (x − 3)²", "280", "2 · (x + 2) · (x − 2)"]}}}]};
-const esc=s=>s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/\{([^{}\/]+)\/([^{}]+)\}/g,'<span class="fr"><span>$1</span><span>$2</span></span>').replace(/\[([+−])\]/g,'<span class="rot">$1</span>');
+const D={"untertitel": ["Mit Hilfe zum Einstieg", "Ohne Hilfe, auch mit Minus", "Mehrere Werkzeuge, mehr Nachdenken"], "mehrteilig": false, "teile": [{"name": "", "stunde": "", "kurz": "", "erinnerung": ["1. Suche die zwei Quadrate a² und b².", "2. Lies die Seiten a und b ab.", "3. Prüfe das Mittelstück: Ist es genau 2 · a · b?", "4. Schreibe die Klammer – und mach die Probe durch Ausmultiplizieren.", "Zwei Quadrate mit Minus dazwischen: a² − b² = (a + b) · (a − b)."], "a1": {"t": "Welche Formel steckt drin – oder keine? Faktorisiere, wenn es geht.", "l": ["(x + 4)²", "(y + 6) · (y − 6)", "(a − 5)²", "keine binomische Formel (2 · 3 · x = 6x, nicht 4x)"], "tipp": "Suche zwei Quadrate und prüfe das Mittelstück 2 · a · b.", "sub": ["x² + 8x + 16", "y² − 36", "a² − 10a + 25", "x² + 4x + 9"]}, "stufen": {"1": {"name": "Mit Hilfe", "aufg": [{"t": "Faktorisiere.", "l": ["(x + 3)²", "(a − 2)²", "(x + 5) · (x − 5)"], "tipp": "Suche zuerst die zwei Quadrate. Bei c) gibt es kein Mittelstück – welche Formel ist das?", "sub": ["x² + 6x + 9", "a² − 4a + 4", "x² − 25"]}, {"t": "Lücken füllen.", "l": ["7", "4 und 4"], "tipp": "49 = ? · ? und 16 = ? · ?", "sub": ["x² + 14x + 49 = (x + ___)²", "y² − 16 = (y + ___) · (y − ___)"]}, {"t": "Wiederholung: Multipliziere aus bzw. klammere aus.", "l": ["x² + x − 6", "5x · (x + 2)"], "tipp": "a) vier Felder, dann zusammenfassen. b) In beiden Teilen stecken 5 und x.", "sub": ["(x + 3) · (x − 2)", "5x² + 10x"], "tag": "w"}, {"t": "Stimmt das? x² + 9 = (x + 3)²", "l": ["nein – (x + 3)² = x² + 6x + 9"], "tipp": "Multipliziere (x + 3)² aus und vergleiche.", "tag": "v", "idee": "Das Mittelstück 6x fehlt. x² + 9 lässt sich nicht mit einer binomischen Formel faktorisieren."}]}, "2": {"name": "Sicher rechnen", "aufg": [{"t": "Faktorisiere.", "l": ["(2x + 3)²", "(3a − 4)²", "(4x + 7) · (4x − 7)"], "tipp": "4x² = (2x)² und 9 = 3². Prüfe das Mittelstück 2 · 2x · 3.", "sub": ["4x² + 12x + 9", "9a² − 24a + 16", "16x² − 49"]}, {"t": "Lücken füllen.", "l": ["12x", "10a"], "tipp": "Das Mittelstück ist 2 · a · b.", "sub": ["x² + ___ + 36 = (x + 6)²", "25a² − ___ + 1 = (5a − 1)²"]}, {"t": "Tim faktorisiert x² + 10x + 16 = (x + 4)². Stimmt das? Mach die Probe.", "l": ["nein – (x + 4)² = x² + 8x + 16"], "tipp": "Multipliziere (x + 4)² aus.", "tag": "v", "idee": "Das Mittelstück passt nicht: 2 · 4 · x = 8x, nicht 10x."}, {"t": "Wiederholung: Multipliziere aus.", "l": ["4x² − 4x + 1", "ab − 2a + 3b − 6"], "tipp": "a) zweite Formel, b) vier Felder.", "sub": ["(2x − 1)²", "(a + 3) · (b − 2)"], "tag": "w"}]}, "3": {"name": "Knifflig", "aufg": [{"t": "Klammere zuerst aus, dann faktorisiere.", "l": ["2 · (x + 2) · (x − 2)", "3 · (a + 2)²", "5 · (x − 3)²"], "tipp": "Klammere die gemeinsame Zahl aus – in der Klammer steht dann eine binomische Formel.", "sub": ["2x² − 8", "3a² + 12a + 12", "5x² − 30x + 45"]}, {"t": "Für welche Zahlen k ist x² + kx + 49 eine binomische Formel?", "l": ["k = 14 oder k = −14"], "tipp": "49 = 7². Wie groß muss das Mittelstück 2 · 7 · x sein?"}, {"t": "Rechne geschickt mit einer binomischen Formel: 37² − 33²", "l": ["(37 + 33) · (37 − 33) = 70 · 4 = 280"], "tipp": "Dritte Formel rückwärts: a² − b² = (a + b) · (a − b)."}, {"t": "Wiederholung: Multipliziere aus: −(x − 4)²", "l": ["−x² + 8x − 16"], "tipp": "Erst (x − 4)² in Klammern ausrechnen, dann dreht das Minus jedes Vorzeichen um.", "tag": "w"}, {"t": "Warum kann man x² + 6x + 8 nicht mit einer binomischen Formel faktorisieren?", "l": ["8 ist keine Quadratzahl"], "tipp": "Welche Zahl müsste für (x + 3)² hinten stehen?", "tag": "v", "idee": "Wäre es (x + 3)², müsste hinten 9 stehen."}]}}}]};
+const esc=s=>s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/\{([^{}\/]+)\/([^{}]+)\}/g,'<span class="fr"><span>$1</span><span>$2</span></span>');
 const el=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e;};
 const tagHtml=t=>t==="v"?'<span class="tag v">💡 Verständnis</span>':t==="w"?'<span class="tag w">↩ Wiederholung</span>':"";
 function aufgabe(nr,a){
   let h=`<div class="kopf">Aufgabe ${nr}${tagHtml(a.tag)}</div><div class="txt">${esc(a.tag==="w"?a.t.replace(/^Wiederholung: /,""):a.t)}</div>`;
   if(a.sub)h+="<ol>"+a.sub.map((s,i)=>`<li><b>${"abcdefgh"[i]})</b>${esc(s)}</li>`).join("")+"</ol>";
-  if(a.idee)h+=`<details class="idee"><summary>Lösungsidee anzeigen</summary><div>${esc(a.idee)}</div></details>`;
+  if(a.tipp)h+=`<details class="tipp"><summary>💡 Tipp</summary><div>${esc(a.tipp)}</div></details>`;
   return el("div","aufg",h);
 }
-function loesung(l){
+// Lösungen einer Stufe: erst nach Rückfrage „Hast du wirklich gerechnet?“, dann nur die richtigen Lösungen je Aufgabe
+function loesung(liste){
   const box=el("div");
   const b=el("button","loesbtn");b.textContent="Lösungen anzeigen";
-  const w=el("div","loes",'<p>Achtung: Nicht alle Ergebnisse stimmen! Findest du dein Ergebnis nicht, suche den Fehler in deiner Rechnung.</p><div class="grid">'+l.map(x=>`<span>${esc(x)}</span>`).join("")+"</div>");w.hidden=true;
-  b.onclick=()=>{w.hidden=!w.hidden;b.textContent=w.hidden?"Lösungen anzeigen":"Lösungen ausblenden";};
-  box.append(b,w);return box;
+  const f=el("div","frag",'<p>Hast du alle Aufgaben wirklich im Heft gerechnet?</p>');f.hidden=true;
+  const ja=el("button","ja");ja.textContent="Ja, Lösungen zeigen";const nein=el("button","nein");nein.textContent="Nein, ich rechne erst";f.append(ja,nein);
+  const w=el("div","loes",liste.map(([nr,a])=>{
+    const l=a.sub?a.l.map((x,i)=>`${"abcdefgh"[i]}) ${esc(x)}`).join("&nbsp;&nbsp;&nbsp; "):a.l.map(esc).join("<br>");
+    return `<div class="zeile"><b>Aufgabe ${nr}:</b> ${l}${a.idee?`<span class="warum">Warum: ${esc(a.idee)}</span>`:""}</div>`;}).join(""));w.hidden=true;
+  b.onclick=()=>{if(!w.hidden){w.hidden=true;b.textContent="Lösungen anzeigen";return;}f.hidden=false;b.hidden=true;};
+  ja.onclick=()=>{f.hidden=true;w.hidden=false;b.hidden=false;b.textContent="Lösungen ausblenden";};
+  nein.onclick=()=>{f.hidden=true;b.hidden=false;};
+  box.append(b,f,w);return box;
 }
 function teil(T){
   const root=el("section","teil");
   if(D.mehrteilig)root.appendChild(el("div","teilkopf",esc(T.name)));
   root.appendChild(el("details","erin",`<summary>Erinnerung: Das brauchst du</summary><ul>${T.erinnerung.map(e=>"<li>"+esc(e)+"</li>").join("")}</ul>`));
   root.appendChild(el("h2","","Aufgabe 1 · für alle"));
-  root.append(aufgabe(1,T.a1),loesung(T.a1.mix));
+  root.append(aufgabe(1,T.a1),loesung([[1,T.a1]]));
   root.appendChild(el("h2","","Jetzt wählst du dein Niveau"));
   const wahl=el("div","wahl"),st=el("div");root.append(wahl,st);
   [["1","★"],["2","★★"],["3","★★★"]].forEach(([k,stern])=>{
@@ -93,7 +111,7 @@ function teil(T){
     const sec=el("section","stufe");sec.hidden=true;
     sec.appendChild(el("h2","",esc(stern+"  "+s.name)));
     s.aufg.forEach((a,i)=>sec.appendChild(aufgabe(stern+" "+(i+2),a)));
-    sec.appendChild(loesung(s.mix));
+    sec.appendChild(loesung(s.aufg.map((a,i)=>[stern+" "+(i+2),a])));
     b.onclick=()=>{wahl.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b));st.querySelectorAll(".stufe").forEach(x=>x.hidden=x!==sec);};
     wahl.appendChild(b);st.appendChild(sec);
   });
