@@ -4,9 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Wo steckt die eine Praline?</title>
-<!-- I.3b Zweite binomische Formel: Schachtel 10 · 10. Tom isst 1 Spalte + 1 Reihe, Lena 2 Spalten + 2 Reihen.
-     Die Ecke steckt in Spalte UND Reihe: Sie wird doppelt abgezogen, aber nur einmal gegessen → + b².
-     „Zum Flächenbild“ zeigt (10 − 2)² = 100 − 20 − 20 + 4. -->
+<!-- I.3b Zweite binomische Formel (Stand 12.10.2026): nur Toms Schachtel 10 · 10 – Tom isst die rechte Spalte und die untere Reihe (wie im Comic im Skript).
+     Die Eckpraline wird doppelt markiert, beim Nachzählen bleiben 9 · 9 = 81. Lena und das Flächenbild (10 − 2)² rechnen die SuS im Skript auf Papier. -->
 <style>
   :root{
     --f1:#bcd3f2; --f2:#c6e8c0; --f3:#fbd9a8; --c2:#3f8f3a; --c3:#c0700f; --eat:#d64545;
@@ -39,14 +38,12 @@
 <header><h1>Wo steckt die eine Praline?</h1></header>
 <main>
   <div class="bar">
-    <button class="btn" id="bT" aria-pressed="false">Tom: 1 Spalte und 1 Reihe</button>
-    <button class="btn" id="bL" aria-pressed="false">Lena: 2 Spalten und 2 Reihen</button>
-    <button class="btn" id="bF" aria-pressed="false" disabled>Zum Flächenbild</button>
+    <button class="btn" id="bT" aria-pressed="false">▶ Abspielen</button>
   </div>
   <div class="wrap">
     <svg id="s" viewBox="0 0 560 520" aria-label="Quadratische Pralinenschachtel mit 10 mal 10 Pralinen"></svg>
     <div class="side">
-      <div class="cap" id="cap">Wähle oben eine Schachtel.</div>
+      <div class="cap" id="cap">Toms Schachtel: Tippe auf „Abspielen“.</div>
       <div class="calc" id="calc"></div>
     </div>
   </div>
@@ -60,7 +57,7 @@ const el=(t,a,p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.set
 const SLOW=1.4;
 const tween=(ms,f)=>new Promise(r=>{ms*=SLOW;const t0=performance.now();const s=t=>{const k=Math.min(1,(t-t0)/ms);f(k);k<1?requestAnimationFrame(s):r();};requestAnimationFrame(s);});
 const wait=ms=>new Promise(r=>setTimeout(r,ms*SLOW));
-let run=0,seenL=false;
+let run=0;
 
 const N=10,C=40,X0=110,Y0=80;
 let cells=[];
@@ -82,11 +79,11 @@ function mark(r,c){
   el("rect",{x:X0+c*C+2,y:Y0+r*C+2,width:C-4,height:C-4,rx:5,fill:"var(--eat)",opacity:z.marks===1?.35:.6});
   if(z.marks===2){const t=el("text",{x:X0+c*C+C/2,y:Y0+r*C+C/2,"text-anchor":"middle","dominant-baseline":"central","font-size":15,"font-weight":800,fill:"#fff"});t.textContent="2×";z.badge=t;}
 }
-function setBtn(id){["bT","bL","bF"].forEach(b=>document.getElementById(b).setAttribute("aria-pressed",b===id));}
+
 
 async function essen(k,name){
   const my=++run;const alive=()=>my===run;const say=t=>{if(alive())cap.textContent=t;};
-  setBtn(k===1?"bT":"bL");box();
+  document.getElementById("bT").textContent="↻ Nochmal";box();
   const n=k*N, rest=N-k;
   calc.innerHTML="In der Schachtel: <b>100</b>";
   say(`Die Schachtel hat 10 · 10 = 100 Pralinen. ${name} isst ${k===1?"die rechte Spalte":"die zwei rechten Spalten"}.`);
@@ -115,39 +112,11 @@ async function essen(k,name){
   const ek=k*k;
   say(`Gegessen wurde die Ecke aber nur einmal. Also muss sie einmal wieder dazu: + ${ek}.`);
   calc.innerHTML=`(10 − ${k})² = 100 <span class="e">− ${n} − ${n}</span> <span class="o">+ ${ek}</span> = <b>${rest*rest}</b><br><span style="font-size:18px;color:var(--muted)">Ecke: ${k} · ${k} = ${ek}, zweimal abgezogen, einmal gegessen</span>`;
-  if(k===2){seenL=true;document.getElementById("bF").disabled=false;}
+  await wait(2600);if(!alive())return;
+  say("Ergänze jetzt im Skript die Erklärung.");
 }
 
-// Flächenbild: großes Quadrat minus zwei Streifen plus Ecke
-async function flaeche(){
-  const my=++run;const alive=()=>my===run;const say=t=>{if(alive())cap.textContent=t;};
-  setBtn("bF");svg.innerHTML="";calc.innerHTML="";
-  const S=N*C,b=2*C;
-  const lab=(x,y,t,o={})=>{const e=el("text",{x,y,"text-anchor":"middle","dominant-baseline":"central","font-size":o.size||22,"font-weight":o.w||700,fill:o.fill||"var(--ink)",opacity:0});e.textContent=t;return e;};
-  const show=(els,ms=500)=>tween(ms,k=>els.forEach(e=>e.setAttribute("opacity",k)));
-  const sq=el("rect",{x:X0,y:Y0,width:S,height:S,fill:"var(--f1)",stroke:"var(--ink)","stroke-width":3,opacity:0});
-  const t10=[lab(X0+S/2,Y0-34,"10"),lab(X0-34,Y0+S/2,"10")];
-  say("Das ist Lenas Schachtel als Flächenbild: ein Quadrat mit der Seite 10.");
-  const tq=lab(X0+(S-b)/2,Y0+(S-b)/2,"10 · 10 = 100",{size:24});
-  await show([sq,...t10,tq]);await wait(2200);if(!alive())return;
-  say("Lena isst einen Streifen rechts: 10 · 2 = 20 Pralinen. Er wird abgezogen.");
-  const sr=el("rect",{x:X0+S-b,y:Y0,width:b,height:S,fill:"var(--f2)",stroke:"var(--c2)","stroke-width":3,opacity:0});
-  const tr=lab(X0+S-b/2,Y0+(S-b)/2,"−20",{fill:"var(--c2)",size:24});const tb2=lab(X0+S-b/2,Y0-34,"−2",{fill:"var(--c2)"});
-  await show([sr,tr,tb2]);await wait(2200);if(!alive())return;
-  say("Und einen Streifen unten: noch einmal 10 · 2 = 20. Auch er wird abgezogen.");
-  const su=el("rect",{x:X0,y:Y0+S-b,width:S,height:b,fill:"var(--f2)",stroke:"var(--c2)","stroke-width":3,opacity:0});
-  const tu=lab(X0+(S-b)/2,Y0+S-b/2,"−20",{fill:"var(--c2)",size:24});const tl2=lab(X0-34,Y0+S-b/2,"−2",{fill:"var(--c2)"});
-  await show([su,tu,tl2]);await wait(2200);if(!alive())return;
-  say("Die Ecke liegt in beiden Streifen. Sie wurde zweimal abgezogen – also kommt sie einmal wieder dazu: (−2) · (−2) = +4.");
-  const ec=el("rect",{x:X0+S-b,y:Y0+S-b,width:b,height:b,fill:"var(--f3)",stroke:"var(--c3)","stroke-width":4,opacity:0});
-  const te=lab(X0+S-b/2,Y0+S-b/2,"+4",{fill:"var(--c3)",size:24});
-  await show([ec,te]);ec.classList.add("blink");await wait(1800);if(!alive())return;
-  calc.innerHTML=`(10 − 2)²<br>= <b>100</b> <span class="g">− 20 − 20</span> <span class="o">+ 4</span><br>= <b>64</b>`;
-  say("Im Skript schreibst du das als Flächenbild mit den Seiten 10 und −2: Das orange Feld ist plus.");
-}
 document.getElementById("bT").onclick=()=>essen(1,"Tom");
-document.getElementById("bL").onclick=()=>essen(2,"Lena");
-document.getElementById("bF").onclick=flaeche;
 box();
 </script>
 </body>
