@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Pralinen umpacken</title>
-<!-- I.3c Dritte binomische Formel: Schachtel 10 · 10, eine quadratische Ecke (3 · 3 bzw. 2 · 2) wird gegessen.
+<!-- I.3c Dritte binomische Formel (Stand 12.10.2026): nur Lenas Schachtel 10 · 10, sie isst die Ecke 3 · 3 (wie im Comic im Skript).
      Der rechte Streifen dreht sich und legt sich unten an: Aus der L-Form wird ein Rechteck (10 + b) · (10 − b) = 100 − b². -->
 <style>
   :root{
@@ -35,13 +35,12 @@
 <header><h1>Pralinen umpacken</h1></header>
 <main>
   <div class="bar">
-    <button class="btn" id="b3" aria-pressed="false">Tom: Ecke 3 · 3</button>
-    <button class="btn" id="b2" aria-pressed="false">Lena: Ecke 2 · 2</button>
+    <button class="btn" id="b3" aria-pressed="false">▶ Abspielen</button>
   </div>
   <div class="wrap">
     <svg id="s" viewBox="0 0 480 560" aria-label="Pralinenschachtel 10 mal 10, eine Ecke wird gegessen und der Rest zu einem Rechteck umgepackt"></svg>
     <div class="side">
-      <div class="cap" id="cap">Wähle oben eine Ecke.</div>
+      <div class="cap" id="cap">Lenas Schachtel: Tippe auf „Abspielen“.</div>
       <div class="calc" id="calc"></div>
     </div>
   </div>
@@ -66,7 +65,7 @@ function praline(g,x,y){
 }
 async function play(k){
   const my=++run;const alive=()=>my===run;const say=t=>{if(alive())cap.textContent=t;};
-  ["b3","b2"].forEach(b=>document.getElementById(b).setAttribute("aria-pressed",b==="b"+k));
+  document.getElementById("b3").textContent="↻ Nochmal";
   svg.innerHTML="";calc.innerHTML="";
   const r=N-k;
   // drei Teile: linker Block (10 hoch, 10 − k breit), Streifen rechts oben (10 − k hoch, k breit), Ecke (k · k)
@@ -83,7 +82,7 @@ async function play(k){
   calc.innerHTML="100 Pralinen";
   await wait(1800);if(!alive())return;
   // 1. Ecke essen
-  say(`${k===3?"Tom":"Lena"} isst unten rechts eine Ecke mit ${k} · ${k} = ${k*k} Pralinen.`);
+  say(`Lena isst unten rechts eine Ecke mit ${k} · ${k} = ${k*k} Pralinen.`);
   const mark=el("rect",{x:X0+r*C,y:Y0+r*C,width:k*C,height:k*C,fill:"var(--eat)",opacity:0});
   await fade([mark],.45,500);await wait(900);if(!alive())return;
   await fade([ecke,mark],0,800);if(!alive())return;
@@ -109,9 +108,10 @@ async function play(k){
   await wait(2200);if(!alive())return;
   calc.innerHTML=`(10 + ${k}) · (10 − ${k})<br>= 10² <span class="e">− ${k}²</span><br>= 100 − ${k*k} = <b>${100-k*k}</b>`;
   say("Eine Seite ist um "+k+" länger, die andere um "+k+" kürzer – und es fehlt genau die Ecke.");
+  await wait(3200);if(!alive())return;
+  say("Ergänze jetzt im Skript den Satz.");
 }
 document.getElementById("b3").onclick=()=>play(3);
-document.getElementById("b2").onclick=()=>play(2);
 </script>
 </body>
 </html>
