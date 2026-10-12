@@ -61,8 +61,9 @@ let run=0;
 const txt=(x,y,t,o={})=>{const e=el("text",{x,y,"text-anchor":"middle","dominant-baseline":"central","font-size":o.size||22,"font-weight":o.w||700,fill:o.fill||"var(--ink)",opacity:o.op??1});
   if(o.rot)e.setAttribute("transform",`rotate(${o.rot} ${x} ${y})`);e.textContent=t;return e;};
 // Malaufgabe im Streifen einblenden, kurz stehen lassen, dann wird daraus das Ergebnis
-async function rechnung(x,y,auf,erg,o,alive){
+async function rechnung(x,y,auf,erg,o,alive,danach){
   const a=txt(x,y,auf,{...o,op:0});await tween(700,k=>a.setAttribute("opacity",k));await wait(2200);if(!alive())return;
+  if(danach)danach();
   const b=txt(x,y,erg,{...o,op:0});await tween(900,k=>{a.setAttribute("opacity",1-k);b.setAttribute("opacity",k);});}
 let pral,colR,rowR,badge;
 // Ausgangsbild: Toms Schachtel wie am Ende des Einstiegs (Spalte und Reihe gegessen, Ecke doppelt)
@@ -100,8 +101,8 @@ async function play(){
   colR.setAttribute("stroke","var(--c2)");colR.setAttribute("stroke-width",3);colR.setAttribute("rx",0);
   txt(cx1+T/2,Y0-30,"−1",{fill:"var(--c2)"});
   await wait(800);if(!alive())return;
-  say("Der Streifen ist 10 hoch und −1 breit: 10 · (−1) = −10.");
-  await rechnung(cx1+T/2,Y0+S/2,"10 · (−1)","−10",{fill:"var(--c2)",size:22,rot:-90},alive);if(!alive())return;
+  say("Der Streifen ist 10 hoch und −1 breit: 10 · (−1).");
+  await rechnung(cx1+T/2,Y0+S/2,"10 · (−1)","−10",{fill:"var(--c2)",size:22,rot:-90},alive,()=>say("Der Streifen ist 10 hoch und −1 breit: 10 · (−1) = −10."));if(!alive())return;
   calc.innerHTML="<b>100</b> <span class='g'>− 10</span>";
   await wait(2200);if(!alive())return;
 
@@ -112,8 +113,8 @@ async function play(){
   rowR.setAttribute("stroke","var(--c2)");rowR.setAttribute("stroke-width",3);rowR.setAttribute("rx",0);
   txt(X0-30,ry1+T/2,"−1",{fill:"var(--c2)"});
   await wait(800);if(!alive())return;
-  say("Dieser Streifen ist −1 hoch und 10 breit: (−1) · 10 = −10.");
-  await rechnung(X0+S/2,ry1+T/2,"(−1) · 10","−10",{fill:"var(--c2)",size:22},alive);if(!alive())return;
+  say("Dieser Streifen ist −1 hoch und 10 breit: (−1) · 10.");
+  await rechnung(X0+S/2,ry1+T/2,"(−1) · 10","−10",{fill:"var(--c2)",size:22},alive,()=>say("Dieser Streifen ist −1 hoch und 10 breit: (−1) · 10 = −10."));if(!alive())return;
   calc.innerHTML="<b>100</b> <span class='g'>− 10 − 10</span>";
   await wait(2200);if(!alive())return;
 
