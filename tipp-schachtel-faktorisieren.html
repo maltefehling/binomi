@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Tipp: So füllst du das Flächenbild aus</title>
+<!-- I.4 Faktorisieren mit binomischen Formeln (15.10.2026, Malte): zeigt den Einstiegs-Auftrag Schritt für Schritt an einem ANDEREN Beispiel
+     (49 Nougat, 28 Herzen, 4 Trüffel → (7 + 2)² = 81). Die Zahlen der Partner A/B (100·40·4, 64·32·4) kommen hier nicht vor. -->
+<style>
+  :root{--tipp:#6d4a9e;--tippH:#f1eaf8;--tippL:#b79bd6;
+    --f1:#dbe7f6;--c1:#2e5d9f;--f2:#e3f2df;--c2:#3f8f3a;--f3:#fbe8cf;--c3:#c0700f;
+    --ink:#1b2a3a;--muted:#5b6b7c;--bg:#f7f4fb;--card:#fff;--line:#d8cce8}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;-webkit-user-select:none;user-select:none}
+  button{font:inherit;touch-action:manipulation}
+  header{padding:12px 16px;background:var(--tipp);color:#fff}
+  header h1{font-size:20px;margin:0}
+  main{padding:12px 16px 20px;max-width:1100px;margin:0 auto}
+  .start{font-size:19px;color:var(--tipp);font-weight:700;margin:4px 0 10px}
+  .bar{display:flex;gap:10px;margin-bottom:12px}
+  .btn{border:2px solid var(--tipp);background:var(--tipp);color:#fff;border-radius:12px;padding:10px 18px;font-size:18px;font-weight:700;min-height:48px}
+  .wrap{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start}
+  svg{flex:1 1 460px;max-width:560px;width:100%;height:auto;background:var(--card);border:1px solid var(--line);border-radius:12px}
+  .side{flex:1 1 320px}
+  .cap{min-height:96px;font-size:21px;font-weight:600;color:var(--tipp);line-height:1.4;margin:4px 0 12px}
+  .zeilen{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;font-size:22px;line-height:1.9}
+  .zeilen div{opacity:.25;transition:opacity .6s}
+  .zeilen div.da{opacity:1}
+  .zeilen b{color:var(--tipp)}
+  .du{display:none;margin-top:14px;background:var(--tippH);border:1px solid var(--tippL);border-radius:12px;padding:10px 14px;font-size:20px;line-height:1.45}
+  .du.da{display:block}
+  svg text{font-family:inherit}
+  .blink{animation:bl .6s ease-in-out 6 alternate}
+  @keyframes bl{from{opacity:1}to{opacity:.25}}
+  footer{color:var(--muted);font-size:13px;text-align:center;padding:12px 0}
+</style>
+</head>
+<body>
+<header><h1>Tipp: So füllst du das Flächenbild aus</h1></header>
+<main>
+  <div class="start">Beispiel mit anderen Zahlen: 49 Nougat-Kugeln, 28 Herzen, 4 Trüffel</div>
+  <div class="bar"><button class="btn" id="go">▶ Abspielen</button></div>
+  <div class="wrap">
+    <svg id="s" viewBox="0 0 520 470" aria-label="Flächenbild mit vier Feldern"></svg>
+    <div class="side">
+      <div class="cap" id="cap">Tippe auf „Abspielen“.</div>
+      <div class="zeilen" id="z">
+        <div id="z1">49 = <b>7</b> · <b>7</b> &nbsp;&nbsp;&nbsp; 4 = <b>2</b> · <b>2</b></div>
+        <div id="z2">28 = <b>14</b> + <b>14</b> &nbsp;&nbsp;&nbsp; Probe: <b>7</b> · <b>2</b> = <b>14</b> ✓</div>
+        <div id="z3">49 + 28 + 4 = ( <b>7</b> + <b>2</b> )² = <b>81</b></div>
+      </div>
+      <div class="du" id="du"><b>Jetzt du:</b> Mach es genauso mit deinen Zahlen. Erst die zwei Quadrate, dann die Seiten, dann die Herzen verteilen und die Probe machen.</div>
+    </div>
+  </div>
+</main>
+<footer>Fehling · Faktorisieren mit binomischen Formeln · Tipp</footer>
+<script>
+"use strict";
+const NS="http://www.w3.org/2000/svg",svg=document.getElementById("s"),cap=document.getElementById("cap");
+const el=(t,a,p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);(p||svg).appendChild(e);return e;};
+const SLOW=1.6,wait=ms=>new Promise(r=>setTimeout(r,ms*SLOW));
+const tween=(ms,f)=>new Promise(r=>{ms*=SLOW;const t0=performance.now();const s=t=>{const k=Math.min(1,(t-t0)/ms);f(k);k<1?requestAnimationFrame(s):r();};requestAnimationFrame(s);});
+const X0=130,Y0=110,A=245,B=95;          // Seiten wie im Skript: großes Quadrat oben links, kleines unten rechts
+let run=0,T={};
+const txt=(x,y,t,o={})=>{const e=el("text",{x,y,"text-anchor":"middle","dominant-baseline":"central","font-size":o.size||30,"font-weight":700,fill:o.fill||"var(--ink)",opacity:o.op??1});e.textContent=t;return e;};
+const zeig=(e,ms=600)=>tween(ms,k=>e.setAttribute("opacity",k));
+function feld(x,y,w,h,f,c){el("rect",{x,y,width:w,height:h,fill:f,stroke:c,"stroke-width":5});}
+function bild(){
+  svg.innerHTML="";
+  el("rect",{x:X0-3,y:Y0-3,width:A+B+6,height:A+B+6,fill:"none",stroke:"var(--ink)","stroke-width":3});
+  feld(X0,Y0,A,A,"var(--f1)","var(--c1)"); feld(X0+A,Y0,B,A,"var(--f2)","var(--c2)");
+  feld(X0,Y0+A,A,B,"var(--f2)","var(--c2)"); feld(X0+A,Y0+A,B,B,"var(--f3)","var(--c3)");
+  // Kästchen für die Seiten wie im Skript
+  const k=(x,y)=>el("rect",{x:x-34,y:y-24,width:68,height:48,fill:"#fff",stroke:"#8a8a8a","stroke-width":2.5});
+  k(X0+A/2,Y0-45);k(X0+A+B/2,Y0-45);k(X0-55,Y0+A/2);k(X0-55,Y0+A+B/2);
+  T={q1:txt(X0+A/2,Y0+A/2,"49",{op:0,fill:"var(--c1)",size:40}),q2:txt(X0+A+B/2,Y0+A+B/2,"4",{op:0,fill:"var(--c3)",size:36}),
+     o1:txt(X0+A/2,Y0-45,"7",{op:0}),o2:txt(X0+A+B/2,Y0-45,"2",{op:0}),l1:txt(X0-55,Y0+A/2,"7",{op:0}),l2:txt(X0-55,Y0+A+B/2,"2",{op:0}),
+     g1:txt(X0+A+B/2,Y0+A/2,"14",{op:0,fill:"var(--c2)",size:32}),g2:txt(X0+A/2,Y0+A+B/2,"14",{op:0,fill:"var(--c2)",size:32})};
+  ["z1","z2","z3"].forEach(i=>document.getElementById(i).classList.remove("da"));document.getElementById("du").classList.remove("da");
+}
+async function play(){
+  const my=++run,alive=()=>my===run,say=t=>{if(alive())cap.textContent=t;};
+  document.getElementById("go").textContent="↻ Nochmal";bild();
+  say("1. Die Nougat-Kugeln kommen ins blaue Feld, die Trüffel ins orange Feld. Beide Felder sind Quadrate.");
+  await wait(1200);if(!alive())return; await zeig(T.q1); await wait(400); await zeig(T.q2); await wait(2600);if(!alive())return;
+  say("2. Wie lang sind die Seiten? 49 = 7 · 7 und 4 = 2 · 2. Die Seiten kommen in die Kästchen am Rand.");
+  document.getElementById("z1").classList.add("da");
+  await wait(1600);if(!alive())return; await Promise.all([zeig(T.o1),zeig(T.l1)]); await wait(700); await Promise.all([zeig(T.o2),zeig(T.l2)]); await wait(2800);if(!alive())return;
+  say("3. Die 28 Herzen werden gleichmäßig auf die zwei grünen Felder verteilt: 28 = 14 + 14.");
+  await wait(1400);if(!alive())return; await Promise.all([zeig(T.g1),zeig(T.g2)]); await wait(2400);if(!alive())return;
+  say("4. Probe: Passt ein grünes Feld zu den Seiten? 7 · 2 = 14 ✓");
+  document.getElementById("z2").classList.add("da"); T.g1.classList.add("blink");T.g2.classList.add("blink");
+  await wait(4200);if(!alive())return;
+  say("5. Die ganze Schachtel ist 7 + 2 = 9 lang und breit. Also: 49 + 28 + 4 = (7 + 2)² = 81.");
+  document.getElementById("z3").classList.add("da");
+  const r=el("rect",{x:X0-8,y:Y0-8,width:A+B+16,height:A+B+16,fill:"none",stroke:"var(--tipp)","stroke-width":6,opacity:0,rx:6});await zeig(r,800);
+  await wait(3600);if(!alive())return;
+  say("Fertig – so füllst du das Flächenbild aus."); document.getElementById("du").classList.add("da");
+}
+document.getElementById("go").onclick=play;
+bild();
+</script>
+</body>
+</html>
