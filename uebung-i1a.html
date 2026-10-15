@@ -61,6 +61,7 @@
   .rot{color:#d0021b;font-weight:800}
   .fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;font-size:.82em;line-height:1.15;margin:0 2px}
   .fr>span:first-child{border-bottom:1.5px solid currentColor;padding:0 3px}
+  .lwahl{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 4px} .lwahl button{min-height:44px;padding:6px 14px;border-radius:10px;border:2px solid #c9d6e5;background:#fff;font-size:17px;font-weight:700;color:inherit} .lwahl button[aria-pressed="true"]{border-color:#1b2a3a;background:#fff4dc}
 </style>
 </head>
 <body>
@@ -75,7 +76,7 @@
 "use strict";
 // Versionsprüfung (12.10.2026): Safari zeigt sonst bis zu 10 Minuten (oft länger) eine alte, gespeicherte Fassung.
 // Beim Öffnen wird die Seite ohne Zwischenspeicher abgefragt; ist sie neuer, lädt sie sich einmal neu.
-const STAND="20261012212754";
+const STAND="20261015124110";
 fetch(location.pathname+"?nocache="+Date.now(),{cache:"no-store"}).then(r=>r.text()).then(t=>{
   const m=t.match(/const STAND="(\d+)"/);
   if(m&&m[1]!==STAND&&!sessionStorage.getItem("neu"+m[1])){sessionStorage.setItem("neu"+m[1],"1");location.replace(location.pathname+"?v="+m[1]);}
@@ -91,18 +92,18 @@ function aufgabe(nr,a){
   if(a.tipp)h+=`<details class="tipp"><summary>💡 Tipp</summary><div>${esc(a.tipp)}</div></details>`;
   return el("div","aufg",h);
 }
-// Lösungen einer Stufe: erst nach Rückfrage „Hast du wirklich gerechnet?“, dann nur die richtigen Lösungen je Aufgabe
+// Lösungen (15.10.2026, Malte): nach „Lösungen anzeigen“ erst die Aufgabe wählen – nie alle Lösungen auf einmal. Nur richtige Lösungen.
 function loesung(liste){
   const box=el("div");
   const b=el("button","loesbtn");b.textContent="Lösungen anzeigen";
-  const f=el("div","frag",'<p>Hast du alle Aufgaben wirklich im Heft gerechnet?</p>');f.hidden=true;
-  const ja=el("button","ja");ja.textContent="Ja, Lösungen zeigen";const nein=el("button","nein");nein.textContent="Nein, ich rechne erst";f.append(ja,nein);
-  const w=el("div","loes",liste.map(([nr,a])=>{
-    const l=a.sub?a.l.map((x,i)=>`${"abcdefgh"[i]}) ${esc(x)}`).join("&nbsp;&nbsp;&nbsp; "):a.l.map(esc).join("<br>");
-    return `<div class="zeile"><b>Aufgabe ${nr}:</b> ${l}${a.idee?`<span class="warum">Warum: ${esc(a.idee)}</span>`:""}</div>`;}).join(""));w.hidden=true;
-  b.onclick=()=>{if(!w.hidden){w.hidden=true;b.textContent="Lösungen anzeigen";return;}f.hidden=false;b.hidden=true;};
-  ja.onclick=()=>{f.hidden=true;w.hidden=false;b.hidden=false;b.textContent="Lösungen ausblenden";};
-  nein.onclick=()=>{f.hidden=true;b.hidden=false;};
+  const f=el("div","frag",'<p>Hast du die Aufgabe wirklich im Heft gerechnet? Zu welcher Aufgabe möchtest du die Lösung sehen?</p>');f.hidden=true;
+  const kn=el("div","lwahl"),w=el("div","loes");w.hidden=true;f.appendChild(kn);
+  const zeile=([nr,a])=>{const l=a.sub?a.l.map((x,i)=>`${"abcdefgh"[i]}) ${esc(x)}`).join("&nbsp;&nbsp;&nbsp; "):a.l.map(esc).join("<br>");
+    return `<div class="zeile"><b>Aufgabe ${nr}:</b> ${l}${a.idee?`<span class="warum">Warum: ${esc(a.idee)}</span>`:""}</div>`;};
+  liste.forEach((e,i)=>{const k=el("button","",`Aufgabe ${esc(String(e[0]))}`);k.setAttribute("aria-pressed","false");
+    k.onclick=()=>{kn.querySelectorAll("button").forEach((x,j)=>x.setAttribute("aria-pressed",j===i));w.innerHTML=zeile(e);w.hidden=false;};kn.appendChild(k);});
+  b.onclick=()=>{const offen=!f.hidden;f.hidden=offen;w.hidden=true;kn.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed","false"));
+    b.textContent=offen?"Lösungen anzeigen":"Lösungen ausblenden";};
   box.append(b,f,w);return box;
 }
 function teil(T){
