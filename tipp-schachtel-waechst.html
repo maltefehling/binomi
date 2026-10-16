@@ -56,10 +56,12 @@ let n=0,timer=null;
 function zeig(){Z.forEach((z,i)=>{z.classList.toggle("da",i<n);z.classList.toggle("neu",i===n-1);});
   du.classList.toggle("da",n>=Z.length);document.getElementById("next").disabled=n>=Z.length;}
 function weiter(){if(n<Z.length){n++;zeig();}}
-document.getElementById("next").onclick=()=>{clearInterval(timer);weiter();};
-document.getElementById("reset").onclick=()=>{clearInterval(timer);n=0;zeig();};
-document.getElementById("play").onclick=()=>{clearInterval(timer);n=0;zeig();weiter();
-  timer=setInterval(()=>{weiter();if(n>=Z.length)clearInterval(timer);},2600);};
+document.getElementById("next").onclick=()=>{clearTimeout(timer);weiter();};
+document.getElementById("reset").onclick=()=>{clearTimeout(timer);n=0;zeig();};
+// Tempo nach Textlänge (16.10.2026: „die Schrift verschwindet zu schnell“) – jeder Schritt bleibt so lange, wie man zum Lesen braucht
+const dauer=i=>{const z=Z[i];return z?2500+(z.innerText||"").length*90:0;};
+const naechster=()=>{weiter();if(n<Z.length)timer=setTimeout(naechster,dauer(n-1));};
+document.getElementById("play").onclick=()=>{clearTimeout(timer);n=0;zeig();weiter();timer=setTimeout(naechster,dauer(0));};
 zeig();
 </script>
 </body>
