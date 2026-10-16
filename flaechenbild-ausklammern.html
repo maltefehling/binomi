@@ -69,10 +69,11 @@ const lesezeit=t=>1500+t.length*80;
 (()=>{const c=document.getElementById("cap");
   if(c)new MutationObserver(()=>{LESE_BIS=performance.now()+lesezeit(c.textContent||"");}).observe(c,{childList:true,characterData:true,subtree:true});
   // Pause-Knopf ans Ende der Knopfleiste (bzw. hinter den Abspielen-Knopf)
+  setTimeout(()=>{   // erst nach dem Aufbau der Seite: manche Knopfleisten entstehen per Skript
   const g=document.getElementById("go")||document.querySelector("main button");if(!g)return;
   const leiste=g.closest(".bar")||g.parentElement;
   const p=document.createElement("button");p.className=g.className;p.type="button";p.textContent="⏸ Pause";p.style.marginLeft="10px";
-  p.removeAttribute("aria-pressed");p.onclick=()=>{PAUSE=!PAUSE;p.textContent=PAUSE?"▶ Weiter":"⏸ Pause";};leiste.appendChild(p);})();
+  p.removeAttribute("aria-pressed");p.onclick=()=>{PAUSE=!PAUSE;p.textContent=PAUSE?"▶ Weiter":"⏸ Pause";};leiste.appendChild(p);},0);})();
 
 const NS="http://www.w3.org/2000/svg",svg=document.getElementById("s"),cap=document.getElementById("cap"),calc=document.getElementById("calc");
 const el=(t,a,p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);(p||svg).appendChild(e);return e;};
