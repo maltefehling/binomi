@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Tipp: So füllst du das Flächenbild aus</title>
-<!-- I.4 Faktorisieren mit binomischen Formeln (15.10.2026, Malte): zeigt den Einstiegs-Auftrag Schritt für Schritt an einem ANDEREN Beispiel
+<!-- I.4 Faktorisieren mit binomischen Formeln (15.10.2026, Malte; 16.10.: Farbschema blau/orange/grün und Schritte ① – ⑤ wie im Skript): zeigt den Einstiegs-Auftrag Schritt für Schritt an einem ANDEREN Beispiel
      (49 Nougat, 28 Herzen, 4 Trüffel → (7 + 2)² = 81). Die Zahlen der Partner A/B (100·40·4, 64·32·4) kommen hier nicht vor. -->
 <style>
   :root{--tipp:#6d4a9e;--tippH:#f1eaf8;--tippL:#b79bd6;
@@ -27,6 +27,7 @@
   .zeilen div{opacity:.25;transition:opacity .6s}
   .zeilen div.da{opacity:1}
   .zeilen b{color:var(--tipp)}
+  .zeilen .b{color:var(--c1);font-weight:800}.zeilen .o{color:var(--c3);font-weight:800}.zeilen .g{color:var(--c2);font-weight:800}
   .du{display:none;margin-top:14px;background:var(--tippH);border:1px solid var(--tippL);border-radius:12px;padding:10px 14px;font-size:20px;line-height:1.45}
   .du.da{display:block}
   svg text{font-family:inherit}
@@ -45,9 +46,11 @@
     <div class="side">
       <div class="cap" id="cap">Tippe auf „Abspielen“.</div>
       <div class="zeilen" id="z">
-        <div id="z1">49 = <b>7</b> · <b>7</b> &nbsp;&nbsp;&nbsp; 4 = <b>2</b> · <b>2</b></div>
-        <div id="z2">28 = <b>14</b> + <b>14</b> &nbsp;&nbsp;&nbsp; Probe: <b>7</b> · <b>2</b> = <b>14</b> ✓</div>
-        <div id="z3">49 + 28 + 4 = ( <b>7</b> + <b>2</b> )² = <b>81</b></div>
+        <div id="z1">① <span class="b">49 = 7 · 7</span></div>
+        <div id="z2">② <span class="o">4 = 2 · 2</span></div>
+        <div id="z3">③ <span class="g">28 : 2 = 14</span></div>
+        <div id="z4">④ Probe: <span class="b">7</span> · <span class="o">2</span> = <span class="g">14</span> ✓</div>
+        <div id="z5">⑤ 49 + 28 + 4 = ( <span class="b">7</span> + <span class="o">2</span> )² = <b>81</b></div>
       </div>
       <div class="du" id="du"><b>Jetzt du:</b> Mach es genauso mit deinen Zahlen. Erst die zwei Quadrate, dann die Seiten, dann die Herzen verteilen und die Probe machen.</div>
     </div>
@@ -71,28 +74,27 @@ function bild(){
   feld(X0,Y0,A,A,"var(--f1)","var(--c1)"); feld(X0+A,Y0,B,A,"var(--f2)","var(--c2)");
   feld(X0,Y0+A,A,B,"var(--f2)","var(--c2)"); feld(X0+A,Y0+A,B,B,"var(--f3)","var(--c3)");
   // Kästchen für die Seiten wie im Skript
-  const k=(x,y)=>el("rect",{x:x-34,y:y-24,width:68,height:48,fill:"#fff",stroke:"#8a8a8a","stroke-width":2.5});
-  k(X0+A/2,Y0-45);k(X0+A+B/2,Y0-45);k(X0-55,Y0+A/2);k(X0-55,Y0+A+B/2);
+  const k=(x,y,c)=>el("rect",{x:x-34,y:y-24,width:68,height:48,fill:"#fff",stroke:c,"stroke-width":4});
+  k(X0+A/2,Y0-45,"var(--c1)");k(X0+A+B/2,Y0-45,"var(--c3)");k(X0-55,Y0+A/2,"var(--c1)");k(X0-55,Y0+A+B/2,"var(--c3)");
   T={q1:txt(X0+A/2,Y0+A/2,"49",{op:0,fill:"var(--c1)",size:40}),q2:txt(X0+A+B/2,Y0+A+B/2,"4",{op:0,fill:"var(--c3)",size:36}),
-     o1:txt(X0+A/2,Y0-45,"7",{op:0}),o2:txt(X0+A+B/2,Y0-45,"2",{op:0}),l1:txt(X0-55,Y0+A/2,"7",{op:0}),l2:txt(X0-55,Y0+A+B/2,"2",{op:0}),
+     o1:txt(X0+A/2,Y0-45,"7",{op:0,fill:"var(--c1)"}),o2:txt(X0+A+B/2,Y0-45,"2",{op:0,fill:"var(--c3)"}),l1:txt(X0-55,Y0+A/2,"7",{op:0,fill:"var(--c1)"}),l2:txt(X0-55,Y0+A+B/2,"2",{op:0,fill:"var(--c3)"}),
      g1:txt(X0+A+B/2,Y0+A/2,"14",{op:0,fill:"var(--c2)",size:32}),g2:txt(X0+A/2,Y0+A+B/2,"14",{op:0,fill:"var(--c2)",size:32})};
-  ["z1","z2","z3"].forEach(i=>document.getElementById(i).classList.remove("da"));document.getElementById("du").classList.remove("da");
+  ["z1","z2","z3","z4","z5"].forEach(i=>document.getElementById(i).classList.remove("da"));document.getElementById("du").classList.remove("da");
 }
 async function play(){
   const my=++run,alive=()=>my===run,say=t=>{if(alive())cap.textContent=t;};
   document.getElementById("go").textContent="↻ Nochmal";bild();
-  say("1. Die Nougat-Kugeln kommen ins blaue Feld, die Trüffel ins orange Feld. Beide Felder sind Quadrate.");
-  await wait(1200);if(!alive())return; await zeig(T.q1); await wait(400); await zeig(T.q2); await wait(2600);if(!alive())return;
-  say("2. Wie lang sind die Seiten? 49 = 7 · 7 und 4 = 2 · 2. Die Seiten kommen in die Kästchen am Rand.");
-  document.getElementById("z1").classList.add("da");
-  await wait(1600);if(!alive())return; await Promise.all([zeig(T.o1),zeig(T.l1)]); await wait(700); await Promise.all([zeig(T.o2),zeig(T.l2)]); await wait(2800);if(!alive())return;
-  say("3. Die 28 Herzen werden gleichmäßig auf die zwei grünen Felder verteilt: 28 = 14 + 14.");
-  await wait(1400);if(!alive())return; await Promise.all([zeig(T.g1),zeig(T.g2)]); await wait(2400);if(!alive())return;
-  say("4. Probe: Passt ein grünes Feld zu den Seiten? 7 · 2 = 14 ✓");
-  document.getElementById("z2").classList.add("da"); T.g1.classList.add("blink");T.g2.classList.add("blink");
-  await wait(4200);if(!alive())return;
-  say("5. Die ganze Schachtel ist 7 + 2 = 9 lang und breit. Also: 49 + 28 + 4 = (7 + 2)² = 81.");
-  document.getElementById("z3").classList.add("da");
+  const Z=i=>document.getElementById("z"+i).classList.add("da");
+  say("① Blaues Feld: 49 Nougat-Kugeln. Welche Zahl mal sich selbst ergibt 49? 7 · 7 – die 7 kommt in die beiden blauen Kästchen.");
+  await wait(1200);if(!alive())return; await zeig(T.q1); Z(1); await wait(1400);if(!alive())return; await Promise.all([zeig(T.o1),zeig(T.l1)]); await wait(3400);if(!alive())return;
+  say("② Oranges Feld: 4 Trüffel. 2 · 2 = 4 – die 2 kommt in die beiden orangen Kästchen.");
+  await zeig(T.q2); Z(2); await wait(1400);if(!alive())return; await Promise.all([zeig(T.o2),zeig(T.l2)]); await wait(3400);if(!alive())return;
+  say("③ Grüne Felder: Die 28 Herzen werden geteilt. In jedes grüne Feld kommt die Hälfte: 28 : 2 = 14.");
+  Z(3); await wait(1400);if(!alive())return; await Promise.all([zeig(T.g1),zeig(T.g2)]); await wait(3200);if(!alive())return;
+  say("④ Probe: blaues Kästchen · oranges Kästchen = 7 · 2 = 14. Das steht im grünen Feld ✓");
+  Z(4); [T.o1,T.o2,T.g1,T.g2].forEach(e=>e.classList.add("blink")); await wait(4600);if(!alive())return;
+  say("⑤ Die ganze Schachtel ist blau + orange = 7 + 2 lang. Also: 49 + 28 + 4 = (7 + 2)² = 81.");
+  Z(5);
   const r=el("rect",{x:X0-8,y:Y0-8,width:A+B+16,height:A+B+16,fill:"none",stroke:"var(--tipp)","stroke-width":6,opacity:0,rx:6});await zeig(r,800);
   await wait(3600);if(!alive())return;
   say("Fertig – so füllst du das Flächenbild aus."); document.getElementById("du").classList.add("da");
