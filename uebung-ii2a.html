@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Übung II.2a · Satz vom Nullprodukt</title>
+<!-- Kapitel II Quadratische Gleichungen: Online-Übung nach dem Buchkapitel (QR-Code im Skript). Nur Aufgaben – gerechnet wird im Heft.
+     Aufbau: Aufgabe 1 für alle, dann ★ / ★★ / ★★★. Tipp zu jeder Aufgabe, Lösungen je Stufe erst nach Rückfrage. -->
+<style>
+  :root{--ink:#1b2a3a;--muted:#5b6b7c;--acc:#1f4e79;--bg:#f4f7fb;--card:#fff;--line:#c9d6e5;
+    --merk:#dde8f5;--merkL:#a9c1e0;--auf:#e8f4e6;--aufL:#c6e8c0;--hilf:#fdf6ea;--hilfL:#fbd9a8;--grau:#f2f2f2;--rot:#b03a2e;--gruen:#3f8f3a}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
+  button{font:inherit;touch-action:manipulation}
+  header{padding:12px 16px;background:var(--acc);color:#fff}
+  header h1{font-size:20px;margin:0}
+  main{max-width:880px;margin:0 auto;padding:14px 16px 32px}
+  .hinweis{background:#fff;border:1px solid #bfbfbf;border-radius:12px;padding:10px 14px;font-size:18px;line-height:1.45;margin-bottom:12px}
+  details.erin{background:var(--merk);border:1px solid var(--merkL);border-radius:12px;padding:10px 14px;margin-bottom:14px;font-size:18px;line-height:1.5}
+  details.erin summary{font-weight:700;color:var(--acc);cursor:pointer;min-height:30px}
+  details.erin ul{margin:6px 0 0;padding-left:22px}
+  h2{font-size:21px;color:var(--acc);margin:18px 0 8px;padding-bottom:4px;border-bottom:2px solid var(--acc)}
+  .aufg{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:10px}
+  .aufg .kopf{font-weight:700;color:var(--acc);font-size:18px;margin-bottom:4px}
+  .aufg .txt{font-size:20px;line-height:1.45}
+  /* Teilaufgaben als getrennte Kärtchen (15.10.2026, Malte): SuS hielten a), b), c) für eine zusammenhängende Aufgabe */
+  .aufg ol{margin:10px 0 0;padding-left:0;list-style:none;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px}
+  .aufg li{font-size:21px;line-height:1.5;white-space:nowrap;overflow-x:auto;border:2px solid #c9d6e5;border-radius:12px;background:#f7f9fc;padding:8px 12px}
+  .aufg li.breit{grid-column:1/-1}
+  .aufg li b.tb{display:inline-block;min-width:34px;text-align:center;background:#1f4e79;color:#fff;border-radius:8px;padding:0 8px;margin-right:10px;font-weight:700}
+  .tag{display:inline-block;font-size:14px;font-weight:700;border-radius:8px;padding:2px 8px;margin-left:8px;vertical-align:middle}
+  .tag.v{background:#fff3c4;color:#7a5b00}.tag.w{background:#e2d6f0;color:#4f2f7a}
+  details.idee{margin-top:8px;font-size:18px}
+  details.idee summary{color:var(--acc);cursor:pointer;font-weight:600}
+  details.idee div{background:var(--grau);border-radius:8px;padding:8px 10px;margin-top:6px;line-height:1.45}
+  .wahl{display:flex;gap:10px;flex-wrap:wrap;margin:6px 0 10px}
+  .wahl button{flex:1 1 200px;border:2px solid var(--acc);background:#fff;color:var(--acc);border-radius:12px;padding:12px 14px;font-size:19px;font-weight:700;min-height:56px;text-align:left}
+  .wahl button[aria-pressed="true"]{background:var(--acc);color:#fff}
+  .wahl small{display:block;font-weight:500;font-size:15px;opacity:.85}
+  .stufe[hidden]{display:none}
+  .loesbtn{border:1px solid var(--hilfL);background:var(--hilf);color:var(--ink);border-radius:10px;padding:10px 16px;font-size:18px;font-weight:700;min-height:48px;margin-top:4px}
+  .loes{background:var(--hilf);border:1px solid var(--hilfL);border-radius:12px;padding:10px 14px;margin-top:8px}
+  .loes p{margin:0 0 8px;font-size:16px;color:var(--rot);font-weight:700}
+  .loes .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:6px}
+  .loes .grid span{background:#fff;border:1px solid var(--line);border-radius:8px;padding:6px 8px;text-align:center;font-size:19px}
+  .loes[hidden]{display:none}
+  details.tipp{margin-top:8px;font-size:18px}
+  details.tipp summary{display:inline-block;cursor:pointer;font-weight:700;color:#6d4a9e;background:#f1eaf8;border:1px solid #b79bd6;border-radius:10px;padding:6px 12px;min-height:40px;list-style:none}
+  details.tipp summary::-webkit-details-marker{display:none}
+  details.tipp div{background:#f1eaf8;border-radius:8px;padding:8px 10px;margin-top:6px;line-height:1.45}
+  .frag{background:#fff;border:2px solid var(--acc);border-radius:12px;padding:12px 14px;margin-top:8px;font-size:19px}
+  .frag[hidden]{display:none}
+  .frag p{margin:0 0 10px;font-weight:700;color:var(--acc)}
+  .frag button{border-radius:10px;padding:10px 16px;font-size:17px;font-weight:700;min-height:46px;margin:0 8px 6px 0;border:2px solid var(--acc)}
+  .frag .ja{background:var(--acc);color:#fff}.frag .nein{background:#fff;color:var(--acc)}
+  .loes .zeile{background:#fff;border:1px solid var(--line);border-radius:8px;padding:8px 10px;margin-bottom:6px;font-size:19px;line-height:1.5}
+  .loes .zeile b{color:var(--acc)}
+  .loes .warum{display:block;font-size:16px;color:var(--muted);margin-top:2px}
+  footer{color:var(--muted);font-size:13px;text-align:center;margin-top:24px}
+  .frage{font-size:18px;font-weight:700;color:var(--acc);margin:4px 0 2px}
+  .teilkopf{font-size:22px;font-weight:800;color:var(--acc);margin:14px 0 8px}
+  .teil[hidden]{display:none}
+  .rot{color:#d0021b;font-weight:800}
+  .fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;font-size:.82em;line-height:1.15;margin:0 2px}
+  .fr>span:first-child{border-bottom:1.5px solid currentColor;padding:0 3px}
+  .lwahl{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 4px} .lwahl button{min-height:44px;padding:6px 14px;border-radius:10px;border:2px solid #c9d6e5;background:#fff;font-size:17px;font-weight:700;color:inherit} .lwahl button[aria-pressed="true"]{border-color:#1b2a3a;background:#fff4dc}
+</style>
+</head>
+<body>
+<header><h1>Übung II.2a · Satz vom Nullprodukt</h1></header>
+<main>
+  <div class="hinweis">✎ <b>Rechne alle Aufgaben in deinem Heft.</b> Schreibe die Nummer der Aufgabe dazu. Wenn du nicht weiterkommst, hilft dir der Tipp. Die Lösungen findest du am Ende jeder Stufe.</div>
+  <div id="teilwahl" hidden><div class="frage">Welche Stunde hattet ihr zuletzt?</div><div class="wahl" id="tw"></div></div>
+  <div id="teile"></div>
+  <footer>Fehling · II Quadratische Gleichungen</footer>
+</main>
+<script>
+"use strict";
+// Versionsprüfung (12.10.2026): Safari zeigt sonst bis zu 10 Minuten (oft länger) eine alte, gespeicherte Fassung.
+// Beim Öffnen wird die Seite ohne Zwischenspeicher abgefragt; ist sie neuer, lädt sie sich einmal neu.
+const STAND="20261016200156";
+fetch(location.pathname+"?nocache="+Date.now(),{cache:"no-store"}).then(r=>r.text()).then(t=>{
+  const m=t.match(/const STAND="(\d+)"/);
+  if(m&&m[1]!==STAND&&!sessionStorage.getItem("neu"+m[1])){sessionStorage.setItem("neu"+m[1],"1");location.replace(location.pathname+"?v="+m[1]);}
+}).catch(()=>{});
+// D.teile: ein Teil pro Stunde eines aufgeteilten Buchkapitels (z. B. II.2a/b/c); Stundenauswahl nur bei aufgeteilten Kapiteln (D.mehrteilig).
+const D={"untertitel": ["Mit Hilfe zum Einstieg", "Ohne Hilfe, auch mit Minus", "Mehrere Schritte, mehr Nachdenken"], "mehrteilig": false, "teile": [{"name": "", "stunde": "", "kurz": "", "erinnerung": ["Fehlt der blaue Stein (keine Zahl allein): alles auf eine Seite, sodass = 0 dasteht.", "x ausklammern: x² − 4x = 0 → x · ( x − 4 ) = 0.", "Satz vom Nullprodukt: Ein Produkt ist 0, wenn mindestens ein Faktor 0 ist: x = 0 oder x − 4 = 0.", "Nie durch x teilen – sonst geht die Lösung x = 0 verloren."], "a1": {"t": "Erst entscheiden: Welcher Stein fehlt – der grüne (kein x allein) oder der blaue (keine Zahl allein)? Löse dann.", "l": ["L = { 0 ; 9 }", "L = { −3 ; 3 }", "L = { −7 ; 0 }", "L = { 0 ; 4 }"], "tipp": "Blau fehlt: x ausklammern, Nullprodukt. Grün fehlt: Wurzel ziehen. Bei d): erst alles auf eine Seite.", "sub": ["x² − 9x = 0", "x² − 9 = 0", "x² + 7x = 0", "3x² = 12x"]}, "stufen": {"1": {"name": "Mit Hilfe", "aufg": [{"t": "Klammere x aus und löse. Beispiel: x² − 6x = 0 → x · ( x − 6 ) = 0 → x = 0 oder x − 6 = 0 → L = { 0 ; 6 }.", "l": ["L = { 0 ; 5 }", "L = { −2 ; 0 }", "L = { 0 ; 10 }"], "tipp": "In beiden Teilen steckt ein x. Dann jeden Faktor einzeln gleich 0 setzen.", "sub": ["x² − 5x = 0", "x² + 2x = 0", "x² − 10x = 0"]}, {"t": "Wann ist das Produkt null? Beispiel: x · ( x − 4 ) = 0 → x = 0 oder x − 4 = 0, also x = 4.", "l": ["L = { 0 ; 8 }", "L = { −1 ; 0 }", "L = { 3 ; 6 }"], "tipp": "Setze jeden Faktor einzeln gleich 0.", "sub": ["x · ( x − 8 ) = 0", "( x + 1 ) · x = 0", "( x − 3 ) · ( x − 6 ) = 0"]}, {"t": "Tom rechnet:  x² = 6x  | : x  →  x = 6,  L = { 6 }.", "l": ["0 = 0 – x = 0 ist auch eine Lösung", "L = { 0 ; 6 }"], "tipp": "Durch x teilen geht nicht, wenn x = 0 ist.", "sub": ["Mach die Probe mit x = 0.", "Wie heißt die richtige Lösungsmenge?"], "tag": "v"}, {"t": "Ein quadratisches Aufwärmfeld wird um 5 m verlängert und ist dann doppelt so groß. Wie lang ist eine Seite? Beispiel: Bei 4 m Verlängerung ist der Streifen so groß wie das Quadrat: x² = 4x → x = 4 m.", "l": ["x² = 5x → x = 5 m"], "tipp": "Der Streifen 5 · x ist so groß wie das Quadrat x · x."}, {"t": "Wiederholung II.1: Löse  x² − 49 = 0.", "l": ["L = { −7 ; 7 }"], "tipp": "Grüner Stein fehlt: x² allein stellen.", "tag": "w"}]}, "2": {"name": "Sicher rechnen", "aufg": [{"t": "Bringe zuerst alles auf eine Seite. Löse dann. Beispiel: 2x² = 10x → 2x² − 10x = 0 → 2x · ( x − 5 ) = 0 → L = { 0 ; 5 }.", "l": ["L = { 0 ; 7 }", "L = { 0 ; 4 }", "L = { −4 ; 0 }", "L = { 0 ; 3 }"], "tipp": "Klammere so viel wie möglich aus, z. B. 3x.", "sub": ["x² = 7x", "3x² − 12x = 0", "2x² + 8x = 0", "5x² = 15x"]}, {"t": "Löse mit dem Satz vom Nullprodukt.", "l": ["L = { −9 ; 2 }", "L = { 0 ; 1 }"], "tipp": "Jeder Faktor einzeln gleich 0. 4x = 0 heißt x = 0.", "sub": ["( x − 2 ) · ( x + 9 ) = 0", "4x · ( x − 1 ) = 0"]}, {"t": "Lena sagt: „Bei einer Gleichung x² + bx = 0 ist x = 0 immer eine Lösung.“", "l": ["0 + 0 = 0", "Ja – beim Ausklammern steht x immer als eigener Faktor davor."], "tipp": "Setze x = 0 ein und rechne.", "sub": ["Setze x = 0 in x² + 7x = 0 ein.", "Stimmt Lenas Satz?"], "tag": "v"}, {"t": "Lena verlängert ein quadratisches Feld um 3 m. Das neue Feld ist dreimal so groß:  x · ( x + 3 ) = 3x².", "l": ["2x² − 3x = 0", "x · ( 2x − 3 ) = 0 → x = 1,5 m (x = 0 passt nicht)"], "tipp": "x² + 3x = 3x² – bring alles auf eine Seite.", "sub": ["Multipliziere aus und ordne: ___ = 0", "Löse. Wie lang ist eine Seite?"]}, {"t": "Wiederholung II.1b: Löse  ( x + 2 )² = 36.", "l": ["L = { −8 ; 4 }"], "tipp": "Klammer stehen lassen, zwei Fälle.", "tag": "w"}]}, "3": {"name": "Knifflig", "aufg": [{"t": "Löse.", "l": ["L = { −4 ; 0 }", "L = { −2 ; 0 }", "L = { 0 ; 6 }"], "tipp": "Erst ausmultiplizieren und alles auf eine Seite bringen.", "sub": ["x² − 4x = 2x²", "x · ( x + 6 ) = 4x", "0,5x² = 3x"]}, {"t": "Wiederholung: Löse die Klammer mit der binomischen Formel auf:  ( x − 3 )² = x² + 9", "l": ["x² − 6x + 9 = x² + 9 → −6x = 0 → x = 0"], "tipp": "Das x² fällt weg.", "tag": "w"}, {"t": "Tom rechnet:  ( x − 2 ) · ( x − 5 ) = 10  →  x − 2 = 10  oder  x − 5 = 10.", "l": ["10 · 7 = 70 – nicht 10", "Der Satz vom Nullprodukt gilt nur, wenn rechts 0 steht."], "tipp": "Was sagt der Satz vom Nullprodukt genau?", "sub": ["Mach die Probe mit x = 12.", "Warum klappt Toms Weg nicht?"], "tag": "v"}, {"t": "Rückwärts: Finde eine Gleichung der Form x² + bx = 0 mit den Lösungen 0 und −6.", "l": ["x · ( x + 6 ) = 0, also x² + 6x = 0"], "tipp": "Zur Lösung −6 gehört die Klammer ( x + 6 ).", "tag": "v"}]}}}]};
+const esc=s=>s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/\{([^{}\/]+)\/([^{}]+)\}/g,'<span class="fr"><span>$1</span><span>$2</span></span>').replace(/\[([+−])\]/g,'<span class="rot">$1</span>');
+const el=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e;};
+const tagHtml=t=>t==="v"?'<span class="tag v">💡 Verständnis</span>':t==="w"?'<span class="tag w">↩ Wiederholung</span>':"";
+function aufgabe(nr,a){
+  let h=`<div class="kopf">Aufgabe ${nr}${tagHtml(a.tag)}</div><div class="txt">${esc(a.tag==="w"?a.t.replace(/^Wiederholung: /,""):a.t)}</div>`;
+  if(a.sub)h+="<ol>"+a.sub.map((s,i)=>`<li><b class="tb">${"abcdefgh"[i]})</b>${esc(s)}</li>`).join("")+"</ol>";
+  if(a.tipp)h+=`<details class="tipp"><summary>💡 Tipp</summary><div>${esc(a.tipp)}</div></details>`;
+  return el("div","aufg",h);
+}
+// Lösungen (15.10.2026, Malte): nach „Lösungen anzeigen“ erst die Aufgabe wählen – nie alle Lösungen auf einmal. Nur richtige Lösungen.
+function loesung(liste){
+  const box=el("div");
+  const b=el("button","loesbtn");b.textContent="Lösungen anzeigen";
+  const f=el("div","frag",'<p>Hast du die Aufgabe wirklich im Heft gerechnet? Zu welcher Aufgabe möchtest du die Lösung sehen?</p>');f.hidden=true;
+  const kn=el("div","lwahl"),w=el("div","loes");w.hidden=true;f.appendChild(kn);
+  const zeile=([nr,a])=>{const l=a.sub?a.l.map((x,i)=>`${"abcdefgh"[i]}) ${esc(x)}`).join("&nbsp;&nbsp;&nbsp; "):a.l.map(esc).join("<br>");
+    return `<div class="zeile"><b>Aufgabe ${nr}:</b> ${l}${a.idee?`<span class="warum">Warum: ${esc(a.idee)}</span>`:""}</div>`;};
+  liste.forEach((e,i)=>{const k=el("button","",`Aufgabe ${esc(String(e[0]))}`);k.setAttribute("aria-pressed","false");
+    k.onclick=()=>{kn.querySelectorAll("button").forEach((x,j)=>x.setAttribute("aria-pressed",j===i));w.innerHTML=zeile(e);w.hidden=false;};kn.appendChild(k);});
+  b.onclick=()=>{const offen=!f.hidden;f.hidden=offen;w.hidden=true;kn.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed","false"));
+    b.textContent=offen?"Lösungen anzeigen":"Lösungen ausblenden";};
+  box.append(b,f,w);return box;
+}
+function teil(T){
+  const root=el("section","teil");
+  if(D.mehrteilig)root.appendChild(el("div","teilkopf",esc(T.name)));
+  root.appendChild(el("details","erin",`<summary>Erinnerung: Das brauchst du</summary><ul>${T.erinnerung.map(e=>"<li>"+esc(e)+"</li>").join("")}</ul>`));
+  root.appendChild(el("h2","","Aufgabe 1 · für alle"));
+  root.append(aufgabe(1,T.a1),loesung([[1,T.a1]]));
+  root.appendChild(el("h2","","Jetzt wählst du dein Niveau"));
+  const wahl=el("div","wahl"),st=el("div");root.append(wahl,st);
+  [["1","★"],["2","★★"],["3","★★★"]].forEach(([k,stern])=>{
+    const s=T.stufen[k];
+    const b=el("button","",`${stern}  ${esc(s.name)}<small>${D.untertitel[k-1]}</small>`);b.setAttribute("aria-pressed","false");
+    const sec=el("section","stufe");sec.hidden=true;
+    sec.appendChild(el("h2","",esc(stern+"  "+s.name)));
+    s.aufg.forEach((a,i)=>sec.appendChild(aufgabe(stern+" "+(i+2),a)));
+    sec.appendChild(loesung(s.aufg.map((a,i)=>[stern+" "+(i+2),a])));
+    b.onclick=()=>{wahl.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b));st.querySelectorAll(".stufe").forEach(x=>x.hidden=x!==sec);};
+    wahl.appendChild(b);st.appendChild(sec);
+  });
+  return root;
+}
+const box=document.getElementById("teile"),secs=D.teile.map(teil);
+secs.forEach(s=>box.appendChild(s));
+if(D.mehrteilig){
+  document.getElementById("teilwahl").hidden=false;const tw=document.getElementById("tw");
+  const zeig=i=>{secs.forEach((s,j)=>s.hidden=j!==i);tw.querySelectorAll("button").forEach((b,j)=>b.setAttribute("aria-pressed",j===i));};
+  D.teile.forEach((T,i)=>{const b=el("button","",esc(T.stunde)+`<small>${esc(T.kurz)}</small>`);b.onclick=()=>zeig(i);tw.appendChild(b);});
+  zeig(D.teile.length-1);
+}
+</script>
+</body>
+</html>
