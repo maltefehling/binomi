@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Aus dem Rechteck wird eine Rechentabelle</title>
+<!-- I.3c Dritte binomische Formel (16.10.2026, Malte): Überleitung wie in I.3b. Lenas umgepacktes Rechteck (10 + 3) · (10 − 3) = 13 · 7
+     wird zur Rechentabelle: 10 · 10 = 100, 10 · (−3) = −30, 3 · 10 = +30, 3 · (−3) = −9 – die grünen Felder heben sich auf.
+     Danach rechnen die SuS im Skript Toms Schachtel (Ecke 2 · 2) auf Papier. -->
+<style>
+  :root{
+    --f1:#bcd3f2; --f2:#c6e8c0; --f3:#fbd9a8; --c1:#2e5d9f; --c2:#3f8f3a; --c3:#c0700f; --eat:#d64545;
+    --ink:#1b2a3a; --muted:#5b6b7c; --acc:#1f4e79; --bg:#f4f7fb; --card:#ffffff; --line:#c9d6e5;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;-webkit-user-select:none;user-select:none}
+  button{font:inherit;touch-action:manipulation}
+  header{padding:12px 16px;background:var(--acc);color:#fff}
+  header h1{font-size:20px;margin:0}
+  main{padding:12px 16px 20px;max-width:1100px;margin:0 auto}
+  .bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+  .btn{border:1px solid var(--acc);background:#fff;color:var(--acc);border-radius:10px;padding:10px 16px;font-size:17px;font-weight:700;min-height:46px}
+  .wrap{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start}
+  svg{flex:1 1 480px;max-width:600px;width:100%;height:auto;background:var(--card);border:1px solid var(--line);border-radius:12px}
+  .side{flex:1 1 300px}
+  .cap{min-height:110px;font-size:21px;font-weight:600;color:var(--acc);line-height:1.4;margin:4px 0 12px}
+  .calc{font-size:25px;line-height:1.7;min-height:80px}
+  .calc .g{color:var(--c2);font-weight:700}.calc .o{color:var(--c3);font-weight:700}.calc .b{color:var(--c1);font-weight:700}
+  .calc s{text-decoration-thickness:3px;color:var(--c2)}
+  footer{color:var(--muted);font-size:13px;text-align:center;padding:10px 0 18px}
+  svg text{font-family:inherit}
+  .blink{animation:bl .55s ease-in-out 6 alternate}
+  @keyframes bl{from{opacity:1}to{opacity:.2}}
+</style>
+</head>
+<body>
+<header><h1>Aus dem Rechteck wird eine Rechentabelle</h1></header>
+<main>
+  <div class="bar"><button class="btn" id="go">▶ Abspielen</button></div>
+  <div class="wrap">
+    <svg id="s" viewBox="0 0 560 560" aria-label="Lenas Rechteck wird zur Rechentabelle"></svg>
+    <div class="side">
+      <div class="cap" id="cap">Lenas umgepacktes Rechteck. Tippe auf „Abspielen“.</div>
+      <div class="calc" id="calc"></div>
+    </div>
+  </div>
+</main>
+<footer>Fehling · Dritte binomische Formel</footer>
+<script>
+"use strict";
+const NS="http://www.w3.org/2000/svg",svg=document.getElementById("s"),cap=document.getElementById("cap"),calc=document.getElementById("calc");
+const el=(t,a,p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);(p||svg).appendChild(e);return e;};
+const SLOW=1.8,wait=ms=>new Promise(r=>setTimeout(r,ms*SLOW));
+const tween=(ms,f)=>new Promise(r=>{ms*=SLOW;const t0=performance.now();const s=t=>{const k=Math.min(1,(t-t0)/ms);f(k);k<1?requestAnimationFrame(s):r();};requestAnimationFrame(s);});
+const txt=(x,y,t,o={})=>{const e=el("text",{x,y,"text-anchor":"middle","dominant-baseline":"central","font-size":o.size||26,"font-weight":700,fill:o.fill||"var(--ink)",opacity:o.op??1},o.p);
+  if(o.rot)e.setAttribute("transform",`rotate(${o.rot} ${x} ${y})`);e.textContent=t;return e;};
+const zeig=(e,ms=600)=>tween(ms,k=>e.setAttribute("opacity",k));
+let run=0;
+// Rechentabelle: links 10 und 3, oben 10 und −3 (Felder wie im Skript: großes Feld oben links)
+const X0=130,Y0=110,A=290,B=96;
+// Lenas Rechteck aus Pralinen: 7 breit, 13 hoch (die unteren 3 Reihen sind der umgelegte Streifen)
+function rechteck(){
+  const g=el("g",{});const C=26,x0=280-3.5*C,y0=95;
+  for(let r=0;r<13;r++)for(let c=0;c<7;c++){
+    el("rect",{x:x0+c*C,y:y0+r*C,width:C,height:C,fill:"#fff",stroke:"#e2d6c8","stroke-width":1},g);
+    el("circle",{cx:x0+c*C+C/2,cy:y0+r*C+C/2,r:9,fill:"#a0673a",stroke:"#6b4226","stroke-width":1.5},g);}
+  el("rect",{x:x0,y:y0,width:7*C,height:13*C,fill:"none",stroke:"#8a6a4a","stroke-width":3},g);
+  el("rect",{x:x0,y:y0+10*C,width:7*C,height:3*C,fill:"none",stroke:"var(--c1)","stroke-width":5},g);
+  txt(280,y0-28,"7 = 10 − 3",{p:g,size:24});txt(x0-62,y0+6.5*C,"13 = 10 + 3",{p:g,size:24,rot:-90});
+  return g;
+}
+async function play(){
+  const my=++run,alive=()=>my===run,say=t=>{if(alive())cap.textContent=t;};
+  document.getElementById("go").textContent="↻ Nochmal";svg.innerHTML="";calc.innerHTML="";
+  const g=rechteck();
+  say("Lenas umgepacktes Rechteck: 10 + 3 = 13 lang und 10 − 3 = 7 breit.");
+  calc.innerHTML="( 10 + 3 ) · ( 10 − 3 )";
+  await wait(3200);if(!alive())return;
+  say("Wir rechnen es in der Rechentabelle aus: links 10 und 3, oben 10 und −3.");
+  await tween(900,k=>g.setAttribute("opacity",1-k));if(!alive())return; g.remove();
+  // Felder
+  const F=[[X0,Y0,A,A,"var(--f1)","var(--c1)"],[X0+A,Y0,B,A,"var(--f2)","var(--c2)"],[X0,Y0+A,A,B,"var(--f2)","var(--c2)"],[X0+A,Y0+A,B,B,"var(--f3)","var(--c3)"]];
+  const R=F.map(([x,y,w,h,f,c])=>el("rect",{x,y,width:w,height:h,fill:f,stroke:"var(--ink)","stroke-width":3,opacity:0}));
+  const L=[txt(X0+A/2,Y0-34,"10",{op:0}),txt(X0+A+B/2,Y0-34,"−3",{op:0,fill:"var(--c2)"}),txt(X0-40,Y0+A/2,"10",{op:0}),txt(X0-40,Y0+A-1,"+",{op:0,size:22}),txt(X0-40,Y0+A+B/2,"3",{op:0,fill:"var(--c2)"})];
+  await tween(800,k=>[...R,...L].forEach(e=>e.setAttribute("opacity",k)));if(!alive())return;
+  await wait(1600);if(!alive())return;
+  // Felder nacheinander: erst Malaufgabe, dann Ergebnis (Faktoren links · oben)
+  const feld=async(i,auf,erg,farbe,satz,rot)=>{
+    const [x,y,w,h]=F[i];say(satz);
+    const a=txt(x+w/2,y+h/2,auf,{op:0,fill:farbe,size:i===0?30:22,rot});await zeig(a,700);await wait(2200);if(!alive())return null;
+    const b=txt(x+w/2,y+h/2,erg,{op:0,fill:farbe,size:i===0?36:26,rot:i===1?-90:0});await tween(800,k=>{a.setAttribute("opacity",1-k);b.setAttribute("opacity",k);});await wait(900);return b;};
+  const t1=await feld(0,"10 · 10","100","var(--c1)","Blaues Feld: 10 · 10 = 100.");if(!alive())return;
+  calc.innerHTML="( 10 + 3 ) · ( 10 − 3 )<br>= <span class='b'>100</span>";
+  const t2=await feld(1,"10 · (−3)","−30","var(--c2)","Rechts oben: 10 · (−3) = −30 – plus mal minus ist minus.",-90);if(!alive())return;
+  calc.innerHTML="( 10 + 3 ) · ( 10 − 3 )<br>= <span class='b'>100</span> <span class='g'>− 30</span>";
+  const t3=await feld(2,"3 · 10","+30","var(--c2)","Links unten: 3 · 10 = +30.");if(!alive())return;
+  calc.innerHTML="( 10 + 3 ) · ( 10 − 3 )<br>= <span class='b'>100</span> <span class='g'>− 30 + 30</span>";
+  const t4=await feld(3,"3 · (−3)","−9","var(--c3)","Die Ecke: 3 · (−3) = −9.");if(!alive())return;
+  calc.innerHTML="( 10 + 3 ) · ( 10 − 3 )<br>= <span class='b'>100</span> <span class='g'>− 30 + 30</span> <span class='o'>− 9</span>";
+  await wait(1600);if(!alive())return;
+  // Die grünen Felder heben sich auf
+  say("Schau auf die grünen Felder: −30 und +30 heben sich auf. Zusammen sind sie 0.");
+  R[1].classList.add("blink");R[2].classList.add("blink");t2.classList.add("blink");t3.classList.add("blink");
+  await wait(3600);if(!alive())return;
+  const strich=(i)=>{const [x,y,w,h]=F[i];return el("line",{x1:x+8,y1:y+h-8,x2:x+w-8,y2:y+8,stroke:"var(--c2)","stroke-width":5,opacity:0});};
+  const s1=strich(1),s2=strich(2);await Promise.all([zeig(s1),zeig(s2)]);
+  calc.innerHTML="( 10 + 3 ) · ( 10 − 3 )<br>= <span class='b'>100</span> <s>− 30 + 30</s> <span class='o'>− 9</span><br>= <span class='b'>10²</span> <span class='o'>− 3²</span> = <b>91</b>";
+  await wait(2400);if(!alive())return;
+  say("Übrig bleiben nur das blaue und das orange Feld: 10² − 3² = 100 − 9 = 91. Genau so viele Pralinen hat Lenas Rechteck: 13 · 7 = 91 ✓");
+  await wait(5200);if(!alive())return;
+  say("Mach es jetzt im Skript mit Toms Schachtel: Er isst eine Ecke 2 · 2.");
+}
+document.getElementById("go").onclick=play;
+// Startbild: Lenas Rechteck
+rechteck();
+</script>
+</body>
+</html>
