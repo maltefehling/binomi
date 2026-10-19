@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<title>Tipps: Wie groß darf das Trainingsfeld werden?</title>
+<!-- Kapitel II Quadratische Gleichungen: gestufte Tipps zum offenen Einstieg (lila QR im Skript). Gebaut mit tipp_einstieg_bau.py. -->
+<style>
+  :root{--tipp:#6d4a9e;--tippH:#f1eaf8;--tippL:#b79bd6;--ink:#1b2a3a;--muted:#5b6b7c;--bg:#f7f4fb;--card:#fff;--line:#d8cce8}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif}
+  button{font:inherit;touch-action:manipulation}
+  header{padding:12px 16px;background:var(--tipp);color:#fff}
+  header h1{font-size:20px;margin:0}
+  main{padding:12px 16px 24px;max-width:860px;margin:0 auto}
+  .frage{font-size:19px;font-weight:600;margin:6px 0 4px}
+  .hinw{color:var(--muted);font-size:16px;margin:0 0 14px}
+  .tipp{background:var(--card);border:1px solid var(--line);border-radius:14px;margin:0 0 12px;overflow:hidden}
+  .tipp button{width:100%;min-height:56px;text-align:left;padding:10px 16px;border:0;background:#fff;color:var(--tipp);font-size:19px;font-weight:700;display:flex;justify-content:space-between;align-items:center}
+  .tipp button:disabled{color:#b9a9cf}
+  .tipp.offen button{background:var(--tippH)}
+  .inhalt{display:none;padding:12px 16px 14px;font-size:21px;line-height:1.6}
+  .tipp.offen .inhalt{display:block}
+  .k{font-size:16px;color:var(--muted)}
+  .du{display:none;margin-top:6px;background:var(--tippH);border:1px solid var(--tippL);border-radius:12px;padding:10px 14px;font-size:19px;line-height:1.45}
+  .du.da{display:block}
+  footer{color:var(--muted);font-size:13px;text-align:center;padding:14px 0}
+</style>
+</head>
+<body>
+<header><h1>Tipps: Wie groß darf das Trainingsfeld werden?</h1></header>
+<main>
+  <div class="frage">Quadratisches Trainingsfeld, rundherum 3 m Sand. Die ganze Sandfläche ist ein Quadrat mit 196 m².</div>
+  <p class="hinw">Öffne immer nur den nächsten Tipp – und versuche es danach erst wieder selbst.</p>
+  <div class="tipp"><button>Tipp 1: Seite der Sandfläche<span>▼</span></button><div class="inhalt">Das Trainingsfeld hat die Seite <b>x</b>.<br>Links kommen <b>3 m</b> Sand dazu, rechts auch <b>3 m</b>.<br>Wie lang ist eine Seite der ganzen Sandfläche?  x + ___</div></div>
+  <div class="tipp"><button>Tipp 2: Seite mal Seite<span>▼</span></button><div class="inhalt">Die Sandfläche ist ein Quadrat: Fläche = Seite <b>mal</b> Seite.<br>( x + ___ ) · ( x + ___ ) = 196</div></div>
+  <div class="tipp"><button>Tipp 3: Kürzer schreiben<span>▼</span></button><div class="inhalt">Wie bei x · x = x² schreibt man eine Klammer mal sich selbst kürzer:<br>( x + ___ )² = 196<br>Vergleiche deine Gleichung mit der ersten Zeile von Tom und Lena.</div></div>
+  <div class="du" id="du"><b>Jetzt du:</b> Schreibe deine Gleichung ins Skript. Schau dann, wie Tom und Lena weiterrechnen – wer kommt ans Ziel?</div>
+</main>
+<footer>Fehling · II.1b Erst umformen, dann Wurzel · Tipps zum Einstieg</footer>
+<script>
+"use strict";
+const T=[...document.querySelectorAll(".tipp")];
+T.forEach((t,i)=>{const b=t.querySelector("button");b.disabled=i>0;
+  b.onclick=()=>{t.classList.add("offen");b.querySelector("span").textContent="";
+    if(T[i+1])T[i+1].querySelector("button").disabled=false;else document.getElementById("du").classList.add("da");};});
+</script>
+</body>
+</html>
