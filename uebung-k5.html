@@ -94,7 +94,7 @@
 "use strict";
 // Versionsprüfung (12.10.2026): Safari zeigt sonst bis zu 10 Minuten (oft länger) eine alte, gespeicherte Fassung.
 // Beim Öffnen wird die Seite ohne Zwischenspeicher abgefragt; ist sie neuer, lädt sie sich einmal neu.
-const STAND="20261023093458";
+const STAND="20261023094058";
 fetch(location.pathname+"?nocache="+Date.now(),{cache:"no-store"}).then(r=>r.text()).then(t=>{
   const m=t.match(/const STAND="(\d+)"/);
   if(m&&m[1]!==STAND&&!sessionStorage.getItem("neu"+m[1])){sessionStorage.setItem("neu"+m[1],"1");location.replace(location.pathname+"?v="+m[1]);}
@@ -113,7 +113,7 @@ function aufgabe(nr,a){
 // Rechenweg: a.weg = Zeilen (ohne Teilaufgaben) bzw. eine Zeilenliste je Teilaufgabe; „ | …“ = Umformung, grau
 const wz=z=>{const [t,u]=z.split(/\s+\|\s*/);return `<div class="wz">${esc(t)}${u!==undefined?`<i>| ${esc(u)}</i>`:""}</div>`;};
 const wegHtml=a=>`<button class="wegbtn" type="button" onclick="const w=this.nextElementSibling;w.hidden=!w.hidden;this.textContent=w.hidden?'Rechenweg anzeigen':'Rechenweg ausblenden';">Rechenweg anzeigen</button><div class="weg" hidden>`+
-  (a.sub?a.weg.map((zs,i)=>`<div class="wt">${"abcdefgh"[i]})</div>`+zs.map(wz).join("")).join(""):a.weg.map(wz).join(""))+`</div>`;
+  (a.sub?a.weg.map((zs,i)=>zs?`<div class="wt">${"abcdefgh"[i]})</div>`+zs.map(wz).join(""):"").join(""):a.weg.map(wz).join(""))+`</div>`;
 // Lösungen (15.10.2026, Malte): nach „Lösungen anzeigen“ erst die Aufgabe wählen – nie alle Lösungen auf einmal. Nur richtige Lösungen.
 function loesung(liste){
   const box=el("div");
