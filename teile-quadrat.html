@@ -110,8 +110,9 @@ document.getElementById("erg").onclick=async()=>{
   await tween(400,k=>T.e.setAttribute("opacity",k));await move(T.e,OX+X,OY+X,800);if(my!==run)return;
   T.loch.setAttribute("opacity",0);T.lochT.setAttribute("opacity",0);
   await Promise.all([fade(T.rahmen,1),fade(T.lx,1),fade(T.ly,1)]);
-  cap.textContent="Ecke ergänzt: + "+(B*B)+". Jetzt ist es ein Quadrat mit der Seite x + "+B+".";
-  term.innerHTML=`<span class="r">x²</span> + <span class="g">${2*B}x</span> <span class="bl">+ ${B*B}</span> = <span style="white-space:nowrap">( x + ${B} )²</span>`;
+  // 1.11.2026 (Malte): Ecke ergänzen und GLEICH WIEDER ABZIEHEN – nicht auf beiden Seiten addieren
+  cap.textContent="Ecke ergänzt: + "+(B*B)+". Damit sich nichts ändert, ziehen wir sie gleich wieder ab: − "+(B*B)+".";
+  term.innerHTML=`<span class="r">x²</span> + <span class="g">${2*B}x</span> = <span class="r">x²</span> + <span class="g">${2*B}x</span> <span class="bl">+ ${B*B} − ${B*B}</span> = <span style="white-space:nowrap">( x + ${B} )² <span class="bl">− ${B*B}</span></span>`;
 };
 const bs=document.getElementById("bs");
 [1,2,3,4,5].forEach(n=>{const b=document.createElement("button");b.className="b"+(n===B?" on":"");b.textContent=n+" m";
