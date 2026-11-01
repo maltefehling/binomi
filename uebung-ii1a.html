@@ -57,6 +57,24 @@
   .loes .zeile b{color:var(--acc)}
   .loes .warum{display:block;font-size:16px;color:var(--muted);margin-top:2px}
   footer{color:var(--muted);font-size:13px;text-align:center;margin-top:24px}
+  /* Lösungsweg (1.11.2026, wie Kap. V): erst das Ergebnis, daneben „Lösungsweg anzeigen“ */
+  .wegbtn{border:1px solid var(--acc);background:#fff;color:var(--acc);border-radius:10px;padding:8px 14px;font-size:17px;font-weight:700;min-height:44px;margin-top:6px}
+  .weg{background:#fff;border:1px solid var(--line);border-left:4px solid var(--acc);border-radius:8px;padding:8px 12px;margin-top:6px;font-size:18px;line-height:1.6}
+  .weg[hidden]{display:none}
+  /* Animierter Tipp (1.11.2026): Beispiel mit anderen Zahlen baut sich Zeile für Zeile auf */
+  details.anim{margin-top:8px}
+  details.anim summary{display:inline-block;cursor:pointer;font-weight:700;color:#6d4a9e;background:#f1eaf8;border:1px solid #b79bd6;border-radius:10px;padding:6px 12px;min-height:40px;list-style:none;font-size:18px}
+  details.anim summary::-webkit-details-marker{display:none}
+  .abox{background:#f1eaf8;border-radius:10px;padding:10px 12px;margin-top:6px}
+  .abox .az{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:4px 14px;align-items:baseline;opacity:0;transition:opacity .6s;margin-bottom:6px}
+  .abox .az.da{opacity:1}
+  .abox .az .r{font-size:20px;line-height:1.4}
+  .abox .az .h{font-size:16px;color:#6d4a9e}
+  .abox .az.neu .r{background:#fff;border-radius:6px;box-shadow:0 0 0 2px #b79bd6}
+  .abox .kn{display:flex;gap:8px;margin-top:6px}
+  .abox .kn button{min-height:42px;padding:0 14px;border-radius:10px;border:2px solid #6d4a9e;background:#fff;color:#6d4a9e;font-size:16px;font-weight:700}
+  .cr{color:#b33c3c;font-weight:700}.cg{color:#3f8f3a;font-weight:700}.cb{color:#2e5d9f;font-weight:700}.co{color:#c0700f;font-weight:700}.cl{color:#6d4a9e;font-weight:800}
+  @media (max-width:560px){.abox .az{grid-template-columns:1fr}}
   .frage{font-size:18px;font-weight:700;color:var(--acc);margin:4px 0 2px}
   .teilkopf{font-size:22px;font-weight:800;color:var(--acc);margin:14px 0 8px}
   .teil[hidden]{display:none}
@@ -78,21 +96,40 @@
 "use strict";
 // Versionsprüfung (12.10.2026): Safari zeigt sonst bis zu 10 Minuten (oft länger) eine alte, gespeicherte Fassung.
 // Beim Öffnen wird die Seite ohne Zwischenspeicher abgefragt; ist sie neuer, lädt sie sich einmal neu.
-const STAND="20261101180002";
+const STAND="20261101181533";
 fetch(location.pathname+"?nocache="+Date.now(),{cache:"no-store"}).then(r=>r.text()).then(t=>{
   const m=t.match(/const STAND="(\d+)"/);
   if(m&&m[1]!==STAND&&!sessionStorage.getItem("neu"+m[1])){sessionStorage.setItem("neu"+m[1],"1");location.replace(location.pathname+"?v="+m[1]);}
 }).catch(()=>{});
 // D.teile: ein Teil pro Stunde eines aufgeteilten Buchkapitels (z. B. II.2a/b/c); Stundenauswahl nur bei aufgeteilten Kapiteln (D.mehrteilig).
-const D={"untertitel": ["Mit Hilfe zum Einstieg", "Ohne Hilfe, auch mit Minus", "Mehrere Schritte, mehr Nachdenken"], "mehrteilig": false, "teile": [{"name": "", "stunde": "", "kurz": "", "erinnerung": ["Reinquadratisch: Es kommen nur x² und Zahlen vor (roter und blauer Stein).", "Erst x² allein stellen, dann die Wurzel ziehen: x² = 49 → x = 7 oder x = −7, also L = { −7 ; 7 }.", "x² = 0 hat nur die Lösung 0. x² = −4 hat keine Lösung, denn eine Zahl mal sich selbst ist nie negativ: L = { }.", "Bei Längen und Flächen zählt nur die positive Lösung."], "a1": {"t": "Löse. Schreibe die Lösungsmenge auf.", "l": ["L = { −9 ; 9 }", "L = { 0 }", "L = { }", "L = { −4 ; 4 }"], "tipp": "Welche Zahl mal sich selbst ergibt die Zahl rechts? Denk an die negative Lösung. Bei d): erst durch 3 teilen.", "sub": ["x² = 81", "x² = 0", "x² = −25", "3x² = 48"]}, "stufen": {"1": {"name": "Mit Hilfe", "aufg": [{"t": "Löse. Beispiel: x² = 36 → x = 6 oder x = −6, also L = { −6 ; 6 }.", "l": ["L = { −10 ; 10 }", "L = { −12 ; 12 }", "L = { −0,5 ; 0,5 }"], "tipp": "Welche Zahl mal sich selbst ergibt die Zahl rechts? Und welche negative Zahl?", "sub": ["x² = 100", "x² = 144", "x² = 0,25"]}, {"t": "Wie viele Lösungen? Entscheide, ohne zu rechnen. Beispiel: x² = 7 hat zwei Lösungen, denn 7 ist positiv.", "l": ["zwei Lösungen", "keine Lösung", "eine Lösung"], "tipp": "Ist die Zahl rechts positiv, null oder negativ?", "sub": ["x² = 12", "x² = −12", "x² = 0"], "tag": "v"}, {"t": "Wiederholung: Multipliziere aus: ( x + 4 )²", "l": ["x² + 8x + 16"], "tipp": "Erste binomische Formel: a² + 2ab + b².", "tag": "w"}]}, "2": {"name": "Sicher rechnen", "aufg": [{"t": "Löse. Beispiel: 2x² − 18 = 0 | + 18 → 2x² = 18 | : 2 → x² = 9 → L = { −3 ; 3 }.", "l": ["L = { −4 ; 4 }", "L = { }", "L = { −6 ; 6 }", "L = { −5 ; 5 }"], "tipp": "Erst die Zahl auf die andere Seite, dann durch die Zahl vor x² teilen. Bei d): Bring x² auf die andere Seite.", "sub": ["3x² − 48 = 0", "5x² + 20 = 0", "x² : 4 = 9", "7 − x² = −18"]}, {"t": "Tom rechnet:  x² + 49 = 0  →  x² = 49  →  L = { −7 ; 7 }.", "l": ["7² + 49 = 98 – nicht 0", "Aus + 49 wird auf der anderen Seite − 49.", "x² = −49 → keine Lösung: L = { }"], "tipp": "Was passiert mit + 49, wenn es auf die andere Seite wandert?", "sub": ["Mach die Probe mit x = 7.", "Wo steckt Toms Fehler?", "Was ist richtig?"], "tag": "v"}, {"t": "Wiederholung: Schreibe als Klammer im Quadrat: x² − 10x + 25", "l": ["( x − 5 )²"], "tipp": "Zweite binomische Formel rückwärts: 25 = 5².", "tag": "w"}]}, "3": {"name": "Knifflig", "aufg": [{"t": "Löse.", "l": ["L = { −4 ; 4 }", "L = { −0,9 ; 0,9 }", "L = { −3 ; 3 }"], "tipp": "Bei c): Bring alle x² auf eine Seite und alle Zahlen auf die andere.", "sub": ["0,5x² − 8 = 0", "x² − 0,81 = 0", "3x² + 7 = 2x² + 16"]}, {"t": "Lena: „Wenn wir die Seite der Feldhälfte von 8 m auf 16 m verdoppeln, wird die Hälfte doppelt so groß.“", "l": ["64 m²", "256 m²", "Nein – viermal so groß."], "tipp": "Rechne beide Flächen aus und vergleiche.", "sub": ["Fläche bei 8 m:", "Fläche bei 16 m:", "Stimmt Lenas Satz?"], "tag": "v"}, {"t": "Ein quadratisches Aufwärmfeld soll 50 m² groß sein. Wie lang muss eine Seite sein? Runde auf cm.", "l": ["x² = 50 → x ≈ 7,07 m"], "tipp": "Taschenrechner: Wurzel aus 50."}]}}}]};
+const D={"untertitel": ["Mit Hilfe zum Einstieg", "Ohne Hilfe, auch mit Minus", "Mehrere Schritte, mehr Nachdenken"], "mehrteilig": false, "teile": [{"name": "", "stunde": "", "kurz": "", "erinnerung": ["Reinquadratisch: Es kommen nur x² und Zahlen vor (roter und blauer Stein).", "Erst x² allein stellen, dann die Wurzel ziehen: x² = 49 → x = 7 oder x = −7, also L = { −7 ; 7 }.", "x² = 0 hat nur die Lösung 0. x² = −4 hat keine Lösung, denn eine Zahl mal sich selbst ist nie negativ: L = { }.", "Bei Längen und Flächen zählt nur die positive Lösung."], "a1": {"t": "Löse. Schreibe die Lösungsmenge auf.", "l": ["L = { −9 ; 9 }", "L = { 0 }", "L = { }", "L = { −4 ; 4 }"], "tipp": "Welche Zahl mal sich selbst ergibt die Zahl rechts? Denk an die negative Lösung. Bei d): erst durch 3 teilen.", "sub": ["x² = 81", "x² = 0", "x² = −25", "3x² = 48"], "weg": ["a) x² = 81 → x = 9 oder x = −9 → L = { −9 ; 9 }", "b) x² = 0 → nur 0 · 0 = 0 → L = { 0 }", "c) x² = −25: Eine Zahl mal sich selbst ist nie negativ → L = { }", "d) 3x² = 48  | : 3  →  x² = 16 → x = 4 oder x = −4 → L = { −4 ; 4 }"], "anim": [["[r:x²] = [b:49]", "Nur x² und eine Zahl – der grüne Stein fehlt."], ["7 · 7 = 49", "Welche Zahl mal sich selbst gibt 49?"], ["( −7 ) · ( −7 ) = 49", "Minus mal Minus gibt Plus – auch −7 passt!"], ["[l:L = { −7 ; 7 }]", "Zwei Lösungen."], ["[r:2x²] = [b:32]   [o:| : 2]", "Steht eine Zahl vor x²: erst teilen."], ["[r:x²] = [b:16]  →  [l:L = { −4 ; 4 }]", "Dann wie oben."]]}, "stufen": {"1": {"name": "Mit Hilfe", "aufg": [{"t": "Löse. Beispiel: x² = 36 → x = 6 oder x = −6, also L = { −6 ; 6 }.", "l": ["L = { −10 ; 10 }", "L = { −12 ; 12 }", "L = { −0,5 ; 0,5 }"], "tipp": "Welche Zahl mal sich selbst ergibt die Zahl rechts? Und welche negative Zahl?", "sub": ["x² = 100", "x² = 144", "x² = 0,25"], "weg": ["a) 10 · 10 = 100 und ( −10 ) · ( −10 ) = 100 → L = { −10 ; 10 }", "b) 12 · 12 = 144 → L = { −12 ; 12 }", "c) 0,5 · 0,5 = 0,25 → L = { −0,5 ; 0,5 }"], "anim": [["[r:x²] = [b:1,21]", "Welche Zahl mal sich selbst gibt 1,21?"], ["1,1 · 1,1 = 1,21", "Probiere: 1,1 · 1,1."], ["( −1,1 ) · ( −1,1 ) = 1,21", "Die negative Zahl passt auch."], ["[l:L = { −1,1 ; 1,1 }]", ""]]}, {"t": "Wie viele Lösungen? Entscheide, ohne zu rechnen. Beispiel: x² = 7 hat zwei Lösungen, denn 7 ist positiv.", "l": ["zwei Lösungen", "keine Lösung", "eine Lösung"], "tipp": "Ist die Zahl rechts positiv, null oder negativ?", "sub": ["x² = 12", "x² = −12", "x² = 0"], "tag": "v", "weg": ["a) 12 ist positiv → zwei Lösungen ( ±√12 )", "b) −12 ist negativ – keine Zahl mal sich selbst gibt etwas Negatives → keine Lösung", "c) Nur 0 · 0 = 0 → eine Lösung"]}, {"t": "Wiederholung: Multipliziere aus: ( x + 4 )²", "l": ["x² + 8x + 16"], "tipp": "Erste binomische Formel: a² + 2ab + b².", "tag": "w", "weg": ["( x + 4 )² = x² + 2 · 4 · x + 4²", "= x² + 8x + 16"]}]}, "2": {"name": "Sicher rechnen", "aufg": [{"t": "Löse. Beispiel: 2x² − 18 = 0 | + 18 → 2x² = 18 | : 2 → x² = 9 → L = { −3 ; 3 }.", "l": ["L = { −4 ; 4 }", "L = { }", "L = { −6 ; 6 }", "L = { −5 ; 5 }"], "tipp": "Erst die Zahl auf die andere Seite, dann durch die Zahl vor x² teilen. Bei d): Bring x² auf die andere Seite.", "sub": ["3x² − 48 = 0", "5x² + 20 = 0", "x² : 4 = 9", "7 − x² = −18"], "weg": ["a) 3x² − 48 = 0  | + 48  →  3x² = 48  | : 3  →  x² = 16 → L = { −4 ; 4 }", "b) 5x² + 20 = 0  | − 20  →  5x² = −20  | : 5  →  x² = −4 → keine Lösung: L = { }", "c) x² : 4 = 9  | · 4  →  x² = 36 → L = { −6 ; 6 }", "d) 7 − x² = −18  | + x²  →  7 = x² − 18  | + 18  →  25 = x² → L = { −5 ; 5 }"]}, {"t": "Tom rechnet:  x² + 49 = 0  →  x² = 49  →  L = { −7 ; 7 }.", "l": ["7² + 49 = 98 – nicht 0", "Aus + 49 wird auf der anderen Seite − 49.", "x² = −49 → keine Lösung: L = { }"], "tipp": "Was passiert mit + 49, wenn es auf die andere Seite wandert?", "sub": ["Mach die Probe mit x = 7.", "Wo steckt Toms Fehler?", "Was ist richtig?"], "tag": "v", "weg": ["a) Probe: 7² + 49 = 49 + 49 = 98 – nicht 0", "b) + 49 wandert auf die andere Seite und wird dort − 49. Tom hat das Vorzeichen nicht gedreht.", "c) x² + 49 = 0  | − 49  →  x² = −49 → keine Zahl passt → L = { }"]}, {"t": "Wiederholung: Schreibe als Klammer im Quadrat: x² − 10x + 25", "l": ["( x − 5 )²"], "tipp": "Zweite binomische Formel rückwärts: 25 = 5².", "tag": "w", "weg": ["Zahl am Ende 25 = 5², Mittelstück 10x = 2 · 5 · x, Minus in der Mitte", "→ x² − 10x + 25 = ( x − 5 )²"]}]}, "3": {"name": "Knifflig", "aufg": [{"t": "Löse.", "l": ["L = { −4 ; 4 }", "L = { −0,9 ; 0,9 }", "L = { −3 ; 3 }"], "tipp": "Bei c): Bring alle x² auf eine Seite und alle Zahlen auf die andere.", "sub": ["0,5x² − 8 = 0", "x² − 0,81 = 0", "3x² + 7 = 2x² + 16"], "weg": ["a) 0,5x² − 8 = 0  | + 8  →  0,5x² = 8  | : 0,5  →  x² = 16 → L = { −4 ; 4 }", "b) x² − 0,81 = 0  | + 0,81  →  x² = 0,81 → 0,9 · 0,9 = 0,81 → L = { −0,9 ; 0,9 }", "c) 3x² + 7 = 2x² + 16  | − 2x²  →  x² + 7 = 16  | − 7  →  x² = 9 → L = { −3 ; 3 }"]}, {"t": "Lena: „Wenn wir die Seite der Feldhälfte von 8 m auf 16 m verdoppeln, wird die Hälfte doppelt so groß.“", "l": ["64 m²", "256 m²", "Nein – viermal so groß."], "tipp": "Rechne beide Flächen aus und vergleiche.", "sub": ["Fläche bei 8 m:", "Fläche bei 16 m:", "Stimmt Lenas Satz?"], "tag": "v", "weg": ["a) 8 · 8 = 64 m²", "b) 16 · 16 = 256 m²", "c) 256 : 64 = 4 → viermal so groß, nicht doppelt. Lenas Satz stimmt nicht."]}, {"t": "Ein quadratisches Aufwärmfeld soll 50 m² groß sein. Wie lang muss eine Seite sein? Runde auf cm.", "l": ["x² = 50 → x ≈ 7,07 m"], "tipp": "Taschenrechner: Wurzel aus 50.", "weg": ["x · x = 50 → x² = 50", "x = √50 ≈ 7,071… (Taschenrechner)", "Eine Länge ist positiv → x ≈ 7,07 m"]}]}}}]};
 const esc=s=>s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/\{([^{}\/]+)\/([^{}]+)\}/g,'<span class="fr"><span>$1</span><span>$2</span></span>').replace(/\[([+−])\]/g,'<span class="rot">$1</span>');
 const el=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e;};
 const tagHtml=t=>t==="v"?'<span class="tag v">💡 Verständnis</span>':t==="w"?'<span class="tag w">↩ Wiederholung</span>':"";
+// Farbmarkup [r:…] [g:…] [b:…] [o:…] [l:…] (nach esc, damit Brüche weiter funktionieren)
+const farbe=s=>s.replace(/\[([rgbol]):([^\]]+)\]/g,'<span class="c$1">$2</span>');
+function animTipp(zeilen){
+  const d=el("details","anim",'<summary>▶ Tipp: Beispiel mit anderen Zahlen</summary>');
+  const box=el("div","abox");d.appendChild(box);
+  const rows=zeilen.map(([z,h])=>{const r=el("div","az",`<div class="r">${farbe(esc(z))}</div><div class="h">${esc(h)}</div>`);box.appendChild(r);return r;});
+  const kn=el("div","kn",'<button class="p">⏸ Pause</button><button class="n">↻ Nochmal</button>');box.appendChild(kn);
+  const pb=kn.querySelector(".p");let n=0,timer=null,steht=false;
+  const zeig=()=>rows.forEach((r,i)=>{r.classList.toggle("da",i<n);r.classList.toggle("neu",i===n-1);});
+  const dauer=()=>1800+((zeilen[n-1]||["",""])[0].length+(zeilen[n-1]||["",""])[1].length)*55;   // Lesezeit nach Textlänge
+  const weiter=()=>{if(steht)return;n++;zeig();if(n<rows.length)timer=setTimeout(weiter,dauer());else pb.disabled=true;};
+  const start=()=>{clearTimeout(timer);steht=false;pb.disabled=false;pb.textContent="⏸ Pause";n=0;zeig();timer=setTimeout(weiter,400);};
+  pb.onclick=()=>{steht=!steht;pb.textContent=steht?"▶ Weiter":"⏸ Pause";clearTimeout(timer);if(!steht)weiter();};
+  kn.querySelector(".n").onclick=start;
+  d.addEventListener("toggle",()=>{if(d.open)start();else clearTimeout(timer);});
+  return d;
+}
 function aufgabe(nr,a){
   let h=`<div class="kopf">Aufgabe ${nr}${tagHtml(a.tag)}</div><div class="txt">${esc(a.tag==="w"?a.t.replace(/^Wiederholung: /,""):a.t)}</div>`;
   if(a.sub)h+="<ol>"+a.sub.map((s,i)=>`<li><b class="tb">${"abcdefgh"[i]})</b>${esc(s)}</li>`).join("")+"</ol>";
   if(a.tipp)h+=`<details class="tipp"><summary>💡 Tipp</summary><div>${esc(a.tipp)}</div></details>`;
-  return el("div","aufg",h);
+  const e=el("div","aufg",h);
+  if(a.anim)e.appendChild(animTipp(a.anim));
+  return e;
 }
 // Lösungen (15.10.2026, Malte): nach „Lösungen anzeigen“ erst die Aufgabe wählen – nie alle Lösungen auf einmal. Nur richtige Lösungen.
 function loesung(liste){
@@ -101,9 +138,11 @@ function loesung(liste){
   const f=el("div","frag",'<p>Hast du die Aufgabe wirklich im Heft gerechnet? Zu welcher Aufgabe möchtest du die Lösung sehen?</p>');f.hidden=true;
   const kn=el("div","lwahl"),w=el("div","loes");w.hidden=true;f.appendChild(kn);
   const zeile=([nr,a])=>{const l=a.sub?a.l.map((x,i)=>`${"abcdefgh"[i]}) ${esc(x)}`).join("&nbsp;&nbsp;&nbsp; "):a.l.map(esc).join("<br>");
-    return `<div class="zeile"><b>Aufgabe ${nr}:</b> ${l}${a.idee?`<span class="warum">Warum: ${esc(a.idee)}</span>`:""}</div>`;};
+    const weg=a.weg?`<br><button class="wegbtn">Lösungsweg anzeigen</button><div class="weg" hidden>${a.weg.map(z=>"<div>"+esc(z)+"</div>").join("")}</div>`:"";
+    return `<div class="zeile"><b>Aufgabe ${nr}:</b> ${l}${a.idee?`<span class="warum">Warum: ${esc(a.idee)}</span>`:""}${weg}</div>`;};
   liste.forEach((e,i)=>{const k=el("button","",`Aufgabe ${esc(String(e[0]))}`);k.setAttribute("aria-pressed","false");
-    k.onclick=()=>{kn.querySelectorAll("button").forEach((x,j)=>x.setAttribute("aria-pressed",j===i));w.innerHTML=zeile(e);w.hidden=false;};kn.appendChild(k);});
+    k.onclick=()=>{kn.querySelectorAll("button").forEach((x,j)=>x.setAttribute("aria-pressed",j===i));w.innerHTML=zeile(e);w.hidden=false;
+      const wb=w.querySelector(".wegbtn");if(wb)wb.onclick=()=>{const g=w.querySelector(".weg");g.hidden=!g.hidden;wb.textContent=g.hidden?"Lösungsweg anzeigen":"Lösungsweg ausblenden";};};kn.appendChild(k);});
   b.onclick=()=>{const offen=!f.hidden;f.hidden=offen;w.hidden=true;kn.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed","false"));
     b.textContent=offen?"Lösungen anzeigen":"Lösungen ausblenden";};
   box.append(b,f,w);return box;

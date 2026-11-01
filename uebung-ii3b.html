@@ -57,6 +57,24 @@
   .loes .zeile b{color:var(--acc)}
   .loes .warum{display:block;font-size:16px;color:var(--muted);margin-top:2px}
   footer{color:var(--muted);font-size:13px;text-align:center;margin-top:24px}
+  /* Lösungsweg (1.11.2026, wie Kap. V): erst das Ergebnis, daneben „Lösungsweg anzeigen“ */
+  .wegbtn{border:1px solid var(--acc);background:#fff;color:var(--acc);border-radius:10px;padding:8px 14px;font-size:17px;font-weight:700;min-height:44px;margin-top:6px}
+  .weg{background:#fff;border:1px solid var(--line);border-left:4px solid var(--acc);border-radius:8px;padding:8px 12px;margin-top:6px;font-size:18px;line-height:1.6}
+  .weg[hidden]{display:none}
+  /* Animierter Tipp (1.11.2026): Beispiel mit anderen Zahlen baut sich Zeile für Zeile auf */
+  details.anim{margin-top:8px}
+  details.anim summary{display:inline-block;cursor:pointer;font-weight:700;color:#6d4a9e;background:#f1eaf8;border:1px solid #b79bd6;border-radius:10px;padding:6px 12px;min-height:40px;list-style:none;font-size:18px}
+  details.anim summary::-webkit-details-marker{display:none}
+  .abox{background:#f1eaf8;border-radius:10px;padding:10px 12px;margin-top:6px}
+  .abox .az{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:4px 14px;align-items:baseline;opacity:0;transition:opacity .6s;margin-bottom:6px}
+  .abox .az.da{opacity:1}
+  .abox .az .r{font-size:20px;line-height:1.4}
+  .abox .az .h{font-size:16px;color:#6d4a9e}
+  .abox .az.neu .r{background:#fff;border-radius:6px;box-shadow:0 0 0 2px #b79bd6}
+  .abox .kn{display:flex;gap:8px;margin-top:6px}
+  .abox .kn button{min-height:42px;padding:0 14px;border-radius:10px;border:2px solid #6d4a9e;background:#fff;color:#6d4a9e;font-size:16px;font-weight:700}
+  .cr{color:#b33c3c;font-weight:700}.cg{color:#3f8f3a;font-weight:700}.cb{color:#2e5d9f;font-weight:700}.co{color:#c0700f;font-weight:700}.cl{color:#6d4a9e;font-weight:800}
+  @media (max-width:560px){.abox .az{grid-template-columns:1fr}}
   .frage{font-size:18px;font-weight:700;color:var(--acc);margin:4px 0 2px}
   .teilkopf{font-size:22px;font-weight:800;color:var(--acc);margin:14px 0 8px}
   .teil[hidden]{display:none}
@@ -78,21 +96,40 @@
 "use strict";
 // Versionsprüfung (12.10.2026): Safari zeigt sonst bis zu 10 Minuten (oft länger) eine alte, gespeicherte Fassung.
 // Beim Öffnen wird die Seite ohne Zwischenspeicher abgefragt; ist sie neuer, lädt sie sich einmal neu.
-const STAND="20261101180002";
+const STAND="20261101181533";
 fetch(location.pathname+"?nocache="+Date.now(),{cache:"no-store"}).then(r=>r.text()).then(t=>{
   const m=t.match(/const STAND="(\d+)"/);
   if(m&&m[1]!==STAND&&!sessionStorage.getItem("neu"+m[1])){sessionStorage.setItem("neu"+m[1],"1");location.replace(location.pathname+"?v="+m[1]);}
 }).catch(()=>{});
 // D.teile: ein Teil pro Stunde eines aufgeteilten Buchkapitels (z. B. II.2a/b/c); Stundenauswahl nur bei aufgeteilten Kapiteln (D.mehrteilig).
-const D={"untertitel": ["Mit Hilfe zum Einstieg", "Ohne Hilfe, auch mit Minus", "Mehrere Schritte, mehr Nachdenken"], "mehrteilig": false, "teile": [{"name": "", "stunde": "", "kurz": "", "erinnerung": ["Die Zahl unter der Wurzel heißt Diskriminante:  D = b² − 4ac.", "D > 0: zwei Lösungen.   D = 0: eine Lösung.   D < 0: keine Lösung.", "Ist nur nach der Anzahl gefragt, reicht es, D auszurechnen."], "a1": {"t": "Wie viele Lösungen? Rechne nur D = b² − 4ac aus.", "l": ["D = 4: zwei Lösungen", "D = 0: eine Lösung", "D = −16: keine Lösung", "D = 49: zwei Lösungen"], "tipp": "a, b, c ablesen, dann b² − 4ac. Bei b): ( −6 )² = 36.", "sub": ["x² + 4x + 3 = 0", "x² − 6x + 9 = 0", "x² + 2x + 5 = 0", "2x² − 3x − 5 = 0"]}, "stufen": {"1": {"name": "Mit Hilfe", "aufg": [{"t": "Berechne D und entscheide, wie viele Lösungen es gibt. Beispiel: x² + 6x + 10 = 0 → D = 36 − 40 = −4 → keine Lösung.", "l": ["D = 9: zwei Lösungen", "D = 0: eine Lösung", "D = −11: keine Lösung"], "tipp": "Lies zuerst a, b und c ab.", "sub": ["x² + 5x + 4 = 0", "x² + 2x + 1 = 0", "x² + x + 3 = 0"]}, {"t": "Tom: „D = −11, also gibt es zwei negative Lösungen.“", "l": ["nein", "keine"], "tipp": "Gibt es eine Zahl, die mal sich selbst −11 ergibt?", "sub": ["Kann man √( −11 ) ziehen?", "Wie viele Lösungen gibt es?"], "tag": "v"}, {"t": "Wiederholung II.1: Wie viele Lösungen hat  x² + 9 = 0?", "l": ["keine Lösung"], "tipp": "x² = −9.", "tag": "w"}]}, "2": {"name": "Sicher rechnen", "aufg": [{"t": "Wie viele Lösungen? Entscheide mit D. Beispiel: 2x² + x + 1 = 0 → D = 1 − 8 = −7 → keine Lösung.", "l": ["D = 0: eine Lösung", "D = −4: keine Lösung", "D = 25: zwei Lösungen", "D = 12,25: zwei Lösungen"], "tipp": "Achte auf die Vorzeichen von a und c.", "sub": ["3x² − 6x + 3 = 0", "−x² + 4x − 5 = 0", "2x² + 7x + 3 = 0", "x² − 0,5x − 3 = 0"]}, {"t": "Für welche Zahl c hat  x² + 8x + c = 0  genau eine Lösung? Für welche c keine?", "l": ["D = 64 − 4c", "c = 16", "c größer als 16"], "tipp": "Genau eine Lösung bei D = 0.", "sub": ["Wie heißt D hier?", "Für welches c ist D = 0?", "Für welche c ist D negativ?"], "tag": "v"}, {"t": "Wiederholung II.3a: Löse  2x² − 3x − 2 = 0.", "l": ["L = { −0,5 ; 2 }"], "tipp": "abc-Formel: D = 9 + 16 = 25.", "tag": "w"}]}, "3": {"name": "Knifflig", "aufg": [{"t": "Für welche Zahlen b hat  x² + bx + 9 = 0  genau eine Lösung?", "l": ["b = 6 oder b = −6"], "tipp": "D = b² − 36 = 0."}, {"t": "x² + 5 = 0 hat keine Lösung, x² − 5 = 0 hat zwei. Zeige es mit D.", "l": ["D = −20 → keine Lösung", "D = 20 → zwei Lösungen"], "tipp": "b = 0, c = 5 bzw. c = −5.", "sub": ["D bei x² + 5 = 0:", "D bei x² − 5 = 0:"], "tag": "v"}, {"t": "Wiederholung II.2c: Löse  x² − 4x = 5  mit quadratischer Ergänzung.", "l": ["L = { −1 ; 5 }"], "tipp": "Ecke 2² = 4.", "tag": "w"}]}}}]};
+const D={"untertitel": ["Mit Hilfe zum Einstieg", "Ohne Hilfe, auch mit Minus", "Mehrere Schritte, mehr Nachdenken"], "mehrteilig": false, "teile": [{"name": "", "stunde": "", "kurz": "", "erinnerung": ["Die Zahl unter der Wurzel heißt Diskriminante:  D = b² − 4ac.", "D > 0: zwei Lösungen.   D = 0: eine Lösung.   D < 0: keine Lösung.", "Ist nur nach der Anzahl gefragt, reicht es, D auszurechnen."], "a1": {"t": "Wie viele Lösungen? Rechne nur D = b² − 4ac aus.", "l": ["D = 4: zwei Lösungen", "D = 0: eine Lösung", "D = −16: keine Lösung", "D = 49: zwei Lösungen"], "tipp": "a, b, c ablesen, dann b² − 4ac. Bei b): ( −6 )² = 36.", "sub": ["x² + 4x + 3 = 0", "x² − 6x + 9 = 0", "x² + 2x + 5 = 0", "2x² − 3x − 5 = 0"], "weg": ["a) a = 1, b = 4, c = 3: D = 16 − 12 = 4 > 0 → zwei Lösungen", "b) a = 1, b = −6, c = 9: D = 36 − 36 = 0 → eine Lösung", "c) a = 1, b = 2, c = 5: D = 4 − 20 = −16 < 0 → keine Lösung", "d) a = 2, b = −3, c = −5: D = 9 + 40 = 49 > 0 → zwei Lösungen"], "anim": [["[r:x²] [g:+ 6x] [b:+ 8] = 0", "Gefragt ist nur: Wie viele Lösungen?"], ["D = [g:6]² − 4 · [r:1] · [b:8] = 36 − 32 = 4", "Nur die Zahl unter der Wurzel."], ["D > 0   →   [l:zwei Lösungen]", "Positiv: zwei · null: eine · negativ: keine."]]}, "stufen": {"1": {"name": "Mit Hilfe", "aufg": [{"t": "Berechne D und entscheide, wie viele Lösungen es gibt. Beispiel: x² + 6x + 10 = 0 → D = 36 − 40 = −4 → keine Lösung.", "l": ["D = 9: zwei Lösungen", "D = 0: eine Lösung", "D = −11: keine Lösung"], "tipp": "Lies zuerst a, b und c ab.", "sub": ["x² + 5x + 4 = 0", "x² + 2x + 1 = 0", "x² + x + 3 = 0"], "weg": ["a) D = 25 − 16 = 9 > 0 → zwei", "b) D = 4 − 4 = 0 → eine", "c) D = 1 − 12 = −11 < 0 → keine"], "anim": [["[r:x²] [g:+ 4x] [b:+ 4] = 0", ""], ["D = 16 − 4 · 1 · 4 = 0", ""], ["D = 0   →   [l:eine Lösung]", ""]]}, {"t": "Tom: „D = −11, also gibt es zwei negative Lösungen.“", "l": ["nein", "keine"], "tipp": "Gibt es eine Zahl, die mal sich selbst −11 ergibt?", "sub": ["Kann man √( −11 ) ziehen?", "Wie viele Lösungen gibt es?"], "tag": "v", "weg": ["a) Keine Zahl mal sich selbst gibt −11 → √( −11 ) gibt es nicht", "b) Ohne Wurzel kein Ergebnis → keine Lösung. Tom irrt sich."]}, {"t": "Wiederholung II.1: Wie viele Lösungen hat  x² + 9 = 0?", "l": ["keine Lösung"], "tipp": "x² = −9.", "tag": "w", "weg": ["x² + 9 = 0 → x² = −9", "negativ → keine Lösung"]}]}, "2": {"name": "Sicher rechnen", "aufg": [{"t": "Wie viele Lösungen? Entscheide mit D. Beispiel: 2x² + x + 1 = 0 → D = 1 − 8 = −7 → keine Lösung.", "l": ["D = 0: eine Lösung", "D = −4: keine Lösung", "D = 25: zwei Lösungen", "D = 12,25: zwei Lösungen"], "tipp": "Achte auf die Vorzeichen von a und c.", "sub": ["3x² − 6x + 3 = 0", "−x² + 4x − 5 = 0", "2x² + 7x + 3 = 0", "x² − 0,5x − 3 = 0"], "weg": ["a) a = 3, b = −6, c = 3: D = 36 − 36 = 0 → eine", "b) a = −1, b = 4, c = −5: D = 16 − 4 · ( −1 ) · ( −5 ) = 16 − 20 = −4 → keine", "c) a = 2, b = 7, c = 3: D = 49 − 24 = 25 → zwei", "d) a = 1, b = −0,5, c = −3: D = 0,25 + 12 = 12,25 → zwei"]}, {"t": "Für welche Zahl c hat  x² + 8x + c = 0  genau eine Lösung? Für welche c keine?", "l": ["D = 64 − 4c", "c = 16", "c größer als 16"], "tipp": "Genau eine Lösung bei D = 0.", "sub": ["Wie heißt D hier?", "Für welches c ist D = 0?", "Für welche c ist D negativ?"], "tag": "v", "weg": ["a) a = 1, b = 8: D = 64 − 4 · 1 · c = 64 − 4c", "b) 64 − 4c = 0 → 4c = 64 → c = 16", "c) D negativ, wenn 4c größer als 64 ist → c größer als 16"]}, {"t": "Wiederholung II.3a: Löse  2x² − 3x − 2 = 0.", "l": ["L = { −0,5 ; 2 }"], "tipp": "abc-Formel: D = 9 + 16 = 25.", "tag": "w", "weg": ["a = 2, b = −3, c = −2:  x = ( 3 ± √( 9 + 16 ) ) : 4 = ( 3 ± 5 ) : 4", "x = 2 oder x = −0,5"]}]}, "3": {"name": "Knifflig", "aufg": [{"t": "Für welche Zahlen b hat  x² + bx + 9 = 0  genau eine Lösung?", "l": ["b = 6 oder b = −6"], "tipp": "D = b² − 36 = 0.", "weg": ["D = b² − 4 · 1 · 9 = b² − 36", "Genau eine Lösung bei D = 0: b² = 36", "b = 6 oder b = −6"]}, {"t": "x² + 5 = 0 hat keine Lösung, x² − 5 = 0 hat zwei. Zeige es mit D.", "l": ["D = −20 → keine Lösung", "D = 20 → zwei Lösungen"], "tipp": "b = 0, c = 5 bzw. c = −5.", "sub": ["D bei x² + 5 = 0:", "D bei x² − 5 = 0:"], "tag": "v", "weg": ["a) a = 1, b = 0, c = 5: D = 0 − 20 = −20 → keine Lösung", "b) a = 1, b = 0, c = −5: D = 0 + 20 = 20 → zwei Lösungen"]}, {"t": "Wiederholung II.2c: Löse  x² − 4x = 5  mit quadratischer Ergänzung.", "l": ["L = { −1 ; 5 }"], "tipp": "Ecke 2² = 4.", "tag": "w", "weg": ["Ecke ( 4 : 2 )² = 4: x² − 4x + 4 = 9", "( x − 2 )² = 9 → x − 2 = 3 oder −3 → x = 5 oder x = −1"]}]}}}]};
 const esc=s=>s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/\{([^{}\/]+)\/([^{}]+)\}/g,'<span class="fr"><span>$1</span><span>$2</span></span>').replace(/\[([+−])\]/g,'<span class="rot">$1</span>');
 const el=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e;};
 const tagHtml=t=>t==="v"?'<span class="tag v">💡 Verständnis</span>':t==="w"?'<span class="tag w">↩ Wiederholung</span>':"";
+// Farbmarkup [r:…] [g:…] [b:…] [o:…] [l:…] (nach esc, damit Brüche weiter funktionieren)
+const farbe=s=>s.replace(/\[([rgbol]):([^\]]+)\]/g,'<span class="c$1">$2</span>');
+function animTipp(zeilen){
+  const d=el("details","anim",'<summary>▶ Tipp: Beispiel mit anderen Zahlen</summary>');
+  const box=el("div","abox");d.appendChild(box);
+  const rows=zeilen.map(([z,h])=>{const r=el("div","az",`<div class="r">${farbe(esc(z))}</div><div class="h">${esc(h)}</div>`);box.appendChild(r);return r;});
+  const kn=el("div","kn",'<button class="p">⏸ Pause</button><button class="n">↻ Nochmal</button>');box.appendChild(kn);
+  const pb=kn.querySelector(".p");let n=0,timer=null,steht=false;
+  const zeig=()=>rows.forEach((r,i)=>{r.classList.toggle("da",i<n);r.classList.toggle("neu",i===n-1);});
+  const dauer=()=>1800+((zeilen[n-1]||["",""])[0].length+(zeilen[n-1]||["",""])[1].length)*55;   // Lesezeit nach Textlänge
+  const weiter=()=>{if(steht)return;n++;zeig();if(n<rows.length)timer=setTimeout(weiter,dauer());else pb.disabled=true;};
+  const start=()=>{clearTimeout(timer);steht=false;pb.disabled=false;pb.textContent="⏸ Pause";n=0;zeig();timer=setTimeout(weiter,400);};
+  pb.onclick=()=>{steht=!steht;pb.textContent=steht?"▶ Weiter":"⏸ Pause";clearTimeout(timer);if(!steht)weiter();};
+  kn.querySelector(".n").onclick=start;
+  d.addEventListener("toggle",()=>{if(d.open)start();else clearTimeout(timer);});
+  return d;
+}
 function aufgabe(nr,a){
   let h=`<div class="kopf">Aufgabe ${nr}${tagHtml(a.tag)}</div><div class="txt">${esc(a.tag==="w"?a.t.replace(/^Wiederholung: /,""):a.t)}</div>`;
   if(a.sub)h+="<ol>"+a.sub.map((s,i)=>`<li><b class="tb">${"abcdefgh"[i]})</b>${esc(s)}</li>`).join("")+"</ol>";
   if(a.tipp)h+=`<details class="tipp"><summary>💡 Tipp</summary><div>${esc(a.tipp)}</div></details>`;
-  return el("div","aufg",h);
+  const e=el("div","aufg",h);
+  if(a.anim)e.appendChild(animTipp(a.anim));
+  return e;
 }
 // Lösungen (15.10.2026, Malte): nach „Lösungen anzeigen“ erst die Aufgabe wählen – nie alle Lösungen auf einmal. Nur richtige Lösungen.
 function loesung(liste){
@@ -101,9 +138,11 @@ function loesung(liste){
   const f=el("div","frag",'<p>Hast du die Aufgabe wirklich im Heft gerechnet? Zu welcher Aufgabe möchtest du die Lösung sehen?</p>');f.hidden=true;
   const kn=el("div","lwahl"),w=el("div","loes");w.hidden=true;f.appendChild(kn);
   const zeile=([nr,a])=>{const l=a.sub?a.l.map((x,i)=>`${"abcdefgh"[i]}) ${esc(x)}`).join("&nbsp;&nbsp;&nbsp; "):a.l.map(esc).join("<br>");
-    return `<div class="zeile"><b>Aufgabe ${nr}:</b> ${l}${a.idee?`<span class="warum">Warum: ${esc(a.idee)}</span>`:""}</div>`;};
+    const weg=a.weg?`<br><button class="wegbtn">Lösungsweg anzeigen</button><div class="weg" hidden>${a.weg.map(z=>"<div>"+esc(z)+"</div>").join("")}</div>`:"";
+    return `<div class="zeile"><b>Aufgabe ${nr}:</b> ${l}${a.idee?`<span class="warum">Warum: ${esc(a.idee)}</span>`:""}${weg}</div>`;};
   liste.forEach((e,i)=>{const k=el("button","",`Aufgabe ${esc(String(e[0]))}`);k.setAttribute("aria-pressed","false");
-    k.onclick=()=>{kn.querySelectorAll("button").forEach((x,j)=>x.setAttribute("aria-pressed",j===i));w.innerHTML=zeile(e);w.hidden=false;};kn.appendChild(k);});
+    k.onclick=()=>{kn.querySelectorAll("button").forEach((x,j)=>x.setAttribute("aria-pressed",j===i));w.innerHTML=zeile(e);w.hidden=false;
+      const wb=w.querySelector(".wegbtn");if(wb)wb.onclick=()=>{const g=w.querySelector(".weg");g.hidden=!g.hidden;wb.textContent=g.hidden?"Lösungsweg anzeigen":"Lösungsweg ausblenden";};};kn.appendChild(k);});
   b.onclick=()=>{const offen=!f.hidden;f.hidden=offen;w.hidden=true;kn.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed","false"));
     b.textContent=offen?"Lösungen anzeigen":"Lösungen ausblenden";};
   box.append(b,f,w);return box;

@@ -57,6 +57,24 @@
   .loes .zeile b{color:var(--acc)}
   .loes .warum{display:block;font-size:16px;color:var(--muted);margin-top:2px}
   footer{color:var(--muted);font-size:13px;text-align:center;margin-top:24px}
+  /* Lösungsweg (1.11.2026, wie Kap. V): erst das Ergebnis, daneben „Lösungsweg anzeigen“ */
+  .wegbtn{border:1px solid var(--acc);background:#fff;color:var(--acc);border-radius:10px;padding:8px 14px;font-size:17px;font-weight:700;min-height:44px;margin-top:6px}
+  .weg{background:#fff;border:1px solid var(--line);border-left:4px solid var(--acc);border-radius:8px;padding:8px 12px;margin-top:6px;font-size:18px;line-height:1.6}
+  .weg[hidden]{display:none}
+  /* Animierter Tipp (1.11.2026): Beispiel mit anderen Zahlen baut sich Zeile für Zeile auf */
+  details.anim{margin-top:8px}
+  details.anim summary{display:inline-block;cursor:pointer;font-weight:700;color:#6d4a9e;background:#f1eaf8;border:1px solid #b79bd6;border-radius:10px;padding:6px 12px;min-height:40px;list-style:none;font-size:18px}
+  details.anim summary::-webkit-details-marker{display:none}
+  .abox{background:#f1eaf8;border-radius:10px;padding:10px 12px;margin-top:6px}
+  .abox .az{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:4px 14px;align-items:baseline;opacity:0;transition:opacity .6s;margin-bottom:6px}
+  .abox .az.da{opacity:1}
+  .abox .az .r{font-size:20px;line-height:1.4}
+  .abox .az .h{font-size:16px;color:#6d4a9e}
+  .abox .az.neu .r{background:#fff;border-radius:6px;box-shadow:0 0 0 2px #b79bd6}
+  .abox .kn{display:flex;gap:8px;margin-top:6px}
+  .abox .kn button{min-height:42px;padding:0 14px;border-radius:10px;border:2px solid #6d4a9e;background:#fff;color:#6d4a9e;font-size:16px;font-weight:700}
+  .cr{color:#b33c3c;font-weight:700}.cg{color:#3f8f3a;font-weight:700}.cb{color:#2e5d9f;font-weight:700}.co{color:#c0700f;font-weight:700}.cl{color:#6d4a9e;font-weight:800}
+  @media (max-width:560px){.abox .az{grid-template-columns:1fr}}
   .frage{font-size:18px;font-weight:700;color:var(--acc);margin:4px 0 2px}
   .teilkopf{font-size:22px;font-weight:800;color:var(--acc);margin:14px 0 8px}
   .teil[hidden]{display:none}
@@ -78,21 +96,40 @@
 "use strict";
 // Versionsprüfung (12.10.2026): Safari zeigt sonst bis zu 10 Minuten (oft länger) eine alte, gespeicherte Fassung.
 // Beim Öffnen wird die Seite ohne Zwischenspeicher abgefragt; ist sie neuer, lädt sie sich einmal neu.
-const STAND="20261101180002";
+const STAND="20261101181533";
 fetch(location.pathname+"?nocache="+Date.now(),{cache:"no-store"}).then(r=>r.text()).then(t=>{
   const m=t.match(/const STAND="(\d+)"/);
   if(m&&m[1]!==STAND&&!sessionStorage.getItem("neu"+m[1])){sessionStorage.setItem("neu"+m[1],"1");location.replace(location.pathname+"?v="+m[1]);}
 }).catch(()=>{});
 // D.teile: ein Teil pro Stunde eines aufgeteilten Buchkapitels (z. B. II.2a/b/c); Stundenauswahl nur bei aufgeteilten Kapiteln (D.mehrteilig).
-const D={"untertitel": ["Mit Hilfe zum Einstieg", "Ohne Hilfe, auch mit Minus", "Mehrere Schritte, mehr Nachdenken"], "mehrteilig": false, "teile": [{"name": "", "stunde": "", "kurz": "", "erinnerung": ["Verbotene Zahlen: Setze JEDEN Nenner gleich 0. Bei ( x + 2 ) ist x = −2 verboten.", "Hauptnenner: Eine Klammer wie ( x + 2 ) ist ein Baustein – sie wird nicht zerlegt.", "Summen und Differenzen in Klammern setzen, dann jeden Teil mal den Hauptnenner nehmen und kürzen.", "Ist eine Lösung verboten, fällt sie weg."], "a1": {"t": "Welche Zahlen darf x nicht sein? Löse dann.", "l": ["x ≠ −4;  L = { 4 }", "x ≠ −1;  L = { −3 ; 2 }", "x ≠ 1;  L = { −1 ; 2 }", "x ≠ 0, x ≠ −2;  L = { −8 ; 6 }"], "tipp": "Jeden Nenner gleich 0 setzen. Bei d) ist der Hauptnenner x · ( x + 2 ).", "sub": ["{x²/x + 4} = {16/x + 4}", "{6/x + 1} = x", "{2/x − 1} = x", "{24/x} − {24/x + 2} = 1"]}, "stufen": {"1": {"name": "Mit Hilfe", "aufg": [{"t": "Löse. Schau nach dem Kürzen, welche Steine da sind. Beispiel: {3/x + 2} = x → 3 = x · ( x + 2 ) → x² + 2x − 3 = 0 → L = { −3 ; 1 }.", "l": ["L = { −4 ; 3 }", "L = { −2 ; 4 }", "L = { 0 ; 4 }"], "tipp": "Nimm mal den Nenner und setze die rechte Seite in Klammern. Bei c) fehlt nach dem Kürzen ein Stein.", "sub": ["{12/x + 1} = x", "{8/x − 2} = x", "{x²/x + 1} = {4x/x + 1}"]}, {"t": "Tom rechnet:  {x²/x − 2} = {4/x − 2}  →  x² = 4  →  L = { −2 ; 2 }.", "l": ["x = 2", "L = { −2 }"], "tipp": "Setze den Nenner gleich 0.", "sub": ["Welche Zahl ist verboten?", "Wie heißt die richtige Lösungsmenge?"], "tag": "v"}, {"t": "Wiederholung II.4a: Löse  {15/x} = x + 2.", "l": ["L = { −5 ; 3 }"], "tipp": "Mal x, Klammer um x + 2.", "tag": "w"}]}, "2": {"name": "Sicher rechnen", "aufg": [{"t": "Löse. Achte auf die verbotenen Zahlen. Beispiel: {6/x} − {6/x + 1} = 1 → 6 · ( x + 1 ) − 6x = x · ( x + 1 ) → 6 = x² + x → L = { −3 ; 2 }.", "l": ["L = { −6 ; 5 }", "L = { −1,2 ; 4 }", "L = { }"], "tipp": "Hauptnenner x · ( x + 1 ) bzw. x · ( x + 2 ). Bei c) ist D negativ.", "sub": ["{30/x} − {30/x + 1} = 1", "{12/x} + {12/x + 2} = 5", "{x/x − 1} = {2/x}"]}, {"t": "Tom rechnet:  {30/x} − {30/x + 1} = 1  | · x · ( x + 1 )  →  30x + 1 − 30x = x · ( x + 1 ).", "l": ["die Klammer: 30 · ( x + 1 )", "30 = x² + x → L = { −6 ; 5 }"], "tipp": "Wurde die 30 mal die ganze Klammer ( x + 1 ) genommen?", "sub": ["Was fehlt?", "Rechne richtig."], "tag": "v"}, {"t": "Wiederholung II.3a: Löse mit der abc-Formel  2x² + x − 6 = 0.", "l": ["L = { −2 ; 1,5 }"], "tipp": "D = 1 + 48 = 49.", "tag": "w"}]}, "3": {"name": "Knifflig", "aufg": [{"t": "Löse. Bestimme zuerst alle verbotenen Zahlen.", "l": ["x ≠ 0, x ≠ 2;  L = { −1 ; 4 }", "x ≠ 0, x ≠ 1;  L = { 0,5 ; 2 }", "x ≠ −2;  L = { 2 }"], "tipp": "Bei c): x² = 4 – eine Lösung ist verboten.", "sub": ["{x + 2/x} = {3/x − 2}", "{x/x − 1} + {2/x} = 3", "{x²/x + 2} = {4/x + 2}"]}, {"t": "Warum kann eine Bruchgleichung weniger Lösungen haben als die quadratische Gleichung, die beim Rechnen entsteht?", "l": ["Sie verschwinden.", "Sie ist verboten und fällt weg."], "tipp": "Denk an Toms Aufgabe auf ★.", "sub": ["Was passiert mit den Nennern beim Malnehmen?", "Was ist mit einer Lösung, die einen Nenner 0 macht?"], "tag": "v"}, {"t": "Wiederholung II.2a: Löse  3x² = 12x.", "l": ["L = { 0 ; 4 }"], "tipp": "Alles auf eine Seite, 3x ausklammern.", "tag": "w"}]}}}]};
+const D={"untertitel": ["Mit Hilfe zum Einstieg", "Ohne Hilfe, auch mit Minus", "Mehrere Schritte, mehr Nachdenken"], "mehrteilig": false, "teile": [{"name": "", "stunde": "", "kurz": "", "erinnerung": ["Verbotene Zahlen: Setze JEDEN Nenner gleich 0. Bei ( x + 2 ) ist x = −2 verboten.", "Hauptnenner: Eine Klammer wie ( x + 2 ) ist ein Baustein – sie wird nicht zerlegt.", "Summen und Differenzen in Klammern setzen, dann jeden Teil mal den Hauptnenner nehmen und kürzen.", "Ist eine Lösung verboten, fällt sie weg."], "a1": {"t": "Welche Zahlen darf x nicht sein? Löse dann.", "l": ["x ≠ −4;  L = { 4 }", "x ≠ −1;  L = { −3 ; 2 }", "x ≠ 1;  L = { −1 ; 2 }", "x ≠ 0, x ≠ −2;  L = { −8 ; 6 }"], "tipp": "Jeden Nenner gleich 0 setzen. Bei d) ist der Hauptnenner x · ( x + 2 ).", "sub": ["{x²/x + 4} = {16/x + 4}", "{6/x + 1} = x", "{2/x − 1} = x", "{24/x} − {24/x + 2} = 1"], "weg": ["a) x ≠ −4.  mal ( x + 4 ): x² = 16 → x = 4 oder x = −4; −4 ist verboten → L = { 4 }", "b) x ≠ −1.  6 = x · ( x + 1 ) → x² + x − 6 = 0 → x = ( −1 ± 5 ) : 2 → x = 2 oder x = −3", "c) x ≠ 1.  2 = x · ( x − 1 ) → x² − x − 2 = 0 → x = ( 1 ± 3 ) : 2 → x = 2 oder x = −1", "d) x ≠ 0, x ≠ −2.  24 · ( x + 2 ) − 24x = x · ( x + 2 ) → 48 = x² + 2x → x² + 2x − 48 = 0 → x = ( −2 ± 14 ) : 2 → x = 6 oder x = −8"], "anim": [["3/[o:( x − 2 )] = x", "Im Nenner steht eine Summe."], ["x − 2 = 0  →  x ≠ 2", "Verbotene Zahl: Nenner gleich 0 setzen."], ["3 = x · ( x − 2 )", "Mal den Nenner."], ["x² − 2x − 3 = 0  →  x = 3 oder x = −1", ""], ["[l:Keine Lösung ist verboten:  L = { −1 ; 3 }]", "Vergleichen!"]]}, "stufen": {"1": {"name": "Mit Hilfe", "aufg": [{"t": "Löse. Schau nach dem Kürzen, welche Steine da sind. Beispiel: {3/x + 2} = x → 3 = x · ( x + 2 ) → x² + 2x − 3 = 0 → L = { −3 ; 1 }.", "l": ["L = { −4 ; 3 }", "L = { −2 ; 4 }", "L = { 0 ; 4 }"], "tipp": "Nimm mal den Nenner und setze die rechte Seite in Klammern. Bei c) fehlt nach dem Kürzen ein Stein.", "sub": ["{12/x + 1} = x", "{8/x − 2} = x", "{x²/x + 1} = {4x/x + 1}"], "weg": ["a) x ≠ −1.  12 = x · ( x + 1 ) → x² + x − 12 = 0 → x = 3 oder x = −4", "b) x ≠ 2.  8 = x · ( x − 2 ) → x² − 2x − 8 = 0 → x = 4 oder x = −2", "c) x ≠ −1.  x² = 4x → x² − 4x = 0 → x · ( x − 4 ) = 0 → x = 0 oder x = 4"], "anim": [["10/[o:( x + 3 )] = x", ""], ["x ≠ −3", "Nenner gleich 0 setzen."], ["10 = x · ( x + 3 )  →  x² + 3x − 10 = 0", ""], ["x = 2   oder   x = −5", ""], ["[l:L = { −5 ; 2 }]", "Keine verboten."]]}, {"t": "Tom rechnet:  {x²/x − 2} = {4/x − 2}  →  x² = 4  →  L = { −2 ; 2 }.", "l": ["x = 2", "L = { −2 }"], "tipp": "Setze den Nenner gleich 0.", "sub": ["Welche Zahl ist verboten?", "Wie heißt die richtige Lösungsmenge?"], "tag": "v", "weg": ["a) Nenner x − 2 = 0 bei x = 2 → x = 2 ist verboten", "b) x² = 4 → x = 2 oder x = −2; 2 fällt weg → L = { −2 }"]}, {"t": "Wiederholung II.4a: Löse  {15/x} = x + 2.", "l": ["L = { −5 ; 3 }"], "tipp": "Mal x, Klammer um x + 2.", "tag": "w", "weg": ["x ≠ 0.  15 = x · ( x + 2 ) → x² + 2x − 15 = 0", "x = ( −2 ± 8 ) : 2 → x = 3 oder x = −5"]}]}, "2": {"name": "Sicher rechnen", "aufg": [{"t": "Löse. Achte auf die verbotenen Zahlen. Beispiel: {6/x} − {6/x + 1} = 1 → 6 · ( x + 1 ) − 6x = x · ( x + 1 ) → 6 = x² + x → L = { −3 ; 2 }.", "l": ["L = { −6 ; 5 }", "L = { −1,2 ; 4 }", "L = { }"], "tipp": "Hauptnenner x · ( x + 1 ) bzw. x · ( x + 2 ). Bei c) ist D negativ.", "sub": ["{30/x} − {30/x + 1} = 1", "{12/x} + {12/x + 2} = 5", "{x/x − 1} = {2/x}"], "weg": ["a) x ≠ 0, −1.  30 · ( x + 1 ) − 30x = x · ( x + 1 ) → 30 = x² + x → x² + x − 30 = 0 → x = ( −1 ± 11 ) : 2 → x = 5 oder x = −6", "b) x ≠ 0, −2.  12 · ( x + 2 ) + 12x = 5x · ( x + 2 ) → 24x + 24 = 5x² + 10x → 5x² − 14x − 24 = 0 → x = ( 14 ± 26 ) : 10 → x = 4 oder x = −1,2", "c) x ≠ 0, 1.  x · x = 2 · ( x − 1 ) → x² − 2x + 2 = 0 → D = 4 − 8 = −4 → L = { }"]}, {"t": "Tom rechnet:  {30/x} − {30/x + 1} = 1  | · x · ( x + 1 )  →  30x + 1 − 30x = x · ( x + 1 ).", "l": ["die Klammer: 30 · ( x + 1 )", "30 = x² + x → L = { −6 ; 5 }"], "tipp": "Wurde die 30 mal die ganze Klammer ( x + 1 ) genommen?", "sub": ["Was fehlt?", "Rechne richtig."], "tag": "v", "weg": ["a) Die 30 muss mal die ganze Klammer: 30 · ( x + 1 ) = 30x + 30", "b) 30x + 30 − 30x = x² + x → x² + x − 30 = 0 → x = 5 oder x = −6"]}, {"t": "Wiederholung II.3a: Löse mit der abc-Formel  2x² + x − 6 = 0.", "l": ["L = { −2 ; 1,5 }"], "tipp": "D = 1 + 48 = 49.", "tag": "w", "weg": ["a = 2, b = 1, c = −6:  x = ( −1 ± √( 1 + 48 ) ) : 4 = ( −1 ± 7 ) : 4", "x = 1,5 oder x = −2"]}]}, "3": {"name": "Knifflig", "aufg": [{"t": "Löse. Bestimme zuerst alle verbotenen Zahlen.", "l": ["x ≠ 0, x ≠ 2;  L = { −1 ; 4 }", "x ≠ 0, x ≠ 1;  L = { 0,5 ; 2 }", "x ≠ −2;  L = { 2 }"], "tipp": "Bei c): x² = 4 – eine Lösung ist verboten.", "sub": ["{x + 2/x} = {3/x − 2}", "{x/x − 1} + {2/x} = 3", "{x²/x + 2} = {4/x + 2}"], "weg": ["a) x ≠ 0, 2.  ( x + 2 ) · ( x − 2 ) = 3x → x² − 4 = 3x → x² − 3x − 4 = 0 → x = 4 oder x = −1", "b) x ≠ 0, 1.  Hauptnenner x · ( x − 1 ): x² + 2 · ( x − 1 ) = 3x · ( x − 1 ) → x² + 2x − 2 = 3x² − 3x → 2x² − 5x + 2 = 0 → x = ( 5 ± 3 ) : 4 → x = 2 oder x = 0,5", "c) x ≠ −2.  x² = 4 → x = 2 oder x = −2; −2 ist verboten → L = { 2 }"]}, {"t": "Warum kann eine Bruchgleichung weniger Lösungen haben als die quadratische Gleichung, die beim Rechnen entsteht?", "l": ["Sie verschwinden.", "Sie ist verboten und fällt weg."], "tipp": "Denk an Toms Aufgabe auf ★.", "sub": ["Was passiert mit den Nennern beim Malnehmen?", "Was ist mit einer Lösung, die einen Nenner 0 macht?"], "tag": "v", "weg": ["a) Beim Malnehmen mit dem Hauptnenner verschwinden die Nenner – und damit die Warnung „nicht 0“.", "b) Macht eine Lösung einen Nenner 0, ist sie verboten und fällt weg. Deshalb zuerst die verbotenen Zahlen aufschreiben."]}, {"t": "Wiederholung II.2a: Löse  3x² = 12x.", "l": ["L = { 0 ; 4 }"], "tipp": "Alles auf eine Seite, 3x ausklammern.", "tag": "w", "weg": ["3x² − 12x = 0 → 3x · ( x − 4 ) = 0", "x = 0 oder x = 4"]}]}}}]};
 const esc=s=>s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/\{([^{}\/]+)\/([^{}]+)\}/g,'<span class="fr"><span>$1</span><span>$2</span></span>').replace(/\[([+−])\]/g,'<span class="rot">$1</span>');
 const el=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e;};
 const tagHtml=t=>t==="v"?'<span class="tag v">💡 Verständnis</span>':t==="w"?'<span class="tag w">↩ Wiederholung</span>':"";
+// Farbmarkup [r:…] [g:…] [b:…] [o:…] [l:…] (nach esc, damit Brüche weiter funktionieren)
+const farbe=s=>s.replace(/\[([rgbol]):([^\]]+)\]/g,'<span class="c$1">$2</span>');
+function animTipp(zeilen){
+  const d=el("details","anim",'<summary>▶ Tipp: Beispiel mit anderen Zahlen</summary>');
+  const box=el("div","abox");d.appendChild(box);
+  const rows=zeilen.map(([z,h])=>{const r=el("div","az",`<div class="r">${farbe(esc(z))}</div><div class="h">${esc(h)}</div>`);box.appendChild(r);return r;});
+  const kn=el("div","kn",'<button class="p">⏸ Pause</button><button class="n">↻ Nochmal</button>');box.appendChild(kn);
+  const pb=kn.querySelector(".p");let n=0,timer=null,steht=false;
+  const zeig=()=>rows.forEach((r,i)=>{r.classList.toggle("da",i<n);r.classList.toggle("neu",i===n-1);});
+  const dauer=()=>1800+((zeilen[n-1]||["",""])[0].length+(zeilen[n-1]||["",""])[1].length)*55;   // Lesezeit nach Textlänge
+  const weiter=()=>{if(steht)return;n++;zeig();if(n<rows.length)timer=setTimeout(weiter,dauer());else pb.disabled=true;};
+  const start=()=>{clearTimeout(timer);steht=false;pb.disabled=false;pb.textContent="⏸ Pause";n=0;zeig();timer=setTimeout(weiter,400);};
+  pb.onclick=()=>{steht=!steht;pb.textContent=steht?"▶ Weiter":"⏸ Pause";clearTimeout(timer);if(!steht)weiter();};
+  kn.querySelector(".n").onclick=start;
+  d.addEventListener("toggle",()=>{if(d.open)start();else clearTimeout(timer);});
+  return d;
+}
 function aufgabe(nr,a){
   let h=`<div class="kopf">Aufgabe ${nr}${tagHtml(a.tag)}</div><div class="txt">${esc(a.tag==="w"?a.t.replace(/^Wiederholung: /,""):a.t)}</div>`;
   if(a.sub)h+="<ol>"+a.sub.map((s,i)=>`<li><b class="tb">${"abcdefgh"[i]})</b>${esc(s)}</li>`).join("")+"</ol>";
   if(a.tipp)h+=`<details class="tipp"><summary>💡 Tipp</summary><div>${esc(a.tipp)}</div></details>`;
-  return el("div","aufg",h);
+  const e=el("div","aufg",h);
+  if(a.anim)e.appendChild(animTipp(a.anim));
+  return e;
 }
 // Lösungen (15.10.2026, Malte): nach „Lösungen anzeigen“ erst die Aufgabe wählen – nie alle Lösungen auf einmal. Nur richtige Lösungen.
 function loesung(liste){
@@ -101,9 +138,11 @@ function loesung(liste){
   const f=el("div","frag",'<p>Hast du die Aufgabe wirklich im Heft gerechnet? Zu welcher Aufgabe möchtest du die Lösung sehen?</p>');f.hidden=true;
   const kn=el("div","lwahl"),w=el("div","loes");w.hidden=true;f.appendChild(kn);
   const zeile=([nr,a])=>{const l=a.sub?a.l.map((x,i)=>`${"abcdefgh"[i]}) ${esc(x)}`).join("&nbsp;&nbsp;&nbsp; "):a.l.map(esc).join("<br>");
-    return `<div class="zeile"><b>Aufgabe ${nr}:</b> ${l}${a.idee?`<span class="warum">Warum: ${esc(a.idee)}</span>`:""}</div>`;};
+    const weg=a.weg?`<br><button class="wegbtn">Lösungsweg anzeigen</button><div class="weg" hidden>${a.weg.map(z=>"<div>"+esc(z)+"</div>").join("")}</div>`:"";
+    return `<div class="zeile"><b>Aufgabe ${nr}:</b> ${l}${a.idee?`<span class="warum">Warum: ${esc(a.idee)}</span>`:""}${weg}</div>`;};
   liste.forEach((e,i)=>{const k=el("button","",`Aufgabe ${esc(String(e[0]))}`);k.setAttribute("aria-pressed","false");
-    k.onclick=()=>{kn.querySelectorAll("button").forEach((x,j)=>x.setAttribute("aria-pressed",j===i));w.innerHTML=zeile(e);w.hidden=false;};kn.appendChild(k);});
+    k.onclick=()=>{kn.querySelectorAll("button").forEach((x,j)=>x.setAttribute("aria-pressed",j===i));w.innerHTML=zeile(e);w.hidden=false;
+      const wb=w.querySelector(".wegbtn");if(wb)wb.onclick=()=>{const g=w.querySelector(".weg");g.hidden=!g.hidden;wb.textContent=g.hidden?"Lösungsweg anzeigen":"Lösungsweg ausblenden";};};kn.appendChild(k);});
   b.onclick=()=>{const offen=!f.hidden;f.hidden=offen;w.hidden=true;kn.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed","false"));
     b.textContent=offen?"Lösungen anzeigen":"Lösungen ausblenden";};
   box.append(b,f,w);return box;
