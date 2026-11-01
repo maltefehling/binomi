@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<title>Tipps: Bruchgleichungen aus Klasse 8</title>
+<!-- Kapitel II Quadratische Gleichungen: gestufte Tipps mit Animation zum offenen Einstieg (lila QR im Skript). Gebaut mit tipp_einstieg_bau.py. -->
+<style>
+  :root{--tipp:#6d4a9e;--tippH:#f1eaf8;--tippL:#b79bd6;--ink:#1b2a3a;--muted:#5b6b7c;--bg:#f7f4fb;--card:#fff;--line:#d8cce8}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif}
+  button{font:inherit;touch-action:manipulation}
+  header{padding:12px 16px;background:var(--tipp);color:#fff}
+  header h1{font-size:20px;margin:0}
+  main{padding:12px 16px 24px;max-width:860px;margin:0 auto}
+  .frage{font-size:19px;font-weight:600;margin:6px 0 4px}
+  .hinw{color:var(--muted);font-size:16px;margin:0 0 14px}
+  .tipp{background:var(--card);border:1px solid var(--line);border-radius:14px;margin:0 0 12px;overflow:hidden}
+  .tipp>button{width:100%;min-height:56px;text-align:left;padding:10px 16px;border:0;background:#fff;color:var(--tipp);font-size:19px;font-weight:700;display:flex;justify-content:space-between;align-items:center}
+  .tipp>button:disabled{color:#b9a9cf}
+  .tipp.offen>button{background:var(--tippH)}
+  .inhalt{display:none;padding:10px 16px 14px}
+  .tipp.offen .inhalt{display:block}
+  .bild{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-start}
+  svg{width:100%;max-width:440px;height:auto;flex:1 1 300px}
+  svg text{font-family:inherit;font-variant-numeric:tabular-nums}
+  [data-k]{opacity:0;transition:opacity .7s}
+  [data-k].da{opacity:1}
+  .weg{opacity:0!important}
+  .wachs{transform-box:fill-box;transform-origin:left bottom;transform:scale(.15);transition:opacity .5s,transform 1.1s ease-out}
+  .wachs.da{transform:scale(1)}
+  .lauf{stroke-dasharray:620;stroke-dashoffset:620;transition:opacity .2s,stroke-dashoffset 2.4s linear}
+  .lauf.da{stroke-dashoffset:0}
+  .puls.da{animation:puls 1.4s ease-in-out 2}
+  @keyframes puls{50%{fill-opacity:.55}}
+  .saetze{flex:1 1 260px;margin:0;padding-left:22px;font-size:19px;line-height:1.45}
+  .saetze li{opacity:0;transition:opacity .6s;margin-bottom:6px}
+  .saetze li.da{opacity:1}
+  .saetze li.neu{color:var(--tipp);font-weight:600}
+  .knoepfe{display:flex;gap:10px;margin-top:10px}
+  .knoepfe button{min-height:46px;padding:0 16px;border-radius:10px;border:2px solid var(--tipp);background:#fff;color:var(--tipp);font-size:17px;font-weight:700}
+  .du{display:none;margin-top:6px;background:var(--tippH);border:1px solid var(--tippL);border-radius:12px;padding:10px 14px;font-size:19px;line-height:1.45}
+  .du.da{display:block}
+  footer{color:var(--muted);font-size:13px;text-align:center;padding:14px 0}
+</style>
+</head>
+<body>
+<header><h1>Tipps: Bruchgleichungen aus Klasse 8</h1></header>
+<main>
+  <div class="frage">Löse 6/x + 1 = 4 und 10/x + 3 = 5.</div>
+  <p class="hinw">Öffne immer nur den nächsten Tipp – und versuche es danach erst wieder selbst.</p>
+  <div class="tipp"><button>Tipp 1: Verbotene Zahl<span>▼</span></button><div class="inhalt"><div class="bild"><svg viewBox="0 0 420 150" role="img"><text x="60" y="70" font-size="30" fill="#1b2a3a" text-anchor="middle">6</text><line x1="40" y1="82" x2="80" y2="82" stroke="#1b2a3a" stroke-width="2"/><text x="60" y="112" font-size="30" fill="#1b2a3a" text-anchor="middle">x</text><circle cx="60" cy="104" r="20" fill="none" stroke="#b33c3c" stroke-width="3" data-k="1"/><text x="100" y="92" font-size="28" fill="#1b2a3a" text-anchor="start">+ 1 = 4</text><text x="220" y="80" font-size="18" fill="#b33c3c" text-anchor="start" data-k="2">Nenner 0 geht nicht</text><text x="220" y="110" font-size="24" fill="#6d4a9e" text-anchor="start" data-k="2" font-weight="700">x ≠ 0</text></svg><ol class="saetze"><li>Unter dem Bruchstrich steht x.</li><li>Durch 0 kann man nicht teilen. Also darf x nicht 0 sein: x ≠ 0.</li></ol></div><div class="knoepfe"><button class="pause">⏸ Pause</button><button class="nochmal">↻ Nochmal</button></div></div></div>
+  <div class="tipp"><button>Tipp 2: Den Bruch loswerden<span>▼</span></button><div class="inhalt"><div class="bild"><svg viewBox="0 0 420 190" role="img"><text x="40" y="45" font-size="21" fill="#1b2a3a" text-anchor="start" data-k="1" font-weight="700">Hauptnenner: x</text><text x="40" y="85" font-size="21" fill="#1b2a3a" text-anchor="start" data-k="2">6/x · x = 6</text><text x="40" y="125" font-size="21" fill="#b33c3c" text-anchor="start" data-k="3" font-weight="700">1 · x = x   (die 1 nicht vergessen!)</text><text x="40" y="165" font-size="21" fill="#1b2a3a" text-anchor="start" data-k="3">4 · x = 4x</text></svg><ol class="saetze"><li>Der einzige Nenner ist x. Er ist der Hauptnenner.</li><li>Nimm jeden Teil mal x. Beim Bruch kürzt sich x weg: 6/x · x = 6.</li><li>Auch die 1 wird mal x genommen: 1 · x = x. Rechts: 4 · x = 4x.</li></ol></div><div class="knoepfe"><button class="pause">⏸ Pause</button><button class="nochmal">↻ Nochmal</button></div></div></div>
+  <div class="tipp"><button>Tipp 3: Lösen und Probe<span>▼</span></button><div class="inhalt"><div class="bild"><svg viewBox="0 0 420 180" role="img"><text x="40" y="55" font-size="22" fill="#1b2a3a" text-anchor="start" data-k="1" font-weight="700">6 + x = 4x</text><text x="40" y="103" font-size="22" fill="#6d4a9e" text-anchor="start" data-k="1">die x auf eine Seite bringen</text><text x="40" y="151" font-size="22" fill="#1b2a3a" text-anchor="start" data-k="2" font-weight="700">Probe:  6 : x + 1 = 4 ?</text></svg><ol class="saetze"><li>Jetzt steht da 6 + x = 4x. Bringe alle x auf eine Seite und löse.</li><li>Probe: Setze dein x in 6 : x + 1 ein. Kommt 4 heraus?</li></ol></div><div class="knoepfe"><button class="pause">⏸ Pause</button><button class="nochmal">↻ Nochmal</button></div></div></div>
+  <div class="du" id="du"><b>Jetzt du:</b> Rechne a) zu Ende und dann b) genauso.</div>
+</main>
+<footer>Fehling · II.4a Bruchgleichungen mit Summen · Tipps zum Einstieg</footer>
+<script>
+"use strict";
+const T=[...document.querySelectorAll(".tipp")];
+function animation(t){
+  const els=[...t.querySelectorAll("[data-k],[data-w]")],li=[...t.querySelectorAll(".saetze li")],
+        pause=t.querySelector(".pause");
+  let n=0,timer=null,steht=false;
+  const zeig=()=>{els.forEach(e=>{const k=+e.dataset.k||0,w=+e.dataset.w||0;
+      e.classList.toggle("da",k>0&&k<=n);e.classList.toggle("weg",w>0&&w<=n);});
+    li.forEach((l,i)=>{l.classList.toggle("da",i<n);l.classList.toggle("neu",i===n-1);});};
+  // Tempo nach Textlänge: jeder Satz bleibt so lange, wie man zum Lesen braucht
+  const dauer=()=>2200+(li[n-1]?li[n-1].textContent.length*75:0);
+  const weiter=()=>{if(steht)return;n++;zeig();if(n<li.length)timer=setTimeout(weiter,dauer());else pause.disabled=true;};
+  const start=()=>{clearTimeout(timer);steht=false;pause.textContent="⏸ Pause";pause.disabled=false;n=0;zeig();
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{timer=setTimeout(weiter,300);}));};
+  pause.onclick=()=>{steht=!steht;pause.textContent=steht?"▶ Weiter":"⏸ Pause";if(!steht){clearTimeout(timer);weiter();}else clearTimeout(timer);};
+  t.querySelector(".nochmal").onclick=start;
+  return start;
+}
+T.forEach((t,i)=>{const b=t.querySelector(":scope>button"),start=animation(t);b.disabled=i>0;
+  b.onclick=()=>{const neu=!t.classList.contains("offen");t.classList.add("offen");b.querySelector("span").textContent="";
+    if(neu)start();
+    if(T[i+1])T[i+1].querySelector(":scope>button").disabled=false;else document.getElementById("du").classList.add("da");};});
+</script>
+</body>
+</html>
