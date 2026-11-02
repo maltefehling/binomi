@@ -72,10 +72,17 @@
   .weiter{font-size:17px;margin-bottom:8px}
   @media (orientation:portrait){
     .wrap{flex-direction:column;flex-wrap:nowrap}
-    svg{max-width:100%;width:100%;height:auto;max-height:44vh}
+    svg{max-width:100%;width:100%;height:auto;max-height:38vh}
     .side{display:flex;flex-direction:column;width:100%}
+    .tab .z{min-height:26px;padding:2px 6px}
     .frage{order:-2}.weiter{order:-1;align-self:flex-start}
   }
+  .vrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
+  .vrow input{width:5em;height:46px;font-size:22px;font-weight:700;text-align:center;border:2px solid var(--line);border-radius:10px}
+  .frage .btn{font-size:16px;min-height:44px}
+  .weiterbtn{background:var(--hl);border-color:var(--hl);color:#fff}
+  .vfb{margin-top:6px;padding:6px 10px;border-radius:10px;font-size:17px;line-height:1.4}
+  .vfb.ok{background:#e4f4e2;color:#24622a}.vfb.tipp{background:#fff4e0;color:#7a4a08}
   footer{color:var(--muted);font-size:13px;text-align:center;padding:10px 0 18px}
   svg text{font-family:inherit}
 </style>
@@ -146,10 +153,11 @@ async function kuerze(oben,unten,restO,restU,gr=22){
   return [...hl,...s,...r];
 }
 
-/* ---------- Begleiter für die Partner-Tabelle im Skript (Malte 2.11.2026) ----------
-   Rolle A: x/2 + x/3 = 10, Rolle B: x/4 + x/6 = 5 – beide gleich ausführlich. An jeder Tabellenzeile ①–⑤ hält die Animation an:
-   erst die Frage („schreib es in Zeile ① …“), nach ▶ Weiter die Erklärung und die richtige Zeile zum Vergleichen. */
-const ZEILEN=[["①","Ich nehme alles mal"],["②",""],["③","x ="],["④","Probe:"],["⑤","Es geht auch mit:"]];
+/* ---------- Begleiter für die Partner-Tabelle im Skript (Malte 2.11./4.11.2026) ----------
+   Rolle A: x/2 + x/3 = 10, Rolle B: x/4 + x/6 = 5 – beide gleich ausführlich. Tabelle ①–⑦ wie im Skript.
+   ① ist eine VERMUTUNG: Wer eine passende Zahl eingibt, überspringt die Erklärung (kann sie aber ansehen);
+   wer keine Idee hat oder falsch liegt, bekommt die Pralinenschachtel. Ab ② erst selbst rechnen, dann vergleichen. */
+const ZEILEN=[["①","Ich nehme alles mal"],["②","Alles mal:"],["③","Kürzen:"],["④","Zusammenfassen:"],["⑤","x ="],["⑥","Probe:"],["⑦","Es geht auch mit:"]];
 let TAB=null;
 function zeigeTabelle(rolle){
   const t=document.getElementById("tab");TAB=rolle;
@@ -159,7 +167,7 @@ function zeigeTabelle(rolle){
 }
 const zeile=(i,wert)=>{if(!TAB)return;document.querySelectorAll(".tab .z").forEach((z,k)=>z.classList.toggle("akt",k===i));if(wert!=null)document.getElementById("v"+i).innerHTML=wert;};
 // Haltepunkt: Frage zeigen, auf ▶ Weiter warten (ohne Rolle: nur kurz zeigen)
-// eintragen = true: neue Idee wurde gerade erklärt → nur übertragen (Zeile ①); sonst erst selbst rechnen (Zeilen ②–⑤)
+// eintragen = true: gerade erklärt → nur übertragen; sonst erst selbst rechnen
 function halt(i,frage,alive,eintragen=false){
   const f=document.getElementById("frage"),w=document.getElementById("weiter");
   if(!TAB)return Promise.resolve();
@@ -168,98 +176,141 @@ function halt(i,frage,alive,eintragen=false){
   setTimeout(()=>f.scrollIntoView({block:"nearest",behavior:"smooth"}),100);
   return new Promise(r=>{w.onclick=()=>{f.classList.remove("an");w.classList.remove("an");r();};});
 }
+// Zeile ①: Vermutung eingeben → {n: passende Zahl oder null, zeigen: Erklärung ansehen?}
+function vermutung(a,b){
+  const f=document.getElementById("frage"),kl=a*b/ggT(a,b);
+  if(!TAB)return Promise.resolve({n:null,zeigen:true});
+  zeile(0);
+  f.innerHTML=`<b>Zeile ①: Deine Vermutung</b><br>Mit welcher Zahl musst du die <b>ganze</b> Gleichung malnehmen, damit <b>beide</b> Nenner verschwinden? Hast du schon eine Idee?
+    <div class="vrow"><input id="vin" inputmode="numeric" autocomplete="off" aria-label="Deine Vermutung" placeholder="Zahl"><button class="btn" id="vpr" type="button">Prüfen ✓</button></div>
+    <button class="btn" id="vzeig" type="button">Ich habe keine Idee – zeig mir, wie es geht</button><div id="vfb"></div>`;
+  f.classList.add("an");setTimeout(()=>f.scrollIntoView({block:"nearest",behavior:"smooth"}),100);
+  return new Promise(r=>{
+    const fertig=(n,zeigen)=>{f.classList.remove("an");r({n,zeigen});};
+    document.getElementById("vzeig").onclick=()=>fertig(null,true);
+    const pr=()=>{const n=+document.getElementById("vin").value.trim(),fb=document.getElementById("vfb");
+      if(!Number.isInteger(n)||n<=0){fb.innerHTML='<div class="vfb tipp">Tippe eine Zahl ein.</div>';return;}
+      if(n%a===0&&n%b===0){
+        fb.innerHTML=`<div class="vfb ok">✅ Stark! ${n} ist durch ${a} und durch ${b} teilbar.${n===kl&&kl<a*b?" Sogar die kleinste Zahl!":""} Schreib ${n} in Zeile ①.</div>
+          <div class="vrow"><button class="btn weiterbtn" id="vw" type="button">▶ Weiter zu Zeile ②</button><button class="btn" id="vwarum" type="button">Zeig mir trotzdem, warum</button></div>`;
+        document.getElementById("vw").onclick=()=>fertig(n,false);document.getElementById("vwarum").onclick=()=>fertig(n,true);
+      }else{
+        const nicht=[a,b].filter(d=>n%d!==0);
+        fb.innerHTML=`<div class="vfb tipp">Gute Idee! Aber ${n} ist nicht durch ${nicht.join(" und nicht durch ")} teilbar – dann bleibt ein Bruch übrig. Schau dir an, wie man die Zahl findet.</div>
+          <button class="btn weiterbtn" id="vzeig2" type="button">Zeig mir, wie es geht</button>`;
+        document.getElementById("vzeig2").onclick=()=>fertig(null,true);
+      }};
+    document.getElementById("vpr").onclick=pr;document.getElementById("vin").addEventListener("keydown",e=>{if(e.key==="Enter")pr();});
+  });
+}
 
 async function play([a,b,c],rolle=null){
   const my=++run,alive=()=>my===run,say=t=>{if(alive())cap.textContent=t;};
   svg.innerHTML="";calc.innerHTML="";merke.classList.remove("an");document.getElementById("check").classList.remove("an");
   document.getElementById("frage").classList.remove("an");document.getElementById("weiter").classList.remove("an");
   zeigeTabelle(rolle);document.body.classList.toggle("rollenmodus",!!rolle);
-  const N=a*b,x=c*N/(a+b),g=ggT(a,b),k=N/g;
+  const P=a*b,g=ggT(a,b),kl=P/g;
   // Gleichung oben
   const n1=bruch(160,a,"var(--n1)");txt(240,62,"+");const n2=bruch(325,b,"var(--n2)");txt(440,62,"= "+c);
   calc.innerHTML=`${fr("x",a,"b1")} + ${fr("x",b,"b2")} = ${c}`;
   say(`${rolle?`Partner ${rolle}, deine Gleichung. `:""}Die Brüche stören: Hier wird durch ${a} und durch ${b} geteilt.`);
   for(let i=0;i<2;i++){await tween(350,k=>[n1,n2].forEach(e=>e.setAttribute("font-size",30+8*Math.sin(Math.PI*k))));}
-  await wait(1500);if(!alive())return;
+  await wait(1200);if(!alive())return;
 
-  // ① Mit welcher Zahl?
-  // Zeile ①: neue Idee → erst erklären, dann eintragen (Malte 4.11.2026: vorher wussten die Schüler nicht, woher die Zahl kommt)
-  zeile(0);
-  say(`Erinnerung: Ein Bruch verschwindet, wenn die Zahl durch den Nenner teilbar ist. Wir brauchen also eine Zahl, die durch ${a} UND durch ${b} teilbar ist.`);
-  await wait(2500);if(!alive())return;
-  const s=Math.min(58,Math.floor(210/Math.max(a,b))),W=b*s,H=a*s,x0=300-W/2,y0=200+(170-H)/2;
-  say(`Wir ziehen die beiden Nenner heraus: die ${a} und die ${b}.`);
-  const k1=txt(160,86,String(a),{size:30,fill:"var(--n1)"}),k2=txt(325,86,String(b),{size:30,fill:"var(--n2)"});
-  await Promise.all([move(k1,x0-28,y0+H/2),move(k2,300,y0-24)]);if(!alive())return;
-  await wait(800);if(!alive())return;
-  say(`Zusammen bilden sie eine Pralinenschachtel: ${a} Reihen mit je ${b} Pralinen.`);
-  const box=el("rect",{x:x0,y:y0,width:W,height:H,rx:8,fill:"var(--schachtel)",stroke:"var(--schachtelL)","stroke-width":3,opacity:0});
-  await fade([box],1,400);
-  const tint=[...Array(a)].map((_,r)=>[...Array(b)].map((_,kk)=>el("rect",{x:x0+kk*s+2,y:y0+r*s+2,width:s-4,height:s-4,rx:6,fill:"transparent"})));
-  const pr=[];
-  for(let r=0;r<a;r++){for(let kk=0;kk<b;kk++){pr.push(el("circle",{cx:x0+kk*s+s/2,cy:y0+r*s+s/2,r:s*0.32,fill:"var(--praline)",opacity:0}));}
-    await fade(pr.slice(-b),1,250);if(!alive())return;}
-  const zahl=txt(x0+W+52,y0+H/2,String(N),{size:42,fill:"var(--hl)",op:0});
-  await fade([zahl],1,400);
-  calc.innerHTML+=`<br>${a} · ${b} = <span class="h">${N}</span> <small>Pralinen</small>`;
-  await wait(2000);if(!alive())return;
-  say(`Steckt die ${a} in der ${N}? Ja: ${N} Pralinen kann man gerecht in ${a} Teile teilen – jeder Teil hat ${b}.`);
-  const linien1=[...Array(a-1)].map((_,i)=>el("line",{x1:x0-6,y1:y0+(i+1)*s,x2:x0+W+6,y2:y0+(i+1)*s,stroke:"var(--n1)","stroke-width":4,opacity:0}));
-  tint.forEach((row,r)=>row.forEach(t=>t.setAttribute("fill",r%2?"var(--n1bg)":"#eef3fb")));
-  await fade(linien1,1,500);if(!alive())return;
-  await wait(2200);if(!alive())return;
-  await fade(linien1,0,300);tint.flat().forEach(t=>t.setAttribute("fill","transparent"));
-  say(`Und die ${b}? Auch sie steckt in der ${N}: ${b} Teile mit je ${a} Pralinen.`);
-  const linien2=[...Array(b-1)].map((_,i)=>el("line",{x1:x0+(i+1)*s,y1:y0-6,x2:x0+(i+1)*s,y2:y0+H+6,stroke:"var(--n2)","stroke-width":4,opacity:0}));
-  tint.forEach(row=>row.forEach((t,kk)=>t.setAttribute("fill",kk%2?"var(--n2bg)":"#eef7ec")));
-  await fade(linien2,1,500);if(!alive())return;
-  await wait(2200);if(!alive())return;
-  await fade(linien2,0,300);tint.flat().forEach(t=>t.setAttribute("fill","transparent"));
-  say(`In der ${N} stecken beide Nenner: Nenner mal Nenner = ${a} · ${b} = ${N}.`);
+  // ① Vermutung – Erklärung nur, wenn gewünscht oder nötig
+  const v=await vermutung(a,b);if(!alive())return;
+  const N=v.n||P,x=c*a*b/(a+b);   // Lösung hängt nicht davon ab, mit welcher Zahl man malnimmt
+  if(v.zeigen){
+    zeile(0);
+    say(`Erinnerung: Ein Bruch verschwindet, wenn die Zahl durch den Nenner teilbar ist. Wir brauchen also eine Zahl, die durch ${a} UND durch ${b} teilbar ist.`);
+    await wait(2500);if(!alive())return;
+    const s=Math.min(58,Math.floor(210/Math.max(a,b))),W=b*s,H=a*s,x0=300-W/2,y0=200+(170-H)/2;
+    say(`Wir ziehen die beiden Nenner heraus: die ${a} und die ${b}.`);
+    const k1=txt(160,86,String(a),{size:30,fill:"var(--n1)"}),k2=txt(325,86,String(b),{size:30,fill:"var(--n2)"});
+    await Promise.all([move(k1,x0-28,y0+H/2),move(k2,300,y0-24)]);if(!alive())return;
+    await wait(800);if(!alive())return;
+    say(`Zusammen bilden sie eine Pralinenschachtel: ${a} Reihen mit je ${b} Pralinen.`);
+    const box=el("rect",{x:x0,y:y0,width:W,height:H,rx:8,fill:"var(--schachtel)",stroke:"var(--schachtelL)","stroke-width":3,opacity:0});
+    await fade([box],1,400);
+    const tint=[...Array(a)].map((_,r)=>[...Array(b)].map((_,kk)=>el("rect",{x:x0+kk*s+2,y:y0+r*s+2,width:s-4,height:s-4,rx:6,fill:"transparent"})));
+    const pr=[];
+    for(let r=0;r<a;r++){for(let kk=0;kk<b;kk++){pr.push(el("circle",{cx:x0+kk*s+s/2,cy:y0+r*s+s/2,r:s*0.32,fill:"var(--praline)",opacity:0}));}
+      await fade(pr.slice(-b),1,250);if(!alive())return;}
+    const zahl=txt(x0+W+52,y0+H/2,String(P),{size:42,fill:"var(--hl)",op:0});
+    await fade([zahl],1,400);
+    await wait(1500);if(!alive())return;
+    say(`Steckt die ${a} in der ${P}? Ja: ${P} Pralinen kann man gerecht in ${a} Teile teilen – jeder Teil hat ${b}.`);
+    const linien1=[...Array(a-1)].map((_,i)=>el("line",{x1:x0-6,y1:y0+(i+1)*s,x2:x0+W+6,y2:y0+(i+1)*s,stroke:"var(--n1)","stroke-width":4,opacity:0}));
+    tint.forEach((row,r)=>row.forEach(t=>t.setAttribute("fill",r%2?"var(--n1bg)":"#eef3fb")));
+    await fade(linien1,1,500);if(!alive())return;
+    await wait(2200);if(!alive())return;
+    await fade(linien1,0,300);tint.flat().forEach(t=>t.setAttribute("fill","transparent"));
+    say(`Und die ${b}? Auch sie steckt in der ${P}: ${b} Teile mit je ${a} Pralinen.`);
+    const linien2=[...Array(b-1)].map((_,i)=>el("line",{x1:x0+(i+1)*s,y1:y0-6,x2:x0+(i+1)*s,y2:y0+H+6,stroke:"var(--n2)","stroke-width":4,opacity:0}));
+    tint.forEach(row=>row.forEach((t,kk)=>t.setAttribute("fill",kk%2?"var(--n2bg)":"#eef7ec")));
+    await fade(linien2,1,500);if(!alive())return;
+    await wait(2200);if(!alive())return;
+    await fade(linien2,0,300);tint.flat().forEach(t=>t.setAttribute("fill","transparent"));
+    say(`In der ${P} stecken beide Nenner: Nenner mal Nenner = ${a} · ${b} = ${P}.${v.n&&v.n!==P?` Deine ${v.n} klappt auch – wir rechnen mit deiner Zahl weiter.`:""}`);
+    zeile(0,`${N}`);
+    await wait(1500);if(!alive())return;
+    if(!v.n){await halt(0,`Schreib jetzt in <b>Zeile ①</b>: Ich nehme alles mal <b>${N}</b>.`,alive,true);if(!alive())return;}
+    await fade([box,zahl,k1,k2,...pr],0,500);
+  }
   zeile(0,`${N}`);
-  await wait(1500);if(!alive())return;
-  await halt(0,`Schreib jetzt in <b>Zeile ①</b>: Ich nehme alles mal <b>${N}</b>.`,alive,true);if(!alive())return;
 
-  // ② mal N, in den Zähler, kürzen
-  await halt(1,`Zeile ②: Nimm jeden Teil mal ${N} und kürze. Was steht dann da?`,alive);if(!alive())return;
-  say(`Wie in der Erinnerung kommt die ${N} in den Zähler.`);
+  // ② alles mal N – N kommt in den Zähler
+  await halt(1,`Zeile ②: Nimm <b>jeden Teil</b> der Gleichung mal ${N} – auch die Zahl rechts. Wie in der Erinnerung kommt die ${N} in den Zähler.`,alive);if(!alive())return;
+  say(`Die ${N} kommt in jeden Zähler – und rechts wird ${c} mal ${N} genommen.`);
   const rechts=txt(512,62,"· "+N,{size:24,fill:"var(--hl)",op:0});
   const [e1,e2]=await Promise.all([inZaehler(n1,N),inZaehler(n2,N)]);await fade([rechts],1,500);if(!alive())return;
   calc.innerHTML=`${fr('<span class="h">'+N+'</span> · x',a,"b1")} + ${fr('<span class="h">'+N+'</span> · x',b,"b2")} = <span class="h">${N}</span> · ${c}`;
+  zeile(1,`${fr(N+" · x",a)} + ${fr(N+" · x",b)} = ${N} · ${c}`);
   await wait(2000);if(!alive())return;
-  say(`Jetzt kürzen: ${N} oben und ${a} unten – ${N} : ${a} = ${b}, ${a} : ${a} = 1. Genauso ${N} und ${b}. Die Brüche verschwinden.`);
+
+  // ③ kürzen
+  await halt(2,`Zeile ③: Kürze. Was bleibt übrig?`,alive);if(!alive())return;
+  say(`Kürzen: ${N} oben und ${a} unten – ${N} : ${a} = ${N/a}, ${a} : ${a} = 1. Genauso ${N} und ${b}. Die Brüche verschwinden.`);
   await kuerze(e1,n1,N/a,1,20);await kuerze(e2,n2,N/b,1,20);if(!alive())return;
   const erg=[txt(160,150,(N/a)+"x",{size:28,fill:"var(--hl)",op:0}),txt(325,150,(N/b)+"x",{size:28,fill:"var(--hl)",op:0}),txt(440,150,"= "+N*c,{size:28,fill:"var(--hl)",op:0}),txt(240,150,"+",{size:28,op:0})];
   await fade(erg,1,600);
   calc.innerHTML+=`<br>${N/a}x + ${N/b}x = ${N*c}`;
-  zeile(1,`${N/a}x + ${N/b}x = ${N*c}`);
-  say(`Vergleiche Zeile ②: ${N/a}x + ${N/b}x = ${N*c}`);
-  await wait(2200);if(!alive())return;
-
-  // ③ lösen
-  await halt(2,`Zeile ③: Löse die Gleichung ${N/a}x + ${N/b}x = ${N*c}.`,alive);if(!alive())return;
-  say(`Jetzt ist es eine ganz normale Gleichung: ${N/a+N/b}x = ${N*c}, also x = ${x}.`);
-  calc.innerHTML+=`<br>${N/a+N/b}x = ${N*c} &nbsp;→&nbsp; <span class="h">x = ${x}</span>`;
-  zeile(2,`${x}`);
+  zeile(2,`${N/a}x + ${N/b}x = ${N*c}`);
   await wait(2000);if(!alive())return;
 
-  // ④ Probe
-  await halt(3,`Zeile ④: Mach die Probe – setze x = ${x} in die Gleichung ein.`,alive);if(!alive())return;
+  // ④ zusammenfassen + teilen
+  const sum=N/a+N/b;
+  await halt(3,`Zeile ④: Fasse ${N/a}x und ${N/b}x zusammen. Durch welche Zahl musst du dann teilen?`,alive);if(!alive())return;
+  say(`${N/a}x + ${N/b}x = ${sum}x. Damit x allein steht, teilen wir beide Seiten durch ${sum}.`);
+  calc.innerHTML+=`<br>${sum}x = ${N*c} &nbsp;<small>| : ${sum}</small>`;
+  zeile(3,`${sum}x = ${N*c} &nbsp;| : ${sum}`);
+  await wait(2000);if(!alive())return;
+
+  // ⑤ x
+  await halt(4,`Zeile ⑤: Rechne aus: x = ?`,alive);if(!alive())return;
+  say(`${N*c} : ${sum} = ${x}. Also x = ${x}.`);
+  calc.innerHTML+=`<br><span class="h">x = ${x}</span>`;
+  zeile(4,`${x}`);
+  await wait(1800);if(!alive())return;
+
+  // ⑥ Probe
+  await halt(5,`Zeile ⑥: Mach die Probe – setze x = ${x} in die Gleichung ein.`,alive);if(!alive())return;
   say(`Probe: ${x} : ${a} = ${x/a} und ${x} : ${b} = ${x/b}, zusammen ${x/a+x/b} ✓`);
-  zeile(3,`${fr(x,a)} + ${fr(x,b)} = ${x/a} + ${x/b} = ${c} ✓`);
+  zeile(5,`${fr(x,a)} + ${fr(x,b)} = ${x/a} + ${x/b} = ${c} ✓`);
   await wait(2000);if(!alive())return;
 
-  // ⑤ andere Zahlen
-  await halt(4,`Zeile ⑤: Welche Zahlen klappen <b>auch</b>? Sie müssen durch ${a} und durch ${b} teilbar sein.`,alive);if(!alive())return;
-  if(g>1){   // Partner B: 12 ist kleiner als 24 → Brücke zu „Geht es auch kleiner?“
-    say(`Auch ${k} klappt – denn ${k} kann man gerecht in ${a} Teile und in ${b} Teile teilen. ${k} ist sogar kleiner als ${N}!`);
-    calc.innerHTML+=`<br><small>Auch ${k}: ${k} : ${a} = ${k/a}, ${k} : ${b} = ${k/b} – kleiner als ${N}!</small>`;
-    zeile(4,`${k}, ${2*N} <small>(${k} ist kleiner als ${N}!)</small>`);
+  // ⑦ andere Zahlen
+  await halt(6,`Zeile ⑦: Welche Zahlen klappen <b>auch</b>? Sie müssen durch ${a} und durch ${b} teilbar sein.`,alive);if(!alive())return;
+  const andere=[kl,2*kl,3*kl,4*kl].filter(m=>m!==N).slice(0,2);
+  zeile(6,andere.join(", ")+(N>kl?` <small>(${kl} ist kleiner als ${N}!)</small>`:""));
+  if(N>kl){
+    say(`Auch ${kl} klappt – denn ${kl} kann man gerecht in ${a} Teile und in ${b} Teile teilen. ${kl} ist sogar kleiner als ${N}!`);
     await wait(2500);if(!alive())return;
     say(`Wie man die kleinste Zahl findet, zeigt die nächste Animation „Geht es auch kleiner?“.`);
+  }else if(kl<P){
+    say(`${andere.join(", ")} klappen auch – aber du hast schon die kleinste Zahl genommen: ${kl}. Auch ${a} · ${b} = ${P} geht, ist aber größer.`);
   }else{
-    say(`Jede Zahl, die durch ${a} und durch ${b} teilbar ist, klappt: ${2*N}, ${3*N}, … Die kleinste ist ${N}.`);
-    zeile(4,`${2*N}, ${3*N}`);
+    say(`Jede Zahl, die durch ${a} und durch ${b} teilbar ist, klappt: ${andere.join(", ")}, … Die kleinste ist ${kl}.`);
   }
   await wait(1500);if(!alive())return;
   zeile(-1);

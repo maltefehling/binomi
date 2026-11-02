@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Warum darf der Nenner nicht 0 sein?</title>
+<!-- I.6 Bruchgleichungen (4.11.2026, Wunsch Malte): Schieberegler setzt Zahlen für x in 3/x + 1/(2x) = 7/4 ein.
+     Nenner und Brüche werden live ausgerechnet; ist ein Nenner 0, leuchtet es rot („durch 0 kann man nicht teilen“).
+     Bei x = 2 stimmt die Gleichung. Danach Merke Definitionsmenge D = ℚ \ {0} und ein kleiner Check. Nur Nenner x und 2x. -->
+<style>
+  :root{--x:#7b4fa0;--xbg:#efe6f7;--rot:#b03a2e;--rotbg:#fde8e6;--ok:#24622a;--okbg:#e4f4e2;--hl:#c0700f;
+    --ink:#1b2a3a;--muted:#5b6b7c;--acc:#1f4e79;--bg:#f4f7fb;--card:#fff;--line:#c9d6e5}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;-webkit-user-select:none;user-select:none}
+  button{font:inherit;touch-action:manipulation}
+  header{padding:8px 16px;background:var(--acc);color:#fff}
+  header h1{font-size:20px;margin:0}
+  main{padding:8px 12px 12px;max-width:1100px;margin:0 auto}
+  .wrap{display:flex;gap:14px;align-items:flex-start}
+  .links{flex:0 0 auto;width:min(58vw,620px)}
+  svg{width:100%;height:auto;background:var(--card);border:1px solid var(--line);border-radius:12px;display:block}
+  .regler{display:flex;align-items:center;gap:12px;margin:10px 4px;font-size:20px;font-weight:700}
+  .regler input{flex:1;height:44px;accent-color:var(--x)}
+  .regler .wert{min-width:4.5em;text-align:center;color:var(--x)}
+  .regler span{white-space:nowrap}
+  .side{flex:1 1 auto;min-width:0}
+  .cap{font-size:19px;font-weight:600;color:var(--acc);line-height:1.45;margin:0 0 10px}
+  .liste{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px 12px;font-size:17px;margin-bottom:10px}
+  .liste div{padding:3px 0}.liste .done{color:var(--ok);font-weight:700}
+  .merke{display:none;background:#e3eef9;border:1px solid #b9d0ea;border-radius:12px;padding:10px 14px;font-size:18px;line-height:1.5}
+  .merke.an{display:block}
+  .check{display:none;margin-top:14px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 16px}
+  .check.an{display:block}
+  .check h2{margin:.1rem 0 .4rem;font-size:20px;color:var(--acc)}
+  .check .cq{font-size:20px;line-height:1.5;margin-bottom:8px}
+  .opts{display:flex;gap:10px;flex-wrap:wrap}
+  .opt{border:2px solid var(--line);background:#fff;border-radius:10px;padding:8px 16px;font-size:20px;font-weight:700;min-height:48px}
+  .opt.sel{border-color:var(--acc);background:#e3eef9}
+  .btn{border:1px solid var(--acc);background:#fff;color:var(--acc);border-radius:10px;padding:8px 14px;font-size:16px;font-weight:700;min-height:44px}
+  .fb{margin-top:8px;padding:8px 12px;border-radius:10px;font-size:18px;line-height:1.45}
+  .fb.ok{background:var(--okbg);color:var(--ok)}.fb.tipp{background:#fff4e0;color:#7a4a08}.fb.bad{background:var(--rotbg);color:#9b2c1f}
+  .fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1.1;margin:0 .12em}
+  .fr span:last-child{border-top:2px solid currentColor;padding:0 .15em}
+  footer{color:var(--muted);font-size:13px;text-align:center;padding:8px 0 14px}
+  @media (orientation:portrait){
+    .wrap{flex-direction:column}
+    .links{width:100%}
+    .side{width:100%}
+  }
+</style>
+</head>
+<body>
+<header><h1>Warum darf der Nenner nicht 0 sein?</h1></header>
+<main>
+  <div class="wrap">
+    <div class="links">
+      <svg id="s" viewBox="0 0 640 330" aria-label="Gleichung mit eingesetzter Zahl für x"></svg>
+      <div class="regler"><span>x =</span><input type="range" id="r" min="-4" max="4" step="0.5" value="3" aria-label="Zahl für x"><span class="wert" id="w"></span></div>
+    </div>
+    <div class="side">
+      <div class="cap" id="cap">Schiebe den Regler und setze verschiedene Zahlen für x ein. Was passiert mit den Nennern?</div>
+      <div class="liste"><div id="l0">☐ Probiere x = 0 aus.</div><div id="l1">☐ Finde die Zahl, bei der die Gleichung stimmt.</div></div>
+      <div class="merke" id="merke"><b>Merke: Definitionsmenge</b><br>Die <b>Definitionsmenge D</b> enthält alle Zahlen, die man für x einsetzen darf. Zahlen, bei denen ein Nenner 0 wird, gehören nicht dazu.<br>Hier: <b>D = ℚ \ {0}</b><br><small>Lies: „alle rationalen Zahlen ohne die 0“ (ℚ = alle Brüche, Dezimalzahlen und negativen Zahlen).</small></div>
+    </div>
+  </div>
+  <section class="check" id="check"></section>
+</main>
+<footer>Fehling · Bruchgleichungen</footer>
+<script>
+"use strict";
+const $=id=>document.getElementById(id),svg=$("s");
+const fmt=v=>{const r=Math.round(v*100)/100;return String(r).replace(".",",").replace("-","−");};
+const fr=(z,n)=>`<span class="fr"><span>${z}</span><span>${n}</span></span>`;
+let war0=false,warL=false;
+const T=(x,y,t,o={})=>`<text x="${x}" y="${y}" text-anchor="middle" dominant-baseline="central" font-size="${o.s||30}" font-weight="${o.w||700}" fill="${o.f||'#1b2a3a'}">${t}</text>`;
+const bruch=(cx,y,z,n,nf,breit=56)=>T(cx,y-26,z)+`<line x1="${cx-breit/2}" y1="${y}" x2="${cx+breit/2}" y2="${y}" stroke="#1b2a3a" stroke-width="3"/>`+T(cx,y+26,n,{f:nf});
+function zeichne(){
+  const x=+$("r").value,xs=fmt(x),xk=x<0?`(${xs})`:xs;
+  $("w").textContent=xs;
+  const n1=x,n2=2*x,null0=x===0,loes=x===2;
+  const rot="#b03a2e",lila="#7b4fa0";
+  let h="";
+  // Gleichung allgemein
+  h+=T(320,24,`Für x eingesetzt: ${xs}`,{s:20,w:600,f:"#5b6b7c"});
+  // eingesetzt
+  h+=bruch(150,100,"3",xk,null0?rot:lila,70)+T(220,100,"+")+bruch(300,100,"1",`2 · ${xk}`,null0?rot:lila,96)+T(395,100,"=")+bruch(455,100,"7","4","#1b2a3a",40);
+  // Nennerkästen
+  const kasten=(x0,lbl,val)=>{const z=val===0;return `<rect x="${x0}" y="160" width="250" height="56" rx="12" fill="${z?'#fde8e6':'#efe6f7'}" stroke="${z?rot:lila}" stroke-width="${z?4:2}"/>`+T(x0+125,188,`Nenner ${lbl} = ${fmt(val)}`,{s:24,f:z?rot:lila});};
+  h+=kasten(50,"x",n1)+kasten(340,"2x",n2);
+  // Ergebnis bzw. Warnung
+  if(null0){
+    h+=`<rect x="60" y="236" width="520" height="70" rx="14" fill="#fde8e6" stroke="${rot}" stroke-width="4"><animate attributeName="opacity" values="1;.45;1" dur="1.2s" repeatCount="indefinite"/></rect>`;
+    h+=T(320,260,"⚠ 3 : 0 und 1 : 0 – geht nicht!",{s:24,f:rot})+T(320,288,"Durch 0 kann man nicht teilen.",{s:20,w:600,f:rot});
+  }else{
+    const l=3/n1+1/n2;
+    h+=T(320,262,`3 : ${xk} + 1 : ${fmt(n2)} = ${fmt(3/n1)} + ${fmt(1/n2)} = ${fmt(l)}`,{s:22,w:600});
+    h+=loes?T(320,292,"= 7/4 ✓  Hier stimmt die Gleichung – das ist die Lösung!",{s:20,f:"#24622a"}):T(320,292,`${fmt(l)} ≠ 7/4 = 1,75`,{s:20,w:600,f:"#5b6b7c"});
+  }
+  svg.innerHTML=h;
+  // Fortschritt + Erklärung
+  if(null0&&!war0){war0=true;$("l0").textContent="☑ x = 0 ausprobiert";$("l0").className="done";}
+  if(loes&&!warL){warL=true;$("l1").textContent="☑ Lösung gefunden: x = 2";$("l1").className="done";}
+  $("cap").textContent=null0?"Bei x = 0 werden BEIDE Nenner 0. Durch 0 kann man nicht teilen – darum darf x hier nicht 0 sein."
+    :loes?"Bei x = 2 stimmt die Gleichung: 3/2 + 1/4 = 7/4. Das ist die Lösung."
+    :war0&&warL?"Alle anderen Zahlen kann man einsetzen – nur die 0 nicht."
+    :"Schiebe den Regler und setze verschiedene Zahlen für x ein. Was passiert mit den Nennern?";
+  if(war0&&warL&&!$("merke").classList.contains("an")){$("merke").classList.add("an");baueCheck();}
+}
+$("r").addEventListener("input",zeichne);
+/* ---------- Check: Welche Zahl darf x nicht sein? Definitionsmenge? ---------- */
+function baueCheck(){
+  const box=$("check");box.classList.add("an");
+  const R=(a,b)=>a+Math.floor(Math.random()*(b-a+1)),k=R(2,5),a=R(1,9),b=R(1,6),c=b+R(1,5);
+  const opts=[`D = ℚ \\ {0}`,`D = ℚ \\ {${k}}`,`D = ℚ \\ {${a}}`,`D = ℚ`].filter((v,i,arr)=>arr.indexOf(v)===i).sort(()=>Math.random()-.5);
+  let sel=null,versuch=0,fertig=false;
+  box.innerHTML=`<h2>✎ Check: Jetzt du!</h2><div class="cq">${fr(a,k+"x")} + ${b} = ${c} &nbsp; Welche Definitionsmenge hat die Gleichung?</div>
+    <div class="opts">${opts.map((o,i)=>`<button class="opt" data-i="${i}">${o}</button>`).join("")}</div>
+    <div style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap"><button class="btn" id="cpr">Prüfen ✓</button><button class="btn" id="cneu">🔁 Neue Aufgabe</button></div><div id="cfb"></div>`;
+  box.querySelectorAll(".opt").forEach(o=>o.onclick=()=>{if(fertig)return;sel=opts[+o.dataset.i];box.querySelectorAll(".opt").forEach(x=>x.classList.toggle("sel",x===o));});
+  $("cpr").onclick=()=>{if(fertig)return;const fb=$("cfb");
+    if(!sel){fb.innerHTML='<div class="fb tipp">Tippe zuerst eine Antwort an.</div>';return;}
+    if(sel==="D = ℚ \\ {0}"){fertig=true;fb.innerHTML=`<div class="fb ok">✅ Richtig! Der Nenner ${k}x wird nur bei x = 0 zu 0 (${k} · 0 = 0). Alle anderen Zahlen darf man einsetzen.</div>`;return;}
+    versuch++;
+    fb.innerHTML=versuch===1?`<div class="fb tipp">Noch nicht. 💡 Setze für x die 0 ein: Was wird aus dem Nenner ${k}x? Und bei x = ${k}?</div>`
+      :(fertig=true,`<div class="fb bad">Leider wieder falsch. Bei x = 0 wird der Nenner ${k} · 0 = 0 – durch 0 kann man nicht teilen. Bei x = ${k} ist der Nenner ${k*k}, das geht. Also <b>D = ℚ \\ {0}</b>.</div>`);};
+  $("cneu").onclick=baueCheck;
+}
+zeichne();
+</script>
+</body>
+</html>
