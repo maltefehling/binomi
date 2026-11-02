@@ -159,11 +159,12 @@ function zeigeTabelle(rolle){
 }
 const zeile=(i,wert)=>{if(!TAB)return;document.querySelectorAll(".tab .z").forEach((z,k)=>z.classList.toggle("akt",k===i));if(wert!=null)document.getElementById("v"+i).innerHTML=wert;};
 // Haltepunkt: Frage zeigen, auf ▶ Weiter warten (ohne Rolle: nur kurz zeigen)
-function halt(i,frage,alive){
+// eintragen = true: neue Idee wurde gerade erklärt → nur übertragen (Zeile ①); sonst erst selbst rechnen (Zeilen ②–⑤)
+function halt(i,frage,alive,eintragen=false){
   const f=document.getElementById("frage"),w=document.getElementById("weiter");
   if(!TAB)return Promise.resolve();
-  zeile(i);f.innerHTML=frage+`<br><b>Schreib es in Zeile ${ZEILEN[i][0]} deiner Tabelle. Dann tippe auf ▶ Weiter.</b>`;f.classList.add("an");
-  w.textContent=`▶ Weiter – Zeile ${ZEILEN[i][0]} ist ausgefüllt`;w.classList.add("an");
+  zeile(i);f.innerHTML=frage+(eintragen?"":`<br><b>Rechne selbst und schreib es in Zeile ${ZEILEN[i][0]} deiner Tabelle. Dann tippe auf ▶ Weiter.</b>`);f.classList.add("an");
+  w.textContent=eintragen?`▶ Weiter – ist eingetragen`:`▶ Weiter – Zeile ${ZEILEN[i][0]} ist ausgefüllt`;w.classList.add("an");
   setTimeout(()=>f.scrollIntoView({block:"nearest",behavior:"smooth"}),100);
   return new Promise(r=>{w.onclick=()=>{f.classList.remove("an");w.classList.remove("an");r();};});
 }
@@ -182,7 +183,10 @@ async function play([a,b,c],rolle=null){
   await wait(1500);if(!alive())return;
 
   // ① Mit welcher Zahl?
-  await halt(0,`Zeile ①: Mit welcher Zahl musst du die <b>ganze</b> Gleichung malnehmen, damit <b>beide</b> Nenner verschwinden? Probiere aus.`,alive);if(!alive())return;
+  // Zeile ①: neue Idee → erst erklären, dann eintragen (Malte 4.11.2026: vorher wussten die Schüler nicht, woher die Zahl kommt)
+  zeile(0);
+  say(`Erinnerung: Ein Bruch verschwindet, wenn die Zahl durch den Nenner teilbar ist. Wir brauchen also eine Zahl, die durch ${a} UND durch ${b} teilbar ist.`);
+  await wait(2500);if(!alive())return;
   const s=Math.min(58,Math.floor(210/Math.max(a,b))),W=b*s,H=a*s,x0=300-W/2,y0=200+(170-H)/2;
   say(`Wir ziehen die beiden Nenner heraus: die ${a} und die ${b}.`);
   const k1=txt(160,86,String(a),{size:30,fill:"var(--n1)"}),k2=txt(325,86,String(b),{size:30,fill:"var(--n2)"});
@@ -211,9 +215,10 @@ async function play([a,b,c],rolle=null){
   await fade(linien2,1,500);if(!alive())return;
   await wait(2200);if(!alive())return;
   await fade(linien2,0,300);tint.flat().forEach(t=>t.setAttribute("fill","transparent"));
-  zeile(0,`${N}`+(g>1?` <small>(oder deine Zahl, wenn sie durch ${a} und ${b} teilbar ist)</small>`:""));
-  say(`Vergleiche Zeile ①: Mit ${N} klappt es – Nenner mal Nenner. In der ${N} stecken beide Nenner.`);
-  await wait(2200);if(!alive())return;
+  say(`In der ${N} stecken beide Nenner: Nenner mal Nenner = ${a} · ${b} = ${N}.`);
+  zeile(0,`${N}`);
+  await wait(1500);if(!alive())return;
+  await halt(0,`Schreib jetzt in <b>Zeile ①</b>: Ich nehme alles mal <b>${N}</b>.`,alive,true);if(!alive())return;
 
   // ② mal N, in den Zähler, kürzen
   await halt(1,`Zeile ②: Nimm jeden Teil mal ${N} und kürze. Was steht dann da?`,alive);if(!alive())return;
