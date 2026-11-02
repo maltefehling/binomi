@@ -88,7 +88,7 @@
 <body>
 <header><h1>Übung II.1b · Erst umformen, dann Wurzel</h1></header>
 <main>
-  <div class="hinweis">✎ <b>So schreibst du ins Heft:</b> Nummer der Aufgabe, dann die <b>Aufgabe abschreiben</b> (z. B. die Gleichung), dann den <b>ganzen Rechenweg</b> Schritt für Schritt – nur das Ergebnis reicht nicht. Wenn du nicht weiterkommst, hilft dir der Tipp. Die Lösungen findest du am Ende jeder Stufe.<br><b>In der Stunde: Aufgabe 1. Zu Hause: eine Stufe (ca. 15 Minuten).</b></div>
+  <div class="hinweis">✎ <b>So schreibst du ins Heft:</b> Nummer der Aufgabe, dann die <b>Aufgabe abschreiben</b> (z. B. die Gleichung), dann den <b>ganzen Rechenweg</b> Schritt für Schritt – nur das Ergebnis reicht nicht. Wenn du nicht weiterkommst, hilft dir der Tipp. Die Lösungen findest du am Ende jeder Stufe.<br><b>In der Stunde: Aufgabe 1 (ca. 15 Minuten). Danach eine Stufe (ca. 20 Minuten).</b></div>
   <div id="teilwahl" hidden><div class="frage">Welche Stunde hattet ihr zuletzt?</div><div class="wahl" id="tw"></div></div>
   <div id="teile"></div>
   <footer>Fehling · II Quadratische Gleichungen</footer>
@@ -97,7 +97,7 @@
 "use strict";
 // Versionsprüfung (12.10.2026): Safari zeigt sonst bis zu 10 Minuten (oft länger) eine alte, gespeicherte Fassung.
 // Beim Öffnen wird die Seite ohne Zwischenspeicher abgefragt; ist sie neuer, lädt sie sich einmal neu.
-const STAND="20261102092405";
+const STAND="20261102093256";
 fetch(location.pathname+"?nocache="+Date.now(),{cache:"no-store"}).then(r=>r.text()).then(t=>{
   const m=t.match(/const STAND="(\d+)"/);
   if(m&&m[1]!==STAND&&!sessionStorage.getItem("neu"+m[1])){sessionStorage.setItem("neu"+m[1],"1");location.replace(location.pathname+"?v="+m[1]);}
