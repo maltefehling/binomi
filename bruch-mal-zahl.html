@@ -39,6 +39,20 @@
   .fb ol{margin:.3rem 0 0 1.2rem;padding:0}
   .fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1.1;margin:0 .15em}
   .fr span:last-child{border-top:2.5px solid currentColor;padding:0 .15em}
+  /* iPad (2.11.2026): 1024×768 quer ohne Scrollen bis zum Bild, 768×1024 hoch: Bild oben, Text darunter */
+  header{padding:8px 16px}
+  main{padding:8px 12px 12px}
+  .bar{gap:6px;margin-bottom:8px;align-items:center}
+  .bar .btn{font-size:15px;padding:6px 12px;min-height:44px}
+  svg{flex:0 0 auto;width:auto;max-width:58vw;height:calc(100vh - 130px);max-height:460px}
+  .wrap{flex-wrap:nowrap;gap:14px}
+  .side{flex:1 1 auto;min-width:0}
+  .cap{min-height:0;font-size:19px;margin:0 0 8px}
+  @media (orientation:portrait){
+    .wrap{flex-direction:column}
+    svg{max-width:100%;width:100%;height:auto;max-height:44vh}
+    .side{width:100%}
+  }
   footer{color:var(--muted);font-size:13px;text-align:center;padding:10px 0 18px}
   svg text{font-family:inherit}
 </style>

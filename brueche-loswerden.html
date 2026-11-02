@@ -44,6 +44,38 @@
   .check input:focus{outline:none;border-color:var(--acc)}
   .check .fb{margin-top:8px;padding:8px 12px;border-radius:10px;font-size:18px;line-height:1.45}
   .fb.ok{background:#e4f4e2;color:#24622a}.fb.tipp{background:#fff4e0;color:#7a4a08}.fb.bad{background:#fde8e6;color:#9b2c1f}
+  .tab{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:6px 10px;margin:0 0 12px;font-size:18px}
+  .tab .tt{font-size:15px;color:var(--muted);margin:2px 0 4px}
+  .tab .z{display:flex;gap:8px;align-items:center;padding:5px 6px;border-radius:8px;min-height:36px}
+  .tab .z .nr{font-weight:800;color:var(--muted);min-width:1.4em}
+  .tab .z .v{font-weight:800;color:#24622a}
+  .tab .z.akt{background:var(--hlbg);outline:2px solid var(--hl)}
+  .tab .z.akt .nr{color:var(--hl)}
+  .weiter{display:none;background:var(--hl);border-color:var(--hl);color:#fff;font-size:19px;margin:0 0 12px}
+  .weiter.an{display:inline-block}
+  .frage{background:#fff4e0;border:2px solid var(--hl);border-radius:12px;padding:10px 14px;font-size:20px;line-height:1.45;margin:0 0 10px;display:none}
+  .frage.an{display:block}
+  /* iPad: 1024×768 quer und 768×1024 hoch */
+  header{padding:8px 16px}
+  main{padding:8px 12px 12px}
+  .bar{gap:6px;margin-bottom:8px;align-items:center}
+  .bar .btn{font-size:15px;padding:6px 12px;min-height:44px}
+  .bar .lbl{font-size:14px;color:var(--muted);margin-left:6px}
+  svg{flex:0 0 auto;width:auto;max-width:58vw;height:calc(100vh - 130px);max-height:460px}
+  .wrap{flex-wrap:nowrap;gap:14px}
+  .side{flex:1 1 auto;min-width:0}
+  .cap{min-height:0;font-size:19px;margin:0 0 8px}
+  .calc{font-size:20px;line-height:1.9}
+  .rollenmodus .calc{display:none}
+  .tab{font-size:16px;margin-bottom:8px}.tab .z{min-height:30px;padding:3px 6px}
+  .frage{font-size:18px;padding:8px 12px;margin-bottom:8px}
+  .weiter{font-size:17px;margin-bottom:8px}
+  @media (orientation:portrait){
+    .wrap{flex-direction:column;flex-wrap:nowrap}
+    svg{max-width:100%;width:100%;height:auto;max-height:44vh}
+    .side{display:flex;flex-direction:column;width:100%}
+    .frage{order:-2}.weiter{order:-1;align-self:flex-start}
+  }
   footer{color:var(--muted);font-size:13px;text-align:center;padding:10px 0 18px}
   svg text{font-family:inherit}
 </style>
@@ -54,7 +86,8 @@
   <div class="bar" id="bar"></div>
   <div class="wrap">
     <svg id="s" viewBox="0 0 600 420" aria-label="Die Nenner werden aus der Gleichung gezogen und bilden zusammen eine Pralinenschachtel"></svg>
-    <div class="side"><div class="cap" id="cap"></div><div class="calc" id="calc"></div>
+    <div class="side"><div class="tab" id="tab" hidden></div><div class="frage" id="frage"></div><button class="btn weiter" id="weiter" type="button">▶ Weiter</button>
+      <div class="cap" id="cap"></div><div class="calc" id="calc"></div>
       <div class="merke" id="merke"><b>Merke:</b> Nimm die <b>ganze</b> Gleichung mal eine Zahl, in der <b>alle Nenner stecken</b>. Dann verschwinden die Brüche.</div></div>
   </div>
   <section class="check" id="check"></section>
@@ -113,84 +146,118 @@ async function kuerze(oben,unten,restO,restU,gr=22){
   return [...hl,...s,...r];
 }
 
-async function play([a,b,c]){
+/* ---------- Begleiter für die Partner-Tabelle im Skript (Malte 2.11.2026) ----------
+   Rolle A: x/2 + x/3 = 10, Rolle B: x/4 + x/6 = 5 – beide gleich ausführlich. An jeder Tabellenzeile ①–⑤ hält die Animation an:
+   erst die Frage („schreib es in Zeile ① …“), nach ▶ Weiter die Erklärung und die richtige Zeile zum Vergleichen. */
+const ZEILEN=[["①","Ich nehme alles mal"],["②",""],["③","x ="],["④","Probe:"],["⑤","Es geht auch mit:"]];
+let TAB=null;
+function zeigeTabelle(rolle){
+  const t=document.getElementById("tab");TAB=rolle;
+  if(!rolle){t.hidden=true;return;}
+  t.hidden=false;
+  t.innerHTML=`<div class="tt">Deine Tabelle im Skript – Partner ${rolle}</div>`+ZEILEN.map((z,i)=>`<div class="z" id="z${i}"><span class="nr">${z[0]}</span><span>${z[1]}</span><span class="v" id="v${i}"></span></div>`).join("");
+}
+const zeile=(i,wert)=>{if(!TAB)return;document.querySelectorAll(".tab .z").forEach((z,k)=>z.classList.toggle("akt",k===i));if(wert!=null)document.getElementById("v"+i).innerHTML=wert;};
+// Haltepunkt: Frage zeigen, auf ▶ Weiter warten (ohne Rolle: nur kurz zeigen)
+function halt(i,frage,alive){
+  const f=document.getElementById("frage"),w=document.getElementById("weiter");
+  if(!TAB)return Promise.resolve();
+  zeile(i);f.innerHTML=frage+`<br><b>Schreib es in Zeile ${ZEILEN[i][0]} deiner Tabelle. Dann tippe auf ▶ Weiter.</b>`;f.classList.add("an");
+  w.textContent=`▶ Weiter – Zeile ${ZEILEN[i][0]} ist ausgefüllt`;w.classList.add("an");
+  setTimeout(()=>f.scrollIntoView({block:"nearest",behavior:"smooth"}),100);
+  return new Promise(r=>{w.onclick=()=>{f.classList.remove("an");w.classList.remove("an");r();};});
+}
+
+async function play([a,b,c],rolle=null){
   const my=++run,alive=()=>my===run,say=t=>{if(alive())cap.textContent=t;};
-  svg.innerHTML="";calc.innerHTML="";merke.classList.remove("an");
-  const N=a*b,x=c*N/(a+b);
+  svg.innerHTML="";calc.innerHTML="";merke.classList.remove("an");document.getElementById("check").classList.remove("an");
+  document.getElementById("frage").classList.remove("an");document.getElementById("weiter").classList.remove("an");
+  zeigeTabelle(rolle);document.body.classList.toggle("rollenmodus",!!rolle);
+  const N=a*b,x=c*N/(a+b),g=ggT(a,b),k=N/g;
   // Gleichung oben
   const n1=bruch(160,a,"var(--n1)");txt(240,62,"+");const n2=bruch(325,b,"var(--n2)");txt(440,62,"= "+c);
   calc.innerHTML=`${fr("x",a,"b1")} + ${fr("x",b,"b2")} = ${c}`;
-  say(`Die Brüche stören: Hier wird durch ${a} und durch ${b} geteilt.`);
-  // Nenner pulsieren
+  say(`${rolle?`Partner ${rolle}, deine Gleichung. `:""}Die Brüche stören: Hier wird durch ${a} und durch ${b} geteilt.`);
   for(let i=0;i<2;i++){await tween(350,k=>[n1,n2].forEach(e=>e.setAttribute("font-size",30+8*Math.sin(Math.PI*k))));}
-  await wait(1800);if(!alive())return;
+  await wait(1500);if(!alive())return;
 
-  // Schachtel-Geometrie: a Reihen, b Spalten
+  // ① Mit welcher Zahl?
+  await halt(0,`Zeile ①: Mit welcher Zahl musst du die <b>ganze</b> Gleichung malnehmen, damit <b>beide</b> Nenner verschwinden? Probiere aus.`,alive);if(!alive())return;
   const s=Math.min(58,Math.floor(210/Math.max(a,b))),W=b*s,H=a*s,x0=300-W/2,y0=200+(170-H)/2;
   say(`Wir ziehen die beiden Nenner heraus: die ${a} und die ${b}.`);
   const k1=txt(160,86,String(a),{size:30,fill:"var(--n1)"}),k2=txt(325,86,String(b),{size:30,fill:"var(--n2)"});
   await Promise.all([move(k1,x0-28,y0+H/2),move(k2,300,y0-24)]);if(!alive())return;
   await wait(800);if(!alive())return;
-
-  // Schachtel entsteht
   say(`Zusammen bilden sie eine Pralinenschachtel: ${a} Reihen mit je ${b} Pralinen.`);
   const box=el("rect",{x:x0,y:y0,width:W,height:H,rx:8,fill:"var(--schachtel)",stroke:"var(--schachtelL)","stroke-width":3,opacity:0});
   await fade([box],1,400);
-  const tint=[...Array(a)].map((_,r)=>[...Array(b)].map((_,k)=>el("rect",{x:x0+k*s+2,y:y0+r*s+2,width:s-4,height:s-4,rx:6,fill:"transparent"})));
+  const tint=[...Array(a)].map((_,r)=>[...Array(b)].map((_,kk)=>el("rect",{x:x0+kk*s+2,y:y0+r*s+2,width:s-4,height:s-4,rx:6,fill:"transparent"})));
   const pr=[];
-  for(let r=0;r<a;r++){for(let k=0;k<b;k++){pr.push(el("circle",{cx:x0+k*s+s/2,cy:y0+r*s+s/2,r:s*0.32,fill:"var(--praline)",opacity:0}));}
-    await fade(pr.slice(-b),1,300);if(!alive())return;}
+  for(let r=0;r<a;r++){for(let kk=0;kk<b;kk++){pr.push(el("circle",{cx:x0+kk*s+s/2,cy:y0+r*s+s/2,r:s*0.32,fill:"var(--praline)",opacity:0}));}
+    await fade(pr.slice(-b),1,250);if(!alive())return;}
   const zahl=txt(x0+W+52,y0+H/2,String(N),{size:42,fill:"var(--hl)",op:0});
   await fade([zahl],1,400);
   calc.innerHTML+=`<br>${a} · ${b} = <span class="h">${N}</span> <small>Pralinen</small>`;
-  await wait(2200);if(!alive())return;
-
-  // in a Teile teilen (Reihen)
+  await wait(2000);if(!alive())return;
   say(`Steckt die ${a} in der ${N}? Ja: ${N} Pralinen kann man gerecht in ${a} Teile teilen – jeder Teil hat ${b}.`);
   const linien1=[...Array(a-1)].map((_,i)=>el("line",{x1:x0-6,y1:y0+(i+1)*s,x2:x0+W+6,y2:y0+(i+1)*s,stroke:"var(--n1)","stroke-width":4,opacity:0}));
   tint.forEach((row,r)=>row.forEach(t=>t.setAttribute("fill",r%2?"var(--n1bg)":"#eef3fb")));
   await fade(linien1,1,500);if(!alive())return;
-  calc.innerHTML+=`<br><span class="h">${N}</span> : <span class="b1">${a}</span> = ${b}`;
-  await wait(2400);if(!alive())return;
+  await wait(2200);if(!alive())return;
   await fade(linien1,0,300);tint.flat().forEach(t=>t.setAttribute("fill","transparent"));
-
-  // in b Teile teilen (Spalten)
   say(`Und die ${b}? Auch sie steckt in der ${N}: ${b} Teile mit je ${a} Pralinen.`);
   const linien2=[...Array(b-1)].map((_,i)=>el("line",{x1:x0+(i+1)*s,y1:y0-6,x2:x0+(i+1)*s,y2:y0+H+6,stroke:"var(--n2)","stroke-width":4,opacity:0}));
-  tint.forEach(row=>row.forEach((t,k)=>t.setAttribute("fill",k%2?"var(--n2bg)":"#eef7ec")));
+  tint.forEach(row=>row.forEach((t,kk)=>t.setAttribute("fill",kk%2?"var(--n2bg)":"#eef7ec")));
   await fade(linien2,1,500);if(!alive())return;
-  calc.innerHTML+=`&nbsp;&nbsp; <span class="h">${N}</span> : <span class="b2">${b}</span> = ${a}`;
-  await wait(2400);if(!alive())return;
+  await wait(2200);if(!alive())return;
   await fade(linien2,0,300);tint.flat().forEach(t=>t.setAttribute("fill","transparent"));
+  zeile(0,`${N}`+(g>1?` <small>(oder deine Zahl, wenn sie durch ${a} und ${b} teilbar ist)</small>`:""));
+  say(`Vergleiche Zeile ①: Mit ${N} klappt es – Nenner mal Nenner. In der ${N} stecken beide Nenner.`);
+  await wait(2200);if(!alive())return;
 
-  // alles mal N – N kommt in den Zähler, dann kürzen
-  say(`In der ${N} stecken beide Nenner. Darum nehmen wir die ganze Gleichung mal ${N} – und wie in der Erinnerung kommt die ${N} in den Zähler.`);
+  // ② mal N, in den Zähler, kürzen
+  await halt(1,`Zeile ②: Nimm jeden Teil mal ${N} und kürze. Was steht dann da?`,alive);if(!alive())return;
+  say(`Wie in der Erinnerung kommt die ${N} in den Zähler.`);
   const rechts=txt(512,62,"· "+N,{size:24,fill:"var(--hl)",op:0});
   const [e1,e2]=await Promise.all([inZaehler(n1,N),inZaehler(n2,N)]);await fade([rechts],1,500);if(!alive())return;
   calc.innerHTML=`${fr('<span class="h">'+N+'</span> · x',a,"b1")} + ${fr('<span class="h">'+N+'</span> · x',b,"b2")} = <span class="h">${N}</span> · ${c}`;
-  await wait(2600);if(!alive())return;
-
-  // kürzen
+  await wait(2000);if(!alive())return;
   say(`Jetzt kürzen: ${N} oben und ${a} unten – ${N} : ${a} = ${b}, ${a} : ${a} = 1. Genauso ${N} und ${b}. Die Brüche verschwinden.`);
   await kuerze(e1,n1,N/a,1,20);await kuerze(e2,n2,N/b,1,20);if(!alive())return;
-  const erg=[txt(160,150,b+"x",{size:28,fill:"var(--hl)",op:0}),txt(325,150,a+"x",{size:28,fill:"var(--hl)",op:0}),txt(440,150,"= "+N*c,{size:28,fill:"var(--hl)",op:0}),txt(240,150,"+",{size:28,op:0})];
+  const erg=[txt(160,150,(N/a)+"x",{size:28,fill:"var(--hl)",op:0}),txt(325,150,(N/b)+"x",{size:28,fill:"var(--hl)",op:0}),txt(440,150,"= "+N*c,{size:28,fill:"var(--hl)",op:0}),txt(240,150,"+",{size:28,op:0})];
   await fade(erg,1,600);
-  calc.innerHTML+=`<br>${b} · x + ${a} · x = ${N*c}<br>${b}x + ${a}x = ${N*c}`;
-  await wait(2800);if(!alive())return;
+  calc.innerHTML+=`<br>${N/a}x + ${N/b}x = ${N*c}`;
+  zeile(1,`${N/a}x + ${N/b}x = ${N*c}`);
+  say(`Vergleiche Zeile ②: ${N/a}x + ${N/b}x = ${N*c}`);
+  await wait(2200);if(!alive())return;
 
-  say(`Jetzt ist es eine ganz normale Gleichung.`);
-  calc.innerHTML+=`<br>${a+b}x = ${N*c} &nbsp;→&nbsp; <span class="h">x = ${x}</span>`;
-  await wait(1800);if(!alive())return;
+  // ③ lösen
+  await halt(2,`Zeile ③: Löse die Gleichung ${N/a}x + ${N/b}x = ${N*c}.`,alive);if(!alive())return;
+  say(`Jetzt ist es eine ganz normale Gleichung: ${N/a+N/b}x = ${N*c}, also x = ${x}.`);
+  calc.innerHTML+=`<br>${N/a+N/b}x = ${N*c} &nbsp;→&nbsp; <span class="h">x = ${x}</span>`;
+  zeile(2,`${x}`);
+  await wait(2000);if(!alive())return;
+
+  // ④ Probe
+  await halt(3,`Zeile ④: Mach die Probe – setze x = ${x} in die Gleichung ein.`,alive);if(!alive())return;
   say(`Probe: ${x} : ${a} = ${x/a} und ${x} : ${b} = ${x/b}, zusammen ${x/a+x/b} ✓`);
-  await wait(1500);if(!alive())return;
-  const g=ggT(a,b);
-  if(g>1){   // Nenner mit gemeinsamem Baustein: Schachtel klappt, ist aber größer als nötig → Brücke zu „Geht es auch kleiner?“
-    const k=N/g;
-    say(`Es klappt! Aber: Geht es auch mit weniger Pralinen? Auch ${k} kann man gerecht in ${a} Teile und in ${b} Teile teilen.`);
-    calc.innerHTML+=`<br><small>Auch ${k} klappt: ${k} : ${a} = ${k/a}, ${k} : ${b} = ${k/b} – und ${k} ist kleiner als ${N}!</small>`;
-    await wait(3000);if(!alive())return;
+  zeile(3,`${fr(x,a)} + ${fr(x,b)} = ${x/a} + ${x/b} = ${c} ✓`);
+  await wait(2000);if(!alive())return;
+
+  // ⑤ andere Zahlen
+  await halt(4,`Zeile ⑤: Welche Zahlen klappen <b>auch</b>? Sie müssen durch ${a} und durch ${b} teilbar sein.`,alive);if(!alive())return;
+  if(g>1){   // Partner B: 12 ist kleiner als 24 → Brücke zu „Geht es auch kleiner?“
+    say(`Auch ${k} klappt – denn ${k} kann man gerecht in ${a} Teile und in ${b} Teile teilen. ${k} ist sogar kleiner als ${N}!`);
+    calc.innerHTML+=`<br><small>Auch ${k}: ${k} : ${a} = ${k/a}, ${k} : ${b} = ${k/b} – kleiner als ${N}!</small>`;
+    zeile(4,`${k}, ${2*N} <small>(${k} ist kleiner als ${N}!)</small>`);
+    await wait(2500);if(!alive())return;
     say(`Wie man die kleinste Zahl findet, zeigt die nächste Animation „Geht es auch kleiner?“.`);
+  }else{
+    say(`Jede Zahl, die durch ${a} und durch ${b} teilbar ist, klappt: ${2*N}, ${3*N}, … Die kleinste ist ${N}.`);
+    zeile(4,`${2*N}, ${3*N}`);
   }
+  await wait(1500);if(!alive())return;
+  zeile(-1);
   merke.classList.add("an");
   baueCheck(checkGen);
 }
@@ -226,15 +293,18 @@ function checkGen(){
     tipp:`Die Zahl muss durch ${a} <b>und</b> durch ${b} teilbar sein. Denk an die Pralinenschachtel: ${a} Reihen mit je ${b} Pralinen.`,
     loesung:`${a} · ${b} = <b>${N}</b>. ${N} : ${a} = ${N/a} und ${N} : ${b} = ${N/b} – beide Nenner verschwinden.`};
 }
-// nur Nenner ohne gemeinsamen Baustein: dann ist Nenner · Nenner schon die kleinste Zahl (der Rest kommt in „Welche Zahl reicht?“)
-const BSP=[[2,3,10],[2,5,7],[3,4,7],[4,6,5]];   // Beispiel 4: Nenner mit gemeinsamem Baustein → Brücke zu „Geht es auch kleiner?“
+// Start: Rolle wählen (fair: beide Partner gleich ausführlich). Weitere Beispiele ohne Tabelle.
+const ROLLEN={A:[2,3,10],B:[4,6,5]},WEITERE=[[2,5,7],[3,4,7]];
 const bar=document.getElementById("bar");
-BSP.forEach((b,i)=>{const x=document.createElement("button");x.className="btn";x.innerHTML=`Beispiel ${i+1}: &nbsp;${fr("x",b[0])} + ${fr("x",b[1])} = ${b[2]}`;
-  x.onclick=()=>{PAUSE=false;document.getElementById("check").classList.remove("an");pz.textContent="⏸ Pause";bar.querySelectorAll(".btn.bsp").forEach(y=>y.setAttribute("aria-pressed",y===x));play(b);};x.classList.add("bsp");bar.appendChild(x);});
-const pz=document.createElement("button");pz.className="btn";pz.type="button";pz.textContent="⏸ Pause";
-pz.onclick=()=>{PAUSE=!PAUSE;pz.textContent=PAUSE?"▶ Weiter":"⏸ Pause";};bar.appendChild(pz);
-const zc=document.createElement("button");zc.className="btn";zc.type="button";zc.textContent="✎ Zum Check";zc.onclick=()=>{baueCheck(checkGen);document.getElementById("check").scrollIntoView({behavior:"smooth"});};bar.appendChild(zc);
-bar.firstChild.setAttribute("aria-pressed","true");play(BSP[0]);
+const knopf=(html,cls,fn)=>{const x=document.createElement("button");x.className="btn "+cls;x.type="button";x.innerHTML=html;x.onclick=fn;bar.appendChild(x);return x;};
+const markiere=x=>bar.querySelectorAll(".wahl").forEach(y=>y.setAttribute("aria-pressed",y===x));
+const start=(b,r,x)=>{PAUSE=false;pz.textContent="⏸ Pause";markiere(x);play(b,r);};
+["A","B"].forEach(r=>{const b=ROLLEN[r];const x=knopf(`Partner ${r}: &nbsp;${fr("x",b[0])} + ${fr("x",b[1])} = ${b[2]}`,"wahl rolle",()=>start(b,r,x));});
+{const l=document.createElement("span");l.className="lbl";l.textContent="Weitere:";bar.appendChild(l);}
+WEITERE.forEach((b,i)=>{const x=knopf(`${fr("x",b[0])} + ${fr("x",b[1])} = ${b[2]}`,"wahl",()=>start(b,null,x));});
+const pz=knopf("⏸ Pause","",()=>{PAUSE=!PAUSE;pz.textContent=PAUSE?"▶ Weiter":"⏸ Pause";});
+knopf("✎ Zum Check","",()=>{baueCheck(checkGen);document.getElementById("check").scrollIntoView({behavior:"smooth"});});
+cap.textContent="Tippe oben auf deine Rolle: Bist du Partner A oder Partner B?";
 </script>
 </body>
 </html>
