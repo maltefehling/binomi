@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Und wenn das x im Nenner steht?</title>
+<!-- I.6 Bruchgleichungen, Kern der Stunde (2.11.2026, Wunsch Malte): erst Nenner aus Zahlen (2 und 3 → Hauptnenner 6),
+     dann verwandelt sich die 2 in ein x – und man geht genauso vor (x und 3 → Hauptnenner 3x). Das x kürzt sich weg wie vorher die 2.
+     Danach als Gleichung lösen, „x darf nicht 0 sein“, Probe. Am Ende ein Check „Bilde den Hauptnenner“. Langsam (SLOW, Lesezeit, Pause). -->
+<style>
+  :root{--hl:#c0700f;--hlbg:#fde7c8;--n1:#2e5d9f;--n2:#3f8f3a;--x:#7b4fa0;--xbg:#efe6f7;--korb:#fdf6ea;--korbL:#fbd9a8;--rot:#b03a2e;
+    --ink:#1b2a3a;--muted:#5b6b7c;--acc:#1f4e79;--bg:#f4f7fb;--card:#fff;--line:#c9d6e5}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;-webkit-user-select:none;user-select:none}
+  button,input{font:inherit;touch-action:manipulation}
+  header{padding:12px 16px;background:var(--acc);color:#fff}
+  header h1{font-size:20px;margin:0}
+  main{padding:12px 16px 20px;max-width:1100px;margin:0 auto}
+  .bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+  .btn{border:1px solid var(--acc);background:#fff;color:var(--acc);border-radius:10px;padding:10px 16px;font-size:17px;font-weight:700;min-height:46px}
+  .wrap{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start}
+  svg{flex:1 1 520px;max-width:660px;width:100%;height:auto;background:var(--card);border:1px solid var(--line);border-radius:12px}
+  .side{flex:1 1 320px}
+  .cap{min-height:120px;font-size:22px;font-weight:600;color:var(--acc);line-height:1.45;margin:4px 0 12px}
+  .calc{font-size:23px;line-height:2.2}
+  .calc .h{color:var(--hl);font-weight:800}.calc .x{color:var(--x);font-weight:800}
+  .calc .alt{color:var(--muted)}
+  .calc small{font-size:17px;color:var(--muted)}
+  .fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1.1;margin:0 .12em;font-size:.95em}
+  .fr span:last-child{border-top:2px solid currentColor;padding:0 .15em}
+  .merke{display:none;background:#e3eef9;border:1px solid #b9d0ea;border-radius:12px;padding:10px 14px;font-size:19px;line-height:1.45;margin-top:12px}
+  .merke.an{display:block}
+  .check{display:none;margin-top:16px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 16px;max-width:1068px}
+  .check.an{display:block}
+  .check h2{margin:.2rem 0 .4rem;font-size:21px;color:var(--acc)}
+  .check .cq{font-size:21px;line-height:1.6;margin-bottom:8px}
+  .check .crow{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:24px;font-weight:700}
+  .check input{width:4.2em;height:48px;font-size:24px;font-weight:700;text-align:center;border:2px solid var(--line);border-radius:10px}
+  .check input:focus{outline:none;border-color:var(--acc)}
+  .check .fb{margin-top:8px;padding:8px 12px;border-radius:10px;font-size:18px;line-height:1.45}
+  .fb.ok{background:#e4f4e2;color:#24622a}.fb.tipp{background:#fff4e0;color:#7a4a08}.fb.bad{background:#fde8e6;color:#9b2c1f}
+  footer{color:var(--muted);font-size:13px;text-align:center;padding:10px 0 18px}
+  svg text{font-family:inherit}
+</style>
+</head>
+<body>
+<header><h1>Und wenn das x im Nenner steht?</h1></header>
+<main>
+  <div class="bar" id="bar"></div>
+  <div class="wrap">
+    <svg id="s" viewBox="0 0 640 300" aria-label="Erst Nenner aus Zahlen, dann wird aus der 2 ein x – das Vorgehen bleibt gleich"></svg>
+    <div class="side"><div class="cap" id="cap"></div><div class="calc" id="calc"></div>
+      <div class="merke" id="merke"><b>Merke:</b> Steht x im Nenner, gehört x in den <b>Hauptnenner</b>. Dann geht alles wie mit Zahlen: mal Hauptnenner, kürzen, lösen.<br><b>x darf nicht 0 sein.</b></div></div>
+  </div>
+  <section class="check" id="check"></section>
+</main>
+<footer>Fehling · Bruchgleichungen</footer>
+<script>
+"use strict";
+let LESE_BIS=0,PAUSE=false;
+const lesezeit=t=>2500+t.length*90;
+const NS="http://www.w3.org/2000/svg",svg=document.getElementById("s"),cap=document.getElementById("cap"),calc=document.getElementById("calc"),merke=document.getElementById("merke");
+new MutationObserver(()=>{LESE_BIS=performance.now()+lesezeit(cap.textContent||"");}).observe(cap,{childList:true,characterData:true,subtree:true});
+const el=(t,a,p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);(p||svg).appendChild(e);return e;};
+const SLOW=1.6;
+const ease=k=>k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;
+const tween=(ms,f)=>new Promise(r=>{ms*=SLOW;let t0=null,pz=0,ps=null;const s=t=>{if(t0===null)t0=t;
+  if(PAUSE){if(ps===null)ps=t;requestAnimationFrame(s);return;}if(ps!==null){pz+=t-ps;ps=null;}
+  const k=Math.min(1,(t-t0-pz)/ms);f(ease(k));k<1?requestAnimationFrame(s):r();};requestAnimationFrame(s);});
+const wait=ms=>new Promise(r=>{const ende=performance.now()+ms*SLOW;const t=()=>{if(!PAUSE&&performance.now()>=Math.max(ende,LESE_BIS))r();else setTimeout(t,100);};t();});
+const T=(x,y,t,o={})=>{const e=el("text",{x,y,"text-anchor":"middle","dominant-baseline":"central","font-size":o.size||36,"font-weight":o.w||700,fill:o.fill||"var(--ink)",opacity:o.op??1});e.textContent=t;return e;};
+const fade=(els,to,ms=600)=>{const f=els.map(e=>+(e.getAttribute("opacity")??1));return tween(ms,k=>els.forEach((e,i)=>e.setAttribute("opacity",f[i]+(to-f[i])*k)));};
+const move=(e,x1,y1,ms=1000)=>{const x0=+e.getAttribute("x"),y0=+e.getAttribute("y");return tween(ms,k=>{e.setAttribute("x",x0+(x1-x0)*k);e.setAttribute("y",y0+(y1-y0)*k);});};
+const fr=(z,n,c="")=>`<span class="fr ${c}"><span>${z}</span><span>${n}</span></span>`;
+let run=0;
+
+// Bruch in der Szene: Zähler, Strich, Nenner → {cx, z, l, n}
+function bruch(cx,z,n,farbe){return {cx,z:T(cx,52,z),l:el("line",{x1:cx-24,y1:80,x2:cx+24,y2:80,stroke:"var(--ink)","stroke-width":3.5}),n:T(cx,108,n,{fill:farbe})};}
+const breite=e=>e.getBBox().width;
+const strich=(B,x1,x2)=>{const a1=+B.l.getAttribute("x1"),a2=+B.l.getAttribute("x2");return tween(900,k=>{B.l.setAttribute("x1",a1+(x1-a1)*k);B.l.setAttribute("x2",a2+(x2-a2)*k);});};
+/* Hauptnenner mal Bruch – wie in der Erinnerung: Die Zahl erscheint vor dem Bruch und wandert dann hoch in den Zähler.
+   teile: [{t, fill}] z. B. 6 und ·  oder  3, x und ·  */
+async function inZaehler(B,teile){
+  const els=teile.map(t=>T(0,80,t.t,{size:32,fill:t.fill||"var(--ink)",op:0}));
+  const ws=els.map(breite),wz=breite(B.z);
+  const gp=teile.map((t,i)=>teile[i+1]&&teile[i+1].t==="x"?1:8);   // „3x“ ohne Lücke, sonst kleiner Abstand
+  const summe=ws.reduce((s,w,i)=>s+w+gp[i],0);
+  // vor dem Bruch aufreihen
+  let x=B.cx-34-summe;
+  els.forEach((e,i)=>{e.setAttribute("x",x+ws[i]/2);x+=ws[i]+gp[i];});
+  await fade(els,1,700);await wait(1200);
+  // in den Zähler: Teile + bisheriger Zähler mittig über dem Strich
+  const ges=summe+wz;let x0=B.cx-ges/2;
+  const ziele=els.map((e,i)=>{const z=x0+ws[i]/2;x0+=ws[i]+gp[i];return z;});
+  await Promise.all([...els.map((e,i)=>move(e,ziele[i],52,1200)),move(B.z,x0+wz/2,52,1200),strich(B,B.cx-ges/2-8,B.cx+ges/2+8)]);
+  return els;
+}
+const T_=(x,y,t,g)=>T(x,y,t,{size:g,fill:"#b03a2e",op:0});
+/* Kürzen deutlich (Malte 2.11.2026): beide Zahlen leuchten auf, werden durchgestrichen, gekürzte Zahl oben und unten dazuschreiben */
+async function kuerze(oben,unten,restO,restU,gr=22){
+  const hl=[oben,unten].map(e=>{const b=e.getBBox();const r=el("rect",{x:b.x-6,y:b.y-3,width:b.width+12,height:b.height+6,rx:8,fill:"#fde7c8",stroke:"#c0700f","stroke-width":2,opacity:0});e.parentNode.insertBefore(r,e);return r;});
+  for(let i=0;i<2;i++){await fade(hl,1,450);await fade(hl,0.35,450);}
+  await fade(hl,1,300);await wait(1500);
+  const s=[oben,unten].map(e=>{const b=e.getBBox();return el("line",{x1:b.x-4,y1:b.y+b.height-5,x2:b.x+b.width+4,y2:b.y+5,stroke:"#b03a2e","stroke-width":3.5,opacity:0});});
+  await fade(s,1,700);await wait(800);
+  const bo=oben.getBBox(),bu=unten.getBBox();
+  const r=[T_(bo.x+bo.width/2,bo.y-gr*0.55,String(restO),gr),T_(bu.x+bu.width/2,bu.y+bu.height+gr*0.55,String(restU),gr)];
+  await fade(r,1,700);await fade(hl,0,500);
+  return [...hl,...s,...r];
+}
+async function zurueck(B,weg){await fade(weg,0,600);weg.forEach(e=>e.remove());await Promise.all([move(B.z,B.cx,52,800),strich(B,B.cx-24,B.cx+24)]);}
+
+async function play(){
+  const my=++run,alive=()=>my===run,say=t=>{if(alive())cap.textContent=t;};
+  svg.innerHTML="";calc.innerHTML="";merke.classList.remove("an");document.getElementById("check").classList.remove("an");
+  // ---------- Teil 1: Nenner aus Zahlen ----------
+  const B1=bruch(200,"4","2","var(--n1)");T(300,80,"+");const B2=bruch(410,"1","3","var(--n2)");
+  say("Erst mit Zahlen: 4/2 + 1/3. Wie werden wir die Brüche los?");
+  calc.innerHTML=`${fr(4,2)} + ${fr(1,3)}`;
+  await wait(2500);if(!alive())return;
+  el("rect",{x:130,y:170,width:400,height:90,rx:16,fill:"var(--korb)",stroke:"var(--korbL)","stroke-width":3});
+  T(330,188,"Hauptnenner",{size:16,fill:"var(--muted)",w:600});
+  say("Die Nenner 2 und 3 kommen in den Hauptnenner-Korb. Gemeinsame Bausteine haben sie nicht.");
+  const k1=T(200,108,"2",{fill:"var(--n1)"}),k2=T(410,108,"3",{fill:"var(--n2)"});
+  await Promise.all([move(k1,250,226),move(k2,330,226)]);if(!alive())return;
+  T(290,226,"·");const kerg=T(420,226,"= 6",{fill:"var(--hl)",op:0});
+  await fade([kerg],1,600);if(!alive())return;
+  await wait(2200);if(!alive())return;
+
+  say("Alles mal 6 – und wie in der Erinnerung kommt die 6 in den Zähler.");
+  const [P1,P2]=await Promise.all([inZaehler(B1,[{t:"6",fill:"var(--hl)"},{t:"·"}]),inZaehler(B2,[{t:"6",fill:"var(--hl)"},{t:"·"}])]);if(!alive())return;
+  calc.innerHTML=`${fr('<span class="h">6</span> · 4',2)} + ${fr('<span class="h">6</span> · 1',3)}`;
+  await wait(2500);if(!alive())return;
+  say("Jetzt kürzen: Die 6 oben und die 2 unten passen zusammen – 6 : 2 = 3, 2 : 2 = 1. Genauso 6 und 3. Die Nenner sind weg!");
+  const S1=await kuerze(P1[0],B1.n,3,1);const S2=await kuerze(P2[0],B2.n,2,1);if(!alive())return;
+  calc.innerHTML+=` &nbsp;=&nbsp; 3 · 4 + 2 · 1 = 12 + 2`;
+  await wait(3200);if(!alive())return;
+
+  // ---------- Teil 2: aus der 2 wird ein x ----------
+  say("Und jetzt verwandelt sich die 2 in ein x. Wir gehen genauso vor!");
+  calc.innerHTML=`<span class="alt">mit Zahlen: ${fr('6 · 4',2)} = 3 · 4 = 12</span>`;
+  await Promise.all([zurueck(B1,[...P1,...S1]),zurueck(B2,[...P2,...S2])]);if(!alive())return;
+  const xb=T(200,108,"x",{fill:"var(--x)",op:0}),xk=T(250,226,"x",{fill:"var(--x)",op:0});
+  await Promise.all([fade([B1.n,k1,kerg],0,900),fade([xb,xk],1,900)]);if(!alive())return;
+  B1.n=xb;
+  const xbg=el("rect",{x:176,y:84,width:48,height:48,rx:10,fill:"var(--xbg)",opacity:0});svg.insertBefore(xbg,svg.firstChild);
+  await fade([xbg],1,500);
+  calc.innerHTML+=`<br>${fr(4,'<span class="x">x</span>')} + ${fr(1,3)}`;
+  await wait(2500);if(!alive())return;
+  say("Im Korb liegen jetzt x und 3. Der Hauptnenner ist x · 3 = 3x.");
+  const kerg2=T(430,226,"= 3x",{fill:"var(--hl)",op:0});
+  await fade([kerg2],1,700);if(!alive())return;
+  await wait(2500);if(!alive())return;
+
+  say("Alles mal 3x – auch das 3x kommt in den Zähler.");
+  const teile=()=>[{t:"3",fill:"var(--hl)"},{t:"x",fill:"var(--x)"},{t:"·"}];
+  const [P3,P4]=await Promise.all([inZaehler(B1,teile()),inZaehler(B2,teile())]);if(!alive())return;
+  calc.innerHTML+=` &nbsp;→&nbsp; ${fr('<span class="h">3x</span> · 4','<span class="x">x</span>')} + ${fr('<span class="h">3x</span> · 1',3)}`;
+  await wait(2500);if(!alive())return;
+  say("Kürzen: Das x oben und das x unten kürzen sich weg – x : x = 1, genau wie vorher die 2! Rechts kürzt sich die 3.");
+  await kuerze(P3[1],B1.n,1,1);await kuerze(P4[0],B2.n,1,1);if(!alive())return;
+  calc.innerHTML+=`<br>= 3 · 4 + x · 1 = 12 + x`;
+  await wait(3500);if(!alive())return;
+
+  // ---------- Teil 3: als Gleichung lösen ----------
+  say("Jetzt als Gleichung: 4/x + 1/3 = 1. Jeder Teil wird mal 3x genommen – auch die 1 rechts.");
+  const gl=T(515,80,"= 1",{op:0});await fade([gl],1,600);await wait(1200);
+  gl.textContent="= 3x · 1";gl.setAttribute("x",545);
+  calc.innerHTML=`${fr(4,'<span class="x">x</span>')} + ${fr(1,3)} = 1 &nbsp;&nbsp;<small>| · 3x</small><br>12 + x = 3x<br>12 = 2x &nbsp;→&nbsp; <span class="h">x = 6</span>`;
+  await wait(3500);if(!alive())return;
+  say("Achtung: x darf nicht 0 sein – sonst stünde 4/0 da, und durch 0 kann man nicht teilen.");
+  await wait(2500);if(!alive())return;
+  say("Probe mit x = 6: 4/6 + 1/3 = 2/3 + 1/3 = 1 ✓");
+  calc.innerHTML+=`<br><small>Probe: ${fr(4,6)} + ${fr(1,3)} = ${fr(2,3)} + ${fr(1,3)} = 1 ✓</small>`;
+  await wait(2500);if(!alive())return;
+  merke.classList.add("an");
+  baueCheck(checkGen);
+}
+
+/* ---------- Check: Hauptnenner mit x bilden ---------- */
+function baueCheck(gen){
+  const box=document.getElementById("check");box.classList.add("an");
+  const t=gen();let versuch=0,fertig=false;
+  box.innerHTML=`<h2>✎ Check: Jetzt du!</h2><div class="cq">${t.frage}</div>
+    <div class="crow">Hauptnenner: <input id="cin" inputmode="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="Hauptnenner">
+    <button class="btn" id="cpr" type="button">Prüfen ✓</button><button class="btn" id="cneu" type="button">🔁 Neue Aufgabe</button></div>
+    <p style="color:var(--muted);margin:.4rem 0 0">Schreibe zum Beispiel 5x.</p><div id="cfb"></div>`;
+  const inp=document.getElementById("cin"),fb=document.getElementById("cfb");
+  const pr=()=>{if(fertig)return;const v=inp.value.trim();if(!v){fb.innerHTML='<div class="fb tipp">Bitte trage zuerst etwas ein.</div>';return;}
+    const r=t.pruefe(v);
+    if(r.ok){fertig=true;fb.innerHTML=`<div class="fb ok">✅ ${r.msg}</div>`;return;}
+    if(r.fast){fb.innerHTML=`<div class="fb tipp">🤔 ${r.msg}</div>`;return;}
+    versuch++;
+    if(versuch===1)fb.innerHTML=`<div class="fb tipp">Noch nicht. 💡 ${t.tipp}</div>`;
+    else{fertig=true;fb.innerHTML=`<div class="fb bad">Leider wieder falsch. So geht es: ${t.loesung}</div>`;}};
+  document.getElementById("cpr").onclick=pr;inp.addEventListener("keydown",e=>{if(e.key==="Enter")pr();});
+  document.getElementById("cneu").onclick=()=>baueCheck(gen);
+}
+// „4x“, „4·x“, „x4“, „4 * x“ → Zahl vor dem x; sonst null
+const leseX=v=>{const s=v.toLowerCase().replace(/[\s·*×]/g,"");let m=s.match(/^(\d*)x$/)||s.match(/^x(\d+)$/);return m?(m[1]===""?1:+m[1]):null;};
+function checkGen(){
+  const R=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+  if(Math.random()<.6){   // a/x + 1/b → Hauptnenner b·x
+    const b=[2,4,5,6,7][R(0,4)],a=R(1,9);
+    return {frage:`${fr(a,"x")} + ${fr(1,b)} = … &nbsp; Bilde den <b>Hauptnenner</b>.`,
+      pruefe:v=>{const k=leseX(v);if(k===b)return{ok:true,msg:`Richtig! Bausteine x und ${b}: Hauptnenner ${b}x.`};
+        if(k&&k%b===0)return{fast:true,msg:`${v} klappt auch – aber geht es kleiner?`};
+        if(+v===b)return{ok:false};return{ok:false};},
+      tipp:`Wie vorher mit Zahlen: Die Nenner x und ${b} kommen in den Korb. Gemeinsame Bausteine haben sie nicht – also x · ${b}.`,
+      loesung:`Nenner x und ${b} → Hauptnenner x · ${b} = <b>${b}x</b>.`};
+  }
+  // a/(2x) + 1/b mit b gerade → die 2 steckt doppelt
+  const b=[4,6][R(0,1)],a=R(1,9),H=b;   // 2x und 4 → 4x, 2x und 6 → 6x
+  return {frage:`${fr(a,"2x")} + ${fr(1,b)} = … &nbsp; Bilde den <b>Hauptnenner</b>.`,
+    pruefe:v=>{const k=leseX(v);if(k===H)return{ok:true,msg:`Richtig! 2x = 2 · x, ${b} = ${b===4?"2 · 2":"2 · 3"} – die 2 nur einmal: ${H}x.`};
+      if(k&&k%H===0)return{fast:true,msg:`${v} klappt auch – aber geht es kleiner? Die 2 steckt in beiden Nennern.`};return{ok:false};},
+    tipp:`Zerlege: 2x = 2 · x und ${b} = ${b===4?"2 · 2":"2 · 3"}. Sammle alle Bausteine – was in beiden steckt, nur einmal.`,
+    loesung:`2x = 2 · x, ${b} = ${b===4?"2 · 2":"2 · 3"} → Hauptnenner ${b===4?"2 · 2 · x":"2 · 3 · x"} = <b>${H}x</b>.`};
+}
+
+const bar=document.getElementById("bar");
+const go=document.createElement("button");go.className="btn";go.textContent="↺ Nochmal abspielen";go.onclick=()=>{PAUSE=false;pz.textContent="⏸ Pause";play();};bar.appendChild(go);
+const pz=document.createElement("button");pz.className="btn";pz.textContent="⏸ Pause";pz.onclick=()=>{PAUSE=!PAUSE;pz.textContent=PAUSE?"▶ Weiter":"⏸ Pause";};bar.appendChild(pz);
+const zc=document.createElement("button");zc.className="btn";zc.textContent="✎ Zum Check";zc.onclick=()=>{baueCheck(checkGen);document.getElementById("check").scrollIntoView({behavior:"smooth"});};bar.appendChild(zc);
+play();
+</script>
+</body>
+</html>

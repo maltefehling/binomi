@@ -19,6 +19,7 @@
   .bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
   .btn{border:1px solid var(--acc);background:#fff;color:var(--acc);border-radius:10px;padding:10px 16px;font-size:17px;font-weight:700;min-height:46px}
   .btn[aria-pressed="true"]{background:var(--acc);color:#fff}
+  .btn .fr{font-size:.9em}
   .wrap{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start}
   svg{flex:1 1 520px;max-width:660px;width:100%;height:auto;background:var(--card);border:1px solid var(--line);border-radius:12px}
   .side{flex:1 1 300px}
@@ -49,7 +50,7 @@
   <div class="wrap">
     <svg id="s" viewBox="0 0 640 340" aria-label="Eine ganze Zahl wird als Bruch mit Nenner 1 geschrieben und mit einem Bruch multipliziert"></svg>
     <div class="side"><div class="cap" id="cap"></div>
-      <div class="merke" id="merke"><b>Merke:</b> Ganze Zahl mal Bruch: Die Zahl kommt in den <b>Zähler</b>. Danach <b>kürzen</b>, wenn es geht.</div></div>
+      <div class="merke" id="merke"><b>Merke:</b> Ganze Zahl mal Bruch: Die Zahl kommt in den <b>Zähler</b>, dann <b>kürzen</b>.<br>Der Bruch <b>verschwindet</b>, wenn die Zahl durch den Nenner teilbar ist.</div></div>
   </div>
   <section class="auf" id="auf">
     <h2>✎ Jetzt du: zwei Aufgaben</h2>
@@ -135,6 +136,10 @@ async function play([z,zaehler,n]){   // z · zaehler/n, z durch n teilbar → E
   const res=T(400,Y2,(q===1?"":q)+zaehler,{fill:"var(--z)",op:0,size:46});
   await fade([res],1,1200);if(!alive())return;
   await wait(2500);if(!alive())return;
+  // Kernsatz für die Stunde: der Nenner verschwindet, weil die Zahl durch ihn teilbar ist
+  say(`Schau genau hin: Der Bruch ist verschwunden! Das klappt, weil ${z} durch den Nenner ${n} teilbar ist.`);
+  const kreis=el("rect",{x:350,y:Y2-32,width:100,height:64,rx:14,fill:"none",stroke:"var(--z)","stroke-width":3,opacity:0});
+  await fade([kreis],1,800);await wait(2500);if(!alive())return;
   merke.classList.add("an");
   zeigeAufgaben(false);
 }
@@ -167,7 +172,7 @@ function neueAufgaben(){
 function zeigeAufgaben(scroll){const a=document.getElementById("auf");if(!a.classList.contains("an")){a.classList.add("an");neueAufgaben();}if(scroll)a.scrollIntoView({behavior:"smooth",block:"start"});}
 const BSP=[[6,"x",2],[6,"x",3],[12,"x",4]];
 const bar=document.getElementById("bar");
-BSP.forEach((b,i)=>{const x=document.createElement("button");x.className="btn bsp";x.textContent=`Beispiel ${i+1}: ${b[0]} · ${b[1]}/${b[2]}`;
+BSP.forEach((b,i)=>{const x=document.createElement("button");x.className="btn bsp";x.innerHTML=`Beispiel ${i+1}: &nbsp;${b[0]} · <span class="fr"><span>${b[1]}</span><span>${b[2]}</span></span>`;
   x.onclick=()=>{PAUSE=false;pz.textContent="⏸ Pause";bar.querySelectorAll(".bsp").forEach(y=>y.setAttribute("aria-pressed",y===x));play(b);};bar.appendChild(x);});
 const pz=document.createElement("button");pz.className="btn";pz.type="button";pz.textContent="⏸ Pause";
 pz.onclick=()=>{PAUSE=!PAUSE;pz.textContent=PAUSE?"▶ Weiter":"⏸ Pause";};bar.appendChild(pz);

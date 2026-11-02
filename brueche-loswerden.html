@@ -21,6 +21,7 @@
   .bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
   .btn{border:1px solid var(--acc);background:#fff;color:var(--acc);border-radius:10px;padding:10px 16px;font-size:17px;font-weight:700;min-height:46px}
   .btn[aria-pressed="true"]{background:var(--acc);color:#fff}
+  .btn .fr{font-size:.9em}
   .wrap{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start}
   svg{flex:1 1 520px;max-width:640px;width:100%;height:auto;background:var(--card);border:1px solid var(--line);border-radius:12px}
   .side{flex:1 1 300px}
@@ -34,6 +35,15 @@
   .fr span:last-child{border-top:2px solid currentColor;padding:0 .15em}
   .merke{display:none;background:#e3eef9;border:1px solid #b9d0ea;border-radius:12px;padding:10px 14px;font-size:19px;line-height:1.45;margin-top:12px}
   .merke.an{display:block}
+  .check{display:none;margin-top:16px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 16px;max-width:1068px}
+  .check.an{display:block}
+  .check h2{margin:.2rem 0 .4rem;font-size:21px;color:var(--acc)}
+  .check .cq{font-size:21px;line-height:1.5;margin-bottom:8px}
+  .check .crow{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:24px;font-weight:700}
+  .check input{width:4.2em;height:48px;font-size:24px;font-weight:700;text-align:center;border:2px solid var(--line);border-radius:10px}
+  .check input:focus{outline:none;border-color:var(--acc)}
+  .check .fb{margin-top:8px;padding:8px 12px;border-radius:10px;font-size:18px;line-height:1.45}
+  .fb.ok{background:#e4f4e2;color:#24622a}.fb.tipp{background:#fff4e0;color:#7a4a08}.fb.bad{background:#fde8e6;color:#9b2c1f}
   footer{color:var(--muted);font-size:13px;text-align:center;padding:10px 0 18px}
   svg text{font-family:inherit}
 </style>
@@ -47,6 +57,7 @@
     <div class="side"><div class="cap" id="cap"></div><div class="calc" id="calc"></div>
       <div class="merke" id="merke"><b>Merke:</b> Nimm die <b>ganze</b> Gleichung mal eine Zahl, in der <b>alle Nenner stecken</b>. Dann verschwinden die Brüche.</div></div>
   </div>
+  <section class="check" id="check"></section>
 </main>
 <footer>Fehling · Bruchgleichungen</footer>
 <script>
@@ -71,9 +82,35 @@ let run=0;
 
 // Ein Bruch in der Gleichung: Zähler x, Bruchstrich, Nenner farbig
 function bruch(cx,nenner,farbe){
-  txt(cx,40,"x",{size:30});
-  el("line",{x1:cx-20,y1:62,x2:cx+20,y2:62,stroke:"var(--ink)","stroke-width":3});
-  return txt(cx,86,String(nenner),{size:30,fill:farbe});
+  const z=txt(cx,40,"x",{size:30});
+  const l=el("line",{x1:cx-20,y1:62,x2:cx+20,y2:62,stroke:"var(--ink)","stroke-width":3});
+  const n=txt(cx,86,String(nenner),{size:30,fill:farbe});n.z=z;n.l=l;n.cx=cx;return n;
+}
+/* Wie in der Erinnerung „Zahl in den Zähler“: die Zahl erscheint vor dem Bruch und wandert hoch in den Zähler */
+const breite=e=>e.getBBox().width;
+async function inZaehler(B,zahl){
+  const e=txt(0,62,String(zahl),{size:30,fill:"var(--hl)",op:0}),d=txt(0,62,"·",{size:30,op:0});
+  const we=breite(e),wd=breite(d),wz=breite(B.z);
+  e.setAttribute("x",B.cx-30-wd-6-we/2);d.setAttribute("x",B.cx-30-wd/2);
+  await fade([e,d],1,600);await wait(1000);
+  const ges=we+6+wd+6+wz,x0=B.cx-ges/2;
+  const l1=+B.l.getAttribute("x1"),l2=+B.l.getAttribute("x2");
+  await Promise.all([move(e,x0+we/2,40,1100),move(d,x0+we+6+wd/2,40,1100),move(B.z,x0+ges-wz/2,40,1100),
+    tween(1100,k=>{B.l.setAttribute("x1",l1+(x0-6-l1)*k);B.l.setAttribute("x2",l2+(x0+ges+6-l2)*k);})]);
+  return e;
+}
+const T_=(x,y,t,g)=>txt(x,y,t,{size:g,fill:"#b03a2e",op:0});
+/* Kürzen deutlich (Malte 2.11.2026): beide Zahlen leuchten auf, werden durchgestrichen, gekürzte Zahl oben und unten dazuschreiben */
+async function kuerze(oben,unten,restO,restU,gr=22){
+  const hl=[oben,unten].map(e=>{const b=e.getBBox();const r=el("rect",{x:b.x-6,y:b.y-3,width:b.width+12,height:b.height+6,rx:8,fill:"#fde7c8",stroke:"#c0700f","stroke-width":2,opacity:0});e.parentNode.insertBefore(r,e);return r;});
+  for(let i=0;i<2;i++){await fade(hl,1,450);await fade(hl,0.35,450);}
+  await fade(hl,1,300);await wait(1500);
+  const s=[oben,unten].map(e=>{const b=e.getBBox();return el("line",{x1:b.x-4,y1:b.y+b.height-5,x2:b.x+b.width+4,y2:b.y+5,stroke:"#b03a2e","stroke-width":3.5,opacity:0});});
+  await fade(s,1,700);await wait(800);
+  const bo=oben.getBBox(),bu=unten.getBBox();
+  const r=[T_(bo.x+bo.width/2,bo.y-gr*0.55,String(restO),gr),T_(bu.x+bu.width/2,bu.y+bu.height+gr*0.55,String(restU),gr)];
+  await fade(r,1,700);await fade(hl,0,500);
+  return [...hl,...s,...r];
 }
 
 async function play([a,b,c]){
@@ -81,7 +118,7 @@ async function play([a,b,c]){
   svg.innerHTML="";calc.innerHTML="";merke.classList.remove("an");
   const N=a*b,x=c*N/(a+b);
   // Gleichung oben
-  const n1=bruch(170,a,"var(--n1)");txt(250,62,"+");const n2=bruch(330,b,"var(--n2)");txt(405,62,"= "+c);
+  const n1=bruch(160,a,"var(--n1)");txt(240,62,"+");const n2=bruch(325,b,"var(--n2)");txt(440,62,"= "+c);
   calc.innerHTML=`${fr("x",a,"b1")} + ${fr("x",b,"b2")} = ${c}`;
   say(`Die Brüche stören: Hier wird durch ${a} und durch ${b} geteilt.`);
   // Nenner pulsieren
@@ -91,7 +128,7 @@ async function play([a,b,c]){
   // Schachtel-Geometrie: a Reihen, b Spalten
   const s=Math.min(58,Math.floor(210/Math.max(a,b))),W=b*s,H=a*s,x0=300-W/2,y0=200+(170-H)/2;
   say(`Wir ziehen die beiden Nenner heraus: die ${a} und die ${b}.`);
-  const k1=txt(170,86,String(a),{size:30,fill:"var(--n1)"}),k2=txt(330,86,String(b),{size:30,fill:"var(--n2)"});
+  const k1=txt(160,86,String(a),{size:30,fill:"var(--n1)"}),k2=txt(325,86,String(b),{size:30,fill:"var(--n2)"});
   await Promise.all([move(k1,x0-28,y0+H/2),move(k2,300,y0-24)]);if(!alive())return;
   await wait(800);if(!alive())return;
 
@@ -126,35 +163,77 @@ async function play([a,b,c]){
   await wait(2400);if(!alive())return;
   await fade(linien2,0,300);tint.flat().forEach(t=>t.setAttribute("fill","transparent"));
 
-  // alles mal N
-  say(`In der ${N} stecken beide Nenner. Darum nehmen wir die ganze Gleichung mal ${N} – jeden Teil!`);
-  const mal=[txt(120,62,N+" ·",{size:24,fill:"var(--hl)",op:0}),txt(284,62,N+" ·",{size:24,fill:"var(--hl)",op:0}),txt(472,62,"· "+N,{size:24,fill:"var(--hl)",op:0})];
-  // „= c“ etwas nach links, damit „· N“ Platz hat
-  await fade(mal,1,500);if(!alive())return;
-  calc.innerHTML=`<span class="h">${N}</span> · ${fr("x",a,"b1")} + <span class="h">${N}</span> · ${fr("x",b,"b2")} = <span class="h">${N}</span> · ${c}`;
-  await wait(2400);if(!alive())return;
+  // alles mal N – N kommt in den Zähler, dann kürzen
+  say(`In der ${N} stecken beide Nenner. Darum nehmen wir die ganze Gleichung mal ${N} – und wie in der Erinnerung kommt die ${N} in den Zähler.`);
+  const rechts=txt(512,62,"· "+N,{size:24,fill:"var(--hl)",op:0});
+  const [e1,e2]=await Promise.all([inZaehler(n1,N),inZaehler(n2,N)]);await fade([rechts],1,500);if(!alive())return;
+  calc.innerHTML=`${fr('<span class="h">'+N+'</span> · x',a,"b1")} + ${fr('<span class="h">'+N+'</span> · x',b,"b2")} = <span class="h">${N}</span> · ${c}`;
+  await wait(2600);if(!alive())return;
 
   // kürzen
-  say(`Jeder Nenner passt in die ${N}: ${N} : ${a} = ${b} und ${N} : ${b} = ${a}. Die Brüche verschwinden.`);
-  await fade([n1,n2],0.25,500);
-  const erg=[txt(170,126,b+"x",{size:28,fill:"var(--hl)",op:0}),txt(330,126,a+"x",{size:28,fill:"var(--hl)",op:0}),txt(420,126,"= "+N*c,{size:28,fill:"var(--hl)",op:0}),txt(250,126,"+",{size:28,op:0})];
+  say(`Jetzt kürzen: ${N} oben und ${a} unten – ${N} : ${a} = ${b}, ${a} : ${a} = 1. Genauso ${N} und ${b}. Die Brüche verschwinden.`);
+  await kuerze(e1,n1,N/a,1,20);await kuerze(e2,n2,N/b,1,20);if(!alive())return;
+  const erg=[txt(160,150,b+"x",{size:28,fill:"var(--hl)",op:0}),txt(325,150,a+"x",{size:28,fill:"var(--hl)",op:0}),txt(440,150,"= "+N*c,{size:28,fill:"var(--hl)",op:0}),txt(240,150,"+",{size:28,op:0})];
   await fade(erg,1,600);
-  calc.innerHTML+=`<br>${b}x + ${a}x = ${N*c} <small>(${N} : ${a} = ${b}, ${N} : ${b} = ${a})</small>`;
-  await wait(2600);if(!alive())return;
+  calc.innerHTML+=`<br>${b} · x + ${a} · x = ${N*c}<br>${b}x + ${a}x = ${N*c}`;
+  await wait(2800);if(!alive())return;
 
   say(`Jetzt ist es eine ganz normale Gleichung.`);
   calc.innerHTML+=`<br>${a+b}x = ${N*c} &nbsp;→&nbsp; <span class="h">x = ${x}</span>`;
   await wait(1800);if(!alive())return;
   say(`Probe: ${x} : ${a} = ${x/a} und ${x} : ${b} = ${x/b}, zusammen ${x/a+x/b} ✓`);
+  await wait(1500);if(!alive())return;
+  const g=ggT(a,b);
+  if(g>1){   // Nenner mit gemeinsamem Baustein: Schachtel klappt, ist aber größer als nötig → Brücke zu „Geht es auch kleiner?“
+    const k=N/g;
+    say(`Es klappt! Aber: Geht es auch mit weniger Pralinen? Auch ${k} kann man gerecht in ${a} Teile und in ${b} Teile teilen.`);
+    calc.innerHTML+=`<br><small>Auch ${k} klappt: ${k} : ${a} = ${k/a}, ${k} : ${b} = ${k/b} – und ${k} ist kleiner als ${N}!</small>`;
+    await wait(3000);if(!alive())return;
+    say(`Wie man die kleinste Zahl findet, zeigt die nächste Animation „Geht es auch kleiner?“.`);
+  }
   merke.classList.add("an");
+  baueCheck(checkGen);
+}
+const ggT=(a,b)=>b?ggT(b,a%b):a;
+/* ---------- Kleiner Check am Ende (Malte 2.11.2026) ----------
+   gen() liefert {frage, pruefe(eingabe) → {ok, fast, msg}, tipp, loesung, einheit}. 1. Fehler → Tipp, 2. Fehler → Lösung. */
+function baueCheck(gen){
+  const box=document.getElementById("check");box.classList.add("an");
+  const t=gen();let versuch=0,fertig=false;
+  box.innerHTML=`<h2>✎ Check: Jetzt du!</h2><div class="cq">${t.frage}</div>
+    <div class="crow"><input id="cin" inputmode="${t.text?"text":"numeric"}" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="Antwort">${t.einheit||""}
+    <button class="btn" id="cpr" type="button">Prüfen ✓</button><button class="btn" id="cneu" type="button">🔁 Neue Aufgabe</button></div><div id="cfb"></div>`;
+  const inp=document.getElementById("cin"),fb=document.getElementById("cfb");
+  const pr=()=>{if(fertig)return;const v=inp.value.trim();if(!v){fb.innerHTML='<div class="fb tipp">Bitte trage zuerst etwas ein.</div>';return;}
+    const r=t.pruefe(v);
+    if(r.ok){fertig=true;fb.innerHTML=`<div class="fb ok">✅ ${r.msg||"Richtig!"}</div>`;return;}
+    if(r.fast){fb.innerHTML=`<div class="fb tipp">🤔 ${r.msg}</div>`;return;}
+    versuch++;
+    if(versuch===1)fb.innerHTML=`<div class="fb tipp">Noch nicht. 💡 ${t.tipp}</div>`;
+    else{fertig=true;fb.innerHTML=`<div class="fb bad">Leider wieder falsch. So geht es: ${t.loesung}</div>`;}};
+  document.getElementById("cpr").onclick=pr;inp.addEventListener("keydown",e=>{if(e.key==="Enter")pr();});
+  document.getElementById("cneu").onclick=()=>baueCheck(gen);
+}
+
+// Check: zwei Nenner ohne gemeinsamen Baustein → Nenner mal Nenner (andere Paare als in den Beispielen)
+function checkGen(){
+  const [a,b]=[[3,5],[2,7],[4,5],[2,9],[5,6],[3,7],[4,7]][Math.floor(Math.random()*7)],N=a*b;
+  return {frage:`${fr("x",a,"b1")} + ${fr("x",b,"b2")} = …<br>Mit welcher Zahl nimmst du die <b>ganze</b> Gleichung mal, damit <b>beide</b> Brüche verschwinden?`,
+    einheit:"",
+    pruefe:v=>{const n=+v.replace(",",".");if(!Number.isInteger(n)||n<=0)return{ok:false};
+      if(n%a===0&&n%b===0)return n===N?{ok:true,msg:`Richtig! ${N} ist durch ${a} und durch ${b} teilbar: ${a} · ${b} = ${N}.`}:{ok:true,msg:`Klappt auch! Die kleinste Zahl wäre ${a} · ${b} = ${N}.`};
+      return{ok:false};},
+    tipp:`Die Zahl muss durch ${a} <b>und</b> durch ${b} teilbar sein. Denk an die Pralinenschachtel: ${a} Reihen mit je ${b} Pralinen.`,
+    loesung:`${a} · ${b} = <b>${N}</b>. ${N} : ${a} = ${N/a} und ${N} : ${b} = ${N/b} – beide Nenner verschwinden.`};
 }
 // nur Nenner ohne gemeinsamen Baustein: dann ist Nenner · Nenner schon die kleinste Zahl (der Rest kommt in „Welche Zahl reicht?“)
-const BSP=[[2,3,10],[2,5,7],[3,4,7]];
+const BSP=[[2,3,10],[2,5,7],[3,4,7],[4,6,5]];   // Beispiel 4: Nenner mit gemeinsamem Baustein → Brücke zu „Geht es auch kleiner?“
 const bar=document.getElementById("bar");
-BSP.forEach((b,i)=>{const x=document.createElement("button");x.className="btn";x.innerHTML=`Beispiel ${i+1}: x/${b[0]} + x/${b[1]} = ${b[2]}`;
-  x.onclick=()=>{PAUSE=false;pz.textContent="⏸ Pause";bar.querySelectorAll(".btn.bsp").forEach(y=>y.setAttribute("aria-pressed",y===x));play(b);};x.classList.add("bsp");bar.appendChild(x);});
+BSP.forEach((b,i)=>{const x=document.createElement("button");x.className="btn";x.innerHTML=`Beispiel ${i+1}: &nbsp;${fr("x",b[0])} + ${fr("x",b[1])} = ${b[2]}`;
+  x.onclick=()=>{PAUSE=false;document.getElementById("check").classList.remove("an");pz.textContent="⏸ Pause";bar.querySelectorAll(".btn.bsp").forEach(y=>y.setAttribute("aria-pressed",y===x));play(b);};x.classList.add("bsp");bar.appendChild(x);});
 const pz=document.createElement("button");pz.className="btn";pz.type="button";pz.textContent="⏸ Pause";
 pz.onclick=()=>{PAUSE=!PAUSE;pz.textContent=PAUSE?"▶ Weiter":"⏸ Pause";};bar.appendChild(pz);
+const zc=document.createElement("button");zc.className="btn";zc.type="button";zc.textContent="✎ Zum Check";zc.onclick=()=>{baueCheck(checkGen);document.getElementById("check").scrollIntoView({behavior:"smooth"});};bar.appendChild(zc);
 bar.firstChild.setAttribute("aria-pressed","true");play(BSP[0]);
 </script>
 </body>

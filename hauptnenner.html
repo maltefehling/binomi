@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<title>Welche Zahl reicht?</title>
+<title>Geht es auch kleiner?</title>
 <!-- I.6 Bruchgleichungen: Hauptnenner durch Zerlegen. Jeder Nenner zerfällt in kleinste Malaufgaben, die Bausteine wandern
      in den Hauptnenner-Korb; was schon im Korb liegt, wird nicht noch einmal genommen. Gleiches Bild wie das Zerlegen in I.1b.
      MODUS=beispiele: drei feste Beispiele · MODUS=eingabe: eigene Nenner (Hilfe zur Übung). -->
@@ -33,18 +33,28 @@
   .chip{min-width:48px;height:44px;border-radius:10px;border:1px solid var(--line);background:#fff;font-size:20px;font-weight:700;color:var(--ink);padding:0 10px}
   .chip[aria-pressed="true"]{background:var(--acc);color:#fff;border-color:var(--acc)}
   .prompt{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;font-size:18px;line-height:1.45;margin-bottom:12px}
+  .check{display:none;margin-top:16px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 16px;max-width:1068px}
+  .check.an{display:block}
+  .check h2{margin:.2rem 0 .4rem;font-size:21px;color:var(--acc)}
+  .check .cq{font-size:21px;line-height:1.5;margin-bottom:8px}
+  .check .crow{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:24px;font-weight:700}
+  .check input{width:4.2em;height:48px;font-size:24px;font-weight:700;text-align:center;border:2px solid var(--line);border-radius:10px}
+  .check input:focus{outline:none;border-color:var(--acc)}
+  .check .fb{margin-top:8px;padding:8px 12px;border-radius:10px;font-size:18px;line-height:1.45}
+  .fb.ok{background:#e4f4e2;color:#24622a}.fb.tipp{background:#fff4e0;color:#7a4a08}.fb.bad{background:#fde8e6;color:#9b2c1f}
   footer{color:var(--muted);font-size:13px;text-align:center;padding:10px 0 18px}
   svg text{font-family:inherit}
 </style>
 </head>
 <body>
-<header><h1>Welche Zahl reicht?</h1></header>
+<header><h1>Geht es auch kleiner?</h1></header>
 <main>
   <div class="bar" id="bar"></div>
   <div class="wrap">
     <svg id="s" viewBox="0 0 600 400" aria-label="Nenner werden zerlegt, die Bausteine wandern in den Hauptnenner-Korb"></svg>
     <div class="side"><div class="cap" id="cap"></div><div class="calc" id="calc"></div></div>
   </div>
+  <section class="check" id="check"></section>
 </main>
 <footer>Fehling · Bruchgleichungen</footer>
 <script>
@@ -90,7 +100,7 @@ async function play(N){
   el("rect",{x:60,y:270,width:480,height:100,rx:18,fill:"var(--korb)",stroke:"var(--korbL)","stroke-width":3});
   txt(300,292,"Hauptnenner-Korb",{size:17,fill:"var(--muted)",w:600});
   const karten=N.map((t,i)=>{el("rect",{x:xs[i]-46,y:30,width:92,height:56,rx:10,fill:"#fff",stroke:COL[i],"stroke-width":3});return txt(xs[i],58,name(t),{fill:COL[i],size:30});});
-  say(`Die Nenner sind ${N.map(name).join(" und ")}. Welche Zahl reicht für alle?`);
+  say(N.length===2&&!N[0].x&&!N[1].x?`Die Nenner sind ${name(N[0])} und ${name(N[1])}. ${name(N[0])} · ${name(N[1])} = ${N[0].c*N[1].c} klappt immer – aber geht es kleiner?`:`Die Nenner sind ${N.map(name).join(" und ")}. Welche Zahl reicht für alle?`);
   await wait(2200);if(!alive())return;
   // 1. zerlegen
   say("Zuerst zerlegen wir jeden Nenner in kleinste Malaufgaben – wie beim Ausklammern.");
@@ -129,11 +139,47 @@ async function play(N){
   const hn=prod(korb),alle=prod(F.flat());
   const sortiert=[...korb].sort((a,b)=>(a==="x")-(b==="x")||a-b);calc.innerHTML=`Hauptnenner: ${sortiert.join(" · ")} = <span class="h">${hn}</span>`+(alle!==hn?`<br><small>Alle Nenner mal: ${N.map(name).join(" · ")} = ${alle} – das geht auch, ist aber größer als nötig.</small>`:"");
   say("Im Korb liegt der Hauptnenner: Er passt zu allen Nennern – und ist so klein wie möglich.");
+  await wait(2500);if(!alive())return;
+  baueCheck(checkGen);
+}
+/* ---------- Kleiner Check am Ende (Malte 2.11.2026) ----------
+   gen() liefert {frage, pruefe(eingabe) → {ok, fast, msg}, tipp, loesung, einheit}. 1. Fehler → Tipp, 2. Fehler → Lösung. */
+function baueCheck(gen){
+  const box=document.getElementById("check");box.classList.add("an");
+  const t=gen();let versuch=0,fertig=false;
+  box.innerHTML=`<h2>✎ Check: Jetzt du!</h2><div class="cq">${t.frage}</div>
+    <div class="crow"><input id="cin" inputmode="${t.text?"text":"numeric"}" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="Antwort">${t.einheit||""}
+    <button class="btn" id="cpr" type="button">Prüfen ✓</button><button class="btn" id="cneu" type="button">🔁 Neue Aufgabe</button></div><div id="cfb"></div>`;
+  const inp=document.getElementById("cin"),fb=document.getElementById("cfb");
+  const pr=()=>{if(fertig)return;const v=inp.value.trim();if(!v){fb.innerHTML='<div class="fb tipp">Bitte trage zuerst etwas ein.</div>';return;}
+    const r=t.pruefe(v);
+    if(r.ok){fertig=true;fb.innerHTML=`<div class="fb ok">✅ ${r.msg||"Richtig!"}</div>`;return;}
+    if(r.fast){fb.innerHTML=`<div class="fb tipp">🤔 ${r.msg}</div>`;return;}
+    versuch++;
+    if(versuch===1)fb.innerHTML=`<div class="fb tipp">Noch nicht. 💡 ${t.tipp}</div>`;
+    else{fertig=true;fb.innerHTML=`<div class="fb bad">Leider wieder falsch. So geht es: ${t.loesung}</div>`;}};
+  document.getElementById("cpr").onclick=pr;inp.addEventListener("keydown",e=>{if(e.key==="Enter")pr();});
+  document.getElementById("cneu").onclick=()=>baueCheck(gen);
+}
+
+// Check: zwei Zahl-Nenner MIT gemeinsamem Baustein (andere als die Beispiele)
+const kgV=(a,b)=>{const g=(x,y)=>y?g(y,x%y):x;return a*b/g(a,b);};
+function checkGen(){
+  const [a,b]=[[4,10],[6,9],[6,10],[8,12],[6,15],[10,15],[9,12],[6,8]][Math.floor(Math.random()*8)],H=kgV(a,b);
+  const fa=primes(a).join(" · "),fb=primes(b).join(" · ");
+  return {frage:`Die Nenner sind <b>${a}</b> und <b>${b}</b>. Bilde den <b>Hauptnenner</b> – die kleinste Zahl, mit der beide Brüche verschwinden.`,
+    pruefe:v=>{const n=+v.replace(",",".");if(!Number.isInteger(n)||n<=0)return{ok:false};
+      if(n===H)return{ok:true,msg:`Richtig! ${a} = ${fa}, ${b} = ${fb} – was doppelt ist, nur einmal: Hauptnenner ${H}.`};
+      if(n%a===0&&n%b===0)return{fast:true,msg:`${n} klappt auch – aber geht es kleiner? Zerlege ${a} und ${b}: Welcher Baustein steckt in beiden?`};
+      return{ok:false};},
+    tipp:`Zerlege beide Nenner: ${a} = ${fa} und ${b} = ${fb}. Sammle alle Bausteine – was in beiden steckt, nur einmal.`,
+    loesung:`${a} = ${fa}, ${b} = ${fb}. Hauptnenner: <b>${H}</b> (${H} : ${a} = ${H/a}, ${H} : ${b} = ${H/b}).`};
 }
 const BSP=[[{c:4,x:0},{c:6,x:0}],[{c:2,x:1},{c:3,x:0}],[{c:4,x:1},{c:6,x:1}]];
 const bar=document.getElementById("bar");
 BSP.forEach((b,i)=>{const x=document.createElement("button");x.className="btn";x.textContent="Beispiel "+(i+1)+":  "+b.map(name).join(" und ");
-  x.onclick=()=>{bar.querySelectorAll(".btn").forEach(y=>y.setAttribute("aria-pressed",y===x));play(b);};bar.appendChild(x);});
+  x.onclick=()=>{bar.querySelectorAll(".btn").forEach(y=>y.setAttribute("aria-pressed",y===x));document.getElementById("check").classList.remove("an");play(b);};bar.appendChild(x);});
+const zc=document.createElement("button");zc.className="btn";zc.textContent="✎ Zum Check";zc.onclick=()=>{baueCheck(checkGen);document.getElementById("check").scrollIntoView({behavior:"smooth"});};bar.appendChild(zc);
 bar.firstChild.setAttribute("aria-pressed","true");play(BSP[0]);
 </script>
 </body>
