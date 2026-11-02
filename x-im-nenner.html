@@ -53,6 +53,24 @@
     svg{max-width:100%;width:100%;height:auto;max-height:44vh}
     .side{width:100%}
   }
+  .tab{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:6px 10px;margin:0 0 8px;font-size:16px}
+  .tab .tt{font-size:15px;color:var(--muted);margin:2px 0 4px}
+  .tab .z{display:flex;gap:8px;align-items:center;padding:3px 6px;border-radius:8px;min-height:30px}
+  .tab .z .nr{font-weight:800;color:var(--muted);min-width:1.4em}
+  .tab .z .v{font-weight:800;color:#24622a}
+  .tab .z.akt{background:var(--hlbg);outline:2px solid var(--hl)}
+  .frage{background:#fff4e0;border:2px solid var(--hl);border-radius:12px;padding:8px 12px;font-size:18px;line-height:1.45;margin:0 0 8px;display:none}
+  .frage.an{display:block}
+  .weiter{display:none;background:var(--hl);border-color:var(--hl);color:#fff;font-size:17px;margin:0 0 8px}
+  .weiter.an{display:inline-block}
+  .vrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
+  .vrow input{width:5em;height:46px;font-size:22px;font-weight:700;text-align:center;border:2px solid var(--line);border-radius:10px}
+  .frage .btn{font-size:16px;min-height:44px}
+  .weiterbtn{background:var(--hl);border-color:var(--hl);color:#fff}
+  .vfb{margin-top:6px;padding:6px 10px;border-radius:10px;font-size:17px;line-height:1.4}
+  .vfb.ok{background:#e4f4e2;color:#24622a}.vfb.tipp{background:#fff4e0;color:#7a4a08}
+  .rollenmodus .calc{display:none}
+  @media (orientation:portrait){.frage{order:-2}.weiter{order:-1;align-self:flex-start}.side{display:flex;flex-direction:column}}
   footer{color:var(--muted);font-size:13px;text-align:center;padding:10px 0 18px}
   svg text{font-family:inherit}
 </style>
@@ -63,7 +81,8 @@
   <div class="bar" id="bar"></div>
   <div class="wrap">
     <svg id="s" viewBox="0 0 640 300" aria-label="Erst Nenner aus Zahlen, dann wird aus der 2 ein x – das Vorgehen bleibt gleich"></svg>
-    <div class="side"><div class="cap" id="cap"></div><div class="calc" id="calc"></div>
+    <div class="side"><div class="tab" id="tab" hidden></div><div class="frage" id="frage"></div><button class="btn weiter" id="weiter" type="button">▶ Weiter</button>
+      <div class="cap" id="cap"></div><div class="calc" id="calc"></div>
       <div class="merke" id="merke"><b>Merke:</b> Steht x im Nenner, gehört x in den <b>Hauptnenner</b>. Dann geht alles wie mit Zahlen: mal Hauptnenner, kürzen, lösen.<br><b>x darf nicht 0 sein.</b></div></div>
   </div>
   <section class="check" id="check"></section>
@@ -124,8 +143,134 @@ async function kuerze(oben,unten,restO,restU,gr=22){
 }
 async function zurueck(B,weg){await fade(weg,0,600);weg.forEach(e=>e.remove());await Promise.all([move(B.z,B.cx,52,800),strich(B,B.cx-24,B.cx+24)]);}
 
+/* ---------- Geführte Tabelle zur Skript-Aufgabe 3/x + 1/(2x) = 7/4 (Malte 4.11.2026) ----------
+   Wie die Partner-Tabelle: Zeilen ①–⑦, bei ①, ② und ⑥ zuerst eine Vermutung eingeben,
+   bei „keine Idee“ oder falscher Vermutung wird der Schritt animiert gezeigt. Sonst: erst selbst rechnen, dann vergleichen. */
+const XZ=[["①","x darf nicht sein:"],["②","Hauptnenner:"],["③","Alles mal:"],["④","Kürzen:"],["⑤","Zusammenfassen:"],["⑥","x ="],["⑦","Probe:"]];
+function xTabelle(){
+  const t=$id("tab");t.hidden=false;
+  t.innerHTML=`<div class="tt">Deine Tabelle im Skript</div>`+XZ.map((z,i)=>`<div class="z"><span class="nr">${z[0]}</span><span>${z[1]}</span><span class="v" id="v${i}"></span></div>`).join("");
+}
+const xzeile=(i,w)=>{document.querySelectorAll(".tab .z").forEach((z,k)=>z.classList.toggle("akt",k===i));if(w!=null)$id("v"+i).innerHTML=w;};
+function xhalt(i,frage,eintragen=false){
+  const f=$id("frage"),w=$id("weiter");xzeile(i);
+  f.innerHTML=frage+(eintragen?"":`<br><b>Rechne selbst und schreib es in Zeile ${XZ[i][0]}. Dann tippe auf ▶ Weiter.</b>`);f.classList.add("an");
+  w.textContent=eintragen?"▶ Weiter – ist eingetragen":`▶ Weiter – Zeile ${XZ[i][0]} ist ausgefüllt`;w.classList.add("an");
+  setTimeout(()=>f.scrollIntoView({block:"nearest",behavior:"smooth"}),100);
+  return new Promise(r=>{w.onclick=()=>{f.classList.remove("an");w.classList.remove("an");r();};});
+}
+// Vermutung: pruefe(v) → {ok, fast, msg}; Ergebnis {ok, zeigen}
+function xvermutung(i,frage,pruefe,ph="Zahl"){
+  const f=$id("frage");xzeile(i);
+  f.innerHTML=`<b>Zeile ${XZ[i][0]}: Deine Vermutung</b><br>${frage}
+    <div class="vrow"><input id="vin" inputmode="${ph==="Zahl"?"numeric":"text"}" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="${ph}"><button class="btn" id="vpr" type="button">Prüfen ✓</button></div>
+    <button class="btn" id="vzeig" type="button">Ich habe keine Idee – zeig mir, wie es geht</button><div id="vfb"></div>`;
+  f.classList.add("an");setTimeout(()=>f.scrollIntoView({block:"nearest",behavior:"smooth"}),100);
+  return new Promise(r=>{
+    const fertig=(ok,zeigen)=>{f.classList.remove("an");r({ok,zeigen});};
+    $id("vzeig").onclick=()=>fertig(false,true);
+    const pr=()=>{const v=$id("vin").value.trim(),fb=$id("vfb");if(!v){fb.innerHTML='<div class="vfb tipp">Tippe zuerst etwas ein.</div>';return;}
+      const e=pruefe(v);
+      if(e.ok){fb.innerHTML=`<div class="vfb ok">✅ ${e.msg}</div><div class="vrow"><button class="btn weiterbtn" id="vw" type="button">▶ Weiter</button><button class="btn" id="vwarum" type="button">Zeig mir trotzdem, wie es geht</button></div>`;
+        $id("vw").onclick=()=>fertig(true,false);$id("vwarum").onclick=()=>fertig(true,true);}
+      else if(e.fast){fb.innerHTML=`<div class="vfb tipp">🤔 ${e.msg}</div>`;}
+      else{fb.innerHTML=`<div class="vfb tipp">${e.msg}</div><button class="btn weiterbtn" id="vz2" type="button">Zeig mir, wie es geht</button>`;$id("vz2").onclick=()=>fertig(false,true);}};
+    $id("vpr").onclick=pr;$id("vin").addEventListener("keydown",e=>{if(e.key==="Enter")pr();});
+  });
+}
+const $id=id=>document.getElementById(id);
+const zahlAus=v=>+v.replace(",",".").replace(/^x\s*=\s*/i,"").trim();
+
+async function playTabelle(){
+  const my=++run,alive=()=>my===run,say=t=>{if(alive())cap.textContent=t;};
+  svg.innerHTML="";calc.innerHTML="";merke.classList.remove("an");$id("check").classList.remove("an");
+  $id("frage").classList.remove("an");$id("weiter").classList.remove("an");document.body.classList.add("rollenmodus");
+  xTabelle();
+  const B1=bruch(150,"3","x","var(--x)");T(228,80,"+");const B2=bruch(320,"1","2x","var(--x)");T(408,80,"=");const B3=bruch(480,"7","4","var(--n2)");
+  say("Die Aufgabe aus dem Skript: 3/x + 1/(2x) = 7/4. Hier steht x im Nenner.");
+  await wait(1800);if(!alive())return;
+
+  // ① Welche Zahl darf x nicht sein?
+  let v=await xvermutung(0,"Welche Zahl darf man für x <b>nicht</b> einsetzen? Tipp: Wann wird ein Nenner 0?",
+    s=>{const n=zahlAus(s);if(n===0)return{ok:true,msg:"Richtig! Bei x = 0 werden die Nenner x und 2x zu 0 – durch 0 kann man nicht teilen."};
+      if(isNaN(n))return{ok:false,msg:"Gib eine Zahl ein."};return{ok:false,msg:`Setze ${s} ein: Nenner x = ${s}, Nenner 2x = ${2*n}. Beide sind nicht 0 – mit ${s} kann man rechnen.`};});
+  if(!alive())return;
+  if(v.zeigen){
+    say("Setze x = 0 ein: Der Nenner x wird 0, und der Nenner 2x wird 2 · 0 = 0. Durch 0 kann man nicht teilen.");
+    const x0a=T(150,108,"0",{fill:"var(--rot)",op:0}),x0b=T(320,108,"2 · 0",{fill:"var(--rot)",op:0});
+    await Promise.all([fade([B1.n,B2.n],0,500),fade([x0a,x0b],1,500)]);await wait(2800);if(!alive())return;
+    await Promise.all([fade([x0a,x0b],0,500),fade([B1.n,B2.n],1,500)]);x0a.remove();x0b.remove();
+  }
+  xzeile(0,"0 &nbsp;<small>(D = ℚ \\ {0})</small>");
+  if(!v.ok){await xhalt(0,"Schreib in Zeile ①: x darf nicht <b>0</b> sein.",true);if(!alive())return;}
+
+  // ② Hauptnenner
+  v=await xvermutung(1,"Welcher <b>Hauptnenner</b> passt zu den Nennern x, 2x und 4?",
+    s=>{const k=leseX(s);if(k===4)return{ok:true,msg:"Richtig! In 4x stecken x, 2x und 4."};
+      if(k&&k%4===0)return{fast:true,msg:`${s} klappt auch – aber geht es kleiner?`};
+      return{ok:false,msg:"Noch nicht. Schau dir an, wie man den Hauptnenner mit dem Korb findet."};},"z. B. 3x");
+  if(!alive())return;
+  if(v.zeigen){
+    const korb=[el("rect",{x:110,y:170,width:420,height:96,rx:16,fill:"var(--korb)",stroke:"var(--korbL)","stroke-width":3}),T(320,186,"Hauptnenner-Korb",{size:15,fill:"var(--muted)",w:600})];
+    say("Zerlege jeden Nenner in Bausteine: x = x, 2x = 2 · x, 4 = 2 · 2.");
+    const c1=T(150,140,"x",{size:24,fill:"var(--x)",op:0}),c2=[T(300,140,"2",{size:24,fill:"var(--x)",op:0}),T(340,140,"x",{size:24,fill:"var(--x)",op:0})],c3=[T(460,140,"2",{size:24,fill:"var(--n2)",op:0}),T(500,140,"2",{size:24,fill:"var(--n2)",op:0})];
+    await fade([c1,...c2,...c3],1,600);await wait(2400);if(!alive())return;
+    say("x kommt in den Korb. Bei 2x liegt x schon drin – nur die 2 kommt dazu. Bei 4 liegt eine 2 schon drin – nur die zweite 2 kommt dazu.");
+    await move(c1,260,232,800);await move(c2[0],320,232,800);
+    const hl=(e)=>{const b=e.getBBox();const r=el("rect",{x:b.x-5,y:b.y-3,width:b.width+10,height:b.height+6,rx:7,fill:"var(--hlbg)",stroke:"var(--hl)","stroke-width":2});svg.insertBefore(r,e);return r;};
+    const h1=hl(c2[1]);await wait(900);await fade([c2[1],h1],0.2,500);
+    const h2=hl(c3[0]);await wait(900);await fade([c3[0],h2],0.2,500);
+    await move(c3[1],380,232,800);if(!alive())return;
+    const erg=T(470,232,"= 4x",{size:24,fill:"var(--hl)",op:0});await fade([erg],1,500);
+    await wait(2500);if(!alive())return;
+    await fade([...korb,c1,...c2,...c3,h1,h2,erg],0,500);[...korb,c1,...c2,...c3,h1,h2,erg].forEach(e=>e.remove());
+  }
+  xzeile(1,"4x");
+  if(!v.ok){await xhalt(1,"Schreib in Zeile ②: Hauptnenner <b>4x</b>.",true);if(!alive())return;}
+
+  // ③ alles mal 4x – in den Zähler
+  await xhalt(2,"Zeile ③: Nimm <b>jeden Teil</b> der Gleichung mal 4x – auch die rechte Seite. Der Hauptnenner kommt in den Zähler.");if(!alive())return;
+  say("Der Hauptnenner 4x kommt in jeden Zähler.");
+  const t4=()=>[{t:"4x",fill:"var(--hl)"},{t:"·"}];
+  const [P1,P2,P3]=await Promise.all([inZaehler(B1,t4()),inZaehler(B2,t4()),inZaehler(B3,t4())]);if(!alive())return;
+  xzeile(2,`${fr("4x · 3","x")} + ${fr("4x · 1","2x")} = ${fr("4x · 7","4")}`);
+  await wait(1800);if(!alive())return;
+
+  // ④ kürzen
+  await xhalt(3,"Zeile ④: Kürze jeden Bruch. Was bleibt übrig?");if(!alive())return;
+  say("4x und x → oben bleibt 4. 4x und 2x → oben bleibt 2. 4x und 4 → oben bleibt x. Die Brüche verschwinden!");
+  await kuerze(P1[0],B1.n,4,1);await kuerze(P2[0],B2.n,2,1);await kuerze(P3[0],B3.n,"x",1);if(!alive())return;
+  const r4=T(320,170,"12 + 2 = 7x",{size:28,fill:"var(--hl)",op:0});await fade([r4],1,600);
+  xzeile(3,"4 · 3 + 2 · 1 = x · 7 &nbsp;→&nbsp; 12 + 2 = 7x");
+  await wait(2000);if(!alive())return;
+
+  // ⑤ zusammenfassen
+  await xhalt(4,"Zeile ⑤: Fasse zusammen. Durch welche Zahl musst du dann teilen?");if(!alive())return;
+  say("12 + 2 = 14. Also 14 = 7x. Damit x allein steht, teilen wir durch 7.");
+  const r5=T(320,210,"14 = 7x   | : 7",{size:26,fill:"var(--hl)",op:0});await fade([r5],1,600);
+  xzeile(4,"14 = 7x &nbsp;| : 7");
+  await wait(1800);if(!alive())return;
+
+  // ⑥ x
+  v=await xvermutung(5,"Rechne aus: x = ?",s=>{const n=zahlAus(s);if(n===2)return{ok:true,msg:"Richtig! 14 : 7 = 2."};return{ok:false,msg:"Noch nicht."};});
+  if(!alive())return;
+  if(v.zeigen){say("14 : 7 = 2. Also x = 2.");const r6=T(320,248,"x = 2",{size:28,fill:"var(--hl)",op:0});await fade([r6],1,600);await wait(1800);if(!alive())return;}
+  xzeile(5,"2");
+  if(!v.ok){await xhalt(5,"Schreib in Zeile ⑥: x = <b>2</b>.",true);if(!alive())return;}
+
+  // ⑦ Probe
+  await xhalt(6,"Zeile ⑦: Mach die Probe – setze x = 2 in die Gleichung ein.");if(!alive())return;
+  say("Probe: 3/2 + 1/4 = 6/4 + 1/4 = 7/4 ✓ – und 2 ist nicht 0, also erlaubt.");
+  xzeile(6,`${fr(3,2)} + ${fr(1,4)} = ${fr(6,4)} + ${fr(1,4)} = ${fr(7,4)} ✓`);
+  await wait(1500);if(!alive())return;
+  xzeile(-1);
+  merke.classList.add("an");
+  baueCheck(checkGen);
+}
+
 async function play(){
   const my=++run,alive=()=>my===run,say=t=>{if(alive())cap.textContent=t;};
+  document.getElementById('tab').hidden=true;document.body.classList.remove('rollenmodus');document.getElementById('frage').classList.remove('an');document.getElementById('weiter').classList.remove('an');
   svg.innerHTML="";calc.innerHTML="";merke.classList.remove("an");document.getElementById("check").classList.remove("an");
   // ---------- Teil 1: Nenner aus Zahlen ----------
   const B1=bruch(200,"4","2","var(--n1)");T(300,80,"+");const B2=bruch(410,"1","3","var(--n2)");
@@ -233,10 +378,12 @@ function checkGen(){
 }
 
 const bar=document.getElementById("bar");
-const go=document.createElement("button");go.className="btn";go.textContent="↺ Nochmal abspielen";go.onclick=()=>{PAUSE=false;pz.textContent="⏸ Pause";play();};bar.appendChild(go);
-const pz=document.createElement("button");pz.className="btn";pz.textContent="⏸ Pause";pz.onclick=()=>{PAUSE=!PAUSE;pz.textContent=PAUSE?"▶ Weiter":"⏸ Pause";};bar.appendChild(pz);
-const zc=document.createElement("button");zc.className="btn";zc.textContent="✎ Zum Check";zc.onclick=()=>{baueCheck(checkGen);document.getElementById("check").scrollIntoView({behavior:"smooth"});};bar.appendChild(zc);
-play();
+const kn=(t,fn,cls="")=>{const x=document.createElement("button");x.className="btn "+cls;x.innerHTML=t;x.onclick=fn;bar.appendChild(x);return x;};
+const k1=kn(`Aufgabe aus dem Skript: &nbsp;<span class="fr"><span>3</span><span>x</span></span> + <span class="fr"><span>1</span><span>2x</span></span> = <span class="fr"><span>7</span><span>4</span></span>`,()=>{PAUSE=false;pz.textContent="⏸ Pause";playTabelle();},"wahl");
+kn("Warum genauso? Aus der 2 wird ein x",()=>{PAUSE=false;pz.textContent="⏸ Pause";play();},"wahl");
+const pz=kn("⏸ Pause",()=>{PAUSE=!PAUSE;pz.textContent=PAUSE?"▶ Weiter":"⏸ Pause";});
+kn("✎ Zum Check",()=>{baueCheck(checkGen);document.getElementById("check").scrollIntoView({behavior:"smooth"});});
+playTabelle();
 </script>
 </body>
 </html>

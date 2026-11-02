@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Kontrolle: Definitionsmenge</title>
+<!-- I.6 Bruchgleichungen (4.11.2026, Wunsch Malte): Kontrolle zu den zwei Aufgaben „Gib die Definitionsmenge an“.
+     D = ℚ \ { _ } steht fertig da, eingegeben wird nur die Zahl. Sie wird in die Gleichung eingesetzt:
+     wird ein Nenner 0 → Haken; sonst wird der Nenner ausgerechnet und gezeigt, dass er nicht 0 ist. -->
+<style>
+  :root{--x:#7b4fa0;--rot:#b03a2e;--ok:#24622a;--okbg:#e4f4e2;--hl:#c0700f;--ink:#1b2a3a;--muted:#5b6b7c;--acc:#1f4e79;--bg:#f4f7fb;--card:#fff;--line:#c9d6e5}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif}
+  button,input{font:inherit;touch-action:manipulation}
+  header{padding:8px 16px;background:var(--acc);color:#fff;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+  header h1{font-size:20px;margin:0 8px 0 0}
+  .tab{border:0;border-radius:10px;padding:8px 18px;background:rgba(255,255,255,.15);color:#fff;font-weight:700;font-size:17px;min-height:44px}
+  .tab[aria-selected="true"]{background:#fff;color:var(--acc)}
+  main{padding:12px 16px 20px;max-width:900px;margin:0 auto}
+  .hint{background:#fdf6ea;border:1px solid #fbd9a8;border-radius:12px;padding:8px 14px;font-size:17px;margin-bottom:12px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin-bottom:12px}
+  .gl{font-size:28px;font-weight:700;text-align:center;margin:4px 0 10px}
+  .d{display:flex;justify-content:center;align-items:center;gap:8px;font-size:30px;font-weight:800;margin:10px 0;white-space:nowrap;flex-wrap:nowrap}
+  .d input{width:3.2em;height:56px;font-size:30px;font-weight:800;text-align:center;border:3px solid var(--x);border-radius:12px;color:var(--x)}
+  .fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1.1;margin:0 .12em}
+  .fr span:last-child{border-top:2.5px solid currentColor;padding:0 .15em}
+  .nen{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:6px}
+  .nk{border:2px solid var(--line);border-radius:12px;padding:8px 14px;font-size:21px;font-weight:700;min-width:12em;text-align:center}
+  .nk.null{border-color:var(--rot);background:#fde8e6;color:var(--rot)}
+  .nk.ok{border-color:#9bbf98;background:#f2f9f1}
+  .fb{margin-top:10px;padding:10px 14px;border-radius:12px;font-size:19px;line-height:1.45;text-align:center}
+  .fb.ok{background:var(--okbg);color:var(--ok)}.fb.nein{background:#fff4e0;color:#7a4a08}
+  .x{color:var(--x)}
+  footer{color:var(--muted);font-size:13px;text-align:center;padding:8px 0 16px}
+</style>
+</head>
+<body>
+<header><h1>Kontrolle: Definitionsmenge</h1><button class="tab" data-a="0" aria-selected="true">a)</button><button class="tab" data-a="1" aria-selected="false">b)</button></header>
+<main>
+  <div class="hint">Erst im Skript rechnen! Dann trägst du hier die Zahl ein, die <b>nicht</b> zur Definitionsmenge gehört. Sie wird in die Gleichung eingesetzt.</div>
+  <div class="card">
+    <div class="gl" id="gl"></div>
+    <div class="d">D = ℚ \ { <input id="z" inputmode="decimal" autocomplete="off" aria-label="Zahl, die nicht zu D gehört"> }</div>
+  </div>
+  <div class="card" id="ein"><div style="text-align:center;color:var(--muted)">Deine Zahl eingesetzt für <b class="x">x</b>:</div><div class="gl" id="gl2"></div><div class="nen" id="nen"></div><div id="fb"></div></div>
+</main>
+<footer>Fehling · Bruchgleichungen</footer>
+<script>
+"use strict";
+const $=id=>document.getElementById(id);
+const fr=(z,n)=>`<span class="fr"><span>${z}</span><span>${n}</span></span>`;
+const fmt=v=>String(Math.round(v*1000)/1000).replace(".",",").replace("-","−");
+// Aufgaben: Brüche [Zähler, k] mit Nenner k·x; Operatoren; rechte Seite
+const AUF=[
+  {teile:[[4,5]],op:[],rest:" + 1 = 3"},
+  {teile:[[2,1],[1,3]],op:[" − "],rest:" = 5"},
+];
+let A=0;
+const nenner=(k,x)=>k===1?x:`${k}${x}`;
+function zeichne(){
+  const t=AUF[A],v=$("z").value.trim(),n=+v.replace(",",".");
+  $("gl").innerHTML=t.teile.map((b,i)=>(i?t.op[i-1]:"")+fr(b[0],nenner(b[1],"x"))).join("")+t.rest;
+  if(v===""||isNaN(n)){$("ein").style.display="none";return;}
+  $("ein").style.display="";
+  const xs=n<0?`(${fmt(n)})`:fmt(n);
+  $("gl2").innerHTML=t.teile.map((b,i)=>(i?t.op[i-1]:"")+fr(b[0],`<span class="x">${b[1]===1?xs:b[1]+" · "+xs}</span>`)).join("")+t.rest;
+  const werte=t.teile.map(b=>b[1]*n);
+  $("nen").innerHTML=t.teile.map((b,i)=>`<div class="nk ${werte[i]===0?"null":"ok"}">Nenner ${nenner(b[1],"x")} = ${b[1]===1?"":b[1]+" · "+xs+" = "}${fmt(werte[i])} ${werte[i]===0?"✓":"≠ 0"}</div>`).join("");
+  $("fb").innerHTML=werte.some(w=>w===0)
+    ? `<div class="fb ok">✅ Richtig! Mit x = ${fmt(n)} wird der Nenner 0 – durch 0 kann man nicht teilen. Darum gehört ${fmt(n)} <b>nicht</b> zur Definitionsmenge: D = ℚ \\ {${fmt(n)}}.</div>`
+    : `<div class="fb nein">Mit ${fmt(n)} wird kein Nenner 0 – mit ${fmt(n)} kann man ganz normal rechnen. ${fmt(n)} gehört also <b>zur</b> Definitionsmenge. Gesucht ist die Zahl, die einen Nenner 0 macht.</div>`;
+}
+$("z").addEventListener("input",zeichne);
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{A=+b.dataset.a;document.querySelectorAll(".tab").forEach(x=>x.setAttribute("aria-selected",x===b));$("z").value="";zeichne();$("z").focus();});
+zeichne();
+</script>
+</body>
+</html>

@@ -92,7 +92,7 @@
 <main>
   <div class="bar" id="bar"></div>
   <div class="wrap">
-    <svg id="s" viewBox="0 0 600 420" aria-label="Die Nenner werden aus der Gleichung gezogen und bilden zusammen eine Pralinenschachtel"></svg>
+    <svg id="s" viewBox="0 0 600 410" aria-label="Die Nenner werden aus der Gleichung gezogen und bilden zusammen eine Pralinenschachtel"></svg>
     <div class="side"><div class="tab" id="tab" hidden></div><div class="frage" id="frage"></div><button class="btn weiter" id="weiter" type="button">▶ Weiter</button>
       <div class="cap" id="cap"></div><div class="calc" id="calc"></div>
       <div class="merke" id="merke"><b>Merke:</b> Nimm die <b>ganze</b> Gleichung mal eine Zahl, in der <b>alle Nenner stecken</b>. Dann verschwinden die Brüche.</div></div>
@@ -299,23 +299,51 @@ async function play([a,b,c],rolle=null){
   zeile(5,`${fr(x,a)} + ${fr(x,b)} = ${x/a} + ${x/b} = ${c} ✓`);
   await wait(2000);if(!alive())return;
 
-  // ⑦ andere Zahlen
-  await halt(6,`Zeile ⑦: Welche Zahlen klappen <b>auch</b>? Sie müssen durch ${a} und durch ${b} teilbar sein.`,alive);if(!alive())return;
+  // ⑦ andere Zahlen – und: geht es kleiner? (Korb wie in „Geht es auch kleiner?“)
+  await halt(6,`Zeile ⑦: Welche Zahlen klappen <b>auch</b>? Sie müssen durch ${a} und durch ${b} teilbar sein. Geht es vielleicht sogar <b>kleiner</b>?`,alive);if(!alive())return;
+  const H=await korbAnim(a,b,alive,say);if(!alive()||H===null)return;
   const andere=[kl,2*kl,3*kl,4*kl].filter(m=>m!==N).slice(0,2);
-  zeile(6,andere.join(", ")+(N>kl?` <small>(${kl} ist kleiner als ${N}!)</small>`:""));
-  if(N>kl){
-    say(`Auch ${kl} klappt – denn ${kl} kann man gerecht in ${a} Teile und in ${b} Teile teilen. ${kl} ist sogar kleiner als ${N}!`);
-    await wait(2500);if(!alive())return;
-    say(`Wie man die kleinste Zahl findet, zeigt die nächste Animation „Geht es auch kleiner?“.`);
-  }else if(kl<P){
-    say(`${andere.join(", ")} klappen auch – aber du hast schon die kleinste Zahl genommen: ${kl}. Auch ${a} · ${b} = ${P} geht, ist aber größer.`);
-  }else{
-    say(`Jede Zahl, die durch ${a} und durch ${b} teilbar ist, klappt: ${andere.join(", ")}, … Die kleinste ist ${kl}.`);
-  }
+  zeile(6,andere.join(", ")+` <small>(kleinste: ${kl})</small>`);
+  await wait(1500);if(!alive())return;
+  const gem=(()=>{const r=zerlege(b);return zerlege(a).filter(d=>{const i=r.indexOf(d);if(i<0)return false;r.splice(i,1);return true;});})();
+  if(N>kl) say(`Im Korb liegt ${kl}: Die ${gem.join(' · ')} steckt in ${a} und in ${b} – sie zählt nur einmal. ${kl} ist kleiner als ${N}! Die kleinste Zahl heißt Hauptnenner.`);
+  else if(kl<P) say(`Im Korb liegt ${kl} – genau deine Zahl, die kleinste! ${a} · ${b} = ${P} klappt auch, ist aber größer.`);
+  else say(`${a} und ${b} haben keinen gemeinsamen Baustein: Der Hauptnenner ist ${a} · ${b} = ${kl}. Größere Zahlen wie ${andere.join(", ")} klappen auch.`);
   await wait(1500);if(!alive())return;
   zeile(-1);
   merke.classList.add("an");
   baueCheck(checkGen);
+}
+/* Zeile ⑦: „Geht es auch kleiner?“ direkt hier (Malte 4.11.2026: eigene Animation dafür eingespart).
+   Nenner in kleinste Malaufgaben zerlegen, Bausteine in den Hauptnenner-Korb – was schon drin liegt, bleibt liegen. */
+const zerlege=n=>{const f=[];for(let d=2;n>1;d++)while(n%d===0){f.push(d);n/=d;}return f;};
+async function korbAnim(a,b,alive,say){
+  // Platz unter der Gleichung freiräumen
+  [...svg.querySelectorAll("rect,circle")].forEach(e=>{if(+e.getAttribute("y")>=180||+e.getAttribute("cy")>=180)e.remove();});
+  [...svg.querySelectorAll("text")].forEach(e=>{if(+e.getAttribute("y")>=180)e.remove();});
+  const korb=el("rect",{x:110,y:300,width:380,height:80,rx:16,fill:"var(--schachtel)",stroke:"#fbd9a8","stroke-width":3});
+  const kl=txt(300,316,"Hauptnenner-Korb",{size:15,fill:"var(--muted)",w:600});
+  const F=[zerlege(a),zerlege(b)],farbe=["var(--n1)","var(--n2)"],xs=[170,430];
+  say(`Zerlege beide Nenner in kleinste Malaufgaben: ${a} = ${F[0].join(" · ")} und ${b} = ${F[1].join(" · ")}.`);
+  const chips=F.map((f,i)=>{txt(xs[i],205,`${[a,b][i]} =`,{size:20,fill:farbe[i]});return f.map((s,k)=>txt(xs[i]+(k-(f.length-1)/2)*36,240,String(s),{size:28,fill:farbe[i],op:0}));});
+  await fade(chips.flat(),1,600);if(!alive())return null;
+  await wait(2200);if(!alive())return null;
+  const imKorb=[],pos=()=>imKorb.map((_,i)=>300+(i-(imKorb.length-1)/2)*42);
+  const ordne=async()=>{const p=pos();await Promise.all(imKorb.map((e,i)=>move(e,p[i],352,400)));};
+  say(`Alle Bausteine der ${a} kommen in den Korb.`);
+  for(const e of chips[0]){imKorb.push(e);await ordne();}
+  if(!alive())return null;await wait(1200);
+  say(`Jetzt die ${b}: Was schon im Korb liegt, brauchen wir nicht noch einmal.`);
+  const rest=F[0].slice();
+  for(let k=0;k<F[1].length;k++){const s=F[1][k],e=chips[1][k],j=rest.indexOf(s);
+    if(j>=0){rest.splice(j,1);const bb=e.getBBox();const r=el("rect",{x:bb.x-6,y:bb.y-3,width:bb.width+12,height:bb.height+6,rx:8,fill:"var(--hlbg)",stroke:"var(--hl)","stroke-width":2});svg.insertBefore(r,e);
+      await wait(900);if(!alive())return null;await fade([e,r],0.2,500);}
+    else{imKorb.push(e);await ordne();}}
+  if(!alive())return null;
+  const H=imKorb.reduce((p,e)=>p*+e.textContent,1);
+  const ergt=txt(300,395,"",{size:22,fill:"var(--hl)"});ergt.textContent=`Hauptnenner: ${imKorb.map(e=>e.textContent).join(" · ")} = ${H}`;
+  await fade([ergt],1,500);
+  return H;
 }
 const ggT=(a,b)=>b?ggT(b,a%b):a;
 /* ---------- Kleiner Check am Ende (Malte 2.11.2026) ----------

@@ -41,6 +41,10 @@
   .fb.ok{background:var(--okbg);color:var(--ok)}.fb.tipp{background:#fff4e0;color:#7a4a08}.fb.bad{background:var(--rotbg);color:#9b2c1f}
   .fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1.1;margin:0 .12em}
   .fr span:last-child{border-top:2px solid currentColor;padding:0 .15em}
+  .warum{display:none;background:#fff4e0;border:2px solid var(--hl);border-radius:12px;padding:8px 12px;font-size:17px;line-height:1.45;margin-bottom:10px}
+  .warum.an{display:block}
+  .vrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:6px 0;font-size:20px;font-weight:700}
+  .vrow input{width:5em;height:44px;font-size:20px;font-weight:700;text-align:center;border:2px solid var(--line);border-radius:10px}
   footer{color:var(--muted);font-size:13px;text-align:center;padding:8px 0 14px}
   @media (orientation:portrait){
     .wrap{flex-direction:column}
@@ -59,8 +63,12 @@
     </div>
     <div class="side">
       <div class="cap" id="cap">Schiebe den Regler und setze verschiedene Zahlen für x ein. Was passiert mit den Nennern?</div>
+      <div class="warum" id="warum"><b>Warum geht 3 : 0 nicht?</b><br>Teilen ist die Umkehrung von Malnehmen: <b>6 : 2 = 3</b>, weil <b>3 · 2 = 6</b>.<br>
+        Für <b>3 : 0 = ?</b> müsste also <b>? · 0 = 3</b> sein. Probiere eine Zahl für ? aus:
+        <div class="vrow"><span>?&nbsp;=</span><input id="frag" inputmode="decimal" autocomplete="off" placeholder="Zahl"><span id="fragerg"></span></div>
+        <small>Jede Zahl mal 0 ergibt 0 – nie 3. Darum gibt es für 3 : 0 <b>kein</b> Ergebnis.</small></div>
       <div class="liste"><div id="l0">☐ Probiere x = 0 aus.</div><div id="l1">☐ Finde die Zahl, bei der die Gleichung stimmt.</div></div>
-      <div class="merke" id="merke"><b>Merke: Definitionsmenge</b><br>Die <b>Definitionsmenge D</b> enthält alle Zahlen, die man für x einsetzen darf. Zahlen, bei denen ein Nenner 0 wird, gehören nicht dazu.<br>Hier: <b>D = ℚ \ {0}</b><br><small>Lies: „alle rationalen Zahlen ohne die 0“ (ℚ = alle Brüche, Dezimalzahlen und negativen Zahlen).</small></div>
+      <div class="merke" id="merke"><b>Merke: Definitionsmenge</b><br>Die <b>Definitionsmenge D</b> enthält alle Zahlen, die man für x einsetzen darf. Zahlen, bei denen ein Nenner 0 wird, gehören nicht dazu – denn für 3 : 0 müsste ? · 0 = 3 sein, und das schafft keine Zahl.<br>Hier: <b>D = ℚ \ {0}</b><br><small>Lies: „alle rationalen Zahlen ohne die 0“ (ℚ = alle Brüche, Dezimalzahlen und negativen Zahlen).</small></div>
     </div>
   </div>
   <section class="check" id="check"></section>
@@ -100,13 +108,16 @@ function zeichne(){
   // Fortschritt + Erklärung
   if(null0&&!war0){war0=true;$("l0").textContent="☑ x = 0 ausprobiert";$("l0").className="done";}
   if(loes&&!warL){warL=true;$("l1").textContent="☑ Lösung gefunden: x = 2";$("l1").className="done";}
-  $("cap").textContent=null0?"Bei x = 0 werden BEIDE Nenner 0. Durch 0 kann man nicht teilen – darum darf x hier nicht 0 sein."
+  $("cap").textContent=null0?"Bei x = 0 werden BEIDE Nenner 0. Dann müsste man 3 : 0 rechnen – warum das nicht geht, steht im Kasten."
     :loes?"Bei x = 2 stimmt die Gleichung: 3/2 + 1/4 = 7/4. Das ist die Lösung."
     :war0&&warL?"Alle anderen Zahlen kann man einsetzen – nur die 0 nicht."
     :"Schiebe den Regler und setze verschiedene Zahlen für x ein. Was passiert mit den Nennern?";
+  $("warum").classList.toggle("an",null0);
   if(war0&&warL&&!$("merke").classList.contains("an")){$("merke").classList.add("an");baueCheck();}
 }
 $("r").addEventListener("input",zeichne);
+$("frag").addEventListener("input",()=>{const v=$("frag").value.trim();const n=+v.replace(",",".");
+  $("fragerg").innerHTML=v===""||isNaN(n)?"":`· 0 = <span style="color:#b03a2e">0</span> &nbsp;≠ 3 ✗`;});
 /* ---------- Check: Welche Zahl darf x nicht sein? Definitionsmenge? ---------- */
 function baueCheck(){
   const box=$("check");box.classList.add("an");
