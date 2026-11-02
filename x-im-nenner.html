@@ -192,7 +192,7 @@ async function playTabelle(){
 
   // ① Welche Zahl darf x nicht sein?
   let v=await xvermutung(0,"Welche Zahl darf man für x <b>nicht</b> einsetzen? Tipp: Wann wird ein Nenner 0?",
-    s=>{const n=zahlAus(s);if(n===0)return{ok:true,msg:"Richtig! Bei x = 0 werden die Nenner x und 2x zu 0 – durch 0 kann man nicht teilen."};
+    s=>{const n=zahlAus(s);if(n===0)return{ok:true,msg:"Richtig! Bei x = 0 werden die Nenner x und 2x zu 0 – durch 0 kann man nicht teilen. Also D = ℚ \\ {0}."};
       if(isNaN(n))return{ok:false,msg:"Gib eine Zahl ein."};return{ok:false,msg:`Setze ${s} ein: Nenner x = ${s}, Nenner 2x = ${2*n}. Beide sind nicht 0 – mit ${s} kann man rechnen.`};});
   if(!alive())return;
   if(v.zeigen){

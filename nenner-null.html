@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Warum darf der Nenner nicht 0 sein?</title>
-<!-- I.6 Bruchgleichungen (4.11.2026, Wunsch Malte): Schieberegler setzt Zahlen für x in 3/x + 1/(2x) = 7/4 ein.
+<!-- I.6 Bruchgleichungen (4.11.2026, Wunsch Malte): Schieberegler setzt Zahlen für x in 2/x + 3/(2x) = 7/2 ein (bewusst andere Gleichung als die Tabellenaufgabe x-im-nenner).
      Nenner und Brüche werden live ausgerechnet; ist ein Nenner 0, leuchtet es rot („durch 0 kann man nicht teilen“).
-     Bei x = 2 stimmt die Gleichung. Danach Merke Definitionsmenge D = ℚ \ {0} und ein kleiner Check. Nur Nenner x und 2x. -->
+     Bei x = 1 stimmt die Gleichung. Danach Merke Definitionsmenge D = ℚ \ {0} und ein kleiner Check. Nur Nenner x und 2x. -->
 <style>
   :root{--x:#7b4fa0;--xbg:#efe6f7;--rot:#b03a2e;--rotbg:#fde8e6;--ok:#24622a;--okbg:#e4f4e2;--hl:#c0700f;
     --ink:#1b2a3a;--muted:#5b6b7c;--acc:#1f4e79;--bg:#f4f7fb;--card:#fff;--line:#c9d6e5}
@@ -63,12 +63,12 @@
     </div>
     <div class="side">
       <div class="cap" id="cap">Schiebe den Regler und setze verschiedene Zahlen für x ein. Was passiert mit den Nennern?</div>
-      <div class="warum" id="warum"><b>Warum geht 3 : 0 nicht?</b><br>Teilen ist die Umkehrung von Malnehmen: <b>6 : 2 = 3</b>, weil <b>3 · 2 = 6</b>.<br>
-        Für <b>3 : 0 = ?</b> müsste also <b>? · 0 = 3</b> sein. Probiere eine Zahl für ? aus:
+      <div class="warum" id="warum"><b>Warum geht 2 : 0 nicht?</b><br>Teilen ist die Umkehrung von Malnehmen: <b>6 : 2 = 3</b>, weil <b>3 · 2 = 6</b>.<br>
+        Für <b>2 : 0 = ?</b> müsste also <b>? · 0 = 2</b> sein. Probiere eine Zahl für ? aus:
         <div class="vrow"><span>?&nbsp;=</span><input id="frag" inputmode="decimal" autocomplete="off" placeholder="Zahl"><span id="fragerg"></span></div>
-        <small>Jede Zahl mal 0 ergibt 0 – nie 3. Darum gibt es für 3 : 0 <b>kein</b> Ergebnis.</small></div>
+        <small>Jede Zahl mal 0 ergibt 0 – nie 2. Darum gibt es für 2 : 0 <b>kein</b> Ergebnis.</small></div>
       <div class="liste"><div id="l0">☐ Probiere x = 0 aus.</div><div id="l1">☐ Finde die Zahl, bei der die Gleichung stimmt.</div></div>
-      <div class="merke" id="merke"><b>Merke: Definitionsmenge</b><br>Die <b>Definitionsmenge D</b> enthält alle Zahlen, die man für x einsetzen darf. Zahlen, bei denen ein Nenner 0 wird, gehören nicht dazu – denn für 3 : 0 müsste ? · 0 = 3 sein, und das schafft keine Zahl.<br>Hier: <b>D = ℚ \ {0}</b><br><small>Lies: „alle rationalen Zahlen ohne die 0“ (ℚ = alle Brüche, Dezimalzahlen und negativen Zahlen).</small></div>
+      <div class="merke" id="merke"><b>Merke: Definitionsmenge</b><br>Die <b>Definitionsmenge D</b> enthält alle Zahlen, die man für x einsetzen darf. Zahlen, bei denen ein Nenner 0 wird, gehören nicht dazu – denn für 2 : 0 müsste ? · 0 = 2 sein, und das schafft keine Zahl.<br>Hier: <b>D = ℚ \ {0}</b><br><small>Lies: „alle rationalen Zahlen ohne die 0“ (ℚ = alle Brüche, Dezimalzahlen und negativen Zahlen).</small></div>
     </div>
   </div>
   <section class="check" id="check"></section>
@@ -85,31 +85,31 @@ const bruch=(cx,y,z,n,nf,breit=56)=>T(cx,y-26,z)+`<line x1="${cx-breit/2}" y1="$
 function zeichne(){
   const x=+$("r").value,xs=fmt(x),xk=x<0?`(${xs})`:xs;
   $("w").textContent=xs;
-  const n1=x,n2=2*x,null0=x===0,loes=x===2;
+  const n1=x,n2=2*x,null0=x===0,loes=x===1;
   const rot="#b03a2e",lila="#7b4fa0";
   let h="";
   // Gleichung allgemein
   h+=T(320,24,`Für x eingesetzt: ${xs}`,{s:20,w:600,f:"#5b6b7c"});
   // eingesetzt
-  h+=bruch(150,100,"3",xk,null0?rot:lila,70)+T(220,100,"+")+bruch(300,100,"1",`2 · ${xk}`,null0?rot:lila,96)+T(395,100,"=")+bruch(455,100,"7","4","#1b2a3a",40);
+  h+=bruch(150,100,"2",xk,null0?rot:lila,70)+T(220,100,"+")+bruch(300,100,"3",`2 · ${xk}`,null0?rot:lila,96)+T(395,100,"=")+bruch(455,100,"7","2","#1b2a3a",40);
   // Nennerkästen
   const kasten=(x0,lbl,val)=>{const z=val===0;return `<rect x="${x0}" y="160" width="250" height="56" rx="12" fill="${z?'#fde8e6':'#efe6f7'}" stroke="${z?rot:lila}" stroke-width="${z?4:2}"/>`+T(x0+125,188,`Nenner ${lbl} = ${fmt(val)}`,{s:24,f:z?rot:lila});};
   h+=kasten(50,"x",n1)+kasten(340,"2x",n2);
   // Ergebnis bzw. Warnung
   if(null0){
     h+=`<rect x="60" y="236" width="520" height="70" rx="14" fill="#fde8e6" stroke="${rot}" stroke-width="4"><animate attributeName="opacity" values="1;.45;1" dur="1.2s" repeatCount="indefinite"/></rect>`;
-    h+=T(320,260,"⚠ 3 : 0 und 1 : 0 – geht nicht!",{s:24,f:rot})+T(320,288,"Durch 0 kann man nicht teilen.",{s:20,w:600,f:rot});
+    h+=T(320,260,"⚠ 2 : 0 und 3 : 0 – geht nicht!",{s:24,f:rot})+T(320,288,"Durch 0 kann man nicht teilen.",{s:20,w:600,f:rot});
   }else{
-    const l=3/n1+1/n2;
-    h+=T(320,262,`3 : ${xk} + 1 : ${fmt(n2)} = ${fmt(3/n1)} + ${fmt(1/n2)} = ${fmt(l)}`,{s:22,w:600});
-    h+=loes?T(320,292,"= 7/4 ✓  Hier stimmt die Gleichung – das ist die Lösung!",{s:20,f:"#24622a"}):T(320,292,`${fmt(l)} ≠ 7/4 = 1,75`,{s:20,w:600,f:"#5b6b7c"});
+    const l=2/n1+3/n2;
+    h+=T(320,262,`2 : ${xk} + 3 : ${fmt(n2)} = ${fmt(2/n1)} + ${fmt(3/n2)} = ${fmt(l)}`,{s:22,w:600});
+    h+=loes?T(320,292,"= 7/2 ✓  Hier stimmt die Gleichung – das ist die Lösung!",{s:20,f:"#24622a"}):T(320,292,`${fmt(l)} ≠ 7/2 = 3,5`,{s:20,w:600,f:"#5b6b7c"});
   }
   svg.innerHTML=h;
   // Fortschritt + Erklärung
   if(null0&&!war0){war0=true;$("l0").textContent="☑ x = 0 ausprobiert";$("l0").className="done";}
-  if(loes&&!warL){warL=true;$("l1").textContent="☑ Lösung gefunden: x = 2";$("l1").className="done";}
-  $("cap").textContent=null0?"Bei x = 0 werden BEIDE Nenner 0. Dann müsste man 3 : 0 rechnen – warum das nicht geht, steht im Kasten."
-    :loes?"Bei x = 2 stimmt die Gleichung: 3/2 + 1/4 = 7/4. Das ist die Lösung."
+  if(loes&&!warL){warL=true;$("l1").textContent="☑ Lösung gefunden: x = 1";$("l1").className="done";}
+  $("cap").textContent=null0?"Bei x = 0 werden BEIDE Nenner 0. Dann müsste man 2 : 0 und 3 : 0 rechnen – warum das nicht geht, steht im Kasten."
+    :loes?"Bei x = 1 stimmt die Gleichung: 2/1 + 3/2 = 2 + 1,5 = 3,5 = 7/2. Das ist die Lösung."
     :war0&&warL?"Alle anderen Zahlen kann man einsetzen – nur die 0 nicht."
     :"Schiebe den Regler und setze verschiedene Zahlen für x ein. Was passiert mit den Nennern?";
   $("warum").classList.toggle("an",null0);
@@ -117,7 +117,7 @@ function zeichne(){
 }
 $("r").addEventListener("input",zeichne);
 $("frag").addEventListener("input",()=>{const v=$("frag").value.trim();const n=+v.replace(",",".");
-  $("fragerg").innerHTML=v===""||isNaN(n)?"":`· 0 = <span style="color:#b03a2e">0</span> &nbsp;≠ 3 ✗`;});
+  $("fragerg").innerHTML=v===""||isNaN(n)?"":`· 0 = <span style="color:#b03a2e">0</span> &nbsp;≠ 2 ✗`;});
 /* ---------- Check: Welche Zahl darf x nicht sein? Definitionsmenge? ---------- */
 function baueCheck(){
   const box=$("check");box.classList.add("an");
