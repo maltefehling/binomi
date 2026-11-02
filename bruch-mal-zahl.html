@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Ganze Zahl mal Bruch</title>
+<!-- I.6 Bruchgleichungen, Erinnerung „Rechnen mit Brüchen“ (2.11.2026, Wunsch Malte):
+     Die ganze Zahl verwandelt sich in einen Bruch mit Nenner 1 (6 = 6/1, „6 Eintel“). Dann Bruch mal Bruch:
+     Zähler mal Zähler, Nenner mal Nenner → die Zahl landet im Zähler. Zum Schluss kürzen. Bewusst langsam (SLOW, Lesezeit, Pause). -->
+<style>
+  :root{--z:#c0700f;--zbg:#fde7c8;--n1:#2e5d9f;--n2:#3f8f3a;
+    --ink:#1b2a3a;--muted:#5b6b7c;--acc:#1f4e79;--bg:#f4f7fb;--card:#fff;--line:#c9d6e5}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;-webkit-user-select:none;user-select:none}
+  button{font:inherit;touch-action:manipulation}
+  header{padding:12px 16px;background:var(--acc);color:#fff}
+  header h1{font-size:20px;margin:0}
+  main{padding:12px 16px 20px;max-width:1100px;margin:0 auto}
+  .bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+  .btn{border:1px solid var(--acc);background:#fff;color:var(--acc);border-radius:10px;padding:10px 16px;font-size:17px;font-weight:700;min-height:46px}
+  .btn[aria-pressed="true"]{background:var(--acc);color:#fff}
+  .wrap{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start}
+  svg{flex:1 1 520px;max-width:660px;width:100%;height:auto;background:var(--card);border:1px solid var(--line);border-radius:12px}
+  .side{flex:1 1 300px}
+  .cap{min-height:120px;font-size:22px;font-weight:600;color:var(--acc);line-height:1.45;margin:4px 0 12px}
+  .merke{display:none;background:#e3eef9;border:1px solid #b9d0ea;border-radius:12px;padding:10px 14px;font-size:20px;line-height:1.45}
+  .merke.an{display:block}
+  .auf{display:none;margin-top:16px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 16px;max-width:1068px}
+  .auf.an{display:block}
+  .auf h2{margin:.2rem 0 .3rem;font-size:21px;color:var(--acc)}
+  .auf .hin{color:var(--muted);font-size:17px;margin:0 0 .6rem}
+  .aufg{border-top:1px solid var(--line);padding:10px 0}
+  .aufg .q{font-size:26px;font-weight:700;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .aufg input{width:3.2em;height:48px;font-size:24px;font-weight:700;text-align:center;border:2px solid var(--line);border-radius:10px}
+  .aufg input:focus{outline:none;border-color:var(--acc)}
+  .aufg .fb{margin-top:8px;padding:8px 12px;border-radius:10px;font-size:18px;line-height:1.45}
+  .fb.ok{background:#e4f4e2;color:#24622a}.fb.tipp{background:#fff4e0;color:#7a4a08}.fb.bad{background:#fde8e6;color:#9b2c1f}
+  .fb ol{margin:.3rem 0 0 1.2rem;padding:0}
+  .fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1.1;margin:0 .15em}
+  .fr span:last-child{border-top:2.5px solid currentColor;padding:0 .15em}
+  footer{color:var(--muted);font-size:13px;text-align:center;padding:10px 0 18px}
+  svg text{font-family:inherit}
+</style>
+</head>
+<body>
+<header><h1>Ganze Zahl mal Bruch</h1></header>
+<main>
+  <div class="bar" id="bar"></div>
+  <div class="wrap">
+    <svg id="s" viewBox="0 0 640 340" aria-label="Eine ganze Zahl wird als Bruch mit Nenner 1 geschrieben und mit einem Bruch multipliziert"></svg>
+    <div class="side"><div class="cap" id="cap"></div>
+      <div class="merke" id="merke"><b>Merke:</b> Ganze Zahl mal Bruch: Die Zahl kommt in den <b>Zähler</b>. Danach <b>kürzen</b>, wenn es geht.</div></div>
+  </div>
+  <section class="auf" id="auf">
+    <h2>✎ Jetzt du: zwei Aufgaben</h2>
+    <p class="hin">Rechne im Heft und tippe nur die Zahl vor dem x ein. Dann „Prüfen“.</p>
+    <div id="aufgaben"></div>
+  </section>
+</main>
+<footer>Fehling · Bruchgleichungen</footer>
+<script>
+"use strict";
+// Langsam (Malte 2.11.2026): jeder Satz bleibt mindestens so lange stehen, wie man zum Lesen braucht; Pause-Knopf hält alles an.
+let LESE_BIS=0,PAUSE=false;
+const lesezeit=t=>2500+t.length*90;
+const NS="http://www.w3.org/2000/svg",svg=document.getElementById("s"),cap=document.getElementById("cap"),merke=document.getElementById("merke");
+new MutationObserver(()=>{LESE_BIS=performance.now()+lesezeit(cap.textContent||"");}).observe(cap,{childList:true,characterData:true,subtree:true});
+const el=(t,a,p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);(p||svg).appendChild(e);return e;};
+const SLOW=1.7;
+const ease=k=>k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;
+const tween=(ms,f)=>new Promise(r=>{ms*=SLOW;let t0=null,pz=0,ps=null;const s=t=>{if(t0===null)t0=t;
+  if(PAUSE){if(ps===null)ps=t;requestAnimationFrame(s);return;}if(ps!==null){pz+=t-ps;ps=null;}
+  const k=Math.min(1,(t-t0-pz)/ms);f(ease(k));k<1?requestAnimationFrame(s):r();};requestAnimationFrame(s);});
+const wait=ms=>new Promise(r=>{const ende=performance.now()+ms*SLOW;const t=()=>{if(!PAUSE&&performance.now()>=Math.max(ende,LESE_BIS))r();else setTimeout(t,100);};t();});
+const T=(x,y,t,o={})=>{const e=el("text",{x,y,"text-anchor":"middle","dominant-baseline":"central","font-size":o.size||40,"font-weight":o.w||700,fill:o.fill||"var(--ink)",opacity:o.op??1});e.textContent=t;return e;};
+const L=(x1,y,x2,o={})=>el("line",{x1,y1:y,x2,y2:y,stroke:o.c||"var(--ink)","stroke-width":3.5,opacity:o.op??1});
+const fade=(els,to,ms=600)=>{const f=els.map(e=>+(e.getAttribute("opacity")??1));return tween(ms,k=>els.forEach((e,i)=>e.setAttribute("opacity",f[i]+(to-f[i])*k)));};
+const move=(e,x1,y1,ms=1000)=>{const x0=+e.getAttribute("x"),y0=+e.getAttribute("y");return tween(ms,k=>{e.setAttribute("x",x0+(x1-x0)*k);e.setAttribute("y",y0+(y1-y0)*k);});};
+const pfeil=(x1,y1,x2,y2,c)=>{const p=el("path",{d:`M${x1},${y1} Q${(x1+x2)/2},${Math.min(y1,y2)-40} ${x2},${y2}`,fill:"none",stroke:c,"stroke-width":3,"marker-end":"url(#spitze"+(c==="var(--z)"?"Z":"N")+")",opacity:0});return p;};
+let run=0;
+
+async function play([z,zaehler,n]){   // z · zaehler/n, z durch n teilbar → Ergebnis (z/n)·zaehler
+  const my=++run,alive=()=>my===run,say=t=>{if(alive())cap.textContent=t;};
+  svg.innerHTML=`<defs>
+    <marker id="spitzeZ" markerWidth="10" markerHeight="10" refX="6" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#c0700f"/></marker>
+    <marker id="spitzeN" markerWidth="10" markerHeight="10" refX="6" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2e5d9f"/></marker></defs>`;
+  merke.classList.remove("an");
+  const Y=110,ZY=Y-34,NY=Y+34;   // Mitte, Zähler, Nenner
+  // 1. Ausgangsterm
+  const zahl=T(110,Y,String(z),{fill:"var(--z)"});
+  const mal=T(170,Y,"·");
+  const bz=T(230,ZY,zaehler),bl=L(205,Y,255),bn=T(230,NY,String(n),{fill:"var(--n1)"});
+  say(`Eine ganze Zahl mal einen Bruch: ${z} · ${zaehler}/${n}. Wie rechnet man das?`);
+  await wait(3000);if(!alive())return;
+
+  // 2. Die Zahl wird zum Bruch mit Nenner 1
+  say(`Trick: Jede ganze Zahl kann man als Bruch schreiben. ${z} ist dasselbe wie ${z}/1 – „${z} Eintel“.`);
+  await move(zahl,110,ZY,1400);if(!alive())return;
+  const zl=L(90,Y,130,{op:0}),eins=T(110,NY,"1",{fill:"var(--n1)",op:0});
+  await fade([zl],1,800);await fade([eins],1,1000);if(!alive())return;
+  // kurz aufleuchten lassen
+  const hl=el("rect",{x:80,y:ZY-30,width:60,height:NY-ZY+60,rx:10,fill:"var(--zbg)",opacity:0});svg.insertBefore(hl,svg.children[1]);
+  await fade([hl],1,600);await wait(3000);if(!alive())return;await fade([hl],0,600);
+
+  // 3. Bruch mal Bruch
+  say("Jetzt rechnen wir Bruch mal Bruch: Zähler mal Zähler – und Nenner mal Nenner.");
+  const gl=T(310,Y,"=");
+  const ergL=L(370,Y,500,{op:0});ergL.setAttribute("opacity",0);
+  await fade([ergL],1,600);
+  const p1=pfeil(110,ZY-24,405,ZY-22,"var(--z)"),p2=pfeil(230,ZY-24,470,ZY-22,"var(--z)");
+  await fade([p1,p2],1,900);if(!alive())return;
+  const ez=T(435,ZY,`${z} · ${zaehler}`,{fill:"var(--z)",op:0});
+  await fade([ez],1,1000);if(!alive())return;
+  await wait(2500);if(!alive())return;
+  const p3=pfeil(110,NY+24,405,NY+26,"var(--n1)"),p4=pfeil(230,NY+24,470,NY+26,"var(--n1)");
+  p3.setAttribute("d",`M110,${NY+24} Q257,${NY+80} 405,${NY+26}`);p4.setAttribute("d",`M230,${NY+24} Q350,${NY+80} 470,${NY+26}`);
+  await fade([p3,p4],1,900);if(!alive())return;
+  const en=T(435,NY,`1 · ${n}`,{fill:"var(--n1)",op:0});
+  await fade([en],1,1000);if(!alive())return;
+  await wait(2500);if(!alive())return;
+  await fade([p1,p2,p3,p4],0,600);
+
+  // 4. ausrechnen: Zahl steht im Zähler
+  const Y2=255,ZY2=Y2-34,NY2=Y2+34;
+  say(`Ausgerechnet: oben ${z}${zaehler}, unten ${n}. Die ${z} ist im Zähler gelandet!`);
+  T(150,Y2,"=");
+  const r1z=T(230,ZY2,z+zaehler,{fill:"var(--z)",op:0}),r1l=L(190,Y2,270,{op:0}),r1n=T(230,NY2,String(n),{fill:"var(--n1)",op:0});
+  await fade([r1z,r1l,r1n],1,1200);if(!alive())return;
+  await wait(3000);if(!alive())return;
+
+  // 5. kürzen
+  const q=z/n;
+  say(`Zum Schluss kürzen: ${z} : ${n} = ${q}. Also ist ${z} · ${zaehler}/${n} = ${q===1?"":q}${zaehler}.`);
+  T(320,Y2,"=");
+  const res=T(400,Y2,(q===1?"":q)+zaehler,{fill:"var(--z)",op:0,size:46});
+  await fade([res],1,1200);if(!alive())return;
+  await wait(2500);if(!alive())return;
+  merke.classList.add("an");
+  zeigeAufgaben(false);
+}
+/* ---------- Zwei Übungsaufgaben (Malte 2.11.2026): erst nach der Animation bzw. per Knopf ----------
+   1) z · x/n   2) z · ax/n   – z ist immer durch n teilbar, das Ergebnis eine ganze Zahl vor dem x. Jedes Mal neue Zahlen. */
+const R=(a,b)=>a+Math.floor(Math.random()*(b-a+1)), pick=a=>a[Math.floor(Math.random()*a.length)];
+const frH=(z,n)=>`<span class="fr"><span>${z}</span><span>${n}</span></span>`;
+function neueAufgaben(){
+  const A=[];
+  let n,q; do{n=pick([2,3,4,5]);q=R(2,5);}while(BSP.some(b=>b[0]===n*q&&b[2]===n)); A.push({z:n*q,a:1,n,erg:q});   // nicht wie die Beispiele der Animation
+  let n2,q2,a2; do{n2=pick([2,3,4,5]);q2=R(2,4);a2=R(2,4);}while(n2===n&&q2===q); A.push({z:n2*q2,a:a2,n:n2,erg:q2*a2});
+  document.getElementById("aufgaben").innerHTML=A.map((t,i)=>`<div class="aufg" data-i="${i}">
+    <div class="q">${i+1})&nbsp; ${t.z} · ${frH((t.a>1?t.a:"")+"x",t.n)} &nbsp;=&nbsp; <input inputmode="numeric" autocomplete="off" aria-label="Zahl vor dem x"> x
+      <button class="btn pr" type="button">Prüfen ✓</button></div><div class="fbx"></div></div>`).join("")+
+    `<div class="btns" style="margin-top:10px"><button class="btn" id="neu" type="button">🔁 Neue Zahlen</button></div>`;
+  document.querySelectorAll(".aufg").forEach(d=>{
+    const t=A[+d.dataset.i],inp=d.querySelector("input"),fbx=d.querySelector(".fbx");let versuch=0,fertig=false;
+    const ax=(t.a>1?t.a:"")+"x";
+    const weg=`<ol><li>${t.z} = ${frH(t.z,1)}</li><li>${frH(t.z,1)} · ${frH(ax,t.n)} = ${frH(t.z+" · "+ax,"1 · "+t.n)} = ${frH((t.z*t.a)+"x",t.n)}</li><li>kürzen: ${t.z*t.a} : ${t.n} = ${t.erg} &nbsp;→&nbsp; <b>${t.erg}x</b></li></ol>`;
+    const pruef=()=>{if(fertig)return;const v=inp.value.trim().replace(",",".");
+      if(v===""){fbx.innerHTML='<div class="fb tipp">Bitte trage zuerst eine Zahl ein.</div>';return;}
+      if(+v===t.erg){fertig=true;inp.disabled=true;fbx.innerHTML=`<div class="fb ok">✅ Richtig! ${t.z} · ${frH(ax,t.n)} = ${t.erg}x</div>`;return;}
+      versuch++;
+      if(versuch===1)fbx.innerHTML=`<div class="fb tipp">Noch nicht. 💡 Schreibe ${t.z} als ${frH(t.z,1)}. Dann Zähler mal Zähler (${t.z} · ${ax}) und Nenner mal Nenner (1 · ${t.n}). Zum Schluss kürzen.</div>`;
+      else{fertig=true;inp.disabled=true;fbx.innerHTML=`<div class="fb bad">Leider wieder falsch. So geht es:${weg}</div>`;}};
+    d.querySelector(".pr").onclick=pruef;inp.addEventListener("keydown",e=>{if(e.key==="Enter")pruef();});
+  });
+  document.getElementById("neu").onclick=neueAufgaben;
+}
+function zeigeAufgaben(scroll){const a=document.getElementById("auf");if(!a.classList.contains("an")){a.classList.add("an");neueAufgaben();}if(scroll)a.scrollIntoView({behavior:"smooth",block:"start"});}
+const BSP=[[6,"x",2],[6,"x",3],[12,"x",4]];
+const bar=document.getElementById("bar");
+BSP.forEach((b,i)=>{const x=document.createElement("button");x.className="btn bsp";x.textContent=`Beispiel ${i+1}: ${b[0]} · ${b[1]}/${b[2]}`;
+  x.onclick=()=>{PAUSE=false;pz.textContent="⏸ Pause";bar.querySelectorAll(".bsp").forEach(y=>y.setAttribute("aria-pressed",y===x));play(b);};bar.appendChild(x);});
+const pz=document.createElement("button");pz.className="btn";pz.type="button";pz.textContent="⏸ Pause";
+pz.onclick=()=>{PAUSE=!PAUSE;pz.textContent=PAUSE?"▶ Weiter":"⏸ Pause";};bar.appendChild(pz);
+const zu=document.createElement("button");zu.className="btn";zu.type="button";zu.textContent="✎ Zu den Aufgaben";zu.onclick=()=>zeigeAufgaben(true);bar.appendChild(zu);
+bar.firstChild.setAttribute("aria-pressed","true");play(BSP[0]);
+</script>
+</body>
+</html>
