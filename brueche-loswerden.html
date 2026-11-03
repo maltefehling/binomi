@@ -7,7 +7,7 @@
 <!-- I.6 Bruchgleichungen, Einstieg (2.11.2026, Wunsch Malte): Warum nimmt man die Gleichung mal 6?
      Die Nenner 2 und 3 werden aus der Gleichung herausgezogen und bilden die Seiten einer Pralinenschachtel 2 · 3 = 6.
      Die 6 lässt sich gerecht in 2 Teile (je 3) und in 3 Teile (je 2) teilen – beide Nenner stecken in ihr.
-     Darum: alles mal 6, die Brüche verschwinden. Nur teilerfremde Nenner; der kleinste Hauptnenner folgt in hauptnenner.html. -->
+     Darum: alles mal 6, die Brüche verschwinden. Zeile ⑦: Vielfache des größeren Nenners durchgehen (kein kgV per Zerlegung, Malte 5.11.2026). -->
 <style>
   :root{--n1:#2e5d9f;--n1bg:#dbe7f7;--n2:#3f8f3a;--n2bg:#dcefd9;--hl:#c0700f;--hlbg:#fde7c8;
     --schachtel:#fdf6ea;--schachtelL:#c9a27a;--praline:#6b3f22;
@@ -299,51 +299,43 @@ async function play([a,b,c],rolle=null){
   zeile(5,`${fr(x,a)} + ${fr(x,b)} = ${x/a} + ${x/b} = ${c} ✓`);
   await wait(2000);if(!alive())return;
 
-  // ⑦ andere Zahlen – und: geht es kleiner? (Korb wie in „Geht es auch kleiner?“)
-  await halt(6,`Zeile ⑦: Welche Zahlen klappen <b>auch</b>? Sie müssen durch ${a} und durch ${b} teilbar sein. Geht es vielleicht sogar <b>kleiner</b>?`,alive);if(!alive())return;
-  const H=await korbAnim(a,b,alive,say);if(!alive()||H===null)return;
+  // ⑦ andere Zahlen: Vielfache des größeren Nenners durchgehen
+  await halt(6,`Zeile ⑦: Welche Zahlen klappen <b>auch</b>? Sie müssen durch ${a} und durch ${b} teilbar sein. Tipp: Geh die Vielfachen von ${Math.max(a,b)} durch.`,alive);if(!alive())return;
+  const H=await vielfacheAnim(a,b,alive,say);if(!alive()||H===null)return;
   const andere=[kl,2*kl,3*kl,4*kl].filter(m=>m!==N).slice(0,2);
-  zeile(6,andere.join(", ")+` <small>(kleinste: ${kl})</small>`);
+  zeile(6,andere.join(", "));
   await wait(1500);if(!alive())return;
-  const gem=(()=>{const r=zerlege(b);return zerlege(a).filter(d=>{const i=r.indexOf(d);if(i<0)return false;r.splice(i,1);return true;});})();
-  if(N>kl) say(`Im Korb liegt ${kl}: Die ${gem.join(' · ')} steckt in ${a} und in ${b} – sie zählt nur einmal. ${kl} ist kleiner als ${N}! Die kleinste Zahl heißt Hauptnenner.`);
-  else if(kl<P) say(`Im Korb liegt ${kl} – genau deine Zahl, die kleinste! ${a} · ${b} = ${P} klappt auch, ist aber größer.`);
-  else say(`${a} und ${b} haben keinen gemeinsamen Baustein: Der Hauptnenner ist ${a} · ${b} = ${kl}. Größere Zahlen wie ${andere.join(", ")} klappen auch.`);
+  if(N>kl) say(`Deine ${N} klappt – ${kl} klappt auch und ist kleiner. Jede dieser Zahlen ist richtig. Mit der kleinsten rechnest du am leichtesten.`);
+  else if(kl<P) say(`${kl} ist genau deine Zahl! ${a} · ${b} = ${P} klappt auch – jede dieser Zahlen ist richtig. Mit der kleineren rechnest du leichter.`);
+  else say(`Hier ist ${a} · ${b} = ${kl} schon die erste Zahl, die passt. Größere Zahlen wie ${andere.join(", ")} klappen auch.`);
   await wait(1500);if(!alive())return;
   zeile(-1);
   merke.classList.add("an");
   baueCheck(checkGen);
 }
-/* Zeile ⑦: „Geht es auch kleiner?“ direkt hier (Malte 4.11.2026: eigene Animation dafür eingespart).
-   Nenner in kleinste Malaufgaben zerlegen, Bausteine in den Hauptnenner-Korb – was schon drin liegt, bleibt liegen. */
+/* Zeile ⑦: Welche Zahlen klappen auch? (Malte 5.11.2026: Klasse 8 braucht kein kgV per Zerlegung.)
+   Vielfachen-Methode: Nimm den größeren Nenner und geh seine Vielfachen durch, bis der kleinere hineinpasst. */
 const zerlege=n=>{const f=[];for(let d=2;n>1;d++)while(n%d===0){f.push(d);n/=d;}return f;};
-async function korbAnim(a,b,alive,say){
-  // Platz unter der Gleichung freiräumen
+async function vielfacheAnim(a,b,alive,say){
   [...svg.querySelectorAll("rect,circle")].forEach(e=>{if(+e.getAttribute("y")>=180||+e.getAttribute("cy")>=180)e.remove();});
   [...svg.querySelectorAll("text")].forEach(e=>{if(+e.getAttribute("y")>=180)e.remove();});
-  const korb=el("rect",{x:110,y:300,width:380,height:80,rx:16,fill:"var(--schachtel)",stroke:"#fbd9a8","stroke-width":3});
-  const kl=txt(300,316,"Hauptnenner-Korb",{size:15,fill:"var(--muted)",w:600});
-  const F=[zerlege(a),zerlege(b)],farbe=["var(--n1)","var(--n2)"],xs=[170,430];
-  say(`Zerlege beide Nenner in kleinste Malaufgaben: ${a} = ${F[0].join(" · ")} und ${b} = ${F[1].join(" · ")}.`);
-  const chips=F.map((f,i)=>{txt(xs[i],205,`${[a,b][i]} =`,{size:20,fill:farbe[i]});return f.map((s,k)=>txt(xs[i]+(k-(f.length-1)/2)*36,240,String(s),{size:28,fill:farbe[i],op:0}));});
-  await fade(chips.flat(),1,600);if(!alive())return null;
-  await wait(2200);if(!alive())return null;
-  const imKorb=[],pos=()=>imKorb.map((_,i)=>300+(i-(imKorb.length-1)/2)*42);
-  const ordne=async()=>{const p=pos();await Promise.all(imKorb.map((e,i)=>move(e,p[i],352,400)));};
-  say(`Alle Bausteine der ${a} kommen in den Korb.`);
-  for(const e of chips[0]){imKorb.push(e);await ordne();}
-  if(!alive())return null;await wait(1200);
-  say(`Jetzt die ${b}: Was schon im Korb liegt, brauchen wir nicht noch einmal.`);
-  const rest=F[0].slice();
-  for(let k=0;k<F[1].length;k++){const s=F[1][k],e=chips[1][k],j=rest.indexOf(s);
-    if(j>=0){rest.splice(j,1);const bb=e.getBBox();const r=el("rect",{x:bb.x-6,y:bb.y-3,width:bb.width+12,height:bb.height+6,rx:8,fill:"var(--hlbg)",stroke:"var(--hl)","stroke-width":2});svg.insertBefore(r,e);
-      await wait(900);if(!alive())return null;await fade([e,r],0.2,500);}
-    else{imKorb.push(e);await ordne();}}
-  if(!alive())return null;
-  const H=imKorb.reduce((p,e)=>p*+e.textContent,1);
-  const ergt=txt(300,395,"",{size:22,fill:"var(--hl)"});ergt.textContent=`Hauptnenner: ${imKorb.map(e=>e.textContent).join(" · ")} = ${H}`;
-  await fade([ergt],1,500);
-  return H;
+  const g=Math.max(a,b),k=Math.min(a,b),fg=a>=b?"var(--n1)":"var(--n2)",fk=a>=b?"var(--n2)":"var(--n1)";
+  say(`Nimm die größere Zahl: ${g}. Geh seine Vielfachen durch: ${g}, ${2*g}, ${3*g}, … Passt die ${k} hinein?`);
+  const kopf=txt(300,205,"",{size:19,fill:"var(--muted)",w:600});kopf.innerHTML=`Vielfache von <tspan fill="${fg}" font-weight="800">${g}</tspan> – passt die <tspan fill="${fk}" font-weight="800">${k}</tspan> hinein?`;
+  await fade([kopf],1,500);if(!alive())return null;await wait(1600);if(!alive())return null;
+  let m=0,i=0;const xs=[110,230,350,470];
+  while(true){i++;m=i*g;const passt=m%k===0;
+    const c=el("rect",{x:xs[i-1]-50,y:232,width:100,height:56,rx:12,fill:passt?"var(--okbg, #e4f4e2)":"#f2f2f2",stroke:passt?"#24622a":"#b9b9b9","stroke-width":passt?3:2,opacity:0});
+    const t=txt(xs[i-1],260,String(m),{size:30,fill:fg,op:0});
+    const z=txt(xs[i-1],312,passt?`${m} : ${k} = ${m/k} ✓`:`${m} : ${k} geht nicht ✗`,{size:16,fill:passt?"#24622a":"#8a8a8a",w:600,op:0});
+    await fade([c,t],1,450);if(!alive())return null;await wait(900);if(!alive())return null;
+    await fade([z],1,400);if(!alive())return null;
+    say(passt?`${m} : ${k} = ${m/k} – die ${k} passt hinein! ${m} ist durch ${a} und durch ${b} teilbar.`:`${m} : ${k} geht nicht auf. Weiter zum nächsten Vielfachen.`);
+    await wait(1900);if(!alive())return null;
+    if(passt||i===4)break;}
+  const erg=txt(300,360,"",{size:21,fill:"var(--hl)"});erg.textContent=`${m} klappt – und ${2*m}, ${3*m}, … klappen auch.`;
+  await fade([erg],1,500);
+  return m;
 }
 const ggT=(a,b)=>b?ggT(b,a%b):a;
 /* ---------- Kleiner Check am Ende (Malte 2.11.2026) ----------
@@ -372,7 +364,7 @@ function checkGen(){
   return {frage:`${fr("x",a,"b1")} + ${fr("x",b,"b2")} = …<br>Mit welcher Zahl nimmst du die <b>ganze</b> Gleichung mal, damit <b>beide</b> Brüche verschwinden?`,
     einheit:"",
     pruefe:v=>{const n=+v.replace(",",".");if(!Number.isInteger(n)||n<=0)return{ok:false};
-      if(n%a===0&&n%b===0)return n===N?{ok:true,msg:`Richtig! ${N} ist durch ${a} und durch ${b} teilbar: ${a} · ${b} = ${N}.`}:{ok:true,msg:`Klappt auch! Die kleinste Zahl wäre ${a} · ${b} = ${N}.`};
+      if(n%a===0&&n%b===0)return n===N?{ok:true,msg:`Richtig! ${N} ist durch ${a} und durch ${b} teilbar: ${a} · ${b} = ${N}.`}:{ok:true,msg:`Klappt auch – jede Zahl, die durch ${a} und ${b} teilbar ist, ist richtig. Mit ${N} rechnest du am leichtesten.`};
       return{ok:false};},
     tipp:`Die Zahl muss durch ${a} <b>und</b> durch ${b} teilbar sein. Denk an die Pralinenschachtel: ${a} Reihen mit je ${b} Pralinen.`,
     loesung:`${a} · ${b} = <b>${N}</b>. ${N} : ${a} = ${N/a} und ${N} : ${b} = ${N/b} – beide Nenner verschwinden.`};

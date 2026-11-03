@@ -6,7 +6,7 @@
 <title>Eine Bruchgleichung Schritt für Schritt lösen</title>
 <!-- I.6 Bruchgleichungen, Kern der Stunde (2.11.2026, Wunsch Malte): erst Nenner aus Zahlen (2 und 3 → Hauptnenner 6),
      dann verwandelt sich die 2 in ein x – und man geht genauso vor (x und 3 → Hauptnenner 3x). Das x kürzt sich weg wie vorher die 2.
-     Danach als Gleichung lösen, „x darf nicht 0 sein“, Probe. Am Ende ein Check „Bilde den Hauptnenner“. Langsam (SLOW, Lesezeit, Pause). -->
+     Danach als Gleichung lösen, „x darf nicht 0 sein“, Probe. Am Ende ein Check „Finde einen gemeinsamen Nenner“ (jedes Vielfache zählt, x nur einmal). Langsam (SLOW, Lesezeit, Pause). -->
 <style>
   :root{--hl:#c0700f;--hlbg:#fde7c8;--n1:#2e5d9f;--n2:#3f8f3a;--x:#7b4fa0;--xbg:#efe6f7;--korb:#fdf6ea;--korbL:#fbd9a8;--rot:#b03a2e;
     --ink:#1b2a3a;--muted:#5b6b7c;--acc:#1f4e79;--bg:#f4f7fb;--card:#fff;--line:#c9d6e5}
@@ -83,7 +83,7 @@
     <svg id="s" viewBox="0 0 640 300" aria-label="Erst Nenner aus Zahlen, dann wird aus der 2 ein x – das Vorgehen bleibt gleich"></svg>
     <div class="side"><div class="tab" id="tab" hidden></div><div class="frage" id="frage"></div><button class="btn weiter" id="weiter" type="button">▶ Weiter</button>
       <div class="cap" id="cap"></div><div class="calc" id="calc"></div>
-      <div class="merke" id="merke"><b>Merke:</b> Steht x im Nenner, gehört x in den <b>Hauptnenner</b>. Dann geht alles wie mit Zahlen: mal Hauptnenner, kürzen, lösen.<br><b>x darf nicht 0 sein.</b></div></div>
+      <div class="merke" id="merke"><b>Merke:</b> Steht x im Nenner, gehört x <b>einmal</b> in den gemeinsamen Nenner. Dann geht alles wie mit Zahlen: alles mal den gemeinsamen Nenner, kürzen, lösen.<br><b>x darf nicht 0 sein.</b></div></div>
   </div>
   <section class="check" id="check"></section>
 </main>
@@ -146,7 +146,7 @@ async function zurueck(B,weg){await fade(weg,0,600);weg.forEach(e=>e.remove());a
 /* ---------- Geführte Tabelle zur Skript-Aufgabe 3/x + 1/(2x) = 7/4 (Malte 4.11.2026) ----------
    Wie die Partner-Tabelle: Zeilen ①–⑦, bei ①, ② und ⑥ zuerst eine Vermutung eingeben,
    bei „keine Idee“ oder falscher Vermutung wird der Schritt animiert gezeigt. Sonst: erst selbst rechnen, dann vergleichen. */
-const XZ=[["①","x darf nicht sein:"],["②","Hauptnenner:"],["③","Alles mal:"],["④","Kürzen:"],["⑤","Zusammenfassen:"],["⑥","x ="],["⑦","Probe:"]];
+const XZ=[["①","x darf nicht sein:"],["②","Gemeinsamer Nenner:"],["③","Alles mal:"],["④","Kürzen:"],["⑤","Zusammenfassen:"],["⑥","x ="],["⑦","Probe:"]];
 function xTabelle(){
   const t=$id("tab");t.hidden=false;
   t.innerHTML=`<div class="tt">Deine Tabelle im Skript</div>`+XZ.map((z,i)=>`<div class="z"><span class="nr">${z[0]}</span><span>${z[1]}</span><span class="v" id="v${i}"></span></div>`).join("");
@@ -204,33 +204,31 @@ async function playTabelle(){
   xzeile(0,"0 &nbsp;<small>(D = ℚ \\ {0})</small>");
   if(!v.ok){await xhalt(0,"Schreib in Zeile ①: x darf nicht <b>0</b> sein.",true);if(!alive())return;}
 
-  // ② Hauptnenner
-  v=await xvermutung(1,"Welcher <b>Hauptnenner</b> passt zu den Nennern x, 2x und 4?",
-    s=>{const k=leseX(s);if(k===4)return{ok:true,msg:"Richtig! In 4x stecken x, 2x und 4."};
-      if(k&&k%4===0)return{fast:true,msg:`${s} klappt auch – aber geht es kleiner?`};
-      return{ok:false,msg:"Noch nicht. Schau dir an, wie man den Hauptnenner mit dem Korb findet."};},"z. B. 3x");
+  // ② gemeinsamer Nenner (Malte 5.11.2026: jedes gemeinsame Vielfache zählt, x nur einmal)
+  v=await xvermutung(1,"Welcher <b>gemeinsame Nenner</b> passt zu den Nennern x, 2x und 4?",
+    s=>{if(/x\s*(²|\^\s*2)|x\s*·?\s*x/i.test(s))return{fast:true,msg:"Achtung: Nimm das x nur <b>einmal</b>. Mit x² entsteht eine Gleichung, die du noch nicht lösen kannst."};
+      const k=leseX(s);if(k===4)return{ok:true,msg:"Richtig! In 4x passen x, 2x und 4."};
+      if(k&&k%4===0)return{ok:true,msg:`${s} klappt auch! Mit <b>4x</b> werden die Zahlen kleiner – darum rechnen wir hier mit 4x weiter.`};
+      return{ok:false,msg:"Noch nicht. Schau dir an, wie man einen gemeinsamen Nenner findet."};},"z. B. 3x");
   if(!alive())return;
   if(v.zeigen){
-    const korb=[el("rect",{x:110,y:170,width:420,height:96,rx:16,fill:"var(--korb)",stroke:"var(--korbL)","stroke-width":3}),T(320,186,"Hauptnenner-Korb",{size:15,fill:"var(--muted)",w:600})];
-    say("Zerlege jeden Nenner in Bausteine: x = x, 2x = 2 · x, 4 = 2 · 2.");
-    const c1=T(150,140,"x",{size:24,fill:"var(--x)",op:0}),c2=[T(300,140,"2",{size:24,fill:"var(--x)",op:0}),T(340,140,"x",{size:24,fill:"var(--x)",op:0})],c3=[T(460,140,"2",{size:24,fill:"var(--n2)",op:0}),T(500,140,"2",{size:24,fill:"var(--n2)",op:0})];
-    await fade([c1,...c2,...c3],1,600);await wait(2400);if(!alive())return;
-    say("x kommt in den Korb. Bei 2x liegt x schon drin – nur die 2 kommt dazu. Bei 4 liegt eine 2 schon drin – nur die zweite 2 kommt dazu.");
-    await move(c1,260,232,800);await move(c2[0],320,232,800);
-    const hl=(e)=>{const b=e.getBBox();const r=el("rect",{x:b.x-5,y:b.y-3,width:b.width+10,height:b.height+6,rx:7,fill:"var(--hlbg)",stroke:"var(--hl)","stroke-width":2});svg.insertBefore(r,e);return r;};
-    const h1=hl(c2[1]);await wait(900);await fade([c2[1],h1],0.2,500);
-    const h2=hl(c3[0]);await wait(900);await fade([c3[0],h2],0.2,500);
-    await move(c3[1],380,232,800);if(!alive())return;
-    const erg=T(470,232,"= 4x",{size:24,fill:"var(--hl)",op:0});await fade([erg],1,500);
+    const kasten=[el("rect",{x:90,y:160,width:460,height:110,rx:16,fill:"var(--korb)",stroke:"var(--korbL)","stroke-width":3})];
+    say("Erst die Zahlen in den Nennern: 2 (aus 2x) und 4. Nimm die größere Zahl: 4. Passt die 2 hinein? 4 : 2 = 2 – ja!");
+    const z1=T(320,190,"Zahlen: 2 und 4  →  4 : 2 = 2 ✓  →  4",{size:20,fill:"var(--ink)",op:0});
+    await fade([...kasten,z1],1,600);await wait(3800);if(!alive())return;
+    say("Jetzt das x: Es steckt in x und in 2x. Du nimmst es nur einmal dazu – sonst entsteht x · x.");
+    const z2=T(320,226,"x kommt einmal dazu  →  4 · x = 4x",{size:20,fill:"var(--x)",op:0});
+    await fade([z2],1,600);await wait(3200);if(!alive())return;
+    const erg=T(320,256,"Gemeinsamer Nenner: 4x",{size:20,fill:"var(--hl)",op:0});await fade([erg],1,500);
     await wait(2500);if(!alive())return;
-    await fade([...korb,c1,...c2,...c3,h1,h2,erg],0,500);[...korb,c1,...c2,...c3,h1,h2,erg].forEach(e=>e.remove());
+    await fade([...kasten,z1,z2,erg],0,500);[...kasten,z1,z2,erg].forEach(e=>e.remove());
   }
   xzeile(1,"4x");
-  if(!v.ok){await xhalt(1,"Schreib in Zeile ②: Hauptnenner <b>4x</b>.",true);if(!alive())return;}
+  if(!v.ok){await xhalt(1,"Schreib in Zeile ②: gemeinsamer Nenner <b>4x</b>.",true);if(!alive())return;}
 
   // ③ alles mal 4x – in den Zähler
-  await xhalt(2,"Zeile ③: Nimm <b>jeden Teil</b> der Gleichung mal 4x – auch die rechte Seite. Der Hauptnenner kommt in den Zähler.");if(!alive())return;
-  say("Der Hauptnenner 4x kommt in jeden Zähler.");
+  await xhalt(2,"Zeile ③: Nimm <b>jeden Teil</b> der Gleichung mal 4x – auch die rechte Seite. Der gemeinsame Nenner kommt in den Zähler.");if(!alive())return;
+  say("Die 4x kommt in jeden Zähler.");
   const t4=()=>[{t:"4x",fill:"var(--hl)"},{t:"·"}];
   const [P1,P2,P3]=await Promise.all([inZaehler(B1,t4()),inZaehler(B2,t4()),inZaehler(B3,t4())]);if(!alive())return;
   xzeile(2,`${fr("4x · 3","x")} + ${fr("4x · 1","2x")} = ${fr("4x · 7","4")}`);
@@ -278,8 +276,8 @@ async function play(){
   calc.innerHTML=`${fr(4,2)} + ${fr(1,3)}`;
   await wait(2500);if(!alive())return;
   el("rect",{x:130,y:170,width:400,height:90,rx:16,fill:"var(--korb)",stroke:"var(--korbL)","stroke-width":3});
-  T(330,188,"Hauptnenner",{size:16,fill:"var(--muted)",w:600});
-  say("Die Nenner 2 und 3 kommen in den Hauptnenner-Korb. Gemeinsame Bausteine haben sie nicht.");
+  T(330,188,"gemeinsamer Nenner",{size:16,fill:"var(--muted)",w:600});
+  say("Die Nenner 2 und 3: 2 · 3 = 6. In die 6 passen beide.");
   const k1=T(200,108,"2",{fill:"var(--n1)"}),k2=T(410,108,"3",{fill:"var(--n2)"});
   await Promise.all([move(k1,250,226),move(k2,330,226)]);if(!alive())return;
   T(290,226,"·");const kerg=T(420,226,"= 6",{fill:"var(--hl)",op:0});
@@ -306,7 +304,7 @@ async function play(){
   await fade([xbg],1,500);
   calc.innerHTML+=`<br>${fr(4,'<span class="x">x</span>')} + ${fr(1,3)}`;
   await wait(2500);if(!alive())return;
-  say("Im Korb liegen jetzt x und 3. Der Hauptnenner ist x · 3 = 3x.");
+  say("Jetzt sind es x und 3. Genauso: x · 3 = 3x. In 3x passen x und 3.");
   const kerg2=T(430,226,"= 3x",{fill:"var(--hl)",op:0});
   await fade([kerg2],1,700);if(!alive())return;
   await wait(2500);if(!alive())return;
@@ -336,12 +334,12 @@ async function play(){
   baueCheck(checkGen);
 }
 
-/* ---------- Check: Hauptnenner mit x bilden ---------- */
+/* ---------- Check: gemeinsamen Nenner mit x bilden (jedes Vielfache richtig, x nur einmal) ---------- */
 function baueCheck(gen){
   const box=document.getElementById("check");box.classList.add("an");
   const t=gen();let versuch=0,fertig=false;
   box.innerHTML=`<h2>✎ Check: Jetzt du!</h2><div class="cq">${t.frage}</div>
-    <div class="crow">Hauptnenner: <input id="cin" inputmode="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="Hauptnenner">
+    <div class="crow">Gemeinsamer Nenner: <input id="cin" inputmode="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="Gemeinsamer Nenner">
     <button class="btn" id="cpr" type="button">Prüfen ✓</button><button class="btn" id="cneu" type="button">🔁 Neue Aufgabe</button></div>
     <p style="color:var(--muted);margin:.4rem 0 0">Schreibe zum Beispiel 5x.</p><div id="cfb"></div>`;
   const inp=document.getElementById("cin"),fb=document.getElementById("cfb");
@@ -357,24 +355,25 @@ function baueCheck(gen){
 }
 // „4x“, „4·x“, „x4“, „4 * x“ → Zahl vor dem x; sonst null
 const leseX=v=>{const s=v.toLowerCase().replace(/[\s·*×]/g,"");let m=s.match(/^(\d*)x$/)||s.match(/^x(\d+)$/);return m?(m[1]===""?1:+m[1]):null;};
+const XX=v=>/x\s*(²|\^\s*2)|x\s*·?\s*x/i.test(v);
 function checkGen(){
   const R=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
-  if(Math.random()<.6){   // a/x + 1/b → Hauptnenner b·x
+  const neu=(frage,H,tipp,loesung)=>({frage,
+    pruefe:v=>{if(XX(v))return{fast:true,msg:"Nimm das x nur <b>einmal</b> – sonst entsteht x², und die Gleichung kannst du noch nicht lösen."};
+      const k=leseX(v);if(k===H)return{ok:true,msg:`Richtig! In ${H}x passen beide Nenner.`};
+      if(k&&k%H===0)return{ok:true,msg:`Richtig, ${v} klappt! Mit ${H}x wären die Zahlen noch etwas kleiner.`};return{ok:false};},
+    tipp,loesung});
+  if(Math.random()<.6){   // a/x + 1/b → b·x
     const b=[2,4,5,6,7][R(0,4)],a=R(1,9);
-    return {frage:`${fr(a,"x")} + ${fr(1,b)} = … &nbsp; Bilde den <b>Hauptnenner</b>.`,
-      pruefe:v=>{const k=leseX(v);if(k===b)return{ok:true,msg:`Richtig! Bausteine x und ${b}: Hauptnenner ${b}x.`};
-        if(k&&k%b===0)return{fast:true,msg:`${v} klappt auch – aber geht es kleiner?`};
-        if(+v===b)return{ok:false};return{ok:false};},
-      tipp:`Wie vorher mit Zahlen: Die Nenner x und ${b} kommen in den Korb. Gemeinsame Bausteine haben sie nicht – also x · ${b}.`,
-      loesung:`Nenner x und ${b} → Hauptnenner x · ${b} = <b>${b}x</b>.`};
+    return neu(`${fr(a,"x")} + ${fr(1,b)} = … &nbsp; Finde einen <b>gemeinsamen Nenner</b>.`,b,
+      `In den Nenner müssen x und ${b} passen. Nimm beide einmal: x · ${b}.`,
+      `Nenner x und ${b} → x · ${b} = <b>${b}x</b>.`);
   }
-  // a/(2x) + 1/b mit b gerade → die 2 steckt doppelt
-  const b=[4,6][R(0,1)],a=R(1,9),H=b;   // 2x und 4 → 4x, 2x und 6 → 6x
-  return {frage:`${fr(a,"2x")} + ${fr(1,b)} = … &nbsp; Bilde den <b>Hauptnenner</b>.`,
-    pruefe:v=>{const k=leseX(v);if(k===H)return{ok:true,msg:`Richtig! 2x = 2 · x, ${b} = ${b===4?"2 · 2":"2 · 3"} – die 2 nur einmal: ${H}x.`};
-      if(k&&k%H===0)return{fast:true,msg:`${v} klappt auch – aber geht es kleiner? Die 2 steckt in beiden Nennern.`};return{ok:false};},
-    tipp:`Zerlege: 2x = 2 · x und ${b} = ${b===4?"2 · 2":"2 · 3"}. Sammle alle Bausteine – was in beiden steckt, nur einmal.`,
-    loesung:`2x = 2 · x, ${b} = ${b===4?"2 · 2":"2 · 3"} → Hauptnenner ${b===4?"2 · 2 · x":"2 · 3 · x"} = <b>${H}x</b>.`};
+  // a/(2x) + 1/b mit b gerade: Zahlen 2 und b → b, dazu x einmal
+  const b=[4,6][R(0,1)],a=R(1,9);
+  return neu(`${fr(a,"2x")} + ${fr(1,b)} = … &nbsp; Finde einen <b>gemeinsamen Nenner</b>.`,b,
+    `Erst die Zahlen: 2 und ${b}. Passt die 2 in die ${b}? Dann kommt das x einmal dazu.`,
+    `Zahlen 2 und ${b}: ${b} : 2 = ${b/2} ✓ → ${b}. x einmal dazu → <b>${b}x</b>.`);
 }
 
 const bar=document.getElementById("bar");
