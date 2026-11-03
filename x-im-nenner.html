@@ -206,7 +206,7 @@ async function playTabelle(){
 
   // ② gemeinsamer Nenner (Malte 5.11.2026: jedes gemeinsame Vielfache zählt, x nur einmal)
   v=await xvermutung(1,"Welcher <b>gemeinsame Nenner</b> passt zu den Nennern x, 2x und 4?",
-    s=>{if(/x\s*(²|\^\s*2)|x\s*·?\s*x/i.test(s))return{fast:true,msg:"Achtung: Nimm das x nur <b>einmal</b>. Mit x² entsteht eine Gleichung, die du noch nicht lösen kannst."};
+    s=>{if(/x\s*(²|\^\s*2)|x\s*[·*]?\s*\d*\s*x/i.test(s))return{fast:true,msg:"Achtung: Nimm das x nur <b>einmal</b>. Mit x² entsteht eine Gleichung, die du noch nicht lösen kannst."};
       const k=leseX(s);if(k===4)return{ok:true,msg:"Richtig! In 4x passen x, 2x und 4."};
       if(k&&k%4===0)return{ok:true,msg:`${s} klappt auch! Mit <b>4x</b> werden die Zahlen kleiner – darum rechnen wir hier mit 4x weiter.`};
       return{ok:false,msg:"Noch nicht. Schau dir an, wie man einen gemeinsamen Nenner findet."};},"z. B. 3x");
@@ -355,7 +355,7 @@ function baueCheck(gen){
 }
 // „4x“, „4·x“, „x4“, „4 * x“ → Zahl vor dem x; sonst null
 const leseX=v=>{const s=v.toLowerCase().replace(/[\s·*×]/g,"");let m=s.match(/^(\d*)x$/)||s.match(/^x(\d+)$/);return m?(m[1]===""?1:+m[1]):null;};
-const XX=v=>/x\s*(²|\^\s*2)|x\s*·?\s*x/i.test(v);
+const XX=v=>/x\s*(²|\^\s*2)|x\s*[·*]?\s*\d*\s*x/i.test(v);
 function checkGen(){
   const R=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
   const neu=(frage,H,tipp,loesung)=>({frage,
