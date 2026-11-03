@@ -320,7 +320,7 @@ async function vielfacheAnim(a,b,alive,say){
   [...svg.querySelectorAll("rect,circle")].forEach(e=>{if(+e.getAttribute("y")>=180||+e.getAttribute("cy")>=180)e.remove();});
   [...svg.querySelectorAll("text")].forEach(e=>{if(+e.getAttribute("y")>=180)e.remove();});
   const g=Math.max(a,b),k=Math.min(a,b),fg=a>=b?"var(--n1)":"var(--n2)",fk=a>=b?"var(--n2)":"var(--n1)";
-  say(`Nimm die größere Zahl: ${g}. Geh seine Vielfachen durch: ${g}, ${2*g}, ${3*g}, … Passt die ${k} hinein?`);
+  say(`Nimm die größere Zahl: ${g}. Geh ihre Vielfachen durch: ${g}, ${2*g}, ${3*g}, … Passt die ${k} hinein?`);
   const kopf=txt(300,205,"",{size:19,fill:"var(--muted)",w:600});kopf.innerHTML=`Vielfache von <tspan fill="${fg}" font-weight="800">${g}</tspan> – passt die <tspan fill="${fk}" font-weight="800">${k}</tspan> hinein?`;
   await fade([kopf],1,500);if(!alive())return null;await wait(1600);if(!alive())return null;
   let m=0,i=0;const xs=[110,230,350,470];
