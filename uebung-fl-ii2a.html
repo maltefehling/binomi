@@ -85,6 +85,7 @@
   /* Flächen-Baukasten: Teilaufgaben sind Sätze → umbrechen statt seitlich scrollen; Eingabefeld unter dem Text */
   .aufg li{white-space:normal;overflow-x:visible}
   .aufg li .eing{display:flex;margin:8px 0 0}
+  .abild{margin:8px 0;background:#fff;border:1px solid var(--line);border-radius:10px;padding:6px} .abild svg{display:block;width:100%;max-width:560px;height:auto;margin:0 auto}
   /* Flächen-Baukasten: Eingabe, Empfehlung, Uhr, Ergebnis-Karte */
   .eing{display:inline-flex;align-items:center;gap:6px;margin-left:10px;white-space:nowrap}
   .eing input{width:120px;min-height:44px;font-size:20px;border:2px solid var(--acc);border-radius:10px;padding:2px 8px;text-align:right}
@@ -117,7 +118,7 @@
 "use strict";
 // Versionsprüfung (12.10.2026): Safari zeigt sonst bis zu 10 Minuten (oft länger) eine alte, gespeicherte Fassung.
 // Beim Öffnen wird die Seite ohne Zwischenspeicher abgefragt; ist sie neuer, lädt sie sich einmal neu.
-const STAND="20261106233904";
+const STAND="20261106234753";
 fetch(location.pathname+"?nocache="+Date.now(),{cache:"no-store"}).then(r=>r.text()).then(t=>{
   const m=t.match(/const STAND="(\d+)"/);
   if(m&&m[1]!==STAND&&!sessionStorage.getItem("neu"+m[1])){sessionStorage.setItem("neu"+m[1],"1");location.replace(location.pathname+"?v="+m[1]);}
@@ -149,6 +150,7 @@ const zahl=s=>{const m=String(s).replace(/\s/g,"").replace(",",".").match(/-?\d+
 const gleich=(x,w)=>Math.abs(x-w)<=Math.max(0.011,Math.abs(w)*1e-6);
 function aufgabe(nr,a,stufe){
   let h=`<div class="kopf">Aufgabe ${nr}${tagHtml(a.tag)}</div><div class="txt">${esc(a.tag==="w"?a.t.replace(/^Wiederholung: /,""):a.t)}</div>`;
+  if(a.svg)h+=`<div class="abild">${a.svg}</div>`;   // Bild zur Aufgabe (Flächen-Baukasten 6.11.2026): rohes SVG aus den Daten
   // 2.11.2026 (Malte): klar machen, dass Aufgabe + Rechenweg ins Heft gehören, nicht nur das Ergebnis
   h+=`<div class="heft">✎ Ins Heft: ${a.tag==="v"?"Aufgabe kurz notieren, dann in ganzen Sätzen begründen bzw. richtig rechnen.":"erst die Aufgabe abschreiben, dann Schritt für Schritt rechnen."}</div>`;
   const feld=(i)=>a.check&&a.check[i]!=null?`<span class="eing" data-i="${i}"><input inputmode="decimal" autocomplete="off" placeholder="Ergebnis"><span class="mk"></span></span>`:"";

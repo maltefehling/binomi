@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tipp: Höhe einzeichnen – auch außerhalb</title>
+<!-- Kapitel II Umfang und Flächeninhalt (Kl. 8): lila Tipp-Seite, gebaut mit tipp_fl_bau.py. Anderes Beispiel, nie die Lösung einer Aufgabe. -->
+<style>
+  :root{--tipp:#6d4a9e;--tippH:#f1eaf8;--tippL:#b79bd6;--ink:#1b2a3a;--muted:#5b6b7c;--bg:#f7f4fb;--line:#d8cce8;--a:#2e5d9f;--hl:#c0700f}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;-webkit-user-select:none;user-select:none}
+  button{font:inherit;touch-action:manipulation}
+  header{padding:12px 16px;background:var(--tipp);color:#fff} header h1{font-size:20px;margin:0}
+  main{padding:12px 16px 24px;max-width:860px;margin:0 auto}
+  .start{font-size:19px;color:var(--tipp);font-weight:700;margin:4px 0 10px}
+  .knoepfe{display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+  .knoepfe button{flex:1 1 150px;min-height:52px;border-radius:12px;font-size:18px;font-weight:700;border:2px solid var(--tipp);background:#fff;color:var(--tipp)}
+  .knoepfe button.haupt{background:var(--tipp);color:#fff}
+  .bild{background:#fff;border:1px solid var(--line);border-radius:14px;padding:8px;margin-bottom:10px}
+  .bild svg{width:100%;height:auto;display:block}
+  .cap{background:#fff;border:2px solid var(--tippL);border-radius:12px;padding:10px 14px;font-size:21px;line-height:1.45;min-height:64px;margin-bottom:10px}
+  .tafel{background:#fff;border:1px solid var(--line);border-radius:14px;padding:6px 16px;min-height:40px}
+  .z{font-size:27px;line-height:1.6;opacity:0;transition:opacity .6s;font-variant-numeric:tabular-nums}
+  .z.da{opacity:1} .z.neu{color:var(--tipp)}
+  .hl{color:var(--hl);font-weight:800}
+  .du{display:none;margin-top:14px;background:var(--tippH);border:1px solid var(--tippL);border-radius:12px;padding:10px 14px;font-size:19px;line-height:1.45}
+  .du.da{display:block}
+  footer{color:var(--muted);font-size:13px;text-align:center;padding:14px 0}
+  .geo,.sichtbar{transition:transform 1.4s ease, opacity .8s}
+</style>
+</head>
+<body>
+<header><h1>Tipp: Höhe einzeichnen – auch außerhalb</h1></header>
+<main>
+  <div class="start">Beispiel mit anderen Maßen: Die obere Ecke liegt nicht über der Grundseite.</div>
+  <div class="knoepfe"><button class="haupt" id="play">▶ Abspielen</button><button id="pause">⏸ Pause</button></div>
+  <div class="bild"><svg viewBox="0 0 560 470" aria-label="Höhe mit dem Geodreieck einzeichnen">
+ <polygon points="60,300 220,300 460,180 300,180" fill="#e3dccf" stroke="#6b5a45" stroke-width="3"/>
+ <line x1="60" y1="300" x2="220" y2="300" stroke="#2e5d9f" stroke-width="6"/><text x="140" y="330" font-size="22" font-weight="700" fill="#2e5d9f" text-anchor="middle">g</text>
+ <circle cx="300" cy="180" r="5" fill="#1b2a3a"/>
+ <line id="verl" x1="220" y1="300" x2="360" y2="300" stroke="#2e5d9f" stroke-width="3" stroke-dasharray="9 7" class="sichtbar" style="opacity:0"/>
+ <g id="geo" class="geo" style="opacity:0">
+  <polygon points="300,150 300,450 150,300" fill="rgba(160,200,235,.45)" stroke="#2e5d9f" stroke-width="2.5"/>
+  <line x1="300" y1="300" x2="150" y2="300" stroke="#c0700f" stroke-width="3" stroke-dasharray="8 6"/>
+ </g>
+ <line id="senk" x1="300" y1="180" x2="300" y2="300" stroke="#c0700f" stroke-width="4" stroke-dasharray="120" stroke-dashoffset="120" style="transition:stroke-dashoffset 1.6s"/>
+ <g id="winkel" class="sichtbar" style="opacity:0"><path d="M 284 300 A 16 16 0 0 1 300 284" fill="none" stroke="#c0700f" stroke-width="2.5"/><circle cx="293.3" cy="293.3" r="2.6" fill="#c0700f"/>
+  <text x="310" y="245" font-size="22" font-weight="700" fill="#c0700f">h</text></g>
+</svg></div>
+  <div class="cap" id="cap"></div>
+  
+  <div class="du" id="du"><b>Jetzt du:</b> Zeichne die Höhe in deinem Parallelogramm genauso ein und miss sie mit dem Lineal.</div>
+</main>
+<footer>Fehling · Parallelogramm · Tipp</footer>
+<script>
+
+function bildZustand(k){const geo=document.getElementById("geo");
+ document.getElementById("verl").style.opacity=k>=1?1:0;
+ geo.style.opacity=(k>=2&&k<=4)?1:0; geo.style.transform=k<=2?"translate(70px,0px)":"translate(0px,0px)";
+ document.getElementById("senk").style.strokeDashoffset=k>=4?0:120;
+ document.getElementById("winkel").style.opacity=k>=5?1:0;}
+
+
+"use strict";
+const S=[["", "Liegt die Ecke gegenüber nicht über der Grundseite, verlängerst du die Grundseite (gestrichelt).", true], ["", "Lege die Mittellinie des Geodreiecks auf die verlängerte Grundseite.", true], ["", "Schiebe das Geodreieck entlang der Grundseite, bis die lange Kante durch die Ecke geht.", true], ["", "Zeichne an der langen Kante von der Ecke bis zur verlängerten Grundseite. Das ist die Höhe.", true], ["", "Markiere den rechten Winkel mit Bogen und Punkt. Die Höhe liegt hier außerhalb – das ist erlaubt.", true]];
+const cap=document.getElementById("cap"),du=document.getElementById("du"),Z=[...document.querySelectorAll(".z")],pb=document.getElementById("pause");
+let n=0,timer=null,steht=false;
+const lese=t=>1500+80*t.length;            // Lesezeit nach Textlänge (Regel 16.10.2026)
+function zustand(k){if(typeof bildZustand==="function")bildZustand(k);}
+function zeig(){
+  const s=S[n-1];cap.textContent=s?s[1]:"Tippe auf ▶ Abspielen.";
+  Z.forEach((z,i)=>{z.classList.toggle("da",i<n&&S[i][0]!=="");z.classList.toggle("neu",i===n-1);});
+  zustand(n);du.classList.toggle("da",n>=S.length);
+}
+function weiter(){if(steht)return;if(n<S.length){n++;zeig();timer=setTimeout(weiter,lese(S[n-1][1])+(S[n-1][2]?1400:0));}else pb.disabled=true;}
+function start(){clearTimeout(timer);steht=false;pb.disabled=false;pb.textContent="⏸ Pause";n=0;zeig();timer=setTimeout(weiter,500);}
+document.getElementById("play").onclick=start;
+pb.onclick=()=>{steht=!steht;pb.textContent=steht?"▶ Weiter":"⏸ Pause";clearTimeout(timer);if(!steht)weiter();};
+zeig();
+
+</script>
+</body>
+</html>
