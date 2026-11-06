@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Check-in II.3a · Dreieck</title>
+<!-- Kapitel II Umfang und Flächeninhalt (Kl. 8), Check-in zu II.3a (QR neben dem Check-in-Merkkasten im Skript). Muster wie Check-in II.1.
+     Drei Aufgabentypen: ① Parallelogramm A = g · h ② Abstand/Höhe (antippen) ③ halbieren, auch mit Komma.
+     Falsch → Erklärung mit Bild, dann neue Aufgabe desselben Typs. Alle drei geschafft → Profi-Runde (endlos, schwerer).
+     Rechte Winkel immer als Bogen mit Punkt. Kein Login, kein Server; das Ergebnis bleibt nur auf diesem Gerät (localStorage). -->
+<style>
+  :root{--acc:#1f4e79;--ink:#1b2a3a;--muted:#5b6b7c;--bg:#f4f7fb;--line:#c9d6e5;--merk:#dde8f5;--merkL:#a9c1e0;
+    --tipp:#6d4a9e;--tippH:#f1eaf8;--tippL:#b79bd6;--ok:#2e7d32;--okH:#e8f4e6;--fehl:#b03a2e;--fehlH:#fbeceb;--hl:#c0700f;--gold:#8a6d00;--goldH:#fff6d6}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
+  button,input{font:inherit;touch-action:manipulation}
+  header{padding:12px 16px;background:var(--acc);color:#fff} header h1{font-size:20px;margin:0}
+  main{max-width:860px;margin:0 auto;padding:14px 16px 32px}
+  .hinweis{background:#fff;border:1px solid #bfbfbf;border-radius:12px;padding:10px 14px;font-size:18px;line-height:1.45;margin-bottom:12px}
+  .fort{display:flex;gap:8px;margin:0 0 12px;flex-wrap:wrap}
+  .fort span{flex:1 1 150px;border:2px solid var(--line);border-radius:10px;padding:6px 10px;font-size:16px;font-weight:700;color:var(--muted);background:#fff}
+  .fort span.jetzt{border-color:var(--acc);color:var(--acc)} .fort span.fertig{border-color:var(--ok);color:var(--ok);background:var(--okH)}
+  .karte{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:12px}
+  .karte h2{font-size:21px;color:var(--acc);margin:0 0 8px}
+  .auf{font-size:24px;line-height:1.5;margin:6px 0 10px}
+  .ein{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .ein input{width:170px;min-height:54px;font-size:26px;border:2px solid var(--acc);border-radius:12px;padding:4px 10px;text-align:right}
+  .ein .einh{font-size:24px}
+  .btn{min-height:54px;border-radius:12px;border:2px solid var(--acc);background:var(--acc);color:#fff;font-size:19px;font-weight:700;padding:0 18px}
+  .btn.hell{background:#fff;color:var(--acc)}
+  .btn.tipp{background:var(--tippH);color:var(--tipp);border-color:var(--tippL)}
+  .knopfreihe{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+  .rm{border-radius:12px;padding:10px 14px;margin-top:12px;font-size:19px;line-height:1.5}
+  .rm.ok{background:var(--okH);border:1px solid #9fcf9a;color:#1d5a21}
+  .rm.fehl{background:var(--fehlH);border:1px solid #e3aaa4}
+  .rm.tipp{background:var(--tippH);border:1px solid var(--tippL)}
+  .rm b{color:var(--acc)}
+  .hl{color:var(--hl);font-weight:800}
+  svg{width:100%;height:auto;display:block}
+  .bild{background:#fff;border:1px solid var(--line);border-radius:12px;margin:8px 0}
+  .strecke{cursor:pointer}
+  .profi{background:var(--goldH);border:2px solid #e6c65a}
+  .profi h2{color:var(--gold)}
+  .punkte{font-size:20px;font-weight:800;color:var(--gold)}
+  .ergebnis{background:#fff;border:2px solid var(--acc);border-radius:14px;padding:12px 16px;font-size:19px;line-height:1.6;margin-top:12px}
+  .ergebnis h3{margin:0 0 6px;color:var(--acc);font-size:20px}
+  footer{color:var(--muted);font-size:13px;text-align:center;margin-top:24px}
+  [hidden]{display:none!important}
+</style>
+</head>
+<body>
+<header><h1>Check-in II.3a · Dreieck</h1></header>
+<main>
+  <div class="hinweis">Drei kurze Aufgaben zu dem, was du heute brauchst. Rechne im Kopf oder auf einem Zettel und tippe das Ergebnis ein. Ist es falsch, bekommst du eine Erklärung und eine neue Aufgabe. <b>Ca. 6 Minuten.</b></div>
+  <div class="fort" id="fort"><span data-k="0">① Parallelogramm</span><span data-k="1">② Abstand</span><span data-k="2">③ Hälfte</span></div>
+  <div id="bereich"></div>
+  <div class="ergebnis" id="ergebnis" hidden></div>
+  <footer>Fehling · II Umfang und Flächeninhalt · Check-in</footer>
+</main>
+<script>
+"use strict";
+const $=s=>document.querySelector(s);
+const el=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e;};
+const zuf=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const wahl=a=>a[Math.floor(Math.random()*a.length)];
+const zahl=s=>{const m=String(s).replace(/\s/g,"").replace(/\./g,"").replace(",",".").match(/-?\d+(\.\d+)?/);return m?parseFloat(m[0]):NaN;};
+const de=x=>String(Math.round(x*1000)/1000).replace(".",",").replace(/\B(?=(\d{3})+(?!\d))/g," ");
+const NS="http://www.w3.org/2000/svg";
+// rechter Winkel: Bogen mit Punkt (nie eckig) – F Scheitel, u/v Einheitsvektoren der Schenkel
+function winkelBogen(F,u,v,r=18,farbe="#6d4a9e"){
+  const a=[F[0]+r*u[0],F[1]+r*u[1]],b=[F[0]+r*v[0],F[1]+r*v[1]];
+  const kreuz=u[0]*v[1]-u[1]*v[0], sweep=kreuz>0?1:0;
+  const m=[u[0]+v[0],u[1]+v[1]],l=Math.hypot(...m),p=[F[0]+r*0.5*m[0]/l,F[1]+r*0.5*m[1]/l];
+  return `<path d="M ${a[0]} ${a[1]} A ${r} ${r} 0 0 ${sweep} ${b[0]} ${b[1]}" fill="none" stroke="${farbe}" stroke-width="2.6"/><circle cx="${p[0]}" cy="${p[1]}" r="2.8" fill="${farbe}"/>`;
+}
+// Einheiten-Treppe als Bild (Tipp und Erklärung)
+function treppe(von,nach){
+  const E=["m²","dm²","cm²","mm²"],i=E.indexOf(von),j=E.indexOf(nach);
+  let s=`<svg viewBox="0 0 600 200">`;
+  E.forEach((e,k)=>{const hl=(k===i||k===j);s+=`<rect x="${20+k*140}" y="${20+k*40}" width="110" height="40" rx="8" fill="${hl?"#fde7c8":"#e8eef7"}" stroke="${hl?"#c0700f":"#2e5d9f"}" stroke-width="${hl?3:1.5}"/><text x="${75+k*140}" y="${47+k*40}" text-anchor="middle" font-size="22" font-weight="700">${e}</text>`;});
+  if(i>=0&&j>=0){const a=Math.min(i,j),b=Math.max(i,j);for(let k=a;k<b;k++){const runter=j>i;
+    s+=`<text x="${135+k*140}" y="${runter?58+k*40:92+k*40}" font-size="18" font-weight="800" fill="${runter?"#c0700f":"#6d4a9e"}">${runter?"· 100":": 100"}</text>`;}}
+  return s+`</svg>`;
+}
+
+// ---------------- Aufgabengeneratoren: {html, pruef(eingabe)→bool, loesung, erkl (HTML), tipp (HTML), art:"zahl"|"tippen"} ----------------
+function genEinheit(schwer){
+  const typen=schwer?[["m²","cm²",10000],["cm²","m²",1/10000],["dm²","mm²",10000],["mm²","dm²",1/10000]]:[["m²","dm²",100],["dm²","m²",1/100],["dm²","cm²",100],["cm²","dm²",1/100],["cm²","mm²",100]];
+  let [von,nach,f]=wahl(typen),a;
+  do{a=f>=1?zuf(2,12):wahl(f===1/100?[300,500,600,800,900,1200,150,450,650,850]:[20000,30000,50000,120000,45000]);}while((von==="m²"&&a===7&&nach==="dm²")||(von==="dm²"&&a===250));
+  const L=a*f,stufen=Math.round(Math.abs(Math.log10(f))/2),runter=f>1;
+  return {art:"zahl",einh:nach,html:`<div class="auf">${de(a)} ${von} = ? ${nach}</div>`,pruef:x=>Math.abs(x-L)<1e-6*Math.max(1,L),loesung:`${de(L)} ${nach}`,
+    erkl:`Von ${von} nach ${nach} gehst du <b>${stufen===1?"eine Stufe":"zwei Stufen"} ${runter?"nach unten":"nach oben"}</b> – also ${stufen===1?"":"zweimal "}${runter?"mal 100":"durch 100"}:<br><b>${de(a)} ${runter?"·":":"} ${de(runter?f:1/f)} = ${de(L)} ${nach}</b><div class="bild">${treppe(von,nach)}</div>`,
+    tipp:`Die Einheiten stehen wie auf einer Treppe. Nach unten (kleinere Einheit): mal 100. Nach oben: durch 100.<div class="bild">${treppe(von,nach)}</div>`};
+}
+function genGleichung(schwer){
+  const a=zuf(2,9),x=zuf(2,12);
+  if(!schwer){const b=a*x;return {art:"zahl",einh:"",html:`<div class="auf">${a} · x = ${b}<br>x = ?</div>`,pruef:v=>v===x,loesung:`x = ${x}`,
+    erkl:`Vor dem x steht „mal ${a}“. Das machst du rückgängig: <b>beide Seiten durch ${a}</b>.<br>${a} · x = ${b} &nbsp; | : ${a}<br><b>x = ${b} : ${a} = ${x}</b><br>Probe: ${a} · ${x} = ${b} ✓`,
+    tipp:`Welche Zahl mal ${a} ergibt ${b}? Oder rechne: beide Seiten durch ${a}.`};}
+  const c=zuf(2,15),d=a*x+c;return {art:"zahl",einh:"",html:`<div class="auf">${a} · x + ${c} = ${d}<br>x = ?</div>`,pruef:v=>v===x,loesung:`x = ${x}`,
+    erkl:`Erst <b>− ${c}</b> auf beiden Seiten: ${a} · x = ${d-c}. Dann <b>: ${a}</b>: <b>x = ${x}</b>.<br>Probe: ${a} · ${x} + ${c} = ${d} ✓`,
+    tipp:`Erst die + ${c} wegrechnen, dann durch ${a} teilen.`};
+}
+function genAbstand(schwer){
+  // Gerade g quer durchs Bild, Punkt P darüber; drei (Profi: vier) Strecken von P zu g, genau eine senkrecht
+  const W=600,H=300,ang=(zuf(-22,22))*Math.PI/180,u=[Math.cos(ang),Math.sin(ang)],n=[Math.sin(ang),-Math.cos(ang)];   // n zeigt nach oben
+  const M=[W/2+zuf(-40,40),H*0.72],dist=zuf(110,150),t0=zuf(-60,60);
+  const F=[M[0]+t0*u[0],M[1]+t0*u[1]],P=[F[0]+dist*n[0],F[1]+dist*n[1]];
+  const offs=schwer?[0,wahl([-1,1])*zuf(28,40),zuf(90,130),-zuf(90,130)]:[0,zuf(90,140),-zuf(90,140)];
+  const kand=offs.map(o=>[F[0]+o*u[0],F[1]+o*u[1]]);
+  const reihe=kand.map((k,i)=>i).sort(()=>Math.random()-0.5);
+  const namen=["A","B","C","D"],richtig=reihe.indexOf(0);
+  const g1=[M[0]-330*u[0],M[1]-330*u[1]],g2=[M[0]+330*u[0],M[1]+330*u[1]];
+  const farben=["#2e5d9f","#c0700f","#3f8f3a","#8e44ad"];
+  const bild=(zeigLoes)=>{let s=`<svg viewBox="0 0 ${W} ${H}"><line x1="${g1[0]}" y1="${g1[1]}" x2="${g2[0]}" y2="${g2[1]}" stroke="#1b2a3a" stroke-width="3"/>`+
+    `<text x="${Math.min(W-25,g2[0]-30)}" y="${Math.min(H-8,g2[1]+28)}" font-size="22">g</text>`;
+    reihe.forEach((ki,i)=>{const k=kand[ki],mid=[P[0]+0.62*(k[0]-P[0]),P[1]+0.62*(k[1]-P[1])],dx=(k[0]-P[0]<-15)?-24:10;
+      s+=`<g class="strecke" data-i="${i}"><line x1="${P[0]}" y1="${P[1]}" x2="${k[0]}" y2="${k[1]}" stroke="transparent" stroke-width="34"/>`+
+         `<line x1="${P[0]}" y1="${P[1]}" x2="${k[0]}" y2="${k[1]}" stroke="${farben[i]}" stroke-width="${zeigLoes&&i===richtig?6:4}" stroke-dasharray="${zeigLoes&&i!==richtig?"6 6":""}"/>`+
+         `<text x="${mid[0]+dx}" y="${mid[1]}" font-size="22" font-weight="800" fill="${farben[i]}">${namen[i]}</text></g>`;});
+    if(zeigLoes){const zuP=[n[0],n[1]],entlang=[u[0],u[1]];s+=winkelBogen(F,zuP,entlang);}
+    s+=`<circle cx="${P[0]}" cy="${P[1]}" r="6" fill="#1b2a3a"/><text x="${P[0]+10}" y="${P[1]-10}" font-size="22" font-weight="700">P</text></svg>`;return s;};
+  return {art:"tippen",n:offs.length,richtig,html:`<div class="auf">Welche Strecke zeigt den <b>Abstand</b> von P zur Geraden g? Tippe sie an.</div><div class="bild" id="tippbild">${bild(false)}</div>`,
+    pruef:i=>i===richtig,loesung:`Strecke ${namen[richtig]}`,
+    erkl:`Der Abstand ist die <b>kürzeste</b> Strecke von P zu g. Sie steht <b>senkrecht</b> auf g – das zeigt der Bogen mit Punkt (rechter Winkel). Auf Papier zeichnest du sie mit dem Geodreieck: Mittellinie auf g, lange Kante durch P.<div class="bild">${bild(true)}</div>`,
+    tipp:`Stell dir vor, du lässt einen Stein von P genau „gerade nach unten“ auf g fallen – quer zu g, nicht schräg. Diese Strecke bildet mit g einen rechten Winkel und ist die kürzeste.`};
+}
+function genParaFlaeche(schwer){
+  const g=zuf(4,12),h=zuf(2,7),b=h+zuf(1,3),A=g*h;
+  if(!schwer)return {art:"zahl",einh:"m²",html:`<div class="auf">Parallelogramm: g = ${g} m, h = ${h} m, schräge Seite ${b} m.<br>Wie groß ist die Fläche?</div>`,pruef:x=>x===A,loesung:`${A} m²`,
+    erkl:`Fläche = <b>Grundseite mal Höhe</b>. Die schräge Seite brauchst du nicht (Annas Fehler!).<br><b>A = ${g} m · ${h} m = ${A} m²</b>`,tipp:`A = g · h. Welche der drei Zahlen ist die Höhe?`};
+  return {art:"zahl",einh:"m",html:`<div class="auf">Parallelogramm: A = ${A} m², g = ${g} m, schräge Seite ${b} m.<br>Wie lang ist die Höhe?</div>`,pruef:x=>x===h,loesung:`${h} m`,
+    erkl:`A = g · h, also ${A} = ${g} · h. Rückwärts: <b>h = ${A} : ${g} = ${h} m</b>.`,tipp:`${g} mal welche Zahl ergibt ${A}?`};
+}
+function genHalb(schwer){
+  if(!schwer){const x=wahl([18,24,30,36,42,13,15,27,45,7,9,21,33]),L=x/2;
+    return {art:"zahl",einh:"",html:`<div class="auf">Was ist die Hälfte von ${x}?</div>`,pruef:v=>Math.abs(v-L)<1e-9,loesung:de(L),
+      erkl:`Die Hälfte heißt <b>: 2</b>.  ${x} : 2 = <b>${de(L)}</b>. Bei einer ungeraden Zahl kommt „,5“ heraus.`,tipp:`Teile durch 2. Bei ungeraden Zahlen: ein Halbes bleibt übrig – also ,5.`};}
+  const a=zuf(3,12),b=zuf(3,9),L=a*b/2;
+  return {art:"zahl",einh:"",html:`<div class="auf">${a} · ${b} : 2 = ?</div>`,pruef:v=>Math.abs(v-L)<1e-9,loesung:de(L),
+    erkl:`Erst mal: ${a} · ${b} = ${a*b}. Dann die Hälfte: ${a*b} : 2 = <b>${de(L)}</b>.`,tipp:`Erst ${a} · ${b}, dann durch 2.`};
+}
+const TYPEN=[{name:"① Parallelogramm",gen:genParaFlaeche},{name:"② Abstand",gen:genAbstand},{name:"③ Hälfte",gen:genHalb}];
+
+// ---------------- Ablauf ----------------
+const log=[{versuche:0,ok:false},{versuche:0,ok:false},{versuche:0,ok:false}];
+let k=0,profi=false,punkte=0;
+function fort(){document.querySelectorAll("#fort span").forEach((s,i)=>{s.classList.toggle("fertig",log[i].ok);s.classList.toggle("jetzt",!profi&&i===k);});}
+function zeigeAufgabe(){
+  const T=TYPEN[k],A=T.gen(profi),b=$("#bereich");b.innerHTML="";fort();
+  const kt=el("div","karte"+(profi?" profi":""));
+  kt.appendChild(el("h2","",profi?`⭐ Profi-Runde · ${T.name.slice(2)}  <span class="punkte">· ${punkte} Punkte</span>`:T.name+(log[k].versuche?" · neue Aufgabe":"")));
+  kt.insertAdjacentHTML("beforeend",A.html);
+  const rm=el("div","rm");rm.hidden=true;
+  const tippBox=el("div","rm tipp",`<b>💡 Tipp:</b> ${A.tipp}`);tippBox.hidden=true;
+  let eing=null;
+  if(A.art==="zahl"){const r=el("div","ein");eing=el("input");eing.inputMode="decimal";eing.autocomplete="off";eing.placeholder="?";r.appendChild(eing);
+    if(A.einh)r.appendChild(el("span","einh",A.einh));kt.appendChild(r);setTimeout(()=>eing.focus(),50);
+    eing.addEventListener("keydown",e=>{if(e.key==="Enter")pruefe(zahl(eing.value));});}
+  const reihe=el("div","knopfreihe");
+  const bP=el("button","btn","Prüfen"),bT=el("button","btn tipp","💡 Tipp");
+  if(A.art==="zahl")reihe.appendChild(bP);reihe.appendChild(bT);kt.append(reihe,tippBox,rm);b.appendChild(kt);
+  bT.onclick=()=>{tippBox.hidden=!tippBox.hidden;};
+  if(A.art==="tippen")kt.querySelectorAll(".strecke").forEach(g=>g.onclick=()=>pruefe(+g.dataset.i));
+  bP.onclick=()=>pruefe(zahl(eing.value));
+  let fertig=false;
+  function pruefe(v){
+    if(fertig)return; if(A.art==="zahl"&&isNaN(v)){rm.hidden=false;rm.className="rm fehl";rm.innerHTML="Tippe eine Zahl ein.";return;}
+    fertig=true;bP.disabled=true;if(!profi)log[k].versuche++;
+    const ok=A.pruef(v);rm.hidden=false;
+    const nb=el("button","btn",ok?"Weiter ▶":"Neue Aufgabe ▶");
+    if(ok){rm.className="rm ok";rm.innerHTML=`✓ Richtig! ${A.loesung}`;if(profi)punkte++;else log[k].ok=true;}
+    else{rm.className="rm fehl";rm.innerHTML=`✗ Noch nicht. Richtig ist <b>${A.loesung}</b>.<br>${A.erkl}`;}
+    rm.appendChild(el("div","knopfreihe")).appendChild(nb);
+    nb.onclick=()=>{if(ok&&!profi){k++;}else if(profi){k=Math.floor(Math.random()*3);}
+      if(!profi&&k>=3){profi=true;k=0;zeigeErgebnis();}zeigeAufgabe();};
+    nb.focus();speichern();
+  }
+}
+function zeigeErgebnis(){
+  const e=$("#ergebnis"),jetzt=new Date();e.hidden=false;
+  const zeile=(i,t)=>`${t}: ${log[i].versuche===1?"✓ sofort richtig":`✓ nach ${log[i].versuche-1} Erklärung${log[i].versuche>2?"en":""}`}`;
+  e.innerHTML=`<h3>Check-in geschafft – ${jetzt.toLocaleDateString("de-DE")} ${jetzt.toLocaleTimeString("de-DE",{hour:"2-digit",minute:"2-digit"})}</h3>`+
+    [zeile(0,"① Parallelogramm"),zeile(1,"② Abstand"),zeile(2,"③ Hälfte")].join("<br>")+
+    (log[1].versuche>1?`<br><b>Tipp:</b> Die Höhe ist so ein Abstand – auch im Dreieck.`:"")+
+    `<br><br>Bis die Lehrkraft weitermacht: <b>Profi-Runde</b> oben – sammle Punkte mit schwereren Aufgaben.`;
+}
+function speichern(){try{localStorage.setItem("checkin-fl-ii3a",JSON.stringify({log,punkte,zeit:Date.now()}));}catch(e){}}
+zeigeAufgabe();
+</script>
+</body>
+</html>

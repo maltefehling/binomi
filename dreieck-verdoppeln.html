@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Animation: Dreieck verdoppeln</title>
+<!-- II.3a Dreieck (Kl. 8, Garten: dreieckiges Kräuterbeet). Am Beamer oder auf den Schüler-Tablets per QR – Entscheidung in der Stunde.
+     „Verdoppeln“: Eine Kopie dreht sich um 180° um die Mitte der rechten Seite → Parallelogramm 6 m · 4 m = 24 m², Dreieck = Hälfte = 12 m².
+     „Spitze verschieben“: Spitze läuft parallel zur Grundseite – Grundseite und Höhe bleiben, Fläche bleibt 12 m² (Vorbereitung II.3b). Rechter Winkel als Bogen mit Punkt. -->
+<style>
+  :root{--acc:#1f4e79;--ink:#1b2a3a;--muted:#5b6b7c;--bg:#f4f7fb;--g:#2e5d9f;--h:#c0700f}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;-webkit-user-select:none;user-select:none}
+  button,input{font:inherit;touch-action:manipulation}
+  header{padding:12px 18px;background:var(--acc);color:#fff} header h1{font-size:24px;margin:0}
+  main{max-width:1100px;margin:0 auto;padding:14px 18px 24px}
+  .auftrag{background:#fff;border:2px solid var(--acc);border-radius:12px;padding:10px 14px;font-size:20px;line-height:1.45;margin-bottom:12px}
+  .bild{background:#fff;border:1px solid #c9d6e5;border-radius:14px;padding:8px}
+  svg{width:100%;height:auto;display:block}
+  .knoepfe{display:flex;gap:12px;flex-wrap:wrap;margin:12px 0}
+  .knopf{min-height:56px;border-radius:12px;border:2px solid var(--acc);background:var(--acc);color:#fff;font-size:20px;font-weight:700;padding:0 20px}
+  .knopf.hell{background:#fff;color:var(--acc)}
+  .regler{display:flex;align-items:center;gap:12px;flex-wrap:wrap;font-size:20px;margin:6px 0}
+  .regler input{flex:1 1 300px;height:44px;accent-color:var(--acc)}
+  .wert{background:#fff;border:1px solid #c9d6e5;border-radius:14px;padding:10px 14px;font-size:25px;line-height:1.5;margin-top:10px}
+  .cg{color:var(--g);font-weight:800}.ch{color:var(--h);font-weight:800}
+</style>
+</head>
+<body>
+<header><h1>Dreieck verdoppeln</h1></header>
+<main>
+  <div class="auftrag">Tippe auf <b>Verdoppeln</b>: Was entsteht aus zwei gleichen Dreiecken? Danach: Verschiebe die <b>Spitze</b>. Was passiert mit der Fläche?</div>
+  <div class="bild"><svg id="svg" viewBox="0 0 640 260"></svg></div>
+  <div class="knoepfe"><button class="knopf" id="dopp">⟲ Verdoppeln</button><button class="knopf hell" id="zur">Zurück</button></div>
+  <div class="regler"><span>Spitze verschieben</span><input type="range" id="r" min="-2" max="8" step="1" value="2"></div>
+  <div class="wert" id="wert"></div>
+</main>
+<script>
+"use strict";
+const svg=document.getElementById("svg"),NS="http://www.w3.org/2000/svg",K=40,X0=80,Y0=210,G=6,H=4;
+const mk=(t,a,p=svg)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);p.appendChild(e);return e;};
+for(let i=0;i<=14;i++)mk("line",{x1:X0-60+i*K,y1:10,x2:X0-60+i*K,y2:250,stroke:"#cdd6e0"});
+for(let j=0;j<=6;j++)mk("line",{x1:X0-60,y1:Y0+40-j*K,x2:X0-60+14*K,y2:Y0+40-j*K,stroke:"#cdd6e0"});
+const P=(x,y)=>[X0+x*K,Y0-y*K];
+const kopie=mk("polygon",{fill:"#f3c9a0",stroke:"#6b5a45","stroke-width":3,"stroke-dasharray":"8 5",opacity:0});
+const drei=mk("polygon",{fill:"#d9c7a5",stroke:"#6b5a45","stroke-width":3});
+const gl=mk("line",{stroke:"#2e5d9f","stroke-width":6}),hl=mk("line",{stroke:"#c0700f","stroke-width":4,"stroke-dasharray":"8 6"});
+const ext=mk("line",{stroke:"#2e5d9f","stroke-width":2,"stroke-dasharray":"7 5"});
+const bogen=mk("path",{fill:"none",stroke:"#c0700f","stroke-width":2.5}),punkt=mk("circle",{r:3.2,fill:"#c0700f"});
+const tg=mk("text",{fill:"#2e5d9f","font-size":22,"font-weight":800,"text-anchor":"middle"}),th=mk("text",{fill:"#c0700f","font-size":22,"font-weight":800});
+const r=document.getElementById("r");let winkel=0,ziel=0,anim=null;
+function zeichne(){
+  const s=+r.value,A=P(0,0),B=P(G,0),S=P(s,H);
+  drei.setAttribute("points",[A,B,S].map(p=>p.join(",")).join(" "));
+  // Kopie: dasselbe Dreieck, gedreht um die Mitte der Seite B–S
+  const M=[(B[0]+S[0])/2,(B[1]+S[1])/2];
+  kopie.setAttribute("points",[A,B,S].map(p=>p.join(",")).join(" "));
+  kopie.setAttribute("transform",`rotate(${winkel} ${M[0]} ${M[1]})`);kopie.setAttribute("opacity",winkel>0?1:0);
+  gl.setAttribute("x1",A[0]);gl.setAttribute("y1",A[1]);gl.setAttribute("x2",B[0]);gl.setAttribute("y2",B[1]);
+  const F=P(s,0);hl.setAttribute("x1",S[0]);hl.setAttribute("y1",S[1]);hl.setAttribute("x2",F[0]);hl.setAttribute("y2",F[1]);
+  const aussen=s<0||s>G; ext.setAttribute("opacity",aussen?1:0);
+  if(s<0){ext.setAttribute("x1",F[0]);ext.setAttribute("x2",A[0]);}else{ext.setAttribute("x1",B[0]);ext.setAttribute("x2",F[0]);} ext.setAttribute("y1",Y0);ext.setAttribute("y2",Y0);
+  const rr=18,dir=(s<=0)?-1:1;   // Bogen auf der Seite der Grundseite
+  bogen.setAttribute("d",`M ${F[0]+(s>=G?-rr:rr)} ${Y0} A ${rr} ${rr} 0 0 ${s>=G?1:0} ${F[0]} ${Y0-rr}`);
+  punkt.setAttribute("cx",F[0]+(s>=G?-rr:rr)*0.42);punkt.setAttribute("cy",Y0-rr*0.42);
+  tg.setAttribute("x",(A[0]+B[0])/2);tg.setAttribute("y",Y0+30);tg.textContent="g = 6 m";
+  th.setAttribute("x",S[0]+(s>=G?-82:8));th.setAttribute("y",Y0-H*K/2);th.textContent="h = 4 m";
+  document.getElementById("wert").innerHTML=winkel>=180?
+    `Zwei gleiche Dreiecke = <b>Parallelogramm</b>: <span class="cg">6 m</span> · <span class="ch">4 m</span> = 24 m²<br>Ein Dreieck ist die <b>Hälfte</b>: 24 m² : 2 = <b>12 m²</b>`:
+    `Dreieck: <span class="cg">g = 6 m</span>, <span class="ch">h = 4 m</span> → Fläche = <b>12 m²</b>${s!==2?" &nbsp;(Spitze verschoben – Grundseite und Höhe sind gleich geblieben)":""}`;
+}
+function drehe(){cancelAnimationFrame(anim);const t0=performance.now(),w0=winkel;
+  const schritt=t=>{const f=Math.min(1,(t-t0)/1800);winkel=w0+(ziel-w0)*(1-Math.cos(Math.PI*f))/2;zeichne();if(f<1)anim=requestAnimationFrame(schritt);};anim=requestAnimationFrame(schritt);}
+document.getElementById("dopp").onclick=()=>{ziel=180;drehe();};
+document.getElementById("zur").onclick=()=>{ziel=0;drehe();};
+r.oninput=()=>{zeichne();};
+zeichne();
+</script>
+</body>
+</html>
