@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Übung II.1 · Rechteck und Quadrat</title>
+<!-- Kapitel II Umfang und Flächeninhalt (Kl. 8): QR-Übung nach dem Buchkapitel (QR-Code im Skript). Nur Aufgaben – gerechnet wird im Heft.
+     Aufbau: Aufgabe 1 für alle, dann ★ / ★★ / ★★★. Tipp zu jeder Aufgabe, Lösungen je Stufe erst nach Rückfrage. -->
+<style>
+  :root{--ink:#1b2a3a;--muted:#5b6b7c;--acc:#1f4e79;--bg:#f4f7fb;--card:#fff;--line:#c9d6e5;
+    --merk:#dde8f5;--merkL:#a9c1e0;--auf:#e8f4e6;--aufL:#c6e8c0;--hilf:#fdf6ea;--hilfL:#fbd9a8;--grau:#f2f2f2;--rot:#b03a2e;--gruen:#3f8f3a}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
+  button{font:inherit;touch-action:manipulation}
+  header{padding:12px 16px;background:var(--acc);color:#fff}
+  header h1{font-size:20px;margin:0}
+  main{max-width:880px;margin:0 auto;padding:14px 16px 32px}
+  .hinweis{background:#fff;border:1px solid #bfbfbf;border-radius:12px;padding:10px 14px;font-size:18px;line-height:1.45;margin-bottom:12px}
+  details.erin{background:var(--merk);border:1px solid var(--merkL);border-radius:12px;padding:10px 14px;margin-bottom:14px;font-size:18px;line-height:1.5}
+  details.erin summary{font-weight:700;color:var(--acc);cursor:pointer;min-height:30px}
+  details.erin ul{margin:6px 0 0;padding-left:22px}
+  h2{font-size:21px;color:var(--acc);margin:18px 0 8px;padding-bottom:4px;border-bottom:2px solid var(--acc)}
+  .aufg{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:10px}
+  .aufg .kopf{font-weight:700;color:var(--acc);font-size:18px;margin-bottom:4px}
+  .aufg .txt{font-size:20px;line-height:1.45}
+  .aufg .heft{font-size:16px;color:var(--muted);margin-top:4px}
+  /* Teilaufgaben als getrennte Kärtchen (15.10.2026, Malte): SuS hielten a), b), c) für eine zusammenhängende Aufgabe */
+  .aufg ol{margin:10px 0 0;padding-left:0;list-style:none;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px}
+  .aufg li{font-size:21px;line-height:1.5;white-space:nowrap;overflow-x:auto;border:2px solid #c9d6e5;border-radius:12px;background:#f7f9fc;padding:8px 12px}
+  .aufg li.breit{grid-column:1/-1}
+  .aufg li b.tb{display:inline-block;min-width:34px;text-align:center;background:#1f4e79;color:#fff;border-radius:8px;padding:0 8px;margin-right:10px;font-weight:700}
+  .tag{display:inline-block;font-size:14px;font-weight:700;border-radius:8px;padding:2px 8px;margin-left:8px;vertical-align:middle}
+  .tag.v{background:#fff3c4;color:#7a5b00}.tag.w{background:#e2d6f0;color:#4f2f7a}
+  details.idee{margin-top:8px;font-size:18px}
+  details.idee summary{color:var(--acc);cursor:pointer;font-weight:600}
+  details.idee div{background:var(--grau);border-radius:8px;padding:8px 10px;margin-top:6px;line-height:1.45}
+  .wahl{display:flex;gap:10px;flex-wrap:wrap;margin:6px 0 10px}
+  .wahl button{flex:1 1 200px;border:2px solid var(--acc);background:#fff;color:var(--acc);border-radius:12px;padding:12px 14px;font-size:19px;font-weight:700;min-height:56px;text-align:left}
+  .wahl button[aria-pressed="true"]{background:var(--acc);color:#fff}
+  .wahl small{display:block;font-weight:500;font-size:15px;opacity:.85}
+  .stufe[hidden]{display:none}
+  .loesbtn{border:1px solid var(--hilfL);background:var(--hilf);color:var(--ink);border-radius:10px;padding:10px 16px;font-size:18px;font-weight:700;min-height:48px;margin-top:4px}
+  .loes{background:var(--hilf);border:1px solid var(--hilfL);border-radius:12px;padding:10px 14px;margin-top:8px}
+  .loes p{margin:0 0 8px;font-size:16px;color:var(--rot);font-weight:700}
+  .loes .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:6px}
+  .loes .grid span{background:#fff;border:1px solid var(--line);border-radius:8px;padding:6px 8px;text-align:center;font-size:19px}
+  .loes[hidden]{display:none}
+  details.tipp{margin-top:8px;font-size:18px}
+  details.tipp summary{display:inline-block;cursor:pointer;font-weight:700;color:#6d4a9e;background:#f1eaf8;border:1px solid #b79bd6;border-radius:10px;padding:6px 12px;min-height:40px;list-style:none}
+  details.tipp summary::-webkit-details-marker{display:none}
+  details.tipp div{background:#f1eaf8;border-radius:8px;padding:8px 10px;margin-top:6px;line-height:1.45}
+  .frag{background:#fff;border:2px solid var(--acc);border-radius:12px;padding:12px 14px;margin-top:8px;font-size:19px}
+  .frag[hidden]{display:none}
+  .frag p{margin:0 0 10px;font-weight:700;color:var(--acc)}
+  .frag button{border-radius:10px;padding:10px 16px;font-size:17px;font-weight:700;min-height:46px;margin:0 8px 6px 0;border:2px solid var(--acc)}
+  .frag .ja{background:var(--acc);color:#fff}.frag .nein{background:#fff;color:var(--acc)}
+  .loes .zeile{background:#fff;border:1px solid var(--line);border-radius:8px;padding:8px 10px;margin-bottom:6px;font-size:19px;line-height:1.5}
+  .loes .zeile b{color:var(--acc)}
+  .loes .warum{display:block;font-size:16px;color:var(--muted);margin-top:2px}
+  footer{color:var(--muted);font-size:13px;text-align:center;margin-top:24px}
+  /* Lösungsweg (1.11.2026, wie Kap. V): erst das Ergebnis, daneben „Lösungsweg anzeigen“ */
+  .wegbtn{border:1px solid var(--acc);background:#fff;color:var(--acc);border-radius:10px;padding:8px 14px;font-size:17px;font-weight:700;min-height:44px;margin-top:6px}
+  .weg{background:#fff;border:1px solid var(--line);border-left:4px solid var(--acc);border-radius:8px;padding:8px 12px;margin-top:6px;font-size:18px;line-height:1.6}
+  .weg[hidden]{display:none}
+  /* Animierter Tipp (1.11.2026): Beispiel mit anderen Zahlen baut sich Zeile für Zeile auf */
+  details.anim{margin-top:8px}
+  details.anim summary{display:inline-block;cursor:pointer;font-weight:700;color:#6d4a9e;background:#f1eaf8;border:1px solid #b79bd6;border-radius:10px;padding:6px 12px;min-height:40px;list-style:none;font-size:18px}
+  details.anim summary::-webkit-details-marker{display:none}
+  .abox{background:#f1eaf8;border-radius:10px;padding:10px 12px;margin-top:6px}
+  .abox .az{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:4px 14px;align-items:baseline;opacity:0;transition:opacity .6s;margin-bottom:6px}
+  .abox .az.da{opacity:1}
+  .abox .az .r{font-size:20px;line-height:1.4}
+  .abox .az .h{font-size:16px;color:#6d4a9e}
+  .abox .az.neu .r{background:#fff;border-radius:6px;box-shadow:0 0 0 2px #b79bd6}
+  .abox .kn{display:flex;gap:8px;margin-top:6px}
+  .abox .kn button{min-height:42px;padding:0 14px;border-radius:10px;border:2px solid #6d4a9e;background:#fff;color:#6d4a9e;font-size:16px;font-weight:700}
+  .cr{color:#b33c3c;font-weight:700}.cg{color:#3f8f3a;font-weight:700}.cb{color:#2e5d9f;font-weight:700}.co{color:#c0700f;font-weight:700}.cl{color:#6d4a9e;font-weight:800}
+  @media (max-width:560px){.abox .az{grid-template-columns:1fr}}
+  .frage{font-size:18px;font-weight:700;color:var(--acc);margin:4px 0 2px}
+  .teilkopf{font-size:22px;font-weight:800;color:var(--acc);margin:14px 0 8px}
+  .teil[hidden]{display:none}
+  .rot{color:#d0021b;font-weight:800}
+  .fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;font-size:.82em;line-height:1.15;margin:0 2px}
+  .fr>span:first-child{border-bottom:1.5px solid currentColor;padding:0 3px}
+  /* Flächen-Baukasten: Teilaufgaben sind Sätze → umbrechen statt seitlich scrollen; Eingabefeld unter dem Text */
+  .aufg li{white-space:normal;overflow-x:visible}
+  .aufg li .eing{display:flex;margin:8px 0 0}
+  /* Flächen-Baukasten: Eingabe, Empfehlung, Uhr, Ergebnis-Karte */
+  .eing{display:inline-flex;align-items:center;gap:6px;margin-left:10px;white-space:nowrap}
+  .eing input{width:120px;min-height:44px;font-size:20px;border:2px solid var(--acc);border-radius:10px;padding:2px 8px;text-align:right}
+  .eing .mk{font-size:22px;font-weight:800;min-width:24px}
+  .eing .mk.ok{color:var(--gruen)} .eing .mk.no{color:var(--rot)}
+  .einzeln{margin-top:8px}
+  .pruef{border:2px solid var(--acc);background:var(--acc);color:#fff;border-radius:10px;padding:8px 16px;font-size:17px;font-weight:700;min-height:46px;margin-top:8px}
+  .empf{background:#e8f4e6;border:2px solid #9fcf9a;border-radius:12px;padding:10px 14px;font-size:19px;margin:8px 0 4px}
+  .wahl button .badge{display:inline-block;margin-left:8px;font-size:13px;background:#2e7d32;color:#fff;border-radius:8px;padding:1px 8px;vertical-align:middle}
+  .uhr{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:#fff;border:1px solid var(--line);border-radius:12px;padding:8px 12px;margin:6px 0 10px;font-size:18px}
+  .uhr button{border:2px solid var(--acc);background:#fff;color:var(--acc);border-radius:10px;padding:6px 14px;font-weight:700;min-height:44px}
+  .uhr .zeit{font-size:22px;font-weight:800;color:var(--acc);font-variant-numeric:tabular-nums}
+  .uhr.um{background:#fff4dc;border-color:#e6c65a}
+  .kartebtn{border:2px solid var(--acc);background:#fff;color:var(--acc);border-radius:10px;padding:10px 16px;font-size:18px;font-weight:700;min-height:48px;margin:10px 0 0 8px}
+  .ekarte{background:#fff;border:3px solid var(--acc);border-radius:14px;padding:12px 16px;margin-top:10px;font-size:19px;line-height:1.6}
+  .ekarte h3{margin:0 0 6px;color:var(--acc)} .ekarte textarea{width:100%;min-height:70px;font:inherit;font-size:18px;border:2px solid var(--line);border-radius:10px;padding:6px 8px}
+  .ekarte .ok{color:var(--gruen);font-weight:800}.ekarte .no{color:var(--rot);font-weight:800}
+  .lwahl{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 4px} .lwahl button{min-height:44px;padding:6px 14px;border-radius:10px;border:2px solid #c9d6e5;background:#fff;font-size:17px;font-weight:700;color:inherit} .lwahl button[aria-pressed="true"]{border-color:#1b2a3a;background:#fff4dc}
+</style>
+</head>
+<body>
+<header><h1>Übung II.1 · Rechteck und Quadrat</h1></header>
+<main>
+  <div class="hinweis">✎ <b>So schreibst du ins Heft:</b> Nummer der Aufgabe, eine kleine <b>Skizze</b> mit den Maßen, dann den <b>ganzen Rechenweg</b> mit Einheiten – nur das Ergebnis reicht nicht. Bei Aufgaben mit Eingabefeld tippst du dein <b>Endergebnis</b> ein (nur die Zahl) und prüfst es. Wenn du nicht weiterkommst, hilft der Tipp.<br><b>In der Stunde: Aufgabe 1 (ca. 5 Minuten). Danach dein Niveau – zu Hause höchstens 15 Minuten (eine ganze Stufe dauert ca. 20 Minuten).</b></div>
+  <div id="teilwahl" hidden><div class="frage">Welche Stunde hattet ihr zuletzt?</div><div class="wahl" id="tw"></div></div>
+  <div id="teile"></div>
+  <footer>Fehling · II Umfang und Flächeninhalt</footer>
+</main>
+<script>
+"use strict";
+// Versionsprüfung (12.10.2026): Safari zeigt sonst bis zu 10 Minuten (oft länger) eine alte, gespeicherte Fassung.
+// Beim Öffnen wird die Seite ohne Zwischenspeicher abgefragt; ist sie neuer, lädt sie sich einmal neu.
+const STAND="20261106231955";
+fetch(location.pathname+"?nocache="+Date.now(),{cache:"no-store"}).then(r=>r.text()).then(t=>{
+  const m=t.match(/const STAND="(\d+)"/);
+  if(m&&m[1]!==STAND&&!sessionStorage.getItem("neu"+m[1])){sessionStorage.setItem("neu"+m[1],"1");location.replace(location.pathname+"?v="+m[1]);}
+}).catch(()=>{});
+// D.teile: ein Teil pro Stunde eines aufgeteilten Buchkapitels (z. B. II.2a/b/c); Stundenauswahl nur bei aufgeteilten Kapiteln (D.mehrteilig).
+const D={"titel": "II.1 · Rechteck und Quadrat", "untertitel": ["Mit Beispiel und Hilfe", "Angaben im Text, auch rückwärts", "Mehrere Schritte, begründen"], "mehrteilig": false, "teile": [{"name": "", "stunde": "", "kurz": "", "erinnerung": ["Flächeninhalt (wie viel Rasen): A = a · b, beim Quadrat A = a · a. Einheit: m², cm² …", "Umfang (wie viel Zaun): U = 2 · a + 2 · b, beim Quadrat U = 4 · a. Einheit: m, cm …", "Gleicher Umfang heißt nicht gleiche Fläche.", "Flächeneinheiten: 1 m² = 100 dm², 1 dm² = 100 cm². Zur kleineren Einheit mal 100, zur größeren durch 100."], "a1": {"t": "Ein rechteckiges Beet im Garten ist 8 m lang und 3 m breit.", "l": ["22 m", "24 m²", "25 m²", "13 cm"], "tipp": "Zaun = Umfang (alle vier Seiten), Rasen = Flächeninhalt (Länge mal Breite).", "sub": ["Wie viel Zaun braucht man rundherum? (in m)", "Wie groß ist die Fläche des Beets? (in m²)", "Ein quadratischer Sandkasten hat 5 m Seitenlänge. Wie groß ist seine Fläche? (in m²)", "Ein Rechteck ist 4 cm lang und 2,5 cm breit. Wie groß ist sein Umfang? (in cm)"], "check": [22, 24, 25, 13], "weg": ["a) U = 2 · 8 m + 2 · 3 m = 16 m + 6 m = 22 m", "b) A = 8 m · 3 m = 24 m²", "c) A = 5 m · 5 m = 25 m²", "d) U = 2 · 4 cm + 2 · 2,5 cm = 8 cm + 5 cm = 13 cm"], "anim": [["Beet: [b:6 m] lang, [o:2 m] breit", "Beispiel mit anderen Zahlen."], ["Zaun = Umfang = [b:6] + [o:2] + [b:6] + [o:2]", "Der Zaun geht einmal ganz herum: alle vier Seiten."], ["U = 2 · [b:6 m] + 2 · [o:2 m] = [g:16 m]", "Zwei Längen und zwei Breiten."], ["Rasen = Flächeninhalt = [b:6 m] · [o:2 m] = [g:12 m²]", "Fläche: Länge mal Breite, Einheit m²."]]}, "stufen": {"1": {"name": "Mit Hilfe", "aufg": [{"t": "Berechne. Beispiel: a = 6 m, b = 2 m → A = 6 · 2 = 12 m²,  U = 2 · 6 + 2 · 2 = 16 m.", "l": ["A = 21 m²", "U = 20 m", "A = 36 cm²", "U = 32 m"], "tipp": "A = a · b (mal), U = 2 · a + 2 · b (alle vier Seiten zusammen).", "sub": ["Rechteck 7 m × 3 m: Flächeninhalt A", "Rechteck 7 m × 3 m: Umfang U", "Rechteck 9 cm × 4 cm: Flächeninhalt A", "Quadrat mit 8 m Seite: Umfang U"], "check": [21, null, null, 32], "weg": ["a) A = 7 m · 3 m = 21 m²", "b) U = 2 · 7 m + 2 · 3 m = 14 m + 6 m = 20 m", "c) A = 9 cm · 4 cm = 36 cm²", "d) U = 4 · 8 m = 32 m"], "anim": [["Rechteck [b:5 m] × [o:4 m]", "Beispiel mit anderen Zahlen."], ["A = [b:5 m] · [o:4 m] = [g:20 m²]", "Flächeninhalt: mal rechnen. Einheit m²."], ["U = 2 · [b:5 m] + 2 · [o:4 m] = 10 m + 8 m = [g:18 m]", "Umfang: alle vier Seiten zusammen. Einheit m."]]}, {"t": "Rechne um. Beispiel: 4 m² = 400 dm²,  600 dm² = 6 m².", "l": ["200 dm²", "500 cm²", "8 dm²", "9 m²"], "tipp": "Zur kleineren Einheit: mal 100. Zur größeren Einheit: durch 100. Die Treppe im Check-in hilft.", "sub": ["2 m² = ? dm²", "5 dm² = ? cm²", "800 cm² = ? dm²", "900 dm² = ? m²"], "check": [null, null, 8, null], "weg": ["a) 2 m² = 2 · 100 dm² = 200 dm²", "b) 5 dm² = 5 · 100 cm² = 500 cm²", "c) 800 cm² = 800 : 100 dm² = 8 dm²", "d) 900 dm² = 900 : 100 m² = 9 m²"]}, {"t": "Ein rechteckiges Beet ist 20 m² groß und 5 m lang. Wie breit ist es? Beispiel: A = 18 m², a = 6 m → b = 18 : 6 = 3 m.", "l": ["b = 4 m"], "tipp": "Welche Zahl mal 5 ergibt 20? Oder: 20 : 5.", "check": [4], "weg": ["A = a · b → 20 = 5 · b", "b = 20 : 5 = 4 m", "Probe: 5 m · 4 m = 20 m² ✓"]}, {"t": "Zaun oder Rasen? Entscheide: Brauchst du den Umfang oder den Flächeninhalt?", "l": ["Umfang", "Flächeninhalt", "Umfang", "Flächeninhalt"], "tipp": "Geht es um den Rand (Zaun, Kante) oder um die Fläche innen (Rasen, Teppich)?", "sub": ["Ein Beet wird eingezäunt.", "Eine Wiese wird mit Rasen eingesät.", "Um die Terrasse kommt eine Kante aus Steinen.", "Ein Zimmerboden bekommt Teppich."], "tag": "v", "weg": ["a) Zaun = Rand → Umfang", "b) Rasen = Fläche → Flächeninhalt", "c) Kante = Rand → Umfang", "d) Teppich = Fläche → Flächeninhalt"]}, {"t": "Wiederholung: Fasse zusammen. Berechne dann für a = 7 und b = 3:  a + b + a + b", "l": ["2a + 2b", "20"], "tipp": "Gleiche Variablen zusammenfassen: a + a = 2a.", "sub": ["Zusammenfassen:", "Für a = 7 und b = 3:"], "tag": "w", "weg": ["a + a + b + b = 2a + 2b", "2 · 7 + 2 · 3 = 14 + 6 = 20"]}]}, "2": {"name": "Sicher rechnen", "aufg": [{"t": "Das Gemüsebeet ist 4,5 m lang und 2 m breit.", "l": ["13 m", "9 m²", "270 g"], "tipp": "Bei c): erst die Fläche, dann für jeden m² 30 g.", "sub": ["Wie viel Zaun braucht man rundherum? (in m)", "Wie groß ist das Beet? (in m²)", "Für 1 m² braucht man 30 g Samen. Wie viel Samen braucht man? (in g)"], "check": [13, null, 270], "weg": ["a) U = 2 · 4,5 m + 2 · 2 m = 9 m + 4 m = 13 m", "b) A = 4,5 m · 2 m = 9 m²", "c) 9 · 30 g = 270 g"]}, {"t": "Rechne rückwärts.", "l": ["b = 6 m", "a = 9 m", "b = 5 m"], "tipp": "Bei a): A : a. Bei b): Ein Quadrat hat vier gleiche Seiten. Bei c): Die halbe Zaunlänge ist eine Länge plus eine Breite.", "sub": ["Rechteck: A = 42 m², a = 7 m. Wie breit ist es? (in m)", "Quadrat: U = 36 m. Wie lang ist eine Seite? (in m)", "Rechteck: U = 30 m, a = 10 m. Wie breit ist es? (in m)"], "check": [6, null, 5], "weg": ["a) 42 = 7 · b → b = 42 : 7 = 6 m", "b) U = 4 · a → 36 = 4 · a → a = 36 : 4 = 9 m", "c) 30 : 2 = 15 m (eine Länge + eine Breite)", "c) b = 15 m − 10 m = 5 m"]}, {"t": "Ein Klassenzimmer ist 8,4 m lang und 6,5 m breit.", "l": ["mehr: ungefähr 8 · 7 = 56 m²", "A = 54,6 m²"], "tipp": "Runde zum Schätzen auf ganze Meter.", "sub": ["Erst schätzen: Sind es mehr oder weniger als 50 m²?", "Rechne genau. (in m²)"], "check": [null, 54.6], "weg": ["a) gerundet: 8 m · 7 m = 56 m² → mehr als 50 m²", "b) A = 8,4 m · 6,5 m = 54,6 m²"]}, {"t": "Ein Rechteck ist 2 m lang und 50 cm breit. Wie groß ist es in m²?", "l": ["2 m · 0,5 m = 1 m²"], "tipp": "Erst beide Seiten in dieselbe Einheit bringen: 50 cm = 0,5 m.", "check": [1], "weg": ["50 cm = 0,5 m", "A = 2 m · 0,5 m = 1 m²"]}, {"t": "Nina: „Zwei Rechtecke mit gleicher Fläche haben auch denselben Umfang.“", "l": ["U = 20 cm", "U = 22 cm", "manchmal – nur wenn es dasselbe Rechteck ist"], "tipp": "Vergleiche zwei Rechtecke mit 24 cm²: 4 cm × 6 cm und 3 cm × 8 cm.", "sub": ["Umfang von 4 cm × 6 cm:", "Umfang von 3 cm × 8 cm:", "Stimmt Ninas Satz immer, manchmal oder nie?"], "tag": "v", "weg": ["a) U = 2 · 4 cm + 2 · 6 cm = 20 cm", "b) U = 2 · 3 cm + 2 · 8 cm = 22 cm", "c) Beide haben 24 cm², aber verschiedene Umfänge → stimmt nur manchmal (wenn es dasselbe Rechteck ist)"]}, {"t": "Wiederholung: Löse  2 · x + 8 = 20", "l": ["x = 6"], "tipp": "Erst − 8, dann : 2.", "tag": "w", "check": [6], "weg": ["2 · x + 8 = 20  | − 8", "2 · x = 12  | : 2", "x = 6"]}]}, "3": {"name": "Knifflig", "aufg": [{"t": "Ninas Familie hat 30 m Zaun für ein rechteckiges Beet an der Hauswand. An der Wand braucht man keinen Zaun. Das Beet soll an der Wand entlang 8 m lang sein.", "l": ["b = 11 m", "A = 88 m²"], "tipp": "Zeichne eine Skizze. Der Zaun besteht aus einer Länge und zwei Breiten: 8 + b + b = 30.", "sub": ["Wie breit wird das Beet? (in m)", "Wie groß wird das Beet? (in m²)"], "check": [11, 88], "weg": ["Skizze: Wand = 8 m, Zaun = 8 m + b + b", "8 + 2 · b = 30  | − 8", "2 · b = 22  | : 2", "b = 11 m", "A = 8 m · 11 m = 88 m²"]}, {"t": "Du hast 24 m Zaun. Welches Rechteck mit ganzen Metern hat die größte Fläche? Lege eine Tabelle an: Länge, Breite, Fläche.", "l": ["6 m × 6 m, A = 36 m²"], "tipp": "Länge + Breite = 12 m. Probiere 1 + 11, 2 + 10, …", "check": [36], "weg": ["Länge + Breite = 24 : 2 = 12 m", "1 · 11 = 11 → 2 · 10 = 20 → 3 · 9 = 27 → 4 · 8 = 32 → 5 · 7 = 35 → 6 · 6 = 36", "größte Fläche: 6 m × 6 m = 36 m²"]}, {"t": "Anna: „Wenn ich beide Seiten eines Rechtecks verdopple, verdoppelt sich auch die Fläche.“", "l": ["6 m² und 24 m²", "nie – die Fläche wird viermal so groß"], "tipp": "Probiere es mit 2 m × 3 m und mit 4 m × 6 m.", "sub": ["Fläche von 2 m × 3 m und von 4 m × 6 m:", "Stimmt Annas Satz immer, manchmal oder nie?"], "tag": "v", "weg": ["a) 2 m · 3 m = 6 m²", "a) 4 m · 6 m = 24 m²", "b) 24 : 6 = 4 → viermal so groß → Annas Satz stimmt nie"]}, {"t": "Ein quadratischer Platz ist 144 m² groß. Wie lang ist der Zaun rundherum? (in m)", "l": ["a = 12 m, U = 48 m"], "tipp": "Welche Zahl mal sich selbst ergibt 144?", "check": [48], "weg": ["a · a = 144 → a = 12 m", "U = 4 · 12 m = 48 m"]}, {"t": "Wiederholung: Ein Rechteck ist x + 3 lang und x breit.", "l": ["U = 4x + 6", "U = 14"], "tipp": "U = 2 · ( x + 3 ) + 2 · x – Klammer ausmultiplizieren.", "sub": ["Stelle einen Term für den Umfang auf und vereinfache.", "Berechne den Umfang für x = 2."], "tag": "w", "check": [null, 14], "weg": ["a) U = 2 · ( x + 3 ) + 2 · x", "a) = 2x + 6 + 2x = 4x + 6", "b) U = 4 · 2 + 6 = 14"]}]}}}]};
+const esc=s=>s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/\{([^{}\/]+)\/([^{}]+)\}/g,'<span class="fr"><span>$1</span><span>$2</span></span>').replace(/\[([+−])\]/g,'<span class="rot">$1</span>');
+const el=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e;};
+const tagHtml=t=>t==="v"?'<span class="tag v">💡 Verständnis</span>':t==="w"?'<span class="tag w">↩ Wiederholung</span>':"";
+// Farbmarkup [r:…] [g:…] [b:…] [o:…] [l:…] (nach esc, damit Brüche weiter funktionieren)
+const farbe=s=>s.replace(/\[([rgbol]):([^\]]+)\]/g,'<span class="c$1">$2</span>');
+function animTipp(zeilen){
+  const d=el("details","anim",'<summary>▶ Tipp: Beispiel mit anderen Zahlen</summary>');
+  const box=el("div","abox");d.appendChild(box);
+  const rows=zeilen.map(([z,h])=>{const r=el("div","az",`<div class="r">${farbe(esc(z))}</div><div class="h">${esc(h)}</div>`);box.appendChild(r);return r;});
+  const kn=el("div","kn",'<button class="p">⏸ Pause</button><button class="n">↻ Nochmal</button>');box.appendChild(kn);
+  const pb=kn.querySelector(".p");let n=0,timer=null,steht=false;
+  const zeig=()=>rows.forEach((r,i)=>{r.classList.toggle("da",i<n);r.classList.toggle("neu",i===n-1);});
+  const dauer=()=>1800+((zeilen[n-1]||["",""])[0].length+(zeilen[n-1]||["",""])[1].length)*55;   // Lesezeit nach Textlänge
+  const weiter=()=>{if(steht)return;n++;zeig();if(n<rows.length)timer=setTimeout(weiter,dauer());else pb.disabled=true;};
+  const start=()=>{clearTimeout(timer);steht=false;pb.disabled=false;pb.textContent="⏸ Pause";n=0;zeig();timer=setTimeout(weiter,400);};
+  pb.onclick=()=>{steht=!steht;pb.textContent=steht?"▶ Weiter":"⏸ Pause";clearTimeout(timer);if(!steht)weiter();};
+  kn.querySelector(".n").onclick=start;
+  d.addEventListener("toggle",()=>{if(d.open)start();else clearTimeout(timer);});
+  return d;
+}
+const ERG={};   // Ergebnisse der geprüften Felder: Schlüssel "Aufgabe★ 2 b" → true/false (erster Versuch)
+const zahl=s=>{const m=String(s).replace(/\s/g,"").replace(",",".").match(/-?\d+(\.\d+)?/);return m?parseFloat(m[0]):NaN;};
+const gleich=(x,w)=>Math.abs(x-w)<=Math.max(0.011,Math.abs(w)*1e-6);
+function aufgabe(nr,a,stufe){
+  let h=`<div class="kopf">Aufgabe ${nr}${tagHtml(a.tag)}</div><div class="txt">${esc(a.tag==="w"?a.t.replace(/^Wiederholung: /,""):a.t)}</div>`;
+  // 2.11.2026 (Malte): klar machen, dass Aufgabe + Rechenweg ins Heft gehören, nicht nur das Ergebnis
+  h+=`<div class="heft">✎ Ins Heft: ${a.tag==="v"?"Aufgabe kurz notieren, dann in ganzen Sätzen begründen bzw. richtig rechnen.":"erst die Aufgabe abschreiben, dann Schritt für Schritt rechnen."}</div>`;
+  const feld=(i)=>a.check&&a.check[i]!=null?`<span class="eing" data-i="${i}"><input inputmode="decimal" autocomplete="off" placeholder="Ergebnis"><span class="mk"></span></span>`:"";
+  if(a.sub)h+="<ol>"+a.sub.map((s,i)=>`<li class="${feld(i)?"breit":""}"><b class="tb">${"abcdefgh"[i]})</b>${esc(s)}${feld(i)}</li>`).join("")+"</ol>";
+  else if(a.check&&a.check[0]!=null)h+=`<div class="einzeln">${feld(0)}</div>`;
+  if(a.check&&a.check.some(v=>v!=null))h+=`<button class="pruef">Ergebnis prüfen</button>`;
+  if(a.tipp)h+=`<details class="tipp"><summary>💡 Tipp</summary><div>${esc(a.tipp)}</div></details>`;
+  const e=el("div","aufg",h);
+  if(a.anim)e.appendChild(animTipp(a.anim));
+  const pb=e.querySelector(".pruef");
+  if(pb)pb.onclick=()=>{let alle=0,rich=0;
+    e.querySelectorAll(".eing").forEach(f=>{const i=+f.dataset.i,w=a.check[i],x=zahl(f.querySelector("input").value),mk=f.querySelector(".mk");
+      if(isNaN(x)){mk.textContent="?";mk.className="mk";return;}
+      const ok=gleich(x,w);mk.textContent=ok?"✓":"✗";mk.className="mk "+(ok?"ok":"no");alle++;if(ok)rich++;
+      const key=`${nr}${a.sub?" "+"abcdefgh"[i]:""}`;if(!(key in ERG))ERG[key]={ok,stufe};});
+    if(e.onGeprueft)e.onGeprueft(rich,alle);};
+  return e;
+}
+// Lösungen (15.10.2026, Malte): nach „Lösungen anzeigen“ erst die Aufgabe wählen – nie alle Lösungen auf einmal. Nur richtige Lösungen.
+function loesung(liste){
+  const box=el("div");
+  const b=el("button","loesbtn");b.textContent="Lösungen anzeigen";
+  const f=el("div","frag",'<p>Stehen die Aufgabe und dein Rechenweg im Heft? Zu welcher Aufgabe möchtest du die Lösung sehen?</p>');f.hidden=true;
+  const kn=el("div","lwahl"),w=el("div","loes");w.hidden=true;f.appendChild(kn);
+  const zeile=([nr,a])=>{const l=a.sub?a.l.map((x,i)=>`${"abcdefgh"[i]}) ${esc(x)}`).join("&nbsp;&nbsp;&nbsp; "):a.l.map(esc).join("<br>");
+    const weg=a.weg?`<br><button class="wegbtn">Lösungsweg anzeigen</button><div class="weg" hidden>${a.weg.map(z=>"<div>"+esc(z)+"</div>").join("")}</div>`:"";
+    return `<div class="zeile"><b>Aufgabe ${nr}:</b> ${l}${a.idee?`<span class="warum">Warum: ${esc(a.idee)}</span>`:""}${weg}</div>`;};
+  liste.forEach((e,i)=>{const k=el("button","",`Aufgabe ${esc(String(e[0]))}`);k.setAttribute("aria-pressed","false");
+    k.onclick=()=>{kn.querySelectorAll("button").forEach((x,j)=>x.setAttribute("aria-pressed",j===i));w.innerHTML=zeile(e);w.hidden=false;
+      const wb=w.querySelector(".wegbtn");if(wb)wb.onclick=()=>{const g=w.querySelector(".weg");g.hidden=!g.hidden;wb.textContent=g.hidden?"Lösungsweg anzeigen":"Lösungsweg ausblenden";};};kn.appendChild(k);});
+  b.onclick=()=>{const offen=!f.hidden;f.hidden=offen;w.hidden=true;kn.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed","false"));
+    b.textContent=offen?"Lösungen anzeigen":"Lösungen ausblenden";};
+  box.append(b,f,w);return box;
+}
+function teil(T){
+  const root=el("section","teil");
+  if(D.mehrteilig)root.appendChild(el("div","teilkopf",esc(T.name)));
+  root.appendChild(el("details","erin",`<summary>Erinnerung: Das brauchst du</summary><ul>${T.erinnerung.map(e=>"<li>"+esc(e)+"</li>").join("")}</ul>`));
+  root.appendChild(el("h2","","Aufgabe 1 · für alle"));
+  const a1=aufgabe(1,T.a1,"1");const empf=el("div","empf");empf.hidden=true;root.append(a1,empf,loesung([[1,T.a1]]));
+  root.appendChild(el("h2","","Jetzt wählst du dein Niveau"));
+  const wahl=el("div","wahl"),st=el("div");root.append(wahl,st);
+  [["1","★"],["2","★★"],["3","★★★"]].forEach(([k,stern])=>{
+    const s=T.stufen[k];
+    const b=el("button","",`${stern}  ${esc(s.name)}<small>${D.untertitel[k-1]}</small>`);b.setAttribute("aria-pressed","false");b.dataset.k=k;
+    const sec=el("section","stufe");sec.hidden=true;
+    sec.appendChild(el("h2","",esc(stern+"  "+s.name)));
+    sec.appendChild(uhr());
+    s.aufg.forEach((a,i)=>sec.appendChild(aufgabe(stern+" "+(i+2),a,stern)));
+    const lz=loesung(s.aufg.map((a,i)=>[stern+" "+(i+2),a]));sec.appendChild(lz);
+    const kb=el("button","kartebtn","📋 Ergebnis-Karte");lz.appendChild(kb);const kk=el("div");sec.appendChild(kk);
+    kb.onclick=()=>{kk.innerHTML="";kk.appendChild(karte(stern));};
+    b.onclick=()=>{wahl.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b));st.querySelectorAll(".stufe").forEach(x=>x.hidden=x!==sec);};
+    wahl.appendChild(b);st.appendChild(sec);
+  });
+  // Niveau-Empfehlung aus Aufgabe 1 (Konzept: Schüler schätzen sich oft falsch ein – die Wahl bleibt bei ihnen)
+  a1.onGeprueft=(rich,alle)=>{if(!alle)return;const k=rich===alle?"3":(rich>=alle/2?"2":"1");const st=["","★","★★","★★★"][k];
+    empf.hidden=false;empf.innerHTML=`Aufgabe 1: <b>${rich} von ${alle}</b> richtig. Wir empfehlen dir <b>${st}</b>. Du darfst trotzdem selbst wählen.`;
+    wahl.querySelectorAll("button").forEach(x=>{const alt=x.querySelector(".badge");if(alt)alt.remove();if(x.dataset.k===k)x.insertAdjacentHTML("beforeend",'<span class="badge">empfohlen</span>');});};
+  return root;
+}
+// 15-Minuten-Uhr (Hausaufgabe nach Zeit, Konzept 5a)
+function uhr(){
+  const u=el("div","uhr",'<span>⏱ Zu Hause: <b>15 Minuten</b> auf deinem Niveau, dann aufhören.</span><span class="zeit">15:00</span><button>Uhr starten</button>');
+  const z=u.querySelector(".zeit"),b=u.querySelector("button");let ende=0,t=null;
+  const tick=()=>{const r=Math.max(0,Math.round((ende-Date.now())/1000));z.textContent=`${Math.floor(r/60)}:${String(r%60).padStart(2,"0")}`;
+    if(r<=0){clearInterval(t);u.classList.add("um");z.textContent="Zeit um – hör auf. Schreib ggf. eine Hänge-Zeile.";b.textContent="Neu starten";}};
+  b.onclick=()=>{clearInterval(t);u.classList.remove("um");ende=Date.now()+15*60000;b.textContent="Neu starten";tick();t=setInterval(tick,1000);};
+  return u;
+}
+// Ergebnis-Karte: kein Name, kein Server – die Lehrkraft schaut in der Folgestunde aufs Tablet
+const KEY="karte-"+location.pathname.split("/").pop();
+function karte(stern){
+  const jetzt=new Date();let alt={};try{alt=JSON.parse(localStorage.getItem(KEY)||"{}");}catch(e){}
+  const zeilen=Object.entries(ERG).filter(([k,v])=>v.stufe===stern||v.stufe==="1").map(([k,v])=>`<span class="${v.ok?"ok":"no"}">${v.ok?"✓":"✗"}</span> Aufgabe ${esc(k.replace(/^1 /,"1 "))}`);
+  const c=el("div","ekarte",`<h3>Ergebnis-Karte · ${esc(D.titel)} · Stufe ${stern}</h3>`+
+    `<div>${jetzt.toLocaleDateString("de-DE")} · ${jetzt.toLocaleTimeString("de-DE",{hour:"2-digit",minute:"2-digit"})}</div>`+
+    `<div>${zeilen.length?zeilen.join("<br>"):"Noch keine Ergebnisse geprüft."}</div>`+
+    `<div style="margin-top:8px"><b>Hänge-Zeile</b> (wo genau hängst du – und warum?)</div><textarea placeholder="Ich hänge bei Aufgabe …, weil …"></textarea>`);
+  const ta=c.querySelector("textarea");ta.value=alt.haenge||"";
+  ta.oninput=()=>{try{localStorage.setItem(KEY,JSON.stringify({haenge:ta.value,erg:ERG,stufe:stern,zeit:Date.now()}));}catch(e){}};
+  try{localStorage.setItem(KEY,JSON.stringify({haenge:ta.value,erg:ERG,stufe:stern,zeit:Date.now()}));}catch(e){}
+  return c;
+}
+const box=document.getElementById("teile"),secs=D.teile.map(teil);
+secs.forEach(s=>box.appendChild(s));
+if(D.mehrteilig){
+  document.getElementById("teilwahl").hidden=false;const tw=document.getElementById("tw");
+  const zeig=i=>{secs.forEach((s,j)=>s.hidden=j!==i);tw.querySelectorAll("button").forEach((b,j)=>b.setAttribute("aria-pressed",j===i));};
+  D.teile.forEach((T,i)=>{const b=el("button","",esc(T.stunde)+`<small>${esc(T.kurz)}</small>`);b.onclick=()=>zeig(i);tw.appendChild(b);});
+  zeig(D.teile.length-1);
+}
+</script>
+</body>
+</html>

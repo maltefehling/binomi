@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Labor: Gleicher Zaun – wie viel Rasen?</title>
+<!-- II.1 Rechteck und Quadrat (Kl. 8, Garten in Gaienhofen). Labor für den Beamer: Die Lehrkraft verschiebt ein Rechteck mit festem Umfang
+     (Standard 24 m, ?u=… ändert ihn) und fragt: „Was passiert mit dem Rasen?“ Später auch für Schüler zum Nachprüfen. Kein Login, keine Daten. -->
+<style>
+  :root{--acc:#1f4e79;--ink:#1b2a3a;--muted:#5b6b7c;--bg:#f4f7fb;--zaun:#7a4a1e;--rasen:#cfe8c4;--karo:#cdd6e0;--a:#2e5d9f;--b:#c0700f}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;-webkit-user-select:none;user-select:none}
+  button,input{font:inherit;touch-action:manipulation}
+  header{padding:12px 18px;background:var(--acc);color:#fff}
+  header h1{font-size:24px;margin:0}
+  main{max-width:1100px;margin:0 auto;padding:14px 18px 24px}
+  .frage{font-size:24px;font-weight:700;color:var(--acc);margin:4px 0 12px}
+  .bild{background:#fff;border:1px solid #c9d6e5;border-radius:14px;padding:10px}
+  svg{width:100%;height:auto;display:block}
+  .regler{display:flex;align-items:center;gap:12px;margin:14px 0 6px;flex-wrap:wrap}
+  .regler button{min-width:64px;min-height:56px;border-radius:12px;border:2px solid var(--acc);background:#fff;color:var(--acc);font-size:28px;font-weight:800}
+  .regler input{flex:1 1 300px;height:44px;accent-color:var(--acc)}
+  .werte{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}
+  .wert{background:#fff;border:1px solid #c9d6e5;border-radius:14px;padding:10px 14px;font-size:26px;line-height:1.4}
+  .wert b{color:var(--acc)}
+  .wert .klein{font-size:18px;color:var(--muted)}
+  .ca{color:var(--a);font-weight:800}.cb{color:var(--b);font-weight:800}
+  .liste{margin-top:12px;background:#fff;border:1px solid #c9d6e5;border-radius:14px;padding:10px 14px;font-size:20px}
+  .liste b{color:var(--acc)}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+  .chips span{border:2px solid #c9d6e5;border-radius:10px;padding:4px 10px}
+  .chips span.max{border-color:#3f8f3a;background:#e8f4e6;font-weight:700}
+  @media (max-width:700px){.werte{grid-template-columns:1fr}.wert{font-size:21px}}
+</style>
+</head>
+<body>
+<header><h1>Labor: Gleicher Zaun – wie viel Rasen?</h1></header>
+<main>
+  <div class="frage" id="frage">Der Zaun ist immer 24 m lang. Was passiert mit dem Rasen, wenn wir das Rechteck anders aufstellen?</div>
+  <div class="bild"><svg id="svg" viewBox="0 0 640 300" aria-label="Rechteck auf Karopapier"></svg></div>
+  <div class="regler">
+    <button id="minus" aria-label="kürzer">◀</button>
+    <input type="range" id="r" min="1" max="11" step="1" value="6" aria-label="Länge">
+    <button id="plus" aria-label="länger">▶</button>
+  </div>
+  <div class="werte">
+    <div class="wert"><b>Zaun</b> (Umfang)<br><span id="u"></span><br><span class="klein">1 Kästchen = 1 m</span></div>
+    <div class="wert"><b>Rasen</b> (Flächeninhalt)<br><span id="a"></span><br><span class="klein" id="zaehl"></span></div>
+  </div>
+  <div class="liste"><b>Schon ausprobiert:</b><div class="chips" id="chips"></div></div>
+</main>
+<script>
+"use strict";
+const q=new URLSearchParams(location.search);
+let U=parseInt(q.get("u")||"24",10); if(!(U>=8&&U<=40&&U%2===0))U=24;
+const H=U/2;   // a + b = halber Umfang
+const r=document.getElementById("r"); r.max=H-1; r.value=H-2;   // Start bei Plan B (10 m × 2 m)
+document.getElementById("frage").textContent=`Der Zaun ist immer ${U} m lang. Was passiert mit dem Rasen, wenn wir das Rechteck anders aufstellen?`;
+const svg=document.getElementById("svg"),NS="http://www.w3.org/2000/svg";
+const K=22, X0=20, Y0=20, COLS=Math.max(H+1,27), ROWS=12;   // Karo: K px je Meter
+svg.setAttribute("viewBox",`0 0 ${X0*2+COLS*K} ${Y0*2+ROWS*K}`);
+const mk=(t,a)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);svg.appendChild(e);return e;};
+for(let i=0;i<=COLS;i++)mk("line",{x1:X0+i*K,y1:Y0,x2:X0+i*K,y2:Y0+ROWS*K,stroke:"#cdd6e0","stroke-width":1});
+for(let j=0;j<=ROWS;j++)mk("line",{x1:X0,y1:Y0+j*K,x2:X0+COLS*K,y2:Y0+j*K,stroke:"#cdd6e0","stroke-width":1});
+const rasen=mk("rect",{fill:"#cfe8c4"}), reihen=mk("g",{}), zaun=mk("rect",{fill:"none",stroke:"#7a4a1e","stroke-width":4});
+const la=mk("line",{stroke:"#2e5d9f","stroke-width":6}), lb=mk("line",{stroke:"#c0700f","stroke-width":6});
+const ta=mk("text",{fill:"#2e5d9f","font-size":20,"font-weight":800,"text-anchor":"middle"}), tb=mk("text",{fill:"#c0700f","font-size":20,"font-weight":800});
+const probiert=new Map();
+function zeig(){
+  const a=+r.value,b=H-a,A=a*b;
+  const x=X0+K, y=Y0+ROWS*K-K-b*K;
+  for(const [e,v] of [[rasen,{x,y,width:a*K,height:b*K}],[zaun,{x,y,width:a*K,height:b*K}]])for(const k in v)e.setAttribute(k,v[k]);
+  reihen.innerHTML=""; for(let j=1;j<b;j++){const l=document.createElementNS(NS,"line");l.setAttribute("x1",x);l.setAttribute("x2",x+a*K);l.setAttribute("y1",y+j*K);l.setAttribute("y2",y+j*K);l.setAttribute("stroke","#8fbf7f");reihen.appendChild(l);}
+  la.setAttribute("x1",x);la.setAttribute("x2",x+a*K);la.setAttribute("y1",y+b*K);la.setAttribute("y2",y+b*K);
+  lb.setAttribute("x1",x+a*K);lb.setAttribute("x2",x+a*K);lb.setAttribute("y1",y);lb.setAttribute("y2",y+b*K);
+  ta.setAttribute("x",x+a*K/2);ta.setAttribute("y",y+b*K+20);ta.textContent=`a = ${a} m`;
+  tb.setAttribute("x",x+a*K+8);tb.setAttribute("y",y+b*K/2+7);tb.textContent=`b = ${b} m`;
+  document.getElementById("u").innerHTML=`<span class="ca">${a}</span> + <span class="cb">${b}</span> + <span class="ca">${a}</span> + <span class="cb">${b}</span> = <b>${U} m</b>`;
+  document.getElementById("a").innerHTML=`<span class="ca">${a}</span> · <span class="cb">${b}</span> = <b>${A} m²</b>`;
+  document.getElementById("zaehl").textContent=`${b} Reihen mit je ${a} Kästchen`;
+  probiert.set(a,A); const max=Math.max(...probiert.values());
+  document.getElementById("chips").innerHTML=[...probiert.entries()].sort((p,q)=>p[0]-q[0]).map(([a,A])=>`<span class="${A===max&&probiert.size>2?"max":""}">${a} m × ${H-a} m: ${A} m²</span>`).join("");
+}
+r.oninput=zeig;
+document.getElementById("minus").onclick=()=>{r.value=Math.max(+r.min,+r.value-1);zeig();};
+document.getElementById("plus").onclick=()=>{r.value=Math.min(+r.max,+r.value+1);zeig();};
+zeig();
+</script>
+</body>
+</html>
