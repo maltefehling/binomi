@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Animation: Parallelogramm kippen und umlegen</title>
+<!-- II.2a Parallelogramm (Kl. 8, Garten: schräge Pflasterfläche). Am Beamer (Lehrkraft bedient) oder auf den Schüler-Tablets per QR – das entscheidet die Lehrkraft in der Stunde.
+     Regler: obere Seite verschieben, Grundseite und Höhe bleiben → Fläche bleibt 24 m², Annas Rechnung „g · schräge Seite“ ändert sich.
+     Knopf „Umlegen“: Dreieck an der Höhe abschneiden und auf die andere Seite schieben → Rechteck. Rechter Winkel als Bogen mit Punkt. -->
+<style>
+  :root{--acc:#1f4e79;--ink:#1b2a3a;--muted:#5b6b7c;--bg:#f4f7fb;--g:#2e5d9f;--h:#c0700f;--pfl:#e3dccf;--rand:#6b5a45;--rot:#b03a2e;--ok:#2e7d32}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;-webkit-user-select:none;user-select:none}
+  button,input{font:inherit;touch-action:manipulation}
+  header{padding:12px 18px;background:var(--acc);color:#fff} header h1{font-size:24px;margin:0}
+  main{max-width:1100px;margin:0 auto;padding:14px 18px 24px}
+  .auftrag{background:#fff;border:2px solid #1f4e79;border-radius:12px;padding:10px 14px;font-size:20px;line-height:1.45;margin-bottom:12px}
+  .bild{background:#fff;border:1px solid #c9d6e5;border-radius:14px;padding:8px}
+  svg{width:100%;height:auto;display:block}
+  .regler{display:flex;align-items:center;gap:12px;margin:14px 0 6px;flex-wrap:wrap;font-size:20px}
+  .regler button{min-width:64px;min-height:56px;border-radius:12px;border:2px solid var(--acc);background:#fff;color:var(--acc);font-size:26px;font-weight:800}
+  .regler input{flex:1 1 300px;height:44px;accent-color:var(--acc)}
+  .knopf{min-height:56px;border-radius:12px;border:2px solid var(--acc);background:var(--acc);color:#fff;font-size:20px;font-weight:700;padding:0 20px}
+  .werte{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}
+  .wert{background:#fff;border:1px solid #c9d6e5;border-radius:14px;padding:10px 14px;font-size:25px;line-height:1.45}
+  .wert.anna{border-color:#e3aaa4} .wert.echt{border-color:#9fcf9a}
+  .cg{color:var(--g);font-weight:800}.ch{color:var(--h);font-weight:800}
+  .klein{font-size:17px;color:var(--muted)}
+  @media (max-width:700px){.werte{grid-template-columns:1fr}.wert{font-size:20px}}
+</style>
+</head>
+<body>
+<header><h1>Parallelogramm: kippen und umlegen</h1></header>
+<main>
+  <div class="auftrag">Schiebe die obere Seite mit ◀ ▶. Beobachte: Was passiert mit <b>Annas Rechnung</b> – und was mit der <b>Fläche</b>? Tippe dann auf <b>✂ Umlegen</b>.</div>
+  <div class="bild"><svg id="svg" viewBox="0 0 640 300"></svg></div>
+  <div class="regler">
+    <span>obere Seite schieben</span>
+    <button id="minus" aria-label="nach links">◀</button>
+    <input type="range" id="r" min="-2" max="6" step="1" value="2" aria-label="Verschiebung">
+    <button id="plus" aria-label="nach rechts">▶</button>
+    <button class="knopf" id="umlegen">✂ Umlegen</button>
+  </div>
+  <div class="werte">
+    <div class="wert anna"><b>Annas Rechnung</b><br><span class="cg">6</span> · schräge Seite <span id="b"></span> = <b id="ab"></b><br><span class="klein">Grundseite mal schräge Seite</span></div>
+    <div class="wert echt"><b>Fläche</b> (Kästchen zählen)<br><span class="cg">g = 6 m</span>, <span class="ch">h = 4 m</span> → <b id="A">24 m²</b><br><span class="klein">1 Kästchen = 1 m²</span></div>
+  </div>
+</main>
+<script>
+"use strict";
+const svg=document.getElementById("svg"),NS="http://www.w3.org/2000/svg",K=40,X0=40,Y0=250,G=6,H=4;   // 1 m = 40 px
+const mk=(t,a,p=svg)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);p.appendChild(e);return e;};
+for(let i=0;i<=14;i++)mk("line",{x1:X0-20+i*K,y1:10,x2:X0-20+i*K,y2:290,stroke:"#cdd6e0"});
+for(let j=0;j<=7;j++)mk("line",{x1:X0-20,y1:Y0+40-j*K,x2:X0-20+14*K,y2:Y0+40-j*K,stroke:"#cdd6e0"});
+const rest=mk("polygon",{fill:"#e3dccf",stroke:"#6b5a45","stroke-width":3});
+const drei=mk("polygon",{fill:"#d7cdb9",stroke:"#6b5a45","stroke-width":3,style:"transition:transform 1.6s ease"});
+const gl=mk("line",{stroke:"#2e5d9f","stroke-width":6}), hl=mk("line",{stroke:"#c0700f","stroke-width":4,"stroke-dasharray":"8 6"});
+const bogen=mk("path",{fill:"none",stroke:"#c0700f","stroke-width":2.5}), punkt=mk("circle",{r:3.2,fill:"#c0700f"});
+const tg=mk("text",{fill:"#2e5d9f","font-size":22,"font-weight":800,"text-anchor":"middle"}), th=mk("text",{fill:"#c0700f","font-size":22,"font-weight":800});
+const r=document.getElementById("r");let gelegt=false;
+const px=(x,y)=>[X0+x*K,Y0-y*K];
+function zeig(){
+  const s=+r.value;gelegt=false;drei.style.transform="translate(0px,0px)";
+  // Ecken: unten (0|0) (6|0), oben (s|4) (s+6|4). Höhe von der oberen linken Ecke, wenn sie über der Grundseite liegt, sonst von der oberen rechten.
+  const A=px(0,0),B=px(G,0),C=px(s+G,H),Dd=px(s,H);
+  const hx=(s>=0&&s<=G)?s:(s<0?s+G:s);           // Höhenfußpunkt-x (immer innerhalb, wenn möglich)
+  const F=px(hx,0),T=px(hx,H);
+  if(s>=0&&s<=G){ // Dreieck links (A, Fußpunkt, obere linke Ecke) abschneiden
+    drei.setAttribute("points",[A,F,Dd].map(p=>p.join(",")).join(" "));
+    rest.setAttribute("points",[F,B,C,Dd].map(p=>p.join(",")).join(" "));
+  }else{drei.setAttribute("points","");rest.setAttribute("points",[A,B,C,Dd].map(p=>p.join(",")).join(" "));}
+  gl.setAttribute("x1",A[0]);gl.setAttribute("y1",A[1]);gl.setAttribute("x2",B[0]);gl.setAttribute("y2",B[1]);
+  const fx=(s>=0&&s<=G)?F:px(Math.min(Math.max(hx,0),G),0);
+  hl.setAttribute("x1",T[0]);hl.setAttribute("y1",T[1]);hl.setAttribute("x2",T[0]);hl.setAttribute("y2",Y0);
+  const rr=18,dir=(hx<=G-0.5)?1:-1;   // Bogen zur Innenseite
+  bogen.setAttribute("d",`M ${T[0]+dir*rr} ${Y0} A ${rr} ${rr} 0 0 ${dir>0?0:1} ${T[0]} ${Y0-rr}`);
+  punkt.setAttribute("cx",T[0]+dir*rr*0.42);punkt.setAttribute("cy",Y0-rr*0.42);
+  tg.setAttribute("x",(A[0]+B[0])/2);tg.setAttribute("y",Y0+28);tg.textContent="g = 6 m";
+  th.setAttribute("x",T[0]+(dir>0?8:-80));th.setAttribute("y",Y0-H*K/2);th.textContent="h = 4 m";
+  const b=Math.round(Math.hypot(s,H)*10)/10, d=x=>String(Math.round(x*10)/10).replace(".",",");   // wie Anna: schräge Seite gemessen (auf mm gerundet)
+  document.getElementById("b").textContent=`${d(b)} m`;
+  document.getElementById("ab").textContent=`${d(G*b)} m²`;
+  document.getElementById("umlegen").disabled=!(s>0&&s<=G);
+}
+document.getElementById("umlegen").onclick=()=>{const s=+r.value;gelegt=!gelegt;drei.style.transform=gelegt?`translate(${G*K}px,0px)`:"translate(0px,0px)";
+  document.getElementById("umlegen").textContent=gelegt?"↩ Zurück":"✂ Umlegen";};
+r.oninput=()=>{document.getElementById("umlegen").textContent="✂ Umlegen";zeig();};
+document.getElementById("minus").onclick=()=>{r.value=Math.max(+r.min,+r.value-1);r.oninput();};
+document.getElementById("plus").onclick=()=>{r.value=Math.min(+r.max,+r.value+1);r.oninput();};
+zeig();
+</script>
+</body>
+</html>
