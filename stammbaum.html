@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Stammbaum der Figuren – wie die neue Figur entsteht</title>
+<!-- Kap. II Umfang und Flächeninhalt (Kl. 8). Eine Seite, fünf Animationen – der QR-Code an jedem Pfeil des Stammbaums springt per #Anker hin:
+     #umlegen (Rechteck → Parallelogramm) · #halbieren (Parallelogramm → Dreieck) · #trapez (Parallelogramm → Trapez) · #drachen (Rechteck → Drachen) · #zerlegen (→ Vieleck).
+     Lesezeit je Satz ≥ 1500 ms + 80 ms je Zeichen, Pause/Weiter, Nochmal. Rechte Winkel als Bogen mit Punkt. Am Beamer oder auf dem Tablet. -->
+<style>
+  :root{--acc:#1f4e79;--ink:#1b2a3a;--muted:#5b6b7c;--bg:#f4f7fb;--g:#2e5d9f;--h:#c0700f}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;-webkit-user-select:none;user-select:none}
+  button{font:inherit;touch-action:manipulation}
+  header{padding:12px 18px;background:var(--acc);color:#fff} header h1{font-size:22px;margin:0}
+  main{max-width:1000px;margin:0 auto;padding:12px 16px 24px}
+  .wahl{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+  .wahl a{flex:1 1 160px;text-decoration:none;border:2px solid #c9d6e5;border-radius:12px;padding:8px 10px;color:var(--acc);font-weight:700;background:#fff;text-align:center;min-height:44px}
+  .wahl a.an{border-color:var(--acc);background:var(--acc);color:#fff}
+  .bild{background:#fff;border:1px solid #c9d6e5;border-radius:14px;padding:6px}
+  svg{width:100%;height:auto;display:block}
+  .knoepfe{display:flex;gap:10px;margin:10px 0}
+  .knoepfe button{flex:1 1 140px;min-height:52px;border-radius:12px;font-size:18px;font-weight:700;border:2px solid var(--acc);background:#fff;color:var(--acc)}
+  .knoepfe button.haupt{background:var(--acc);color:#fff}
+  .cap{background:#fff;border:2px solid #a9c1e0;border-radius:12px;padding:10px 14px;font-size:21px;line-height:1.45;min-height:64px}
+  .teil{transition:transform 1.6s ease, opacity .9s}
+</style>
+</head>
+<body>
+<header><h1 id="titel">Stammbaum der Figuren</h1></header>
+<main>
+  <div class="wahl" id="wahl"></div>
+  <div class="bild"><svg id="svg" viewBox="0 0 640 330"></svg></div>
+  <div class="knoepfe"><button class="haupt" id="play">▶ Abspielen</button><button id="pause">⏸ Pause</button></div>
+  <div class="cap" id="cap">Tippe auf ▶ Abspielen.</div>
+</main>
+<script>
+"use strict";
+const NS="http://www.w3.org/2000/svg",svg=document.getElementById("svg"),K=40,X0=60,Y0=270;
+const P=(x,y)=>[X0+x*K,Y0-y*K], pts=a=>a.map(p=>P(...p).join(",")).join(" ");
+const mk=(t,a,p=svg)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);p.appendChild(e);return e;};
+const FARBE={a:"#d9e6c9",b:"#f3c9a0",c:"#cfdcef",d:"#e8d7f1"};
+// Bogen mit Punkt an Fußpunkt F (Einheiten), Schenkel u, v (Einheitsvektoren in Einheiten, y nach oben)
+function winkel(F,u,v,g){const r=15,[fx,fy]=P(...F),a=[fx+r*u[0],fy-r*u[1]],b=[fx+r*v[0],fy-r*v[1]];
+  const kreuz=u[0]*(-v[1])-(-u[1])*v[0];mk("path",{d:`M ${a[0]} ${a[1]} A ${r} ${r} 0 0 ${kreuz>0?1:0} ${b[0]} ${b[1]}`,fill:"none",stroke:"#c0700f","stroke-width":2.5},g);
+  const m=[(u[0]+v[0]),(u[1]+v[1])],l=Math.hypot(...m);mk("circle",{cx:fx+r*0.45*m[0]/l,cy:fy-r*0.45*m[1]/l,r:3,fill:"#c0700f"},g);}
+function txt(x,y,t,o={},g=svg){const [sx,sy]=P(x,y);const e=mk("text",{x:sx,y:sy,"font-size":o.s||20,"font-weight":800,fill:o.c||"#1b2a3a","text-anchor":o.a||"middle"},g);e.textContent=t;return e;}
+function gitter(){for(let i=-1;i<=14;i++)mk("line",{x1:X0+i*K,y1:10,x2:X0+i*K,y2:320,stroke:"#e1e7ee"});for(let j=-1;j<=7;j++)mk("line",{x1:X0-40,y1:Y0-j*K,x2:X0+14*K,y2:Y0-j*K,stroke:"#e1e7ee"});}
+// Ein Teil: Polygon in einer Gruppe, die sich drehen/verschieben lässt (Transform in Pixeln)
+function teil(p,farbe,o={}){const g=mk("g",{class:"teil"});mk("polygon",{points:pts(p),fill:farbe,stroke:"#5a4a35","stroke-width":3,"stroke-dasharray":o.dash||""},g);return g;}
+const dreh=(g,grad,um)=>{const [cx,cy]=P(...um);g.style.transformOrigin=`${cx}px ${cy}px`;g.style.transform=`rotate(${grad}deg)`;};
+const schieb=(g,dx,dy)=>{g.style.transform=`translate(${dx*K}px,${-dy*K}px)`;};
+
+// Jede Animation: titel, aufbau(), schritte [Satz, Aktion]
+const A={
+ umlegen:{titel:"Rechteck → Parallelogramm: umlegen",aufbau(){
+   const rest=teil([[0,0],[6,0],[6,4],[2,4]],FARBE.c),ecke=teil([[0,0],[2,4],[0,4]],FARBE.b);
+   const schnitt=mk("line",{x1:P(0,0)[0],y1:P(0,0)[1],x2:P(2,4)[0],y2:P(2,4)[1],stroke:"#c0700f","stroke-width":3,"stroke-dasharray":"8 6",opacity:0,class:"teil"});
+   const zweit=mk("g",{opacity:0,class:"teil"});mk("line",{x1:P(2,0)[0],y1:Y0,x2:P(2,4)[0],y2:P(2,4)[1],stroke:"#c0700f","stroke-width":3,"stroke-dasharray":"8 6"},zweit);
+   winkel([2,0],[1,0],[0,1],zweit);txt(2.3,2,"h = 4 m",{c:"#c0700f",a:"start",s:18},zweit);txt(3,-0.6,"g = 6 m",{c:"#2e5d9f",s:18},zweit);
+   const r1=mk("g",{class:"teil"});txt(3,-0.6,"Rechteck 6 m × 4 m",{s:18},r1);
+   return {rest,ecke,schnitt,zweit,r1};},
+  schritte:[["Ein Rechteck: 6 m lang, 4 m breit. Es ist 24 m² groß.",()=>{}],
+   ["Wir schneiden links ein Dreieck ab (gestrichelte Linie).",t=>{t.schnitt.style.opacity=1;}],
+   ["Das Dreieck wandert ganz nach rechts und wird dort angelegt.",t=>{schieb(t.ecke,6,0);t.r1.style.opacity=0;}],
+   ["So entsteht ein Parallelogramm. Nichts ist dazugekommen, nichts fehlt.",t=>{t.schnitt.style.opacity=0;}],
+   ["Grundseite und Höhe sind gleich geblieben: A = g · h = 6 · 4 = 24 m².",t=>{t.zweit.style.opacity=1;}]]},
+ halbieren:{titel:"Parallelogramm → Dreieck: halbieren",aufbau(){
+   const links=teil([[0,0],[6,0],[2,4]],FARBE.b),rechts=teil([[6,0],[8,4],[2,4]],FARBE.c);
+   const diag=mk("line",{x1:P(6,0)[0],y1:P(6,0)[1],x2:P(2,4)[0],y2:P(2,4)[1],stroke:"#c0700f","stroke-width":3,"stroke-dasharray":"8 6",opacity:0,class:"teil"});
+   const hh=mk("g",{opacity:0,class:"teil"});mk("line",{x1:P(2,0)[0],y1:Y0,x2:P(2,4)[0],y2:P(2,4)[1],stroke:"#c0700f","stroke-width":3,"stroke-dasharray":"8 6"},hh);
+   winkel([2,0],[1,0],[0,1],hh);txt(2.3,2,"h = 4 m",{c:"#c0700f",a:"start",s:18},hh);txt(3,-0.6,"g = 6 m",{c:"#2e5d9f",s:18},hh);
+   return {links,rechts,diag,hh};},
+  schritte:[["Ein Parallelogramm: g = 6 m, h = 4 m. Es ist 6 · 4 = 24 m² groß.",()=>{}],
+   ["Eine Diagonale teilt es in zwei gleiche Dreiecke.",t=>{t.diag.style.opacity=1;}],
+   ["Das zweite Dreieck dreht sich weg – es ist genau gleich groß wie das erste.",t=>{dreh(t.rechts,180,[4,2]);t.rechts.style.opacity=0.35;}],
+   ["Ein Dreieck ist also die Hälfte des Parallelogramms.",t=>{t.rechts.style.opacity=0;t.diag.style.opacity=0;}],
+   ["A = g · h : 2 = 6 · 4 : 2 = 12 m².",t=>{t.hh.style.opacity=1;}]]},
+ trapez:{titel:"Parallelogramm → Trapez: verdoppeln",aufbau(){
+   const t1=teil([[0,0],[7,0],[4,3],[1,3]],FARBE.a),t2=teil([[7,0],[10,0],[11,3],[4,3]],FARBE.c);
+   const lab=mk("g",{opacity:0,class:"teil"});txt(3.5,-0.6,"a = 7 m",{c:"#2e5d9f",s:18},lab);txt(2.5,3.4,"c = 3 m",{c:"#2e5d9f",s:18},lab);
+   mk("line",{x1:P(1,0)[0],y1:Y0,x2:P(1,3)[0],y2:P(1,3)[1],stroke:"#c0700f","stroke-width":3,"stroke-dasharray":"8 6"},lab);winkel([1,0],[1,0],[0,1],lab);txt(1.3,1.5,"h",{c:"#c0700f",a:"start",s:18},lab);
+   const g2=mk("g",{opacity:0,class:"teil"});txt(8.5,-0.6,"c",{c:"#2e5d9f",s:18},g2);txt(5,-1.3,"Grundseite a + c = 10 m",{c:"#2e5d9f",s:18},g2);
+   return {t1,t2,lab,g2};},
+  schritte:[["Ein Trapez: unten a = 7 m, oben c = 3 m, Höhe 3 m.",t=>{t.lab.style.opacity=1;dreh(t.t2,180,[5.5,1.5]);t.t2.style.opacity=0;}],
+   ["Wir nehmen ein zweites, gleiches Trapez und drehen es halb herum.",t=>{t.t2.style.opacity=1;}],
+   ["Angelegt an die schräge Seite ergeben beide zusammen ein Parallelogramm.",t=>{dreh(t.t2,0,[5.5,1.5]);}],
+   ["Seine Grundseite ist a + c = 10 m lang, die Höhe ist 3 m: zusammen 10 · 3 = 30 m².",t=>{t.g2.style.opacity=1;}],
+   ["Ein Trapez ist die Hälfte: A = (a + c) : 2 · h = 15 m².",t=>{t.t2.style.opacity=0.35;}]]},
+ drachen:{titel:"Rechteck → Drachen: Ecken einklappen",aufbau(){
+   mk("polygon",{points:pts([[0,0],[6,0],[6,4],[0,4]]),fill:"none",stroke:"#7b4fa8","stroke-width":2.5,"stroke-dasharray":"8 6"});
+   const dr=teil([[3,4],[0,2.8],[3,0],[6,2.8]],FARBE.b);
+   const ecken=[[[0,4],[3,4],[0,2.8]],[[6,4],[3,4],[6,2.8]],[[0,0],[3,0],[0,2.8]],[[6,0],[3,0],[6,2.8]]].map(p=>teil(p,FARBE.d,{dash:"5 4"}));
+   const diag=mk("g",{opacity:0,class:"teil"});
+   mk("line",{x1:P(3,0)[0],y1:P(3,0)[1],x2:P(3,4)[0],y2:P(3,4)[1],stroke:"#2e5d9f","stroke-width":3},diag);mk("line",{x1:P(0,2.8)[0],y1:P(0,2.8)[1],x2:P(6,2.8)[0],y2:P(6,2.8)[1],stroke:"#c0700f","stroke-width":3},diag);
+   txt(3.3,1.2,"e = 4 m",{c:"#2e5d9f",a:"start",s:18},diag);txt(4.6,3.0,"f = 6 m",{c:"#c0700f",s:18},diag);winkel([3,2.8],[1,0],[0,-1],diag);
+   const mitten=[[1.5,3.4],[4.5,3.4],[1.5,1.4],[4.5,1.4]];   // Mitten der Drachenseiten (Drehpunkte)
+   return {dr,ecken,diag,mitten};},
+  schritte:[["Um den Drachen zeichnen wir ein Rechteck. Seine Seiten sind so lang wie die Diagonalen e und f.",t=>{t.diag.style.opacity=1;}],
+   ["Außen bleiben vier Ecken übrig (lila).",()=>{}],
+   ["Jede Ecke klappt nach innen – sie passt genau auf ein Stück des Drachens.",t=>{t.ecken.forEach((g,i)=>dreh(g,180,t.mitten[i]));}],
+   ["Innen und außen ist also gleich viel: Der Drachen ist genau die Hälfte des Rechtecks.",t=>{t.ecken.forEach(g=>g.style.opacity=0.4);}],
+   ["A = e · f : 2 = 4 · 6 : 2 = 12 m².",()=>{}]]},
+ zerlegen:{titel:"Bekannte Figuren → Vieleck: zerlegen",aufbau(){
+   const r=teil([[0,0],[5,0],[5,3],[0,3]],FARBE.c),d=teil([[0,3],[5,3],[2,5]],FARBE.b),t=teil([[5,0],[8,0],[7,3],[5,3]],FARBE.a);
+   const nam=mk("g",{opacity:0,class:"teil"});txt(2.5,1.4,"Rechteck",{s:18},nam);txt(2.4,3.6,"Dreieck",{s:16},nam);txt(6.4,1.4,"Trapez",{s:16},nam);
+   return {r,d,t,nam};},
+  schritte:[["Ein Grundstück hat eine ungewohnte Form – ein Vieleck.",()=>{}],
+   ["Wir zerlegen es in Figuren, die wir schon kennen.",t=>{schieb(t.d,0,0.8);schieb(t.t,1,0);t.nam.style.opacity=1;}],
+   ["Rechteck, Dreieck und Trapez – für jede Figur kennen wir die Formel.",()=>{}],
+   ["Wieder zusammengeschoben: Die Teilflächen werden addiert.",t=>{schieb(t.d,0,0);schieb(t.t,0,0);}],
+   ["A = A Rechteck + A Dreieck + A Trapez.",()=>{}]]},
+};
+const NAMEN={umlegen:"umlegen",halbieren:"halbieren",trapez:"Trapez",drachen:"Drachen",zerlegen:"zerlegen"};
+const wahl=document.getElementById("wahl");
+Object.keys(A).forEach(k=>{const a=document.createElement("a");a.href="#"+k;a.textContent=NAMEN[k];a.dataset.k=k;wahl.appendChild(a);});
+const cap=document.getElementById("cap"),pb=document.getElementById("pause");
+let akt,teile,n=0,timer=null,steht=false;
+const lese=t=>1500+80*t.length;
+function laden(){const k=(location.hash||"#umlegen").slice(1);akt=A[k]||A.umlegen;clearTimeout(timer);
+  wahl.querySelectorAll("a").forEach(a=>a.classList.toggle("an",A[a.dataset.k]===akt));
+  document.getElementById("titel").textContent=akt.titel;svg.innerHTML="";gitter();teile=akt.aufbau();n=0;
+  akt.schritte[0][1](teile);cap.textContent="Tippe auf ▶ Abspielen.";pb.disabled=true;}
+function weiter(){if(steht)return;if(n<akt.schritte.length){const [satz,f]=akt.schritte[n];if(n>0)f(teile);cap.textContent=satz;n++;timer=setTimeout(weiter,lese(satz)+1200);}else pb.disabled=true;}
+document.getElementById("play").onclick=()=>{laden();steht=false;pb.disabled=false;pb.textContent="⏸ Pause";timer=setTimeout(weiter,300);};
+pb.onclick=()=>{steht=!steht;pb.textContent=steht?"▶ Weiter":"⏸ Pause";clearTimeout(timer);if(!steht)weiter();};
+window.addEventListener("hashchange",laden);laden();
+</script>
+</body>
+</html>
