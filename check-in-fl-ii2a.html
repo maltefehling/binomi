@@ -132,11 +132,11 @@ function genRechteck(schwer){
     [...Array(b).keys()].map(j=>`<line x1="20" x2="${20+a*24}" y1="${10+j*24}" y2="${10+j*24}" stroke="#8fbf7f"/>`).join("")+
     [...Array(a).keys()].map(i=>`<line y1="10" y2="${10+b*24}" x1="${20+i*24}" x2="${20+i*24}" stroke="#8fbf7f"/>`).join("")+
     `<text x="${20+a*12}" y="${b*24+34}" text-anchor="middle" font-size="18" font-weight="700" fill="#2e5d9f">a = ${a} m</text><text x="${a*24+26}" y="${10+b*12+6}" font-size="18" font-weight="700" fill="#c0700f">b</text></svg>`;
-  if(!schwer){const A=a*b;return {art:"zahl",einh:"m²",html:`<div class="auf">Ein Rechteck ist ${a} m lang und ${b} m breit.<br>Wie groß ist seine Fläche?</div>`,pruef:x=>x===A,loesung:`${A} m²`,
-    erkl:`Fläche = <b>Länge mal Breite</b>: ${b} Reihen mit je ${a} Kästchen.<br><b>A = ${a} m · ${b} m = ${A} m²</b><div class="bild">${bild}</div>`,
+  if(!schwer){const A=a*b;return {art:"zahl",einh:"m²",html:`<div class="auf">Ein Rechteck ist ${a} m lang und ${b} m breit.<br>Berechne seinen <b>Flächeninhalt</b>.</div>`,pruef:x=>x===A,loesung:`${A} m²`,
+    erkl:`Flächeninhalt = <b>Länge mal Breite</b>: ${b} Reihen mit je ${a} Kästchen.<br><b>A = a · b = ${a} m · ${b} m = ${A} m²</b><div class="bild">${bild}</div>`,
     tipp:`Wie viele Reihen? Wie viele Kästchen in jeder Reihe? Dann mal rechnen.`};}
-  const A=a*b;return {art:"zahl",einh:"m",html:`<div class="auf">Ein Rechteck ist ${A} m² groß und ${a} m lang.<br>Wie breit ist es?</div>`,pruef:x=>x===b,loesung:`${b} m`,
-    erkl:`A = a · b, also ${A} = ${a} · b. Rückwärts: <b>b = ${A} : ${a} = ${b} m</b>.<div class="bild">${bild}</div>`,tipp:`Welche Zahl mal ${a} ergibt ${A}?`};
+  const A=a*b;return {art:"zahl",einh:"m",html:`<div class="auf">Ein Rechteck hat einen <b>Flächeninhalt</b> von ${A} m² und ist ${a} m lang.<br>Berechne seine Breite.</div>`,pruef:x=>x===b,loesung:`${b} m`,
+    erkl:`① Formel: A = a · b<br>② einsetzen: ${A} m² = ${a} m · b<br>③ rückwärts: <b>b = ${A} m² : ${a} m = ${b} m</b>.<div class="bild">${bild}</div>`,tipp:`Welche Zahl mal ${a} ergibt ${A}?`};
 }
 function genParallelogramm(schwer){
   // vier Vierecke, genau eines ist ein Parallelogramm (Profi: das richtige ist ein Rechteck oder eine Raute – auch sie sind Parallelogramme)
