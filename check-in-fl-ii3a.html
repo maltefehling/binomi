@@ -46,6 +46,8 @@
   .ergebnis h3{margin:0 0 6px;color:var(--acc);font-size:20px}
   footer{color:var(--muted);font-size:13px;text-align:center;margin-top:24px}
   [hidden]{display:none!important}
+  .fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;font-size:.85em;line-height:1.15;margin:0 3px}
+  .fr>span:first-child{border-bottom:2px solid currentColor;padding:0 4px}
 </style>
 </head>
 <body>
@@ -138,8 +140,8 @@ function genHalb(schwer){
     return {art:"zahl",einh:"",html:`<div class="auf">Was ist die Hälfte von ${x}?</div>`,pruef:v=>Math.abs(v-L)<1e-9,loesung:de(L),
       erkl:`Die Hälfte heißt <b>: 2</b>.  ${x} : 2 = <b>${de(L)}</b>. Bei einer ungeraden Zahl kommt „,5“ heraus.`,tipp:`Teile durch 2. Bei ungeraden Zahlen: ein Halbes bleibt übrig – also ,5.`};}
   const a=zuf(3,12),b=zuf(3,9),L=a*b/2;
-  return {art:"zahl",einh:"",html:`<div class="auf">${a} · ${b} : 2 = ?</div>`,pruef:v=>Math.abs(v-L)<1e-9,loesung:de(L),
-    erkl:`Erst mal: ${a} · ${b} = ${a*b}. Dann die Hälfte: ${a*b} : 2 = <b>${de(L)}</b>.`,tipp:`Erst ${a} · ${b}, dann durch 2.`};
+  return {art:"zahl",einh:"",html:`<div class="auf"><span class="fr"><span>${a} · ${b}</span><span>2</span></span> = ?</div>`,pruef:v=>Math.abs(v-L)<1e-9,loesung:de(L),
+    erkl:`Der Bruchstrich heißt „durch 2“. Erst mal: ${a} · ${b} = ${a*b}. Dann die Hälfte: ${a*b} : 2 = <b>${de(L)}</b>.`,tipp:`Erst ${a} · ${b}, dann durch 2.`};
 }
 const TYPEN=[{name:"① Parallelogramm",gen:genParaFlaeche},{name:"② Abstand",gen:genAbstand},{name:"③ Hälfte",gen:genHalb}];
 

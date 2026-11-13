@@ -31,6 +31,8 @@
   .knoepfe button.haupt{background:var(--acc);color:#fff}
   .cap{background:#fff;border:2px solid #a9c1e0;border-radius:12px;padding:10px 14px;font-size:21px;line-height:1.45;min-height:64px}
   .teil{transition:transform 1.6s ease, opacity .6s}
+  .fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;font-size:.85em;line-height:1.15;margin:0 3px}
+  .fr>span:first-child{border-bottom:2px solid currentColor;padding:0 4px}
 </style>
 </head>
 <body>
@@ -76,13 +78,13 @@ const A={
    return {kopie,ecke,rand,h,frage,loes,g1,a1,a2,q};},
   schritte:[
    ["Ein Kräuterbeet hat die Form eines Dreiecks. Sein Flächeninhalt ist 6 m², die Grundseite g ist 4 m. Wie groß ist die Höhe h?",t=>{}],
-   ["Schreibe zuerst die Formel auf.",t=>zeile("A = <span class='bl'>g</span> · <span class='gr'>h</span> : 2","① Formel")],
-   ["Setze ein, was du schon kennst. Die Höhe h kennst du noch nicht.",t=>zeile("6 m² = <span class='bl'>4 m</span> · <span class='gr'>h</span> : 2","② einsetzen")],
+   ["Schreibe zuerst die Formel auf.",t=>zeile("A = <span class='fr'><span><span class='bl'>g</span> · <span class='gr'>h</span></span><span>2</span></span>","① Formel")],
+   ["Setze ein, was du schon kennst. Die Höhe h kennst du noch nicht.",t=>zeile("6 m² = <span class='fr'><span><span class='bl'>4 m</span> · <span class='gr'>h</span></span><span>2</span></span>","② einsetzen")],
    ["Nimm ein zweites, gleiches Dreieck dazu. Zusammen ergeben sie ein Parallelogramm – doppelt so groß: 12 m². Rückwärts heißt hier zuerst: mal 2.",t=>{t.kopie.style.opacity=1;t.a1.style.opacity=0;t.a2.style.opacity=1;zeile("12 m² = <span class='bl'>4 m</span> · <span class='gr'>h</span>","③ erst · 2 (zwei Dreiecke)");}],
    ["Lege die Ecke links nach rechts um. Es entsteht ein Rechteck – 4 m lang und so hoch wie h.",t=>{t.ecke.style.transform=`translate(${4*K}px,0px)`;t.rand.style.opacity=0;t.g1.style.transform=`translate(${K}px,0px)`;t.h.style.opacity=0;}],
    ["Im Rechteck liegen die 12 Kästchen in Reihen zu je 4 Kästchen. Das sind 3 Reihen.",t=>zeigeNach(t.q)],
    ["Also ist die Höhe 3 m. Statt mal rechnest du jetzt geteilt.",t=>{t.loes.style.opacity=1;zeile("<span class='gr'>h</span> = 12 m² : <span class='bl'>4 m</span> = <span class='gr'>3 m</span>","③ dann geteilt");}],
-   ["Mach zum Schluss die Probe mit der Formel. Es passt!",t=>zeile("<span class='bl'>4 m</span> · <span class='gr'>3 m</span> : 2 = 6 m² ✓","④ Probe")]]},
+   ["Mach zum Schluss die Probe mit der Formel. Es passt!",t=>zeile("<span class='fr'><span><span class='bl'>4 m</span> · <span class='gr'>3 m</span></span><span>2</span></span> = 6 m² ✓","④ Probe")]]},
 };
 const cap=document.getElementById("cap"),pb=document.getElementById("pause");
 let akt,teile,n=0,timer=null,steht=false;
