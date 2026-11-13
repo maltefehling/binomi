@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Übung II.3b · Höhen im Dreieck</title>
+<!-- Kapitel II Umfang und Flächeninhalt (Kl. 8): QR-Übung nach dem Buchkapitel (QR-Code im Skript). Nur Aufgaben – gerechnet wird im Heft.
+     Aufbau: Aufgabe 1 für alle, dann ★ / ★★ / ★★★. Tipp zu jeder Aufgabe, Lösungen je Stufe erst nach Rückfrage. -->
+<style>
+  :root{--ink:#1b2a3a;--muted:#5b6b7c;--acc:#1f4e79;--bg:#f4f7fb;--card:#fff;--line:#c9d6e5;
+    --merk:#dde8f5;--merkL:#a9c1e0;--auf:#e8f4e6;--aufL:#c6e8c0;--hilf:#fdf6ea;--hilfL:#fbd9a8;--grau:#f2f2f2;--rot:#b03a2e;--gruen:#3f8f3a}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
+  button{font:inherit;touch-action:manipulation}
+  header{padding:12px 16px;background:var(--acc);color:#fff}
+  header h1{font-size:20px;margin:0}
+  main{max-width:880px;margin:0 auto;padding:14px 16px 32px}
+  .hinweis{background:#fff;border:1px solid #bfbfbf;border-radius:12px;padding:10px 14px;font-size:18px;line-height:1.45;margin-bottom:12px}
+  details.erin{background:var(--merk);border:1px solid var(--merkL);border-radius:12px;padding:10px 14px;margin-bottom:14px;font-size:18px;line-height:1.5}
+  details.erin summary{font-weight:700;color:var(--acc);cursor:pointer;min-height:30px}
+  details.erin ul{margin:6px 0 0;padding-left:22px}
+  h2{font-size:21px;color:var(--acc);margin:18px 0 8px;padding-bottom:4px;border-bottom:2px solid var(--acc)}
+  .aufg{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:10px}
+  .aufg .kopf{font-weight:700;color:var(--acc);font-size:18px;margin-bottom:4px}
+  .aufg .txt{font-size:20px;line-height:1.45}
+  .aufg .heft{font-size:16px;color:var(--muted);margin-top:4px}
+  /* Teilaufgaben als getrennte Kärtchen (15.10.2026, Malte): SuS hielten a), b), c) für eine zusammenhängende Aufgabe */
+  .aufg ol{margin:10px 0 0;padding-left:0;list-style:none;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px}
+  .aufg li{font-size:21px;line-height:1.5;white-space:nowrap;overflow-x:auto;border:2px solid #c9d6e5;border-radius:12px;background:#f7f9fc;padding:8px 12px}
+  .aufg li.breit{grid-column:1/-1}
+  .aufg li b.tb{display:inline-block;min-width:34px;text-align:center;background:#1f4e79;color:#fff;border-radius:8px;padding:0 8px;margin-right:10px;font-weight:700}
+  .tag{display:inline-block;font-size:14px;font-weight:700;border-radius:8px;padding:2px 8px;margin-left:8px;vertical-align:middle}
+  .tag.v{background:#fff3c4;color:#7a5b00}.tag.w{background:#e2d6f0;color:#4f2f7a}.tag.m{background:#dff0e6;color:#1d5a35}
+  details.idee{margin-top:8px;font-size:18px}
+  details.idee summary{color:var(--acc);cursor:pointer;font-weight:600}
+  details.idee div{background:var(--grau);border-radius:8px;padding:8px 10px;margin-top:6px;line-height:1.45}
+  .wahl{display:flex;gap:10px;flex-wrap:wrap;margin:6px 0 10px}
+  .wahl button{flex:1 1 200px;border:2px solid var(--acc);background:#fff;color:var(--acc);border-radius:12px;padding:12px 14px;font-size:19px;font-weight:700;min-height:56px;text-align:left}
+  .wahl button[aria-pressed="true"]{background:var(--acc);color:#fff}
+  .wahl small{display:block;font-weight:500;font-size:15px;opacity:.85}
+  .stufe[hidden]{display:none}
+  .loesbtn{border:1px solid var(--hilfL);background:var(--hilf);color:var(--ink);border-radius:10px;padding:10px 16px;font-size:18px;font-weight:700;min-height:48px;margin-top:4px}
+  .loes{background:var(--hilf);border:1px solid var(--hilfL);border-radius:12px;padding:10px 14px;margin-top:8px}
+  .loes p{margin:0 0 8px;font-size:16px;color:var(--rot);font-weight:700}
+  .loes .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:6px}
+  .loes .grid span{background:#fff;border:1px solid var(--line);border-radius:8px;padding:6px 8px;text-align:center;font-size:19px}
+  .loes[hidden]{display:none}
+  details.tipp{margin-top:8px;font-size:18px}
+  details.tipp summary{display:inline-block;cursor:pointer;font-weight:700;color:#6d4a9e;background:#f1eaf8;border:1px solid #b79bd6;border-radius:10px;padding:6px 12px;min-height:40px;list-style:none}
+  details.tipp summary::-webkit-details-marker{display:none}
+  details.tipp div{background:#f1eaf8;border-radius:8px;padding:8px 10px;margin-top:6px;line-height:1.45}
+  .frag{background:#fff;border:2px solid var(--acc);border-radius:12px;padding:12px 14px;margin-top:8px;font-size:19px}
+  .frag[hidden]{display:none}
+  .frag p{margin:0 0 10px;font-weight:700;color:var(--acc)}
+  .frag button{border-radius:10px;padding:10px 16px;font-size:17px;font-weight:700;min-height:46px;margin:0 8px 6px 0;border:2px solid var(--acc)}
+  .frag .ja{background:var(--acc);color:#fff}.frag .nein{background:#fff;color:var(--acc)}
+  .loes .zeile{background:#fff;border:1px solid var(--line);border-radius:8px;padding:8px 10px;margin-bottom:6px;font-size:19px;line-height:1.5}
+  .loes .zeile b{color:var(--acc)}
+  .loes .warum{display:block;font-size:16px;color:var(--muted);margin-top:2px}
+  footer{color:var(--muted);font-size:13px;text-align:center;margin-top:24px}
+  /* Lösungsweg (1.11.2026, wie Kap. V): erst das Ergebnis, daneben „Lösungsweg anzeigen“ */
+  .wegbtn{border:1px solid var(--acc);background:#fff;color:var(--acc);border-radius:10px;padding:8px 14px;font-size:17px;font-weight:700;min-height:44px;margin-top:6px}
+  .weg{background:#fff;border:1px solid var(--line);border-left:4px solid var(--acc);border-radius:8px;padding:8px 12px;margin-top:6px;font-size:18px;line-height:1.6}
+  .weg[hidden]{display:none}
+  /* Animierter Tipp (1.11.2026): Beispiel mit anderen Zahlen baut sich Zeile für Zeile auf */
+  details.anim{margin-top:8px}
+  details.anim summary{display:inline-block;cursor:pointer;font-weight:700;color:#6d4a9e;background:#f1eaf8;border:1px solid #b79bd6;border-radius:10px;padding:6px 12px;min-height:40px;list-style:none;font-size:18px}
+  details.anim summary::-webkit-details-marker{display:none}
+  .abox{background:#f1eaf8;border-radius:10px;padding:10px 12px;margin-top:6px}
+  .abox .az{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:4px 14px;align-items:baseline;opacity:0;transition:opacity .6s;margin-bottom:6px}
+  .abox .az.da{opacity:1}
+  .abox .az .r{font-size:20px;line-height:1.4}
+  .abox .az .h{font-size:16px;color:#6d4a9e}
+  .abox .az.neu .r{background:#fff;border-radius:6px;box-shadow:0 0 0 2px #b79bd6}
+  .abox .kn{display:flex;gap:8px;margin-top:6px}
+  .abox .kn button{min-height:42px;padding:0 14px;border-radius:10px;border:2px solid #6d4a9e;background:#fff;color:#6d4a9e;font-size:16px;font-weight:700}
+  .cr{color:#b33c3c;font-weight:700}.cg{color:#3f8f3a;font-weight:700}.cb{color:#2e5d9f;font-weight:700}.co{color:#c0700f;font-weight:700}.cl{color:#6d4a9e;font-weight:800}
+  @media (max-width:560px){.abox .az{grid-template-columns:1fr}}
+  .frage{font-size:18px;font-weight:700;color:var(--acc);margin:4px 0 2px}
+  .teilkopf{font-size:22px;font-weight:800;color:var(--acc);margin:14px 0 8px}
+  .teil[hidden]{display:none}
+  .rot{color:#d0021b;font-weight:800}
+  .fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;font-size:.82em;line-height:1.15;margin:0 2px}
+  .fr>span:first-child{border-bottom:1.5px solid currentColor;padding:0 3px}
+  /* Flächen-Baukasten: Teilaufgaben sind Sätze → umbrechen statt seitlich scrollen; Eingabefeld unter dem Text */
+  .aufg li{white-space:normal;overflow-x:visible}
+  .aufg li .eing{display:flex;margin:8px 0 0}
+  .abild{margin:8px 0;background:#fff;border:1px solid var(--line);border-radius:10px;padding:6px} .abild svg{display:block;width:100%;max-width:560px;height:auto;margin:0 auto}
+  /* Flächen-Baukasten: Eingabe, Empfehlung, Uhr, Ergebnis-Karte */
+  .eing{display:inline-flex;align-items:center;gap:6px;margin-left:10px;white-space:nowrap}
+  .eing .einh{min-height:44px;min-width:52px;margin-left:6px;font-size:18px;font-weight:700;border:2px solid var(--acc);border-radius:10px;background:#eef3fa;color:var(--acc)}
+  .eing input{width:130px;min-height:44px;font-size:20px;border:2px solid var(--acc);border-radius:10px;padding:2px 8px;text-align:right}
+  .eing .mk{font-size:22px;font-weight:800;min-width:24px}
+  .eing .mk.ok{color:var(--gruen)} .eing .mk.no{color:var(--rot)}
+  .einzeln{margin-top:8px}
+  .pruef{border:2px solid var(--acc);background:var(--acc);color:#fff;border-radius:10px;padding:8px 16px;font-size:17px;font-weight:700;min-height:46px;margin-top:8px}
+  .empf{background:#e8f4e6;border:2px solid #9fcf9a;border-radius:12px;padding:10px 14px;font-size:19px;margin:8px 0 4px}
+  .wahl button .badge{display:inline-block;margin-left:8px;font-size:13px;background:#2e7d32;color:#fff;border-radius:8px;padding:1px 8px;vertical-align:middle}
+  .uhr{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:#fff;border:1px solid var(--line);border-radius:12px;padding:8px 12px;margin:6px 0 10px;font-size:18px}
+  .uhr button{border:2px solid var(--acc);background:#fff;color:var(--acc);border-radius:10px;padding:6px 14px;font-weight:700;min-height:44px}
+  .uhr .zeit{font-size:22px;font-weight:800;color:var(--acc);font-variant-numeric:tabular-nums}
+  .uhr.um{background:#fff4dc;border-color:#e6c65a}
+  .kartebtn{border:2px solid var(--acc);background:#fff;color:var(--acc);border-radius:10px;padding:10px 16px;font-size:18px;font-weight:700;min-height:48px;margin:10px 0 0 8px}
+  .ekarte{background:#fff;border:3px solid var(--acc);border-radius:14px;padding:12px 16px;margin-top:10px;font-size:19px;line-height:1.6}
+  .ekarte h3{margin:0 0 6px;color:var(--acc)} .ekarte textarea{width:100%;min-height:70px;font:inherit;font-size:18px;border:2px solid var(--line);border-radius:10px;padding:6px 8px}
+  .ekarte .ok{color:var(--gruen);font-weight:800}.ekarte .no{color:var(--rot);font-weight:800}
+  .lwahl{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 4px} .lwahl button{min-height:44px;padding:6px 14px;border-radius:10px;border:2px solid #c9d6e5;background:#fff;font-size:17px;font-weight:700;color:inherit} .lwahl button[aria-pressed="true"]{border-color:#1b2a3a;background:#fff4dc}
+</style>
+</head>
+<body>
+<header><h1>Übung II.3b · Höhen im Dreieck</h1></header>
+<main>
+  <div class="hinweis">✎ <b>So schreibst du ins Heft:</b> Nummer der Aufgabe, eine kleine <b>Skizze</b> mit den Maßen, dann den <b>ganzen Rechenweg</b> mit Einheiten – nur das Ergebnis reicht nicht. Bei Aufgaben mit Eingabefeld tippst du dein <b>Endergebnis</b> ein (nur die Zahl) und prüfst es. Wenn du nicht weiterkommst, hilft der Tipp.<br><b>In der Stunde: Aufgabe 1 (ca. 5 Minuten). Danach dein Niveau – zu Hause höchstens 15 Minuten (eine ganze Stufe dauert ca. 10 Minuten).</b></div>
+  <div id="teilwahl" hidden><div class="frage">Welche Stunde hattet ihr zuletzt?</div><div class="wahl" id="tw"></div></div>
+  <div id="teile"></div>
+  <footer>Fehling · II Umfang und Flächeninhalt</footer>
+</main>
+<script>
+"use strict";
+// Versionsprüfung (12.10.2026): Safari zeigt sonst bis zu 10 Minuten (oft länger) eine alte, gespeicherte Fassung.
+// Beim Öffnen wird die Seite ohne Zwischenspeicher abgefragt; ist sie neuer, lädt sie sich einmal neu.
+const STAND="20261113194318";
+fetch(location.pathname+"?nocache="+Date.now(),{cache:"no-store"}).then(r=>r.text()).then(t=>{
+  const m=t.match(/const STAND="(\d+)"/);
+  if(m&&m[1]!==STAND&&!sessionStorage.getItem("neu"+m[1])){sessionStorage.setItem("neu"+m[1],"1");location.replace(location.pathname+"?v="+m[1]);}
+}).catch(()=>{});
+// D.teile: ein Teil pro Stunde eines aufgeteilten Buchkapitels (z. B. II.2a/b/c); Stundenauswahl nur bei aufgeteilten Kapiteln (D.mehrteilig).
+const D={"titel": "II.3b · Höhen im Dreieck", "untertitel": ["Mit Beispiel und Hilfe", "Angaben im Text, auch rückwärts", "Mehrere Schritte, begründen"], "mehrteilig": false, "teile": [{"name": "", "stunde": "", "kurz": "", "erinnerung": ["Jede Seite kann Grundseite sein. Jede Seite hat ihre eigene Höhe: senkrecht auf der Seite, durch die Ecke gegenüber.", "A = {a · h_a/2} = {b · h_b/2} = {c · h_c/2} – Seite mal ihre Höhe, durch 2.", "Rechtwinklig: Die beiden Seiten am rechten Winkel sind gegenseitig ihre Höhen: A = {a · b/2} – nur mit diesen beiden Seiten!", "Stumpfwinklig: Die Höhe kann außerhalb liegen. Die Seite wird dann verlängert."], "a1": {"t": "Berechne den Flächeninhalt. Suche zuerst die Seite und ihre Höhe – nicht alle Zahlen brauchst du.", "l": ["A = 20 cm²", "A = 30 m²", "A = 12 cm²", "A = 18 m²"], "tipp": "Seite mal IHRE Höhe, durch 2. Im rechtwinkligen Dreieck: die beiden Seiten am rechten Winkel.", "sub": ["Dreieck: b = 8 cm, h_b = 5 cm, eine andere Seite 6 cm (in cm²)", "Rechtwinkliges Dreieck: Seiten am rechten Winkel 5 m und 12 m, lange Seite 13 m (in m²)", "Stumpfwinkliges Dreieck: c = 6 cm, h_c = 4 cm liegt außerhalb, andere Seiten 5 cm und 9,2 cm (in cm²)", "Dreieck: a = 9 m, h_a = 4 m (in m²)"], "check": [20, 30, 12, 18], "svg": "<svg viewBox=\"0 0 333 204\" xmlns=\"http://www.w3.org/2000/svg\"><polygon points=\"74.8,170.0 278.8,119.0 122.4,27.2\" fill=\"#f1e6d2\" stroke=\"#6b5a45\" stroke-width=\"2.5\"/><line x1=\"74.8\" y1=\"170.0\" x2=\"122.4\" y2=\"27.2\" stroke=\"#2e5d9f\" stroke-width=\"5\"/><text x=\"84.1\" y=\"99.8\" font-size=\"17\" font-weight=\"700\" fill=\"#2e5d9f\" text-anchor=\"end\">b = 8 cm</text><line x1=\"278.8\" y1=\"119.0\" x2=\"110.5\" y2=\"62.9\" stroke=\"#c0700f\" stroke-width=\"3\" stroke-dasharray=\"6 4\"/><path d=\"M 105.1 79.0 A 17.0 17.0 0 0 0 126.6 68.3\" fill=\"none\" stroke=\"#c0700f\" stroke-width=\"2\"/><circle cx=\"114.1\" cy=\"70.2\" r=\"2.6\" fill=\"#c0700f\"/><text x=\"200.0\" y=\"80.8\" font-size=\"17\" font-weight=\"700\" fill=\"#c0700f\" text-anchor=\"start\">h<tspan baseline-shift=\"sub\" font-size=\"12\">b</tspan> = 5 cm</text><text x=\"180.5\" y=\"165.3\" font-size=\"17\" font-weight=\"700\" fill=\"#555\" text-anchor=\"middle\">6 cm</text></svg>", "weg": ["a) A = {b · h_b/2} = {8 cm · 5 cm/2} = 20 cm² (6 cm nicht nötig)", "b) A = {5 m · 12 m/2} = 30 m² (Seiten am rechten Winkel)", "c) A = {c · h_c/2} = {6 cm · 4 cm/2} = 12 cm²", "d) A = {a · h_a/2} = {9 m · 4 m/2} = 18 m²"]}, "stufen": {"1": {"name": "Mit Hilfe", "aufg": [{"t": "Berechne den Flächeninhalt: Seite mal ihre Höhe, durch 2. Beispiel: c = 6 m, h_c = 3 m → A = {6 m · 3 m/2} = {18 m²/2} = 9 m².", "l": ["15 cm²", "14 m²", "12,5 cm²"], "tipp": "Erst Seite mal Höhe, dann durch 2.", "sub": ["a = 10 cm, h_a = 3 cm (in cm²)", "b = 7 m, h_b = 4 m (in m²)", "c = 5 cm, h_c = 5 cm (in cm²)"], "check": [15, 14, 12.5], "svg": "<svg viewBox=\"0 0 333 163\" xmlns=\"http://www.w3.org/2000/svg\"><polygon points=\"74.8,129.2 278.8,129.2 142.8,27.2\" fill=\"#f1e6d2\" stroke=\"#6b5a45\" stroke-width=\"2.5\"/><line x1=\"74.8\" y1=\"129.2\" x2=\"278.8\" y2=\"129.2\" stroke=\"#2e5d9f\" stroke-width=\"5\"/><text x=\"176.8\" y=\"150.5\" font-size=\"17\" font-weight=\"700\" fill=\"#2e5d9f\" text-anchor=\"middle\">c</text><line x1=\"142.8\" y1=\"27.2\" x2=\"142.8\" y2=\"129.2\" stroke=\"#c0700f\" stroke-width=\"3\" stroke-dasharray=\"6 4\"/><path d=\"M 159.8 129.2 A 17.0 17.0 0 0 0 142.8 112.2\" fill=\"none\" stroke=\"#c0700f\" stroke-width=\"2\"/><circle cx=\"148.6\" cy=\"123.4\" r=\"2.6\" fill=\"#c0700f\"/><text x=\"159.8\" y=\"84.2\" font-size=\"17\" font-weight=\"700\" fill=\"#c0700f\" text-anchor=\"start\">h<tspan baseline-shift=\"sub\" font-size=\"12\">c</tspan></text></svg>", "weg": ["a) A = {10 cm · 3 cm/2} = {30 cm²/2} = 15 cm²", "b) A = {7 m · 4 m/2} = {28 m²/2} = 14 m²", "c) A = {5 cm · 5 cm/2} = {25 cm²/2} = 12,5 cm²"]}, {"t": "Rechtwinkliges Dreieck: Die Seiten am rechten Winkel sind 6 cm und 9 cm lang, die lange Seite ist 10,8 cm. Berechne den Flächeninhalt. (in cm²)", "l": ["27 cm²"], "tipp": "Die eine Seite am rechten Winkel ist die Höhe zur anderen. Die lange Seite brauchst du nicht.", "check": [27], "svg": "<svg viewBox=\"0 0 333 197\" xmlns=\"http://www.w3.org/2000/svg\"><polygon points=\"74.8,163.2 278.8,163.2 74.8,27.2\" fill=\"#f1e6d2\" stroke=\"#6b5a45\" stroke-width=\"2.5\"/><line x1=\"74.8\" y1=\"163.2\" x2=\"278.8\" y2=\"163.2\" stroke=\"#2e5d9f\" stroke-width=\"5\"/><text x=\"176.8\" y=\"184.5\" font-size=\"17\" font-weight=\"700\" fill=\"#2e5d9f\" text-anchor=\"middle\">9 cm</text><path d=\"M 91.8 163.2 A 17.0 17.0 0 0 0 74.8 146.2\" fill=\"none\" stroke=\"#555\" stroke-width=\"2\"/><circle cx=\"80.6\" cy=\"157.4\" r=\"2.6\" fill=\"#555\"/><text x=\"59.5\" y=\"101.2\" font-size=\"17\" font-weight=\"700\" fill=\"#555\" text-anchor=\"end\">6 cm</text><text x=\"185.3\" y=\"88.5\" font-size=\"17\" font-weight=\"700\" fill=\"#555\" text-anchor=\"start\">10,8 cm</text></svg>", "weg": ["Seiten am rechten Winkel: 6 cm und 9 cm", "A = {6 cm · 9 cm/2} = {54 cm²/2} = 27 cm²"]}, {"t": "Dasselbe Dreieck, zwei Wege: Die Seite c = 8 cm hat die Höhe h_c = 3 cm. Die Seite a = 6 cm hat die Höhe h_a = 4 cm.", "l": ["12 cm²", "12 cm²", "Es kommt dasselbe heraus."], "tipp": "Jedes Mal Seite mal IHRE Höhe, durch 2.", "sub": ["Berechne A mit c und h_c. (in cm²)", "Berechne A mit a und h_a. (in cm²)", "Was fällt dir auf?"], "check": [12, 12, null], "weg": ["a) A = {8 cm · 3 cm/2} = 12 cm²", "b) A = {6 cm · 4 cm/2} = 12 cm²", "c) Mit jeder Seite und ihrer Höhe kommt derselbe Flächeninhalt heraus."]}, {"t": "Wiederholung II.3a: Ein Dreieck hat die Grundseite g = 6 m und die Höhe h = 5 m. Berechne seinen Flächeninhalt. (in m²)", "l": ["15 m²"], "tipp": "A = {g · h/2}.", "tag": "w", "check": [15], "weg": ["A = {6 m · 5 m/2} = {30 m²/2} = 15 m²"]}]}, "2": {"name": "Sicher rechnen", "aufg": [{"t": "Ein dreieckiges Sonnensegel hat einen rechten Winkel. Die Seiten am rechten Winkel sind 3 m und 4,5 m lang, die lange Seite ist 5,4 m.", "l": ["6,75 m²", "12,9 m"], "tipp": "Flächeninhalt: nur die beiden Seiten am rechten Winkel. Umfang: alle drei Seiten.", "sub": ["Berechne den Flächeninhalt. (in m²)", "Berechne den Umfang. (in m)"], "check": [6.75, 12.9], "svg": "<svg viewBox=\"0 0 282 163\" xmlns=\"http://www.w3.org/2000/svg\"><polygon points=\"74.8,129.2 227.8,129.2 74.8,27.2\" fill=\"#f1e6d2\" stroke=\"#6b5a45\" stroke-width=\"2.5\"/><line x1=\"74.8\" y1=\"129.2\" x2=\"227.8\" y2=\"129.2\" stroke=\"#2e5d9f\" stroke-width=\"5\"/><text x=\"151.3\" y=\"150.5\" font-size=\"17\" font-weight=\"700\" fill=\"#2e5d9f\" text-anchor=\"middle\">4,5 m</text><path d=\"M 91.8 129.2 A 17.0 17.0 0 0 0 74.8 112.2\" fill=\"none\" stroke=\"#555\" stroke-width=\"2\"/><circle cx=\"80.6\" cy=\"123.4\" r=\"2.6\" fill=\"#555\"/><text x=\"59.5\" y=\"84.2\" font-size=\"17\" font-weight=\"700\" fill=\"#555\" text-anchor=\"end\">3 m</text><text x=\"159.8\" y=\"71.5\" font-size=\"17\" font-weight=\"700\" fill=\"#555\" text-anchor=\"start\">5,4 m</text></svg>", "weg": ["a) A = {3 m · 4,5 m/2} = {13,5 m²/2} = 6,75 m²", "b) U = 3 m + 4,5 m + 5,4 m = 12,9 m"]}, {"t": "Ben rechnet für ein rechtwinkliges Dreieck mit den Seiten 6 cm, 8 cm und 10 cm:  A = {10 cm · 8 cm/2} = 40 cm².", "l": ["10 cm und 8 cm stehen nicht senkrecht aufeinander – 8 cm ist nicht die Höhe zu 10 cm.", "24 cm²"], "tipp": "Welche beiden Seiten bilden den rechten Winkel?", "sub": ["Was hat Ben falsch gemacht?", "Berechne den Flächeninhalt richtig. (in cm²)"], "tag": "v", "check": [null, 24], "weg": ["a) Der rechte Winkel liegt zwischen 6 cm und 8 cm. 8 cm ist nicht die Höhe zu 10 cm.", "b) A = {6 cm · 8 cm/2} = {48 cm²/2} = 24 cm²"]}, {"t": "Stumpfwinkliges Dreieck: Die Seite a ist 5 m lang. Ihre Höhe h_a = 2,4 m liegt außerhalb. Berechne den Flächeninhalt. (in m²)", "l": ["6 m²"], "tipp": "Auch wenn die Höhe außerhalb liegt: Seite mal ihre Höhe, durch 2.", "check": [6], "svg": "<svg viewBox=\"0 0 367 143\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"142.8\" y1=\"108.8\" x2=\"74.8\" y2=\"108.8\" stroke=\"#555\" stroke-width=\"2\" stroke-dasharray=\"6 5\"/><polygon points=\"142.8,108.8 312.8,108.8 74.8,27.2\" fill=\"#f1e6d2\" stroke=\"#6b5a45\" stroke-width=\"2.5\"/><line x1=\"142.8\" y1=\"108.8\" x2=\"312.8\" y2=\"108.8\" stroke=\"#2e5d9f\" stroke-width=\"5\"/><text x=\"227.8\" y=\"130.1\" font-size=\"17\" font-weight=\"700\" fill=\"#2e5d9f\" text-anchor=\"middle\">a = 5 m</text><line x1=\"74.8\" y1=\"27.2\" x2=\"74.8\" y2=\"108.8\" stroke=\"#c0700f\" stroke-width=\"3\" stroke-dasharray=\"6 4\"/><path d=\"M 91.8 108.8 A 17.0 17.0 0 0 0 74.8 91.8\" fill=\"none\" stroke=\"#c0700f\" stroke-width=\"2\"/><circle cx=\"80.6\" cy=\"103.0\" r=\"2.6\" fill=\"#c0700f\"/><text x=\"57.8\" y=\"74.0\" font-size=\"17\" font-weight=\"700\" fill=\"#c0700f\" text-anchor=\"end\">h<tspan baseline-shift=\"sub\" font-size=\"12\">a</tspan> = 2,4 m</text></svg>", "weg": ["A = {a · h_a/2} = {5 m · 2,4 m/2} = {12 m²/2} = 6 m²"]}, {"t": "Ein Dreieck hat einen Flächeninhalt von 18 cm². Die Seite b ist 9 cm lang. Berechne ihre Höhe h_b. (in cm)", "l": ["h_b = 4 cm"], "tipp": "Rückwärts: erst · 2, dann durch b.", "check": [4], "weg": ["① A = {b · h_b/2}", "② 18 cm² = {9 cm · h_b/2}", "③ erst · 2: 36 cm² = 9 cm · h_b", "    dann geteilt: h_b = 36 cm² : 9 cm = 4 cm", "④ Probe: {9 cm · 4 cm/2} = 18 cm² ✓"]}, {"t": "Ein Dreieck hat c = 1,5 m und h_c = 80 cm. Berechne den Flächeninhalt in m². (in m²)", "l": ["A = {1,5 m · 0,8 m/2} = 0,6 m²"], "tipp": "Erst 80 cm = 0,8 m.", "check": [0.6], "weg": ["80 cm = 0,8 m", "A = {1,5 m · 0,8 m/2} = {1,2 m²/2} = 0,6 m²"]}, {"t": "Wiederholung II.2b: Ein Parallelogramm hat a = 7 cm, h_a = 3 cm und b = 4 cm. Berechne die Höhe h_b. (in cm)", "l": ["h_b = 5,25 cm"], "tipp": "Erst A = a · h_a, dann h_b = A : b.", "tag": "w", "check": [5.25], "weg": ["A = a · h_a = 7 cm · 3 cm = 21 cm²", "h_b = 21 cm² : 4 cm = 5,25 cm"]}]}, "3": {"name": "Knifflig", "aufg": [{"t": "Entscheide zuerst: Parallelogramm oder Dreieck? Berechne dann den Flächeninhalt.", "l": ["24 m²", "12 m²", "84 cm²"], "tipp": "Parallelogramm: Seite mal Höhe. Dreieck: Seite mal Höhe, durch 2.", "sub": ["Parallelogramm mit a = 8 m und h_a = 3 m (in m²)", "Dreieck mit b = 8 m und h_b = 3 m (in m²)", "Rechtwinkliges Dreieck mit den Seiten 7 cm, 24 cm und 25 cm (in cm²)"], "tag": "m", "check": [24, 12, 84], "weg": ["a) Parallelogramm: A = 8 m · 3 m = 24 m²", "b) Dreieck: A = {8 m · 3 m/2} = 12 m²", "c) Rechtwinklig (7 cm und 24 cm am rechten Winkel): A = {7 cm · 24 cm/2} = 84 cm²"]}, {"t": "Ein Dreieck hat c = 10 cm und h_c = 6 cm. Die Seite a ist 12 cm lang. Berechne die Höhe h_a. (in cm)", "l": ["h_a = 5 cm"], "tipp": "Erst den Flächeninhalt mit c und h_c. Dann rückwärts mit a.", "check": [5], "weg": ["A = {10 cm · 6 cm/2} = 30 cm²", "30 cm² = {12 cm · h_a/2}  | · 2", "60 cm² = 12 cm · h_a  | : 12 cm", "h_a = 5 cm"]}, {"t": "Rechtwinkliges Dreieck: Die Seiten am rechten Winkel sind 6 cm und 8 cm, die lange Seite ist 10 cm. Berechne die Höhe zur langen Seite. (in cm)", "l": ["4,8 cm"], "tipp": "Erst A mit den beiden Seiten am rechten Winkel. Dann rückwärts mit der langen Seite.", "check": [4.8], "weg": ["A = {6 cm · 8 cm/2} = 24 cm²", "24 cm² = {10 cm · h/2}  | · 2", "48 cm² = 10 cm · h  | : 10 cm", "h = 4,8 cm"]}, {"t": "Nina: „Die Höhe ist immer eine Seite des Dreiecks.“", "l": ["manchmal – nur im rechtwinkligen Dreieck sind die beiden Seiten am rechten Winkel gegenseitig Höhen"], "tipp": "Denk an die Animation: Wann lag die Höhe genau auf einer Seite?", "sub": ["Stimmt das immer, manchmal oder nie? Begründe."], "tag": "v", "weg": ["Manchmal: Nur im rechtwinkligen Dreieck liegt eine Höhe auf einer Seite – die beiden Seiten am rechten Winkel sind gegenseitig Höhen. Sonst liegt die Höhe innen oder außen."]}, {"t": "Wiederholung II.1: Ein Quadrat hat den Umfang 36 m. Berechne seinen Flächeninhalt. (in m²)", "l": ["a = 9 m, A = 81 m²"], "tipp": "Erst die Seite: 36 : 4.", "tag": "w", "check": [81], "weg": ["a = 36 m : 4 = 9 m", "A = 9 m · 9 m = 81 m²"]}]}}}]};
+const esc=s=>s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/(^|[^A-Za-zäöüÄÖÜß])h_([abc])(?![A-Za-zäöüÄÖÜß])/g,"$1h<sub>$2</sub>").replace(/\{([^{}\/]+)\/([^{}]+)\}/g,'<span class="fr"><span>$1</span><span>$2</span></span>').replace(/\[([+−])\]/g,'<span class="rot">$1</span>');
+const el=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e;};
+const tagHtml=t=>t==="v"?'<span class="tag v">💡 Verständnis</span>':t==="w"?'<span class="tag w">↩ Wiederholung</span>':t==="m"?'<span class="tag m">🔀 Mix: erst entscheiden</span>':"";   // „m“ seit 13.11.2026 (II.3b)
+// Farbmarkup [r:…] [g:…] [b:…] [o:…] [l:…] (nach esc, damit Brüche weiter funktionieren)
+const farbe=s=>s.replace(/\[([rgbol]):([^\]]+)\]/g,'<span class="c$1">$2</span>');
+function animTipp(zeilen){
+  const d=el("details","anim",'<summary>▶ Tipp: Beispiel mit anderen Zahlen</summary>');
+  const box=el("div","abox");d.appendChild(box);
+  const rows=zeilen.map(([z,h])=>{const r=el("div","az",`<div class="r">${farbe(esc(z))}</div><div class="h">${esc(h)}</div>`);box.appendChild(r);return r;});
+  const kn=el("div","kn",'<button class="p">⏸ Pause</button><button class="n">↻ Nochmal</button>');box.appendChild(kn);
+  const pb=kn.querySelector(".p");let n=0,timer=null,steht=false;
+  const zeig=()=>rows.forEach((r,i)=>{r.classList.toggle("da",i<n);r.classList.toggle("neu",i===n-1);});
+  const dauer=()=>1800+((zeilen[n-1]||["",""])[0].length+(zeilen[n-1]||["",""])[1].length)*55;   // Lesezeit nach Textlänge
+  const weiter=()=>{if(steht)return;n++;zeig();if(n<rows.length)timer=setTimeout(weiter,dauer());else pb.disabled=true;};
+  const start=()=>{clearTimeout(timer);steht=false;pb.disabled=false;pb.textContent="⏸ Pause";n=0;zeig();timer=setTimeout(weiter,400);};
+  pb.onclick=()=>{steht=!steht;pb.textContent=steht?"▶ Weiter":"⏸ Pause";clearTimeout(timer);if(!steht)weiter();};
+  kn.querySelector(".n").onclick=start;
+  d.addEventListener("toggle",()=>{if(d.open)start();else clearTimeout(timer);});
+  return d;
+}
+const ERG={};   // Ergebnisse der geprüften Felder: Schlüssel "Aufgabe★ 2 b" → true/false (erster Versuch)
+const zahl=s=>{const m=String(s).replace(/[a-zA-Z]+²/g,"").replace(/\s/g,"").replace(",",".").match(/-?\d+(\.\d+)?/);return m?parseFloat(m[0]):NaN;};
+const gleich=(x,w)=>Math.abs(x-w)<=Math.max(0.011,Math.abs(w)*1e-6);
+function aufgabe(nr,a,stufe){
+  let h=`<div class="kopf">Aufgabe ${nr}${tagHtml(a.tag)}</div><div class="txt">${esc(a.tag==="w"?a.t.replace(/^Wiederholung: /,""):a.t)}</div>`;
+  if(a.svg)h+=`<div class="abild">${a.svg}</div>`;   // Bild zur Aufgabe (Flächen-Baukasten 6.11.2026): rohes SVG aus den Daten
+  // 2.11.2026 (Malte): klar machen, dass Aufgabe + Rechenweg ins Heft gehören, nicht nur das Ergebnis
+  h+=`<div class="heft">✎ Ins Heft: ${a.tag==="v"?"Aufgabe kurz notieren, dann in ganzen Sätzen begründen bzw. richtig rechnen.":"erst die Aufgabe abschreiben, dann Schritt für Schritt rechnen."}</div>`;
+  // 13.11.2026 (Malte): Taste für die Flächeneinheit (² ist auf dem iPad schwer zu tippen) – Einheit aus „(in m²)“ im Aufgabentext
+  const einheit=(i)=>{const m=String((a.sub&&a.sub[i])||a.t).match(/\(in ([a-zA-Z]+²)\)|in ([a-zA-Z]+²)\./);return m?(m[1]||m[2]):"";};
+  const feld=(i)=>{if(!(a.check&&a.check[i]!=null))return "";const u=einheit(i);
+    return `<span class="eing" data-i="${i}"><input inputmode="decimal" autocomplete="off" placeholder="Ergebnis">${u?`<button type="button" class="einh" data-u="${u}">${u}</button>`:""}<span class="mk"></span></span>`;};
+  if(a.sub)h+="<ol>"+a.sub.map((s,i)=>`<li class="${feld(i)?"breit":""}"><b class="tb">${"abcdefgh"[i]})</b>${esc(s)}${feld(i)}</li>`).join("")+"</ol>";
+  else if(a.check&&a.check[0]!=null)h+=`<div class="einzeln">${feld(0)}</div>`;
+  if(a.check&&a.check.some(v=>v!=null))h+=`<button class="pruef">Ergebnis prüfen</button>`;
+  if(a.tipp)h+=`<details class="tipp"><summary>💡 Tipp</summary><div>${esc(a.tipp)}</div></details>`;
+  const e=el("div","aufg",h);
+  e.querySelectorAll(".einh").forEach(b=>b.onclick=()=>{const inp=b.parentNode.querySelector("input");
+    inp.value=inp.value.replace(/\s*[a-zA-Z]+²?\s*$/,"").trim()+" "+b.dataset.u;inp.focus();});
+  if(a.anim)e.appendChild(animTipp(a.anim));
+  const pb=e.querySelector(".pruef");
+  if(pb)pb.onclick=()=>{let alle=0,rich=0;
+    e.querySelectorAll(".eing").forEach(f=>{const i=+f.dataset.i,w=a.check[i],x=zahl(f.querySelector("input").value),mk=f.querySelector(".mk");
+      if(isNaN(x)){mk.textContent="?";mk.className="mk";return;}
+      const ok=gleich(x,w);mk.textContent=ok?"✓":"✗";mk.className="mk "+(ok?"ok":"no");alle++;if(ok)rich++;
+      const key=`${nr}${a.sub?" "+"abcdefgh"[i]:""}`;if(!(key in ERG))ERG[key]={ok,stufe};});
+    if(e.onGeprueft)e.onGeprueft(rich,alle);};
+  return e;
+}
+// Lösungen (15.10.2026, Malte): nach „Lösungen anzeigen“ erst die Aufgabe wählen – nie alle Lösungen auf einmal. Nur richtige Lösungen.
+function loesung(liste){
+  const box=el("div");
+  const b=el("button","loesbtn");b.textContent="Lösungen anzeigen";
+  const f=el("div","frag",'<p>Stehen die Aufgabe und dein Rechenweg im Heft? Zu welcher Aufgabe möchtest du die Lösung sehen?</p>');f.hidden=true;
+  const kn=el("div","lwahl"),w=el("div","loes");w.hidden=true;f.appendChild(kn);
+  const zeile=([nr,a])=>{const l=a.sub?a.l.map((x,i)=>`${"abcdefgh"[i]}) ${esc(x)}`).join("&nbsp;&nbsp;&nbsp; "):a.l.map(esc).join("<br>");
+    const weg=a.weg?`<br><button class="wegbtn">Lösungsweg anzeigen</button><div class="weg" hidden>${a.weg.map(z=>"<div>"+esc(z)+"</div>").join("")}</div>`:"";
+    return `<div class="zeile"><b>Aufgabe ${nr}:</b> ${l}${a.idee?`<span class="warum">Warum: ${esc(a.idee)}</span>`:""}${weg}</div>`;};
+  liste.forEach((e,i)=>{const k=el("button","",`Aufgabe ${esc(String(e[0]))}`);k.setAttribute("aria-pressed","false");
+    k.onclick=()=>{kn.querySelectorAll("button").forEach((x,j)=>x.setAttribute("aria-pressed",j===i));w.innerHTML=zeile(e);w.hidden=false;
+      const wb=w.querySelector(".wegbtn");if(wb)wb.onclick=()=>{const g=w.querySelector(".weg");g.hidden=!g.hidden;wb.textContent=g.hidden?"Lösungsweg anzeigen":"Lösungsweg ausblenden";};};kn.appendChild(k);});
+  b.onclick=()=>{const offen=!f.hidden;f.hidden=offen;w.hidden=true;kn.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed","false"));
+    b.textContent=offen?"Lösungen anzeigen":"Lösungen ausblenden";};
+  box.append(b,f,w);return box;
+}
+function teil(T){
+  const root=el("section","teil");
+  if(D.mehrteilig)root.appendChild(el("div","teilkopf",esc(T.name)));
+  root.appendChild(el("details","erin",`<summary>Erinnerung: Das brauchst du</summary><ul>${T.erinnerung.map(e=>"<li>"+esc(e)+"</li>").join("")}</ul>`));
+  root.appendChild(el("h2","","Aufgabe 1 · für alle"));
+  const a1=aufgabe(1,T.a1,"1");const empf=el("div","empf");empf.hidden=true;root.append(a1,empf,loesung([[1,T.a1]]));
+  root.appendChild(el("h2","","Jetzt wählst du dein Niveau"));
+  const wahl=el("div","wahl"),st=el("div");root.append(wahl,st);
+  [["1","★"],["2","★★"],["3","★★★"]].forEach(([k,stern])=>{
+    const s=T.stufen[k];
+    const b=el("button","",`${stern}  ${esc(s.name)}<small>${D.untertitel[k-1]}</small>`);b.setAttribute("aria-pressed","false");b.dataset.k=k;
+    const sec=el("section","stufe");sec.hidden=true;
+    sec.appendChild(el("h2","",esc(stern+"  "+s.name)));
+    sec.appendChild(uhr());
+    s.aufg.forEach((a,i)=>sec.appendChild(aufgabe(stern+" "+(i+2),a,stern)));
+    const lz=loesung(s.aufg.map((a,i)=>[stern+" "+(i+2),a]));sec.appendChild(lz);
+    const kb=el("button","kartebtn","📋 Ergebnis-Karte");lz.appendChild(kb);const kk=el("div");sec.appendChild(kk);
+    kb.onclick=()=>{kk.innerHTML="";kk.appendChild(karte(stern));};
+    b.onclick=()=>{wahl.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b));st.querySelectorAll(".stufe").forEach(x=>x.hidden=x!==sec);};
+    wahl.appendChild(b);st.appendChild(sec);
+  });
+  // Niveau-Empfehlung aus Aufgabe 1 (Konzept: Schüler schätzen sich oft falsch ein – die Wahl bleibt bei ihnen)
+  a1.onGeprueft=(rich,alle)=>{if(!alle)return;const k=rich===alle?"3":(rich>=alle/2?"2":"1");const st=["","★","★★","★★★"][k];
+    empf.hidden=false;empf.innerHTML=`Aufgabe 1: <b>${rich} von ${alle}</b> richtig. Wir empfehlen dir <b>${st}</b>. Du darfst trotzdem selbst wählen.`;
+    wahl.querySelectorAll("button").forEach(x=>{const alt=x.querySelector(".badge");if(alt)alt.remove();if(x.dataset.k===k)x.insertAdjacentHTML("beforeend",'<span class="badge">empfohlen</span>');});};
+  return root;
+}
+// 15-Minuten-Uhr (Hausaufgabe nach Zeit, Konzept 5a)
+function uhr(){
+  const u=el("div","uhr",'<span>⏱ Zu Hause: <b>15 Minuten</b> auf deinem Niveau, dann aufhören.</span><span class="zeit">15:00</span><button>Uhr starten</button>');
+  const z=u.querySelector(".zeit"),b=u.querySelector("button");let ende=0,t=null;
+  const tick=()=>{const r=Math.max(0,Math.round((ende-Date.now())/1000));z.textContent=`${Math.floor(r/60)}:${String(r%60).padStart(2,"0")}`;
+    if(r<=0){clearInterval(t);u.classList.add("um");z.textContent="Zeit um – hör auf. Schreib ggf. eine Hänge-Zeile.";b.textContent="Neu starten";}};
+  b.onclick=()=>{clearInterval(t);u.classList.remove("um");ende=Date.now()+15*60000;b.textContent="Neu starten";tick();t=setInterval(tick,1000);};
+  return u;
+}
+// Ergebnis-Karte: kein Name, kein Server – die Lehrkraft schaut in der Folgestunde aufs Tablet
+const KEY="karte-"+location.pathname.split("/").pop();
+function karte(stern){
+  const jetzt=new Date();let alt={};try{alt=JSON.parse(localStorage.getItem(KEY)||"{}");}catch(e){}
+  const zeilen=Object.entries(ERG).filter(([k,v])=>v.stufe===stern||v.stufe==="1").map(([k,v])=>`<span class="${v.ok?"ok":"no"}">${v.ok?"✓":"✗"}</span> Aufgabe ${esc(k.replace(/^1 /,"1 "))}`);
+  const c=el("div","ekarte",`<h3>Ergebnis-Karte · ${esc(D.titel)} · Stufe ${stern}</h3>`+
+    `<div>${jetzt.toLocaleDateString("de-DE")} · ${jetzt.toLocaleTimeString("de-DE",{hour:"2-digit",minute:"2-digit"})}</div>`+
+    `<div>${zeilen.length?zeilen.join("<br>"):"Noch keine Ergebnisse geprüft."}</div>`+
+    `<div style="margin-top:8px"><b>Hänge-Zeile</b> (wo genau hängst du – und warum?)</div><textarea placeholder="Ich hänge bei Aufgabe …, weil …"></textarea>`);
+  const ta=c.querySelector("textarea");ta.value=alt.haenge||"";
+  ta.oninput=()=>{try{localStorage.setItem(KEY,JSON.stringify({haenge:ta.value,erg:ERG,stufe:stern,zeit:Date.now()}));}catch(e){}};
+  try{localStorage.setItem(KEY,JSON.stringify({haenge:ta.value,erg:ERG,stufe:stern,zeit:Date.now()}));}catch(e){}
+  return c;
+}
+const box=document.getElementById("teile"),secs=D.teile.map(teil);
+secs.forEach(s=>box.appendChild(s));
+if(D.mehrteilig){
+  document.getElementById("teilwahl").hidden=false;const tw=document.getElementById("tw");
+  const zeig=i=>{secs.forEach((s,j)=>s.hidden=j!==i);tw.querySelectorAll("button").forEach((b,j)=>b.setAttribute("aria-pressed",j===i));};
+  D.teile.forEach((T,i)=>{const b=el("button","",esc(T.stunde)+`<small>${esc(T.kurz)}</small>`);b.onclick=()=>zeig(i);tw.appendChild(b);});
+  zeig(D.teile.length-1);
+}
+</script>
+</body>
+</html>

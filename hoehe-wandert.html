@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Wo steht die Höhe? (II.3b)</title>
+<!-- Kap. II Umfang und Flächeninhalt (Kl. 8), 13.11.2026, QR im Skript II.3b bei „Gilt Bens Regel für jedes Dreieck?“.
+     Malte: Punkt C verschieben, die Höhe wandert mit; im rechtwinkligen Dreieck liegt die Höhe genau auf der Seite b.
+     Grundseite c = 6 cm fest, C auf der Parallelen im Abstand 3 cm. Anzeige: (c · h_c)/2 bleibt 9 cm², Bens „Seite mal Seite“ (b · c)/2 stimmt nur bei C über A.
+     Abspielen mit Lesezeit (≥ 1500 ms + 80 ms je Zeichen) und Pause; danach selbst schieben (Regler oder Punkt C ziehen). Rechter Winkel als Bogen mit Punkt. -->
+<style>
+  :root{--acc:#1f4e79;--ink:#1b2a3a;--bg:#f4f7fb;--c:#2e5d9f;--h:#c0700f;--b:#3f8f3a;--ok:#2e7d32;--okH:#e8f4e6;--fehl:#b03a2e;--fehlH:#fbeceb}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;-webkit-user-select:none;user-select:none}
+  button,input{font:inherit;touch-action:manipulation}
+  header{padding:12px 18px;background:var(--acc);color:#fff} header h1{font-size:22px;margin:0}
+  main{max-width:1000px;margin:0 auto;padding:12px 16px 24px}
+  .bild{background:#fff;border:1px solid #c9d6e5;border-radius:14px;padding:6px;touch-action:none}
+  svg{width:100%;height:auto;display:block}
+  .regler{display:flex;align-items:center;gap:12px;margin:10px 0;font-size:18px;font-weight:700;color:var(--acc)}
+  .regler input{flex:1;height:44px;accent-color:var(--acc)}
+  .anz{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0}
+  @media (max-width:640px){.anz{grid-template-columns:1fr}}
+  .anz div{background:#fff;border:2px solid #c9d6e5;border-radius:12px;padding:10px 14px;font-size:20px;line-height:1.5}
+  .anz .k{display:block;font-size:15px;color:#5b6b7c;font-weight:700}
+  .anz .ok{border-color:#9fcf9a;background:var(--okH)} .anz .fehl{border-color:#e3aaa4;background:var(--fehlH)}
+  .knoepfe{display:flex;gap:10px;margin:10px 0}
+  .knoepfe button{flex:1 1 140px;min-height:52px;border-radius:12px;font-size:18px;font-weight:700;border:2px solid var(--acc);background:#fff;color:var(--acc)}
+  .knoepfe button.haupt{background:var(--acc);color:#fff}
+  .cap{background:#fff;border:2px solid #a9c1e0;border-radius:12px;padding:10px 14px;font-size:21px;line-height:1.45;min-height:64px}
+  .fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;font-size:.85em;line-height:1.15;margin:0 3px}
+  .fr>span:first-child{border-bottom:2px solid currentColor;padding:0 4px}
+</style>
+</head>
+<body>
+<header><h1>Wo steht die Höhe?</h1></header>
+<main>
+  <div class="bild"><svg id="svg" viewBox="0 0 600 300"></svg></div>
+  <div class="regler"><span>Punkt C</span><input type="range" id="rg" min="-3.5" max="5" step="0.1" value="3.5" aria-label="Punkt C verschieben"></div>
+  <div class="anz">
+    <div><span class="k">Seite c mal ihre Höhe h<sub>c</sub>, durch 2</span>A = <span id="aRichtig"></span></div>
+    <div id="benBox"><span class="k">Bens Regel: Seite mal Seite, durch 2</span><span id="aBen"></span></div>
+  </div>
+  <div class="knoepfe"><button class="haupt" id="play">▶ Abspielen</button><button id="pause">⏸ Pause</button></div>
+  <div class="cap" id="cap">Tippe auf ▶ Abspielen – oder schieb Punkt C selbst.</div>
+</main>
+<script>
+"use strict";
+const NS="http://www.w3.org/2000/svg",svg=document.getElementById("svg"),K=42,X0=215,Y0=235,H=3,C_=6;
+const P=(x,y)=>[X0+x*K,Y0-y*K];
+const mk=(t,a,p=svg)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);p.appendChild(e);return e;};
+const de=x=>String(Math.round(x*10)/10).replace(".",",");
+const FR=(z,n)=>`<span class="fr"><span>${z}</span><span>${n}</span></span>`;
+// Raster
+for(let i=-5;i<=9;i++)mk("line",{x1:P(i,0)[0],y1:10,x2:P(i,0)[0],y2:290,stroke:"#eef2f6"});
+for(let j=-1;j<=5;j++)mk("line",{x1:0,y1:P(0,j)[1],x2:600,y2:P(0,j)[1],stroke:"#eef2f6"});
+// Parallele
+mk("line",{x1:P(-4.6,H)[0],y1:P(0,H)[1],x2:P(8.6,H)[0],y2:P(0,H)[1],stroke:"#9aa8b8","stroke-width":2,"stroke-dasharray":"6 6"});
+const verl=mk("line",{stroke:"#2e5d9f","stroke-width":3,"stroke-dasharray":"7 6",opacity:0});
+const dr=mk("polygon",{fill:"#f6efe2",stroke:"#6b5a45","stroke-width":2.5});
+const seiteB=mk("line",{stroke:"#3f8f3a","stroke-width":3});
+mk("line",{x1:P(0,0)[0],y1:P(0,0)[1],x2:P(C_,0)[0],y2:P(C_,0)[1],stroke:"#2e5d9f","stroke-width":6});
+const hl=mk("line",{stroke:"#c0700f","stroke-width":4,"stroke-dasharray":"8 6"});
+const bog=mk("path",{fill:"none",stroke:"#c0700f","stroke-width":2.5}),pkt=mk("circle",{r:3.2,fill:"#c0700f"});
+const t=(x,y,s,o={})=>{const e=mk("text",{x,y,"font-size":o.s||20,"font-weight":800,fill:o.c||"#1b2a3a","text-anchor":o.a||"middle"});e.textContent=s;return e;};
+t(P(0,0)[0]-14,P(0,0)[1]+24,"A");t(P(C_,0)[0]+14,P(C_,0)[1]+24,"B");t(P(3,0)[0],P(0,0)[1]+30,"c = 6 cm",{c:"#2e5d9f"});
+const tC=t(0,0,"C"),tH=t(0,0,"",{c:"#c0700f",a:"start",s:19}),tB=t(0,0,"b",{c:"#3f8f3a",s:19}),tHin=t(300,26,"",{c:"#3f8f3a",s:19});
+const griff=mk("circle",{r:16,fill:"#1f4e79",opacity:0.15,style:"cursor:grab"}),cP=mk("circle",{r:7,fill:"#1f4e79"});
+let x=3.5;
+function zeichne(){
+  const A=P(0,0),B=P(C_,0),C=P(x,H),F=P(x,0);
+  dr.setAttribute("points",[A,B,C].map(p=>p.join(",")).join(" "));
+  seiteB.setAttribute("x1",A[0]);seiteB.setAttribute("y1",A[1]);seiteB.setAttribute("x2",C[0]);seiteB.setAttribute("y2",C[1]);
+  hl.setAttribute("x1",C[0]);hl.setAttribute("y1",C[1]);hl.setAttribute("x2",F[0]);hl.setAttribute("y2",F[1]);
+  const rechts=Math.abs(x)<0.05;
+  seiteB.setAttribute("stroke-width",rechts?7:3);
+  // Verlängerung von c, wenn der Fußpunkt außerhalb liegt
+  if(x<0){verl.setAttribute("x1",F[0]-12);verl.setAttribute("y1",F[1]);verl.setAttribute("x2",A[0]);verl.setAttribute("y2",A[1]);verl.setAttribute("opacity",1);}else verl.setAttribute("opacity",0);
+  // rechter Winkel als Bogen mit Punkt: zwischen „nach oben“ und „Richtung B“
+  const r=18,f=F;bog.setAttribute("d",`M ${f[0]+r} ${f[1]} A ${r} ${r} 0 0 0 ${f[0]} ${f[1]-r}`);pkt.setAttribute("cx",f[0]+r*0.42);pkt.setAttribute("cy",f[1]-r*0.42);
+  tC.setAttribute("x",C[0]);tC.setAttribute("y",C[1]-16);griff.setAttribute("cx",C[0]);griff.setAttribute("cy",C[1]);cP.setAttribute("cx",C[0]);cP.setAttribute("cy",C[1]);
+  tH.setAttribute("x",x<0?C[0]-8:C[0]+8);tH.setAttribute("text-anchor",x<0?"end":"start");tH.setAttribute("y",P(0,1.6)[1]);tH.innerHTML=rechts?"":'h<tspan baseline-shift="sub" font-size="14">c</tspan> = 3 cm';
+  const mB=[(A[0]+C[0])/2,(A[1]+C[1])/2];tB.setAttribute("x",mB[0]+(x>=0?-16:16));tB.setAttribute("y",mB[1]+(x>=0?0:16));
+  tHin.textContent=rechts?"Rechtwinklig: Die Seite b ist die Höhe zu c!":(x<0?"Stumpfwinklig: Die Höhe liegt außerhalb.":"");
+  const b=Math.hypot(x,H),ben=b*C_/2,stimmt=Math.abs(ben-9)<0.05;
+  document.getElementById("aRichtig").innerHTML=`${FR("c · h<sub>c</sub>","2")} = ${FR("6 cm · 3 cm","2")} = <b>9 cm²</b>`;
+  document.getElementById("aBen").innerHTML=`${FR("b · c","2")} = ${FR(de(b)+" cm · 6 cm","2")} = <b>${de(ben)} cm²</b> ${stimmt?"✓":"✗"}`;
+  document.getElementById("benBox").className=stimmt?"ok":"fehl";
+  document.getElementById("rg").value=x;
+}
+// selbst schieben: Regler oder Punkt C ziehen
+const rg=document.getElementById("rg");
+rg.addEventListener("input",()=>{stop();x=+rg.value;zeichne();});
+let zieht=false;
+const svgX=e=>{const r=svg.getBoundingClientRect();return ((e.clientX-r.left)/r.width*600-X0)/K;};
+griff.addEventListener("pointerdown",e=>{zieht=true;stop();griff.setPointerCapture(e.pointerId);});
+griff.addEventListener("pointermove",e=>{if(!zieht)return;let v=Math.round(svgX(e)*10)/10;if(Math.abs(v)<0.25)v=0;x=Math.max(-3.5,Math.min(5,v));zeichne();});
+griff.addEventListener("pointerup",()=>{zieht=false;});
+// Abspielen
+const S=[
+ [3.5,"Die Seite c bleibt liegen. Punkt C wandert auf der gestrichelten Linie – immer 3 cm über c."],
+ [2,"Die Höhe h<sub>c</sub> wandert mit. Sie steht immer senkrecht auf c."],
+ [0,"Jetzt liegt C genau über A. Das Dreieck ist rechtwinklig – die Höhe liegt genau auf der Seite b!"],
+ [0,`Nur hier stimmt Bens Regel „Seite mal Seite“: ${FR("b · c","2")} = ${FR("3 cm · 6 cm","2")} = 9 cm². Denn die Seite b ist gleichzeitig die Höhe.`],
+ [-2.5,"C wandert weiter: Das Dreieck wird stumpfwinklig. Die Höhe liegt außerhalb – man verlängert c (gestrichelt)."],
+ [-2.5,"Bens Regel stimmt hier nicht mehr. Aber Seite mal ihre Höhe, durch 2, ergibt immer 9 cm²."],
+ [-2.5,"Jetzt du: Schieb Punkt C selbst hin und her. Wann zeigt Bens Regel ✓?"]];
+const cap=document.getElementById("cap"),pb=document.getElementById("pause");
+let n=0,timer=null,laeuft=false,steht=false,anim=null;
+const lese=s=>1500+80*s.replace(/<[^>]+>/g,"").length;
+function fahre(ziel,fertig){cancelAnimationFrame(anim);const x0=x,t0=performance.now(),d=Math.max(300,Math.abs(ziel-x0)*600);
+  const schritt=now=>{const p=Math.min(1,(now-t0)/d),e=p<0.5?2*p*p:1-Math.pow(-2*p+2,2)/2;x=x0+(ziel-x0)*e;zeichne();if(p<1)anim=requestAnimationFrame(schritt);else{x=ziel;zeichne();fertig();}};
+  anim=requestAnimationFrame(schritt);}
+function weiter(){if(!laeuft||steht)return;if(n>=S.length){laeuft=false;pb.disabled=true;return;}
+  const [ziel,satz]=S[n];n++;cap.innerHTML=satz;fahre(ziel,()=>{timer=setTimeout(weiter,lese(satz)+(n===3?1500:800));});}
+function stop(){laeuft=false;clearTimeout(timer);cancelAnimationFrame(anim);pb.disabled=true;}
+document.getElementById("play").onclick=()=>{stop();n=0;x=3.5;zeichne();laeuft=true;steht=false;pb.disabled=false;pb.textContent="⏸ Pause";weiter();};
+pb.onclick=()=>{steht=!steht;pb.textContent=steht?"▶ Weiter":"⏸ Pause";clearTimeout(timer);if(!steht)weiter();};
+pb.disabled=true;zeichne();
+</script>
+</body>
+</html>
