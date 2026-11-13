@@ -116,7 +116,7 @@
 <body>
 <header><h1>Übung II.2b · Welche Strecke ist die Höhe?</h1></header>
 <main>
-  <div class="hinweis"><b>So schreibst du ins Heft</b> – das Zeichen an jeder Aufgabe sagt es dir:<div class="legende"><span class="form voll">☰ Rechenweg</span><span>① Formel ② Zahlen mit Einheit einsetzen ③ Ergebnis mit Einheit – <b>so auch in der Klassenarbeit</b>.</span><span class="form kurz">▬ Kurzform</span><span>eine Zeile, z. B. 4 cm · 8 cm = 32 cm².</span><span class="form blitz">⚡ Blitz</span><span>nur das Ergebnis mit Einheit – im Kopf.</span></div><b>Faustregel:</b> Aufschreiben musst du alles, was du sonst verwechseln oder vergessen könntest. Bei Aufgaben mit Eingabefeld tippst du dein <b>Endergebnis</b> ein (nur die Zahl), <b>wählst die richtige Einheit</b> (cm, cm² oder cm³?) und prüfst es. Wenn du nicht weiterkommst, hilft der Tipp.<br><b>Übungsstunde: Aufgabe 1 (ca. 5 Minuten), dann dein Niveau (ca. 20 Minuten). Wer fertig ist, macht im nächsten Niveau weiter. Hausaufgabe: der Kasten 🏠 ganz unten (ca. 10 Minuten).</b></div>
+  <div class="hinweis"><b>So schreibst du ins Heft</b> – das Zeichen an jeder Aufgabe sagt es dir:<div class="legende"><span class="form voll">☰ Rechenweg</span><span>① Formel ② Zahlen mit Einheit einsetzen ③ Ergebnis mit Einheit.</span><span class="form kurz">▬ Kurzform</span><span>eine Zeile, z. B. 4 cm · 8 cm = 32 cm².</span><span class="form blitz">⚡ Blitz</span><span>nur das Ergebnis mit Einheit – im Kopf.</span></div><b>Faustregel:</b> Aufschreiben musst du alles, was du sonst verwechseln oder vergessen könntest. Bei Aufgaben mit Eingabefeld tippst du dein <b>Endergebnis</b> ein (nur die Zahl), <b>wählst die richtige Einheit</b> (cm, cm² oder cm³?) und prüfst es. Wenn du nicht weiterkommst, hilft der Tipp.<br><b>Übungsstunde: Aufgabe 1 (ca. 5 Minuten), dann dein Niveau (ca. 20 Minuten). Wer fertig ist, macht im nächsten Niveau weiter. Hausaufgabe: der Kasten 🏠 ganz unten (ca. 10 Minuten).</b></div>
   <div id="teilwahl" hidden><div class="frage">Welche Stunde hattet ihr zuletzt?</div><div class="wahl" id="tw"></div></div>
   <div id="teile"></div>
   <footer>Fehling · II Umfang und Flächeninhalt</footer>
@@ -125,7 +125,7 @@
 "use strict";
 // Versionsprüfung (12.10.2026): Safari zeigt sonst bis zu 10 Minuten (oft länger) eine alte, gespeicherte Fassung.
 // Beim Öffnen wird die Seite ohne Zwischenspeicher abgefragt; ist sie neuer, lädt sie sich einmal neu.
-const STAND="20261113202614";
+const STAND="20261113202859";
 fetch(location.pathname+"?nocache="+Date.now(),{cache:"no-store"}).then(r=>r.text()).then(t=>{
   const m=t.match(/const STAND="(\d+)"/);
   if(m&&m[1]!==STAND&&!sessionStorage.getItem("neu"+m[1])){sessionStorage.setItem("neu"+m[1],"1");location.replace(location.pathname+"?v="+m[1]);}
