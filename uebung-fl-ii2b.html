@@ -84,13 +84,13 @@
   .fr>span:first-child{border-bottom:1.5px solid currentColor;padding:0 3px}
   /* Flächen-Baukasten: Teilaufgaben sind Sätze → umbrechen statt seitlich scrollen; Eingabefeld unter dem Text */
   .aufg li{white-space:normal;overflow-x:visible}
-  .aufg li .eing{display:flex;margin:8px 0 0}
+  .aufg li .eing{display:flex;flex-wrap:wrap;margin:8px 0 0}
   .abild{margin:8px 0;background:#fff;border:1px solid var(--line);border-radius:10px;padding:6px} .abild svg{display:block;width:100%;max-width:560px;height:auto;margin:0 auto}
   /* Flächen-Baukasten: Eingabe, Empfehlung, Uhr, Ergebnis-Karte */
-  .eing{display:inline-flex;align-items:center;gap:6px;margin-left:10px;white-space:nowrap}
+  .eing{display:inline-flex;align-items:center;gap:6px;margin-left:10px;flex-wrap:wrap;max-width:100%}
   .eing .einh[aria-pressed="true"]{background:var(--acc);color:#fff}
-  .eing .einh{min-height:44px;min-width:52px;margin-left:6px;font-size:18px;font-weight:700;border:2px solid var(--acc);border-radius:10px;background:#eef3fa;color:var(--acc)}
-  .eing input{width:130px;min-height:44px;font-size:20px;border:2px solid var(--acc);border-radius:10px;padding:2px 8px;text-align:right}
+  .eing .einh{min-height:44px;min-width:52px;margin-left:0;font-size:18px;font-weight:700;border:2px solid var(--acc);border-radius:10px;background:#eef3fa;color:var(--acc)}
+  .eing input{width:120px;min-height:44px;font-size:20px;border:2px solid var(--acc);border-radius:10px;padding:2px 8px;text-align:right}
   .eing .mk{font-size:22px;font-weight:800;min-width:24px}
   .eing .mk.ok{color:var(--gruen)} .eing .mk.no{color:var(--rot)}
   .einzeln{margin-top:8px}
@@ -121,7 +121,7 @@
 "use strict";
 // Versionsprüfung (12.10.2026): Safari zeigt sonst bis zu 10 Minuten (oft länger) eine alte, gespeicherte Fassung.
 // Beim Öffnen wird die Seite ohne Zwischenspeicher abgefragt; ist sie neuer, lädt sie sich einmal neu.
-const STAND="20261113201258";
+const STAND="20261113201310";
 fetch(location.pathname+"?nocache="+Date.now(),{cache:"no-store"}).then(r=>r.text()).then(t=>{
   const m=t.match(/const STAND="(\d+)"/);
   if(m&&m[1]!==STAND&&!sessionStorage.getItem("neu"+m[1])){sessionStorage.setItem("neu"+m[1],"1");location.replace(location.pathname+"?v="+m[1]);}
