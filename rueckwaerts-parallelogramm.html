@@ -3,11 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Rückwärts rechnen – Seite aus dem Flächeninhalt</title>
-<!-- Kap. II Umfang und Flächeninhalt (Kl. 8), 13.11.2026. Zwei Animationen, per #Anker aus dem Skript (QR am Rand):
-     #rechteck (II.1, Emma): A = 18 m², a = 6 m → b · #parallelogramm (II.2a, Noah): A = 15 m², h = 3 m → g.
-     Ablauf immer: Formel → Bekanntes einsetzen → Bild (Kästchen in Reihen) → geteilt rechnen → Probe.
-     Lesezeit je Satz ≥ 1500 ms + 80 ms je Zeichen, Pause/Weiter. Rechte Winkel als Bogen mit Punkt. -->
+<title>Rückwärts rechnen: Parallelogramm (II.2a)</title>
+<!-- Kap. II Umfang und Flächeninhalt (Kl. 8), 13.11.2026. Nur EINE Animation je Seite (Malte: sonst wählen Schüler die falsche) – QR am Rand des Skripts II.2a.
+     Ablauf: Formel → Bekanntes einsetzen → Bild (Kästchen in Reihen) → geteilt rechnen → Probe. Lesezeit ≥ 1500 ms + 80 ms je Zeichen, Pause/Weiter. -->
 <style>
   :root{--acc:#1f4e79;--ink:#1b2a3a;--bg:#f4f7fb;--g:#2e5d9f;--h:#c0700f}
   *{box-sizing:border-box}
@@ -38,7 +36,6 @@
 <body>
 <header><h1 id="titel">Rückwärts rechnen</h1></header>
 <main>
-  <div class="wahl" id="wahl"></div>
   <div class="wer"><img id="foto" alt=""><div id="wertext"></div></div>
   <div class="reihe">
     <div class="bild"><svg id="svg" viewBox="0 0 520 300"></svg></div>
@@ -64,24 +61,6 @@ const tafel=document.getElementById("tafel");
 function zeile(html,k){const d=document.createElement("div");d.className="z";d.innerHTML=(k?`<span class="k">${k}</span>`:"")+html;tafel.appendChild(d);requestAnimationFrame(()=>requestAnimationFrame(()=>d.classList.add("an")));}
 
 const A={
- rechteck:{titel:"Rückwärts rechnen: Rechteck",wer:"emma_kopf.png",wertext:"Emma zeigt dir, wie man eine Seite aus dem Flächeninhalt findet.",aufbau(){
-   mk("rect",{x:P(0,3)[0],y:P(0,3)[1],width:6*K,height:3*K,fill:"none",stroke:"#7a8a70","stroke-width":2,"stroke-dasharray":"6 5"});
-   mk("line",{x1:P(0,0)[0],y1:Y0,x2:P(6,0)[0]+2,y2:Y0,stroke:"#2e5d9f","stroke-width":5});
-   txt(3,-0.6,"a = 6 m",{c:"#2e5d9f"});
-   const frage=txt(6.3,1.4,"b = ?",{c:"#c0700f",a:"start"});
-   const q=kaestchen(0,6,3);
-   const loes=grp(0);mk("line",{x1:P(6,0)[0],y1:Y0,x2:P(6,3)[0],y2:P(6,3)[1],stroke:"#c0700f","stroke-width":5},loes);txt(6.3,1.4,"b = 3 m",{c:"#c0700f",a:"start"},loes);
-   const reihen=grp(0);[1,2,3].forEach(j=>txt(-0.6,j-0.6,j+".",{s:16,c:"#3f6f35"},reihen));
-   txt(3,3.5,"A = 18 m²",{c:"#3f6f35"});
-   return {frage,q,loes,reihen};},
-  schritte:[
-   ["Ein Beet hat einen Flächeninhalt von 18 m². Es ist 6 m lang. Wie breit ist es?",t=>{}],
-   ["Schreibe zuerst die Formel auf.",t=>zeile("A = <span class='bl'>a</span> · <span class='gr'>b</span>","① Formel")],
-   ["Setze ein, was du schon kennst. Die Breite b kennst du noch nicht.",t=>zeile("18 m² = <span class='bl'>6 m</span> · <span class='gr'>b</span>","② einsetzen")],
-   ["Stell dir die 18 Kästchen vor. In jede Reihe passen 6 Kästchen, weil das Beet 6 m lang ist.",t=>zeigeNach(t.q)],
-   ["Es gibt genau 3 Reihen. Das Beet ist also 3 m breit.",t=>{t.reihen.style.opacity=1;t.frage.style.opacity=0;t.loes.style.opacity=1;}],
-   ["Rückwärts rechnen heißt: Statt mal rechnest du geteilt.",t=>zeile("<span class='gr'>b</span> = 18 m² : <span class='bl'>6 m</span> = <span class='gr'>3 m</span>","③ rückwärts: geteilt")],
-   ["Mach zum Schluss die Probe mit der Formel. Es passt!",t=>zeile("<span class='bl'>6 m</span> · <span class='gr'>3 m</span> = 18 m² ✓","④ Probe")]]},
  parallelogramm:{titel:"Rückwärts rechnen: Parallelogramm",wer:"noah_kopf.png",wertext:"Noah zeigt dir, wie man die Grundseite aus dem Flächeninhalt findet.",aufbau(){
    const ecke=mk("polygon",{points:pts([[0,0],[2,0],[2,3]]),fill:"#f6d9b8",stroke:"#5a4a35","stroke-width":2.5,class:"teil"});
    mk("polygon",{points:pts([[2,0],[5,0],[7,3],[2,3]]),fill:"#e3dccf",stroke:"#5a4a35","stroke-width":2.5});
@@ -102,21 +81,17 @@ const A={
    ["Also ist die Grundseite 5 m lang. Rückwärts heißt: Statt mal rechnest du geteilt.",t=>{t.frage.style.opacity=0;t.loes.style.opacity=1;zeile("<span class='bl'>g</span> = 15 m² : <span class='gr'>3 m</span> = <span class='bl'>5 m</span>","③ rückwärts: geteilt");}],
    ["Mach zum Schluss die Probe mit der Formel. Es passt!",t=>zeile("<span class='bl'>5 m</span> · <span class='gr'>3 m</span> = 15 m² ✓","④ Probe")]]},
 };
-const NAMEN={rechteck:"Rechteck (II.1)",parallelogramm:"Parallelogramm (II.2a)"};
-const wahl=document.getElementById("wahl");
-Object.keys(A).forEach(k=>{const a=document.createElement("a");a.href="#"+k;a.textContent=NAMEN[k];a.dataset.k=k;wahl.appendChild(a);});
 const cap=document.getElementById("cap"),pb=document.getElementById("pause");
 let akt,teile,n=0,timer=null,steht=false;
 const lese=t=>1500+80*t.length;
-function laden(){const k=(location.hash||"#rechteck").slice(1);akt=A[k]||A.rechteck;clearTimeout(timer);
-  wahl.querySelectorAll("a").forEach(a=>a.classList.toggle("an",A[a.dataset.k]===akt));
+function laden(){akt=A.parallelogramm;clearTimeout(timer);
   document.getElementById("titel").textContent=akt.titel;document.getElementById("foto").src=akt.wer;document.getElementById("wertext").textContent=akt.wertext;
   svg.innerHTML="";tafel.innerHTML="";gitter();teile=akt.aufbau();n=0;
   cap.textContent=akt.schritte[0][0]+"  (Tippe auf ▶ Abspielen.)";pb.disabled=true;}
 function weiter(){if(steht)return;if(n<akt.schritte.length){const [satz,f]=akt.schritte[n];f(teile);cap.textContent=satz;n++;timer=setTimeout(weiter,lese(satz)+1500);}else pb.disabled=true;}
 document.getElementById("play").onclick=()=>{laden();steht=false;pb.disabled=false;pb.textContent="⏸ Pause";timer=setTimeout(weiter,300);};
 pb.onclick=()=>{steht=!steht;pb.textContent=steht?"▶ Weiter":"⏸ Pause";clearTimeout(timer);if(!steht)weiter();};
-window.addEventListener("hashchange",laden);laden();
+laden();
 </script>
 </body>
 </html>
