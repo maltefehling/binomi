@@ -51,7 +51,7 @@ const P=(x,y)=>[X0+x*K,Y0-y*K], pts=a=>a.map(p=>P(...p).join(",")).join(" ");
 const mk=(t,a,p=svg)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);p.appendChild(e);return e;};
 function txt(x,y,t,o={},g=svg){const [sx,sy]=P(x,y);const e=mk("text",{x:sx,y:sy,"font-size":o.s||19,"font-weight":800,fill:o.c||"#1b2a3a","text-anchor":o.a||"middle"},g);e.textContent=t;return e;}
 function gitter(){for(let i=-1;i<=11;i++)mk("line",{x1:X0+i*K,y1:10,x2:X0+i*K,y2:290,stroke:"#e1e7ee"});for(let j=-1;j<=5;j++)mk("line",{x1:20,y1:Y0-j*K,x2:X0+11*K,y2:Y0-j*K,stroke:"#e1e7ee"});}
-function winkel(F,g){const r=14,[fx,fy]=P(...F);mk("path",{d:`M ${fx+r} ${fy} A ${r} ${r} 0 0 0 ${fx} ${fy-r}`,fill:"none",stroke:"#c0700f","stroke-width":2.5},g);mk("circle",{cx:fx+r*0.42,cy:fy-r*0.42,r:3,fill:"#c0700f"},g);}
+function winkel(F,g){const r=19,[fx,fy]=P(...F);mk("path",{d:`M ${fx+r} ${fy} A ${r} ${r} 0 0 0 ${fx} ${fy-r}`,fill:"none",stroke:"#c0700f","stroke-width":2.5},g);mk("circle",{cx:fx+r*0.42,cy:fy-r*0.42,r:3,fill:"#c0700f"},g);}
 const grp=(o=1)=>{const g=mk("g",{class:"teil"});g.style.opacity=o;return g;};
 // Kästchen einzeln einblenden (Reihe für Reihe), x0..x0+n−1, Reihen 0..r−1
 function kaestchen(x0,n,r){const L=[];for(let j=0;j<r;j++)for(let i=0;i<n;i++){const [x,y]=P(x0+i,j+1);

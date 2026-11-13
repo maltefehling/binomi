@@ -41,7 +41,7 @@ const P=(x,y)=>[X0+x*K,Y0-y*K], pts=a=>a.map(p=>P(...p).join(",")).join(" ");
 const mk=(t,a,p=svg)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);p.appendChild(e);return e;};
 const FARBE={a:"#d9e6c9",b:"#f3c9a0",c:"#cfdcef",d:"#e8d7f1"};
 // Bogen mit Punkt an Fußpunkt F (Einheiten), Schenkel u, v (Einheitsvektoren in Einheiten, y nach oben)
-function winkel(F,u,v,g){const r=15,[fx,fy]=P(...F),a=[fx+r*u[0],fy-r*u[1]],b=[fx+r*v[0],fy-r*v[1]];
+function winkel(F,u,v,g){const r=19,[fx,fy]=P(...F),a=[fx+r*u[0],fy-r*u[1]],b=[fx+r*v[0],fy-r*v[1]];
   const kreuz=u[0]*(-v[1])-(-u[1])*v[0];mk("path",{d:`M ${a[0]} ${a[1]} A ${r} ${r} 0 0 ${kreuz>0?1:0} ${b[0]} ${b[1]}`,fill:"none",stroke:"#c0700f","stroke-width":2.5},g);
   const m=[(u[0]+v[0]),(u[1]+v[1])],l=Math.hypot(...m);mk("circle",{cx:fx+r*0.45*m[0]/l,cy:fy-r*0.45*m[1]/l,r:3,fill:"#c0700f"},g);}
 function txt(x,y,t,o={},g=svg){const [sx,sy]=P(x,y);const e=mk("text",{x:sx,y:sy,"font-size":o.s||20,"font-weight":800,fill:o.c||"#1b2a3a","text-anchor":o.a||"middle"},g);e.textContent=t;return e;}
