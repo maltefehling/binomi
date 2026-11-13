@@ -24,6 +24,7 @@
   .aufg .kopf{font-weight:700;color:var(--acc);font-size:18px;margin-bottom:4px}
   .aufg .txt{font-size:20px;line-height:1.45}
   .form{display:inline-block;font-size:14px;font-weight:800;border-radius:8px;padding:2px 8px;margin-left:8px;vertical-align:middle;background:#eef3fa;color:var(--acc)}
+  .form::first-letter{font-size:1.4em}
   .form.voll{background:#1f4e79;color:#fff} .form.blitz{background:#fff1c9;color:#7a5b00}
   .legende{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;margin:6px 0 4px;align-items:baseline}
   .aufg .heft{font-size:16px;color:var(--muted);margin-top:4px}
@@ -115,7 +116,7 @@
 <body>
 <header><h1>Übung II.1 · Rechteck und Quadrat</h1></header>
 <main>
-  <div class="hinweis"><b>So schreibst du ins Heft</b> – das Zeichen an jeder Aufgabe sagt es dir:<div class="legende"><span class="form voll">✎✎ Rechenweg</span><span>① Formel ② Zahlen mit Einheit einsetzen ③ Ergebnis mit Einheit – <b>so auch in der Klassenarbeit</b>.</span><span class="form kurz">▬ Kurzform</span><span>eine Zeile, z. B. 4 cm · 8 cm = 32 cm².</span><span class="form blitz">⚡ Blitz</span><span>nur das Ergebnis mit Einheit – im Kopf.</span></div><b>Faustregel:</b> Aufschreiben musst du alles, was du sonst verwechseln oder vergessen könntest. Bei Aufgaben mit Eingabefeld tippst du dein <b>Endergebnis</b> ein (nur die Zahl), <b>wählst die richtige Einheit</b> (cm, cm² oder cm³?) und prüfst es. Wenn du nicht weiterkommst, hilft der Tipp.<br><b>Übungsstunde: Aufgabe 1 (ca. 5 Minuten), dann dein Niveau (ca. 25 Minuten). Wer fertig ist, macht im nächsten Niveau weiter. Hausaufgabe: der Kasten 🏠 ganz unten (ca. 10 Minuten).</b></div>
+  <div class="hinweis"><b>So schreibst du ins Heft</b> – das Zeichen an jeder Aufgabe sagt es dir:<div class="legende"><span class="form voll">☰ Rechenweg</span><span>① Formel ② Zahlen mit Einheit einsetzen ③ Ergebnis mit Einheit – <b>so auch in der Klassenarbeit</b>.</span><span class="form kurz">▬ Kurzform</span><span>eine Zeile, z. B. 4 cm · 8 cm = 32 cm².</span><span class="form blitz">⚡ Blitz</span><span>nur das Ergebnis mit Einheit – im Kopf.</span></div><b>Faustregel:</b> Aufschreiben musst du alles, was du sonst verwechseln oder vergessen könntest. Bei Aufgaben mit Eingabefeld tippst du dein <b>Endergebnis</b> ein (nur die Zahl), <b>wählst die richtige Einheit</b> (cm, cm² oder cm³?) und prüfst es. Wenn du nicht weiterkommst, hilft der Tipp.<br><b>Übungsstunde: Aufgabe 1 (ca. 5 Minuten), dann dein Niveau (ca. 25 Minuten). Wer fertig ist, macht im nächsten Niveau weiter. Hausaufgabe: der Kasten 🏠 ganz unten (ca. 10 Minuten).</b></div>
   <div id="teilwahl" hidden><div class="frage">Welche Stunde hattet ihr zuletzt?</div><div class="wahl" id="tw"></div></div>
   <div id="teile"></div>
   <footer>Fehling · II Umfang und Flächeninhalt</footer>
@@ -124,7 +125,7 @@
 "use strict";
 // Versionsprüfung (12.10.2026): Safari zeigt sonst bis zu 10 Minuten (oft länger) eine alte, gespeicherte Fassung.
 // Beim Öffnen wird die Seite ohne Zwischenspeicher abgefragt; ist sie neuer, lädt sie sich einmal neu.
-const STAND="20261113202251";
+const STAND="20261113202614";
 fetch(location.pathname+"?nocache="+Date.now(),{cache:"no-store"}).then(r=>r.text()).then(t=>{
   const m=t.match(/const STAND="(\d+)"/);
   if(m&&m[1]!==STAND&&!sessionStorage.getItem("neu"+m[1])){sessionStorage.setItem("neu"+m[1],"1");location.replace(location.pathname+"?v="+m[1]);}
@@ -135,7 +136,7 @@ const esc=s=>s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/(^|[^A-Za-zä
 const el=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e;};
 // 13.11.2026 (Malte): Wie viel ins Heft? Kurzform mit ▬ (eine Zeile) statt ✎ – ✎ heißt im Skript „schriftlich“.
 // Drei Formen, an jeder Aufgabe sichtbar (Expertise-Umkehr: Gerüst nur, wo es hilft)
-const FORM={voll:"✎✎ Rechenweg",kurz:"▬ Kurzform",blitz:"⚡ Blitz"};
+const FORM={voll:"☰ Rechenweg",kurz:"▬ Kurzform",blitz:"⚡ Blitz"};
 const formHtml=f=>f?`<span class="form ${f}">${FORM[f]}</span>`:"";
 const HEFT={voll:"Nummer, kleine Skizze, dann ① Formel ② Zahlen mit Einheit ③ Ergebnis mit Einheit.",
   kurz:"Nummer und eine Zeile, z. B. 4 cm · 8 cm = 32 cm² – bei Ankreuz-Aufgaben: Nummer und deine Antwort.",
@@ -232,7 +233,7 @@ function teil(T){
   // Hausaufgabe (13.11.2026, Malte + Hausaufgabenforschung): eigener, kurzer Kasten für alle – heute · früher · verstehen, ★ freiwillig
   if(T.ha){const ha=el("section","hakasten");
     ha.appendChild(el("h2","","🏠 Hausaufgabe · für alle"));
-    ha.appendChild(el("div","hinweis",'Drei kurze Aufgaben: <b>eine von heute, eine von früher, eine zum Verstehen</b>. Die ★-Aufgabe ist freiwillig. <b>Höchstens 15 Minuten</b> – dann hörst du auf und schreibst eine Hänge-Zeile. Das Zeichen an der Aufgabe (✎✎ Rechenweg · ▬ Kurzform · ⚡ Blitz) sagt dir, was ins Heft kommt.'));
+    ha.appendChild(el("div","hinweis",'Drei kurze Aufgaben: <b>eine von heute, eine von früher, eine zum Verstehen</b>. Die ★-Aufgabe ist freiwillig. <b>Höchstens 15 Minuten</b> – dann hörst du auf und schreibst eine Hänge-Zeile. Das Zeichen an der Aufgabe (☰ Rechenweg · ▬ Kurzform · ⚡ Blitz) sagt dir, was ins Heft kommt.'));
     ha.appendChild(uhr());
     T.ha.forEach((a,i)=>ha.appendChild(aufgabe("H"+(i+1),a,"H")));
     const lz=loesung(T.ha.map((a,i)=>["H"+(i+1),a]));ha.appendChild(lz);
