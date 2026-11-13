@@ -61,24 +61,24 @@ const tafel=document.getElementById("tafel");
 function zeile(html,k){const d=document.createElement("div");d.className="z";d.innerHTML=(k?`<span class="k">${k}</span>`:"")+html;tafel.appendChild(d);requestAnimationFrame(()=>requestAnimationFrame(()=>d.classList.add("an")));}
 
 const A={
- parallelogramm:{titel:"Rückwärts rechnen: Parallelogramm",wer:"noah_kopf.png",wertext:"Noah zeigt dir, wie man die Grundseite aus dem Flächeninhalt findet.",aufbau(){
+ parallelogramm:{titel:"Rückwärts rechnen: Parallelogramm",wer:"noah_kopf.png",wertext:"Noah zeigt dir, wie man die Seite a aus dem Flächeninhalt findet.",aufbau(){
    const ecke=mk("polygon",{points:pts([[0,0],[2,0],[2,3]]),fill:"#f6d9b8",stroke:"#5a4a35","stroke-width":2.5,class:"teil"});
    mk("polygon",{points:pts([[2,0],[5,0],[7,3],[2,3]]),fill:"#e3dccf",stroke:"#5a4a35","stroke-width":2.5});
-   const h=grp(1);mk("line",{x1:P(2,0)[0],y1:Y0,x2:P(2,3)[0],y2:P(2,3)[1],stroke:"#c0700f","stroke-width":3,"stroke-dasharray":"7 5"},h);winkel([2,0],h);txt(2.25,1.4,"h = 3 m",{c:"#c0700f",a:"start",s:17},h);
+   const h=grp(1);mk("line",{x1:P(2,0)[0],y1:Y0,x2:P(2,3)[0],y2:P(2,3)[1],stroke:"#c0700f","stroke-width":3,"stroke-dasharray":"7 5"},h);winkel([2,0],h);txt(2.25,1.4,"hₐ = 3 m",{c:"#c0700f",a:"start",s:17},h);
    const g1=grp(1);mk("line",{x1:P(0,0)[0],y1:Y0,x2:P(5,0)[0]+2,y2:Y0,stroke:"#2e5d9f","stroke-width":5},g1);
    const g2=grp(0);mk("line",{x1:P(2,0)[0],y1:Y0,x2:P(7,0)[0]+2,y2:Y0,stroke:"#2e5d9f","stroke-width":5},g2);
-   const frage=txt(2.5,-0.6,"g = ?",{c:"#2e5d9f"});
-   const loes=grp(0);txt(4.5,-0.6,"g = 5 m",{c:"#2e5d9f"},loes);
+   const frage=txt(2.5,-0.6,"a = ?",{c:"#2e5d9f"});
+   const loes=grp(0);txt(4.5,-0.6,"a = 5 m",{c:"#2e5d9f"},loes);
    txt(4.5,3.5,"A = 15 m²",{c:"#3f6f35"});
    const q=kaestchen(2,5,3);
    return {ecke,h,frage,loes,q,g1,g2};},
   schritte:[
-   ["Ein Pflasterweg hat einen Flächeninhalt von 15 m². Die Höhe ist 3 m. Wie lang ist die Grundseite g?",t=>{}],
-   ["Schreibe zuerst die Formel auf.",t=>zeile("A = <span class='bl'>g</span> · <span class='gr'>h</span>","① Formel")],
-   ["Setze ein, was du schon kennst. Die Grundseite g kennst du noch nicht.",t=>zeile("15 m² = <span class='bl'>g</span> · <span class='gr'>3 m</span>","② einsetzen")],
-   ["Lege das Dreieck links nach rechts um. Es entsteht ein Rechteck – genauso lang wie g und 3 m hoch.",t=>{t.ecke.style.transform=`translate(${5*K}px,0px)`;t.g1.style.opacity=0;t.g2.style.opacity=1;t.frage.setAttribute("x",P(4.5,0)[0]);}],
+   ["Ein Pflasterweg hat einen Flächeninhalt von 15 m². Die Höhe hₐ ist 3 m. Wie lang ist die Seite a?",t=>{}],
+   ["Schreibe zuerst die Formel auf.",t=>zeile("A = <span class='bl'>a</span> · <span class='gr'>h<sub>a</sub></span>","① Formel")],
+   ["Setze ein, was du schon kennst. Die Seite a kennst du noch nicht.",t=>zeile("15 m² = <span class='bl'>a</span> · <span class='gr'>3 m</span>","② einsetzen")],
+   ["Lege das Dreieck links nach rechts um. Es entsteht ein Rechteck – genauso lang wie a und 3 m hoch.",t=>{t.ecke.style.transform=`translate(${5*K}px,0px)`;t.g1.style.opacity=0;t.g2.style.opacity=1;t.frage.setAttribute("x",P(4.5,0)[0]);}],
    ["Im Rechteck liegen die 15 Kästchen in 3 Reihen. In jeder Reihe sind 5 Kästchen.",t=>{t.h.style.opacity=0;zeigeNach(t.q);}],
-   ["Also ist die Grundseite 5 m lang. Rückwärts heißt: Statt mal rechnest du geteilt.",t=>{t.frage.style.opacity=0;t.loes.style.opacity=1;zeile("<span class='bl'>g</span> = 15 m² : <span class='gr'>3 m</span> = <span class='bl'>5 m</span>","③ rückwärts: geteilt");}],
+   ["Also ist die Seite a 5 m lang. Rückwärts heißt: Statt mal rechnest du geteilt.",t=>{t.frage.style.opacity=0;t.loes.style.opacity=1;zeile("<span class='bl'>a</span> = 15 m² : <span class='gr'>3 m</span> = <span class='bl'>5 m</span>","③ rückwärts: geteilt");}],
    ["Mach zum Schluss die Probe mit der Formel. Es passt!",t=>zeile("<span class='bl'>5 m</span> · <span class='gr'>3 m</span> = 15 m² ✓","④ Probe")]]},
 };
 const cap=document.getElementById("cap"),pb=document.getElementById("pause");

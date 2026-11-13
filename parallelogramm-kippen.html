@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Animation: Parallelogramm kippen und umlegen</title>
 <!-- II.2a Parallelogramm (Kl. 8, Garten: schräge Pflasterfläche). Am Beamer (Lehrkraft bedient) oder auf den Schüler-Tablets per QR – das entscheidet die Lehrkraft in der Stunde.
-     Regler: obere Seite verschieben, Grundseite und Höhe bleiben → Fläche bleibt 24 m², Annas Rechnung „g · schräge Seite“ ändert sich.
+     Regler: obere Seite verschieben, Grundseite und Höhe bleiben → Fläche bleibt 24 m², Annas Rechnung „a · schräge Seite“ ändert sich.
      Knopf „Umlegen“: Dreieck an der Höhe abschneiden und auf die andere Seite schieben → Rechteck. Rechter Winkel als Bogen mit Punkt. -->
 <style>
   :root{--acc:#1f4e79;--ink:#1b2a3a;--muted:#5b6b7c;--bg:#f4f7fb;--g:#2e5d9f;--h:#c0700f;--pfl:#e3dccf;--rand:#6b5a45;--rot:#b03a2e;--ok:#2e7d32}
@@ -43,7 +43,7 @@
   </div>
   <div class="werte">
     <div class="wert anna"><b>Annas Rechnung</b><br><span class="cg">6</span> · schräge Seite <span id="b"></span> = <b id="ab"></b><br><span class="klein">Grundseite mal schräge Seite</span></div>
-    <div class="wert echt"><b>Fläche</b> (Kästchen zählen)<br><span class="cg">g = 6 m</span>, <span class="ch">h = 4 m</span> → <b id="A">24 m²</b><br><span class="klein">1 Kästchen = 1 m²</span></div>
+    <div class="wert echt"><b>Fläche</b> (Kästchen zählen)<br><span class="cg">a = 6 m</span>, <span class="ch">h<sub>a</sub> = 4 m</span> → <b id="A">24 m²</b><br><span class="klein">1 Kästchen = 1 m²</span></div>
   </div>
 </main>
 <script>
@@ -75,7 +75,7 @@ function zeig(){
   const rr=18,dir=(hx<=G-0.5)?1:-1;   // Bogen zur Innenseite
   bogen.setAttribute("d",`M ${T[0]+dir*rr} ${Y0} A ${rr} ${rr} 0 0 ${dir>0?0:1} ${T[0]} ${Y0-rr}`);
   punkt.setAttribute("cx",T[0]+dir*rr*0.42);punkt.setAttribute("cy",Y0-rr*0.42);
-  tg.setAttribute("x",(A[0]+B[0])/2);tg.setAttribute("y",Y0+28);tg.textContent="g = 6 m";
+  tg.setAttribute("x",(A[0]+B[0])/2);tg.setAttribute("y",Y0+28);tg.textContent="a = 6 m";
   th.setAttribute("x",T[0]+(dir>0?8:-80));th.setAttribute("y",Y0-H*K/2);th.textContent="h = 4 m";
   const b=Math.round(Math.hypot(s,H)*10)/10, d=x=>String(Math.round(x*10)/10).replace(".",",");   // wie Anna: schräge Seite gemessen (auf mm gerundet)
   document.getElementById("b").textContent=`${d(b)} m`;

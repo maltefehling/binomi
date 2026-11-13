@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Check-in II.2b · Höhe im Parallelogramm</title>
 <!-- Kapitel II Umfang und Flächeninhalt (Kl. 8), Check-in zu II.2b (QR neben dem Check-in-Merkkasten im Skript). Muster wie Check-in II.1.
-     Drei Aufgabentypen: ① Parallelogramm A = g · h (schräge Seite als Ablenker) ② Abstand Punkt–Gerade (antippen) ③ Gleichung a · x = b mit Kommazahl.
+     Drei Aufgabentypen: ① Parallelogramm A = a · h_a (schräge Seite als Ablenker) ② Abstand Punkt–Gerade (antippen) ③ Gleichung a · x = b mit Kommazahl.
      Falsch → Erklärung mit Bild, dann neue Aufgabe desselben Typs. Alle drei geschafft → Profi-Runde (endlos, schwerer).
      Rechte Winkel immer als Bogen mit Punkt. Kein Login, kein Server; das Ergebnis bleibt nur auf diesem Gerät (localStorage). -->
 <style>
@@ -128,10 +128,10 @@ function genAbstand(schwer){
 }
 function genParaFlaeche(schwer){
   const g=zuf(4,12),h=zuf(2,7),b=h+zuf(1,3),A=g*h;
-  if(!schwer)return {art:"zahl",einh:"m²",html:`<div class="auf">Parallelogramm: g = ${g} m, h = ${h} m, schräge Seite ${b} m.<br>Wie groß ist die Fläche?</div>`,pruef:x=>x===A,loesung:`${A} m²`,
-    erkl:`Fläche = <b>Grundseite mal Höhe</b>. Die schräge Seite brauchst du nicht (Annas Fehler!).<br><b>A = ${g} m · ${h} m = ${A} m²</b>`,tipp:`A = g · h. Welche der drei Zahlen ist die Höhe?`};
-  return {art:"zahl",einh:"m",html:`<div class="auf">Parallelogramm: A = ${A} m², g = ${g} m, schräge Seite ${b} m.<br>Wie lang ist die Höhe?</div>`,pruef:x=>x===h,loesung:`${h} m`,
-    erkl:`A = g · h, also ${A} = ${g} · h. Rückwärts: <b>h = ${A} : ${g} = ${h} m</b>.`,tipp:`${g} mal welche Zahl ergibt ${A}?`};
+  if(!schwer)return {art:"zahl",einh:"m²",html:`<div class="auf">Parallelogramm: a = ${g} m, h<sub>a</sub> = ${h} m, schräge Seite b = ${b} m.<br>Berechne den <b>Flächeninhalt</b>.</div>`,pruef:x=>x===A,loesung:`${A} m²`,
+    erkl:`Flächeninhalt = <b>Seite mal ihre Höhe</b>. Die schräge Seite b brauchst du nicht (Annas Fehler!).<br><b>A = a · h<sub>a</sub> = ${g} m · ${h} m = ${A} m²</b>`,tipp:`A = a · h<sub>a</sub>. Welche der drei Zahlen ist die Höhe?`};
+  return {art:"zahl",einh:"m",html:`<div class="auf">Parallelogramm: A = ${A} m², a = ${g} m, schräge Seite b = ${b} m.<br>Berechne die Höhe h<sub>a</sub>.</div>`,pruef:x=>x===h,loesung:`${h} m`,
+    erkl:`① Formel: A = a · h<sub>a</sub><br>② einsetzen: ${A} m² = ${g} m · h<sub>a</sub><br>③ rückwärts: <b>h<sub>a</sub> = ${A} m² : ${g} m = ${h} m</b>.`,tipp:`${g} mal welche Zahl ergibt ${A}?`};
 }
 function genGleichungDez(schwer){
   const a=wahl([2,4,6,8]),x=zuf(2,9)+0.5,b=a*x;

@@ -57,25 +57,25 @@ const A={
    const rest=teil([[0,0],[6,0],[6,4],[2,4]],FARBE.c),ecke=teil([[0,0],[2,4],[0,4]],FARBE.b);
    const schnitt=mk("line",{x1:P(0,0)[0],y1:P(0,0)[1],x2:P(2,4)[0],y2:P(2,4)[1],stroke:"#c0700f","stroke-width":3,"stroke-dasharray":"8 6",opacity:0,class:"teil"});
    const zweit=mk("g",{opacity:0,class:"teil"});mk("line",{x1:P(2,0)[0],y1:Y0,x2:P(2,4)[0],y2:P(2,4)[1],stroke:"#c0700f","stroke-width":3,"stroke-dasharray":"8 6"},zweit);
-   winkel([2,0],[1,0],[0,1],zweit);txt(2.3,2,"h = 4 m",{c:"#c0700f",a:"start",s:18},zweit);txt(3,-0.6,"g = 6 m",{c:"#2e5d9f",s:18},zweit);
+   winkel([2,0],[1,0],[0,1],zweit);txt(2.3,2,"hₐ = 4 m",{c:"#c0700f",a:"start",s:18},zweit);txt(3,-0.6,"a = 6 m",{c:"#2e5d9f",s:18},zweit);
    const r1=mk("g",{class:"teil"});txt(3,-0.6,"Rechteck 6 m × 4 m",{s:18},r1);
    return {rest,ecke,schnitt,zweit,r1};},
   schritte:[["Ein Rechteck: 6 m lang, 4 m breit. Es ist 24 m² groß.",()=>{}],
    ["Wir schneiden links ein Dreieck ab (gestrichelte Linie).",t=>{t.schnitt.style.opacity=1;}],
    ["Das Dreieck wandert ganz nach rechts und wird dort angelegt.",t=>{schieb(t.ecke,6,0);t.r1.style.opacity=0;}],
    ["So entsteht ein Parallelogramm. Nichts ist dazugekommen, nichts fehlt.",t=>{t.schnitt.style.opacity=0;}],
-   ["Grundseite und Höhe sind gleich geblieben: A = g · h = 6 · 4 = 24 m².",t=>{t.zweit.style.opacity=1;}]]},
+   ["Seite a und Höhe hₐ sind gleich geblieben: A = a · hₐ = 6 m · 4 m = 24 m².",t=>{t.zweit.style.opacity=1;}]]},
  halbieren:{titel:"Parallelogramm → Dreieck: halbieren",aufbau(){
    const links=teil([[0,0],[6,0],[2,4]],FARBE.b),rechts=teil([[6,0],[8,4],[2,4]],FARBE.c);
    const diag=mk("line",{x1:P(6,0)[0],y1:P(6,0)[1],x2:P(2,4)[0],y2:P(2,4)[1],stroke:"#c0700f","stroke-width":3,"stroke-dasharray":"8 6",opacity:0,class:"teil"});
    const hh=mk("g",{opacity:0,class:"teil"});mk("line",{x1:P(2,0)[0],y1:Y0,x2:P(2,4)[0],y2:P(2,4)[1],stroke:"#c0700f","stroke-width":3,"stroke-dasharray":"8 6"},hh);
    winkel([2,0],[1,0],[0,1],hh);txt(2.3,2,"h = 4 m",{c:"#c0700f",a:"start",s:18},hh);txt(3,-0.6,"g = 6 m",{c:"#2e5d9f",s:18},hh);
    return {links,rechts,diag,hh};},
-  schritte:[["Ein Parallelogramm: g = 6 m, h = 4 m. Es ist 6 · 4 = 24 m² groß.",()=>{}],
+  schritte:[["Ein Parallelogramm: a = 6 m, hₐ = 4 m. Es ist 6 m · 4 m = 24 m² groß.",()=>{}],
    ["Eine Diagonale teilt es in zwei gleiche Dreiecke.",t=>{t.diag.style.opacity=1;}],
    ["Das zweite Dreieck dreht sich weg – es ist genau gleich groß wie das erste.",t=>{dreh(t.rechts,180,[4,2]);t.rechts.style.opacity=0.35;}],
    ["Ein Dreieck ist also die Hälfte des Parallelogramms.",t=>{t.rechts.style.opacity=0;t.diag.style.opacity=0;}],
-   ["A = g · h : 2 = 6 · 4 : 2 = 12 m².",t=>{t.hh.style.opacity=1;}]]},
+   ["Fürs Dreieck heißt die Seite unten Grundseite g, die Höhe h: A = g · h : 2 = 6 m · 4 m : 2 = 12 m².",t=>{t.hh.style.opacity=1;}]]},
  trapez:{titel:"Parallelogramm → Trapez: verdoppeln",aufbau(){
    const t1=teil([[0,0],[7,0],[4,3],[1,3]],FARBE.a),t2=teil([[7,0],[10,0],[11,3],[4,3]],FARBE.c);
    const lab=mk("g",{opacity:0,class:"teil"});txt(3.5,-0.6,"a = 7 m",{c:"#2e5d9f",s:18},lab);txt(2.5,3.4,"c = 3 m",{c:"#2e5d9f",s:18},lab);
