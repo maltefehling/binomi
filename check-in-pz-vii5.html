@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Check-in VII.5 · Die Lücke wandert – der Grundwert</title>
+<!-- Kapitel VII Prozente (Kl. 7), Check-in zu VII.5 (QR neben dem Check-in-Merkkasten im Skript). Aus check-in-vorlage.html (Kap. II) abgeleitet; diese Datei ist die Quelle.
+     Drei Aufgabentypen: ① Prozentwert mit dem Dreischritt ② teilen, dann mal 100 ③ Was steht unter 100 %? (Grundwert antippen).
+     Falsch → Erklärung mit Bild, dann neue Aufgabe desselben Typs. Alle drei geschafft → Profi-Runde (endlos, schwerer, mit Hundertsteln).
+     Kein Login, kein Server; das Ergebnis bleibt nur auf diesem Gerät (localStorage). Belegte Beispiele: 7/20 (Tipp VII.1), Schulhof 200 m² / 30 % (Tipp VII.2) – kommen hier nicht vor. -->
+<style>
+  :root{--acc:#1f4e79;--ink:#1b2a3a;--muted:#5b6b7c;--bg:#f4f7fb;--line:#c9d6e5;--merk:#dde8f5;--merkL:#a9c1e0;
+    --tipp:#6d4a9e;--tippH:#f1eaf8;--tippL:#b79bd6;--ok:#2e7d32;--okH:#e8f4e6;--fehl:#b03a2e;--fehlH:#fbeceb;--hl:#c0700f;--gold:#8a6d00;--goldH:#fff6d6}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
+  button,input{font:inherit;touch-action:manipulation}
+  header{padding:12px 16px;background:var(--acc);color:#fff} header h1{font-size:20px;margin:0}
+  main{max-width:860px;margin:0 auto;padding:14px 16px 32px}
+  .hinweis{background:#fff;border:1px solid #bfbfbf;border-radius:12px;padding:10px 14px;font-size:18px;line-height:1.45;margin-bottom:12px}
+  .fort{display:flex;gap:8px;margin:0 0 12px;flex-wrap:wrap}
+  .fort span{flex:1 1 150px;border:2px solid var(--line);border-radius:10px;padding:6px 10px;font-size:16px;font-weight:700;color:var(--muted);background:#fff}
+  .fort span.jetzt{border-color:var(--acc);color:var(--acc)} .fort span.fertig{border-color:var(--ok);color:var(--ok);background:var(--okH)}
+  .karte{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:12px}
+  .karte h2{font-size:21px;color:var(--acc);margin:0 0 8px}
+  .auf{font-size:24px;line-height:1.5;margin:6px 0 10px}
+  .ein{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .ein input{width:170px;min-height:54px;font-size:26px;border:2px solid var(--acc);border-radius:12px;padding:4px 10px;text-align:right}
+  .ein .einh{font-size:24px}
+  .btn{min-height:54px;border-radius:12px;border:2px solid var(--acc);background:var(--acc);color:#fff;font-size:19px;font-weight:700;padding:0 18px}
+  .btn.hell{background:#fff;color:var(--acc)}
+  .btn.tipp{background:var(--tippH);color:var(--tipp);border-color:var(--tippL)}
+  .knopfreihe{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+  .rm{border-radius:12px;padding:10px 14px;margin-top:12px;font-size:19px;line-height:1.5}
+  .rm.ok{background:var(--okH);border:1px solid #9fcf9a;color:#1d5a21}
+  .rm.fehl{background:var(--fehlH);border:1px solid #e3aaa4}
+  .rm.tipp{background:var(--tippH);border:1px solid var(--tippL)}
+  .rm b{color:var(--acc)}
+  .hl{color:var(--hl);font-weight:800}
+  svg{width:100%;height:auto;display:block}
+  .bild{background:#fff;border:1px solid var(--line);border-radius:12px;margin:8px 0}
+  .strecke{cursor:pointer}
+  .fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1.1;margin:0 4px}
+  .fr>span:first-child{border-bottom:2.5px solid currentColor;padding:0 6px}
+  .wahlk{display:flex;gap:12px;flex-wrap:wrap;margin-top:6px}
+  .wahlk button{min-width:96px;min-height:76px;border-radius:12px;border:2px solid var(--acc);background:#fff;color:var(--acc);font-size:26px;font-weight:700;padding:6px 14px}
+  .profi{background:var(--goldH);border:2px solid #e6c65a}
+  .profi h2{color:var(--gold)}
+  .punkte{font-size:20px;font-weight:800;color:var(--gold)}
+  .ergebnis{background:#fff;border:2px solid var(--acc);border-radius:14px;padding:12px 16px;font-size:19px;line-height:1.6;margin-top:12px}
+  .ergebnis h3{margin:0 0 6px;color:var(--acc);font-size:20px}
+  footer{color:var(--muted);font-size:13px;text-align:center;margin-top:24px}
+  [hidden]{display:none!important}
+</style>
+</head>
+<body>
+<header><h1>Check-in VII.5 · Die Lücke wandert – der Grundwert</h1></header>
+<main>
+  <div class="hinweis">Drei kurze Aufgaben zu dem, was du heute brauchst. Rechne im Kopf oder mit dem Taschenrechner. Tippe das Ergebnis ein oder tippe die richtige Antwort an. Ist es falsch, bekommst du eine Erklärung und eine neue Aufgabe. <b>Ca. 6 Minuten.</b></div>
+  <div class="fort" id="fort"><span data-k="0">① Dreischritt</span><span data-k="1">② Teilen, dann mal 100</span><span data-k="2">③ Was steht unter 100 %?</span></div>
+  <div id="bereich"></div>
+  <div class="ergebnis" id="ergebnis" hidden></div>
+  <footer>Fehling · VII Prozente · Check-in</footer>
+</main>
+<script>
+"use strict";
+const $=s=>document.querySelector(s);
+const el=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e;};
+const zuf=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const wahl=a=>a[Math.floor(Math.random()*a.length)];
+const zahl=s=>{const m=String(s).replace(/\s/g,"").replace(/\./g,"").replace(",",".").match(/-?\d+(\.\d+)?/);return m?parseFloat(m[0]):NaN;};
+const de=x=>String(Math.round(x*1000)/1000).replace(".",",").replace(/\B(?=(\d{3})+(?!\d))/g," ");
+const NS="http://www.w3.org/2000/svg";
+const br=(z,n)=>`<span class="fr"><span>${z}</span><span>${n}</span></span>`;
+const ggt=(a,b)=>b?ggt(b,a%b):a;
+// Streifen mit n gleichen Teilen, k davon gefärbt
+function streifen(n,k,farbe="#b9cfe8"){
+  const W=560,H=64,x0=6,y0=6;let s=`<svg viewBox="0 0 ${W+12} ${H+12}"><rect x="${x0}" y="${y0}" width="${W}" height="${H}" fill="#eef1f5"/>`+
+    `<rect x="${x0}" y="${y0}" width="${W*k/n}" height="${H}" fill="${farbe}"/>`;
+  for(let i=1;i<n;i++)s+=`<line x1="${x0+i*W/n}" y1="${y0}" x2="${x0+i*W/n}" y2="${y0+H}" stroke="#3b4a5a" stroke-width="3"/>`;
+  return s+`<rect x="${x0}" y="${y0}" width="${W}" height="${H}" fill="none" stroke="#3b4a5a" stroke-width="3"/></svg>`;
+}
+
+// ---------------- Aufgabengeneratoren: {html, pruef(eingabe)→bool, loesung, erkl (HTML), tipp (HTML), art:"zahl"|"tippen"} ----------------
+function genPW(schwer){
+  // ① Prozentwert mit dem Dreischritt (VII.4)
+  const fs=schwer?[[35,75,"km"],[76,62,"km²"],[27,1200,"ha"],[65,270,"km"],[15,840,"€"]]:[[30,400,"€"],[20,600,"ha"],[40,500,"€"],[25,800,"t"],[60,300,"km"],[75,200,"m²"]];
+  const [p,G,e]=wahl(fs),E=G/100,L=Math.round(E*p*10000)/10000;
+  return {art:"zahl",einh:e,html:`<div class="auf">Wie viel sind <b style="color:#c0700f">${p} %</b> von <b style="color:#2e5d9f">${de(G)} ${e}</b>?</div><div style="font-size:17px;color:#5b6b7c">Dreischritt: erst 1 %, dann ${p} %. Taschenrechner erlaubt.</div>`,
+    pruef:v=>Math.abs(v-L)<1e-6,loesung:`${p} % von ${de(G)} ${e} = ${de(L)} ${e}`,
+    erkl:`Runter zu 1 %: ${de(G)} ${e} : 100 = <b>${de(E)} ${e}</b>.<br>Hoch zu ${p} %: ${de(E)} ${e} · ${p} = <b>${de(L)} ${e}</b>.`,
+    tipp:`Erst durch 100 (das ist 1 %), dann mal ${p}.`};
+}
+function genTM(schwer){
+  // ② erst teilen, dann mal 100 – genau die Rechnung für den Grundwert (heute)
+  const fs=schwer?[[67.5,25],[0.75*40,40],[45,75],[18,90],[9,75]]:[[150,30],[300,25],[60,20],[120,40],[45,15],[80,50]];
+  const [W,p]=wahl(fs),E=W/p,L=Math.round(E*100*10000)/10000;
+  return {art:"zahl",einh:"",html:`<div class="auf">${de(W)} : ${p} · 100 = ?</div><div style="font-size:17px;color:#5b6b7c">Erst teilen, dann mal 100. Taschenrechner erlaubt.</div>`,
+    pruef:v=>Math.abs(v-L)<1e-6,loesung:`${de(W)} : ${p} = ${de(E)}, · 100 = ${de(L)}`,
+    erkl:`Erst teilen: ${de(W)} : ${p} = <b>${de(E)}</b>. Dann mal 100: das Komma rückt zwei Stellen nach rechts → <b>${de(L)}</b>.`,
+    tipp:`Taschenrechner: ${de(W)} ÷ ${p} =, dann × 100 =.`};
+}
+function genUnter(schwer){
+  // ③ Fachwort: Welche Angabe steht unter 100 %? – auch in Sätzen, in denen der Grundwert hinten steht
+  const fs=[[30,500,150,"t"],[25,1200,300,"ha"],[40,75,30,"km"],[25,270,67.5,"km"],[60,1200,720,"ha"],[20,80,16,"€"]];
+  const [p,G,W,e]=wahl(fs);
+  const satz=wahl(schwer?[`${de(W)} ${e} sind ${p} % des Ganzen. Das Ganze ist ${de(G)} ${e}.`,`Von ${de(G)} ${e} sind ${p} % genau ${de(W)} ${e}.`]:[`${p} % von ${de(G)} ${e} sind ${de(W)} ${e}.`,`${de(W)} ${e} sind ${p} % von ${de(G)} ${e}.`]);
+  const opts=[`${p} %`,`${de(G)} ${e}`,`${de(W)} ${e}`].sort(()=>Math.random()-0.5),richtig=opts.indexOf(`${de(G)} ${e}`);
+  return {art:"tippen",richtig,html:`<div class="auf">${satz}<br>Welche Angabe steht am Streifen <b>unter 100 %</b>? Tippe an.</div><div class="wahlk">${opts.map((o,i)=>`<button class="strecke" data-i="${i}">${o}</button>`).join("")}</div>`,
+    pruef:i=>i===richtig,loesung:`${de(G)} ${e} – der Grundwert`,
+    erkl:`Unter 100 % steht immer das <b>Ganze</b>: der <b style="color:#2e5d9f">Grundwert</b> (${de(G)} ${e}). Der <b style="color:#2e7d32">Prozentwert</b> (${de(W)} ${e}) ist der Teil, er steht unter ${p} %. Der <b style="color:#c0700f">Prozentsatz</b> (${p} %) steht oben.<br>Achtung: Der Grundwert muss nicht vorne im Satz stehen – frag dich: Was ist das Ganze?`,
+    tipp:`Frag dich: Was ist das Ganze? Das gehört zu 100 %.`};
+}
+const TYPEN=[{name:"① Dreischritt",gen:genPW},{name:"② Teilen, dann mal 100",gen:genTM},{name:"③ Was steht unter 100 %?",gen:genUnter}];
+
+// ---------------- Ablauf ----------------
+const log=[{versuche:0,ok:false},{versuche:0,ok:false},{versuche:0,ok:false}];
+let k=0,profi=false,punkte=0;
+function fort(){document.querySelectorAll("#fort span").forEach((s,i)=>{s.classList.toggle("fertig",log[i].ok);s.classList.toggle("jetzt",!profi&&i===k);});}
+function zeigeAufgabe(){
+  const T=TYPEN[k],A=T.gen(profi),b=$("#bereich");b.innerHTML="";fort();
+  const kt=el("div","karte"+(profi?" profi":""));
+  kt.appendChild(el("h2","",profi?`⭐ Profi-Runde · ${T.name.slice(2)}  <span class="punkte">· ${punkte} Punkte</span>`:T.name+(log[k].versuche?" · neue Aufgabe":"")));
+  kt.insertAdjacentHTML("beforeend",A.html);
+  const rm=el("div","rm");rm.hidden=true;
+  const tippBox=el("div","rm tipp",`<b>💡 Tipp:</b> ${A.tipp}`);tippBox.hidden=true;
+  let eing=null;
+  if(A.art==="zahl"){const r=el("div","ein");eing=el("input");eing.inputMode="decimal";eing.autocomplete="off";eing.placeholder="?";r.appendChild(eing);
+    if(A.einh)r.appendChild(el("span","einh",A.einh));kt.appendChild(r);setTimeout(()=>eing.focus(),50);
+    eing.addEventListener("keydown",e=>{if(e.key==="Enter")pruefe(zahl(eing.value));});}
+  const reihe=el("div","knopfreihe");
+  const bP=el("button","btn","Prüfen"),bT=el("button","btn tipp","💡 Tipp");
+  if(A.art==="zahl")reihe.appendChild(bP);reihe.appendChild(bT);kt.append(reihe,tippBox,rm);b.appendChild(kt);
+  bT.onclick=()=>{tippBox.hidden=!tippBox.hidden;};
+  if(A.art==="tippen")kt.querySelectorAll(".strecke").forEach(g=>g.onclick=()=>pruefe(+g.dataset.i));
+  bP.onclick=()=>pruefe(zahl(eing.value));
+  let fertig=false;
+  function pruefe(v){
+    if(fertig)return; if(A.art==="zahl"&&isNaN(v)){rm.hidden=false;rm.className="rm fehl";rm.innerHTML="Tippe eine Zahl ein.";return;}
+    fertig=true;bP.disabled=true;if(!profi)log[k].versuche++;
+    const ok=A.pruef(v);rm.hidden=false;
+    const nb=el("button","btn",ok?"Weiter ▶":"Neue Aufgabe ▶");
+    if(ok){rm.className="rm ok";rm.innerHTML=`✓ Richtig! ${A.loesung}`;if(profi)punkte++;else log[k].ok=true;}
+    else{rm.className="rm fehl";rm.innerHTML=`✗ Noch nicht. Richtig ist <b>${A.loesung}</b>.<br>${A.erkl}`;}
+    rm.appendChild(el("div","knopfreihe")).appendChild(nb);
+    nb.onclick=()=>{if(ok&&!profi){k++;}else if(profi){k=Math.floor(Math.random()*3);}
+      if(!profi&&k>=3){profi=true;k=0;zeigeErgebnis();}zeigeAufgabe();};
+    nb.focus();speichern();
+  }
+}
+function zeigeErgebnis(){
+  const e=$("#ergebnis"),jetzt=new Date();e.hidden=false;
+  const zeile=(i,t)=>`${t}: ${log[i].versuche===1?"✓ sofort richtig":`✓ nach ${log[i].versuche-1} Erklärung${log[i].versuche>2?"en":""}`}`;
+  e.innerHTML=`<h3>Check-in geschafft – ${jetzt.toLocaleDateString("de-DE")} ${jetzt.toLocaleTimeString("de-DE",{hour:"2-digit",minute:"2-digit"})}</h3>`+
+    [zeile(0,"① Dreischritt"),zeile(1,"② Teilen, dann mal 100"),zeile(2,"③ Was steht unter 100 %?")].join("<br>")+
+    (log[2].versuche>1?`<br><b>Tipp:</b> Unter 100 % steht immer das Ganze – der Grundwert. Darauf kommt es heute an.`:"")+
+    `<br><br>Bis die Lehrkraft weitermacht: <b>Profi-Runde</b> oben – sammle Punkte mit schwereren Aufgaben.`;
+}
+function speichern(){try{localStorage.setItem("checkin-pz-vii5",JSON.stringify({log,punkte,zeit:Date.now()}));}catch(e){}}
+zeigeAufgabe();
+</script>
+</body>
+</html>
