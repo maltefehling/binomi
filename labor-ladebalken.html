@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Labor: Ladebalken stoppen</title>
+<title>Labor: Fortschrittsbalken stoppen</title>
 <!-- Kapitel VII Prozente (Kl. 7), Labor zu VII.1 Prozent am Streifen. Steht nicht im Schülerskript – für den Einstieg am Beamer
      (Lehrkraft bedient, alle schätzen) oder als Abschluss auf dem Schüler-Tablet. Mehrwert gegenüber Papier: Der Balken bewegt sich und stoppt,
      die Einteilung blendet erst nach der Schätzung ein (Kontrolle). Kein Login, kein Server, keine Daten. -->
@@ -49,20 +49,20 @@
 </style>
 </head>
 <body>
-<header><h1>Labor: Ladebalken stoppen</h1></header>
+<header><h1>Labor: Fortschrittsbalken stoppen</h1></header>
 <main>
-  <div class="hinweis"><b>Auftrag:</b> Starte den Ladebalken. Er bleibt irgendwo stehen. <b>Schätze</b>, wie viel <b>Prozent</b> geladen sind, und tippe deine Schätzung ein. Danach zeigt dir die Einteilung, wie nah du warst. Spiele fünf Runden.</div>
+  <div class="hinweis"><b>Auftrag:</b> Eine Gruppe der 7c fährt um den Untersee. Starte die Fahrt – der Fortschrittsbalken der Tour-App bleibt irgendwo stehen. <b>Schätze</b>, wie viel <b>Prozent</b> der Strecke geschafft sind, und tippe deine Schätzung ein. Danach zeigt dir die Einteilung, wie nah du warst. Spiele fünf Runden.</div>
   <div class="stufen" id="stufen">
     <button data-s="1" aria-pressed="true">Stufe 1<small>Der Balken stoppt bei 10 %, 20 %, 25 %, 50 %, 75 % …</small></button>
     <button data-s="2" aria-pressed="false">Stufe 2<small>Der Balken stoppt irgendwo – auch bei 37 % oder 82 %.</small></button>
   </div>
   <div class="fenster">
-    <div class="titel" id="titel">Update wird geladen …</div>
+    <div class="titel" id="titel">Tour-App · Untersee-Runde 75 km</div>
     <div class="bahn" id="bahn"><div class="voll" id="voll"></div><div class="marke" id="marke"></div></div>
     <div class="skala" id="skala"></div>
   </div>
   <div class="reihe">
-    <button class="btn" id="start">▶ Laden starten</button>
+    <button class="btn" id="start">▶ Fahrt starten</button>
     <label for="tipp">Meine Schätzung:</label><input id="tipp" inputmode="numeric" autocomplete="off" placeholder="?" disabled><span class="einh">%</span>
     <button class="btn hell" id="pruef" disabled>Prüfen</button>
   </div>
@@ -81,8 +81,8 @@ const BRUCH={10:[1,10],20:[1,5],25:[1,4],30:[3,10],40:[2,5],50:[1,2],60:[3,5],70
 let stufe=1,ziel=0,runde=0,punkte=0,laeuft=false,letzte=-1;
 document.querySelectorAll("#stufen button").forEach(b=>b.onclick=()=>{stufe=+b.dataset.s;document.querySelectorAll("#stufen button").forEach(x=>x.setAttribute("aria-pressed",x===b));neu();});
 function stand(){$("#stand").textContent=`Runde ${runde} von 5 · ${punkte} Punkte`;}
-function neu(){runde=0;punkte=0;stand();zurueck();bS.textContent="▶ Laden starten";bS.disabled=false;}
-function zurueck(){bahn.classList.remove("zeig");skala.classList.remove("zeig");marke.classList.remove("zeig");voll.style.width="0%";rm.hidden=true;tipp.value="";tipp.disabled=true;bP.disabled=true;$("#titel").textContent="Update wird geladen …";}
+function neu(){runde=0;punkte=0;stand();zurueck();bS.textContent="▶ Fahrt starten";bS.disabled=false;}
+function zurueck(){bahn.classList.remove("zeig");skala.classList.remove("zeig");marke.classList.remove("zeig");voll.style.width="0%";rm.hidden=true;tipp.value="";tipp.disabled=true;bP.disabled=true;$("#titel").textContent="Tour-App · Untersee-Runde 75 km";}
 function start(){
   if(laeuft)return;if(runde>=5){neu();}
   zurueck();laeuft=true;bS.disabled=true;
@@ -91,7 +91,7 @@ function start(){
   // ungleichmäßig laden (wie ein echter Download): kurze Pausen, dann weiter
   const lauf=t=>{const x=Math.min(1,(t-t0)/dauer),e=x<1?1-Math.pow(1-x,2.2):1,ruck=x<1?Math.sin(x*18)*0.012:0;
     voll.style.width=Math.max(0,Math.min(ziel,ziel*(e+ruck)))+"%";
-    if(x<1)requestAnimationFrame(lauf);else{voll.style.width=ziel+"%";laeuft=false;$("#titel").textContent="Angehalten – wie viel Prozent sind geladen?";tipp.disabled=false;bP.disabled=false;tipp.focus();}};
+    if(x<1)requestAnimationFrame(lauf);else{voll.style.width=ziel+"%";laeuft=false;$("#titel").textContent="Pause – wie viel Prozent der Strecke sind geschafft?";tipp.disabled=false;bP.disabled=false;tipp.focus();}};
   requestAnimationFrame(lauf);
 }
 function pruefe(){
@@ -102,10 +102,10 @@ function pruefe(){
   bahn.classList.add("zeig");skala.classList.add("zeig");marke.style.left=ziel+"%";marke.textContent=ziel+" %";marke.classList.add("zeig");
   const b=BRUCH[ziel],br=b?` Als Bruch: <span class="fr"><span>${b[0]}</span><span>${b[1]}</span></span> des Balkens.`:"";
   rm.hidden=false;rm.className="rm "+(p===3?"gold":p?"gut":"");
-  rm.innerHTML=`Geladen sind <b>${ziel} %</b>. Deine Schätzung: ${String(v).replace(".",",")} %. `+
+  rm.innerHTML=`Geschafft sind <b>${ziel} %</b>. Deine Schätzung: ${String(v).replace(".",",")} %. `+
     (d===0?"Genau getroffen!":`Du lagst um ${String(Math.round(d*10)/10).replace(".",",")} daneben.`)+` <b>${p===3?"3 Punkte ⭐":p+(p===1?" Punkt":" Punkte")}</b>.${br}`+
     (runde>=5?`<br><b>Fertig: ${punkte} von 15 Punkten.</b> ${punkte>=12?"Du hast ein sehr gutes Augenmaß.":punkte>=7?"Schon gut – achte auf die Hälfte und die Viertel als Hilfe.":"Tipp: Suche zuerst die Mitte (50 %), dann die Viertel (25 %, 75 %)."}`:"");
-  stand();bS.disabled=false;bS.textContent=runde>=5?"↻ Neues Spiel":"▶ Nächster Balken";
+  stand();bS.disabled=false;bS.textContent=runde>=5?"↻ Neue Runde":"▶ Nächste Gruppe";
 }
 bS.onclick=start;bP.onclick=pruefe;tipp.addEventListener("keydown",e=>{if(e.key==="Enter")pruefe();});
 </script>
