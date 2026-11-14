@@ -30,14 +30,14 @@
 <main>
   <div class="auftrag"><b>Auftrag:</b> Schau zu, wie man über 1 % zu 65 % kommt – und dann zu jeder anderen Zahl. Achte darauf, dass oben und unten immer dasselbe passiert.</div>
   <div class="knoepfe"><button class="haupt" id="play">▶ Abspielen</button><button id="pause">⏸ Pause</button></div>
-  <div class="bild"><svg id="s" viewBox="0 0 720 400"></svg></div>
+  <div class="bild"><svg id="s" viewBox="0 0 720 420"></svg></div>
   <div class="cap" id="cap">Tippe auf ▶ Abspielen.</div>
   <footer>Fehling · VII Prozente · Der Dreischritt über 1 % · Animation</footer>
 </main>
 <script>
 "use strict";
 const NS="http://www.w3.org/2000/svg",S=document.getElementById("s");
-const X0=80,WD=600,Y0=175,H=50,X=a=>X0+a*WD,E=0.045;
+const X0=80,WD=600,Y0=180,H=50,X=a=>X0+a*WD,E=0.045;
 const el=(t,a,txt)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(txt!=null)e.textContent=txt;S.appendChild(e);return e;};
 el("rect",{x:X0,y:Y0,width:WD,height:H,fill:"#eef1f5"});
 const fuell=el("rect",{x:X0,y:Y0,width:0.65*WD,height:H,fill:"#8fc77f",class:"f aus"});
@@ -52,18 +52,22 @@ T(0,Y0+H+26,"0","#1b2a3a");T(1,Y0+H+26,"270","#2e5d9f");
 const fz=T(0.65,Y0+H+26,"?","#2e7d32","f");
 const w1=T(E+0.01,Y0+H+26,"2,7","#1b2a3a","f aus"),w65=T(0.65,Y0+H+26,"175,5","#2e7d32","f aus");
 const wf=[T(0.2,Y0+H+26,"54","#1b2a3a","f aus"),T(0.37,Y0+H+26,"99,9","#1b2a3a","f aus")];
-function bogen(a,b,y,dir,h,text,farbe){
-  const x1=X(a),x2=X(b),xm=(x1+x2)/2,g=document.createElementNS(NS,"g");g.setAttribute("class","f aus");
+function bogen(a,b,y,dir,h,text,farbe,klasse,lt){
+  // Malte 14.11.2026: kein Bogen darf durch die Beschriftung eines anderen laufen – Beschriftung bei lt (0,5 = Scheitel, 0,8 = nahe am Ziel)
+  lt=lt==null?0.5:lt;
+  const x1=X(a),x2=X(b),xm=(x1+x2)/2,g=document.createElementNS(NS,"g");g.setAttribute("class","f aus"+(klasse?" "+klasse:""));
   const p=document.createElementNS(NS,"path");p.setAttribute("d",`M ${x1} ${y} Q ${xm} ${y+dir*h*2} ${x2} ${y}`);p.setAttribute("fill","none");p.setAttribute("stroke",farbe);p.setAttribute("stroke-width",3);
   const ang=Math.atan2(y-(y+dir*h*2),x2-xm),L=11,sp=document.createElementNS(NS,"path");
   sp.setAttribute("d",`M ${x2} ${y} L ${x2-L*Math.cos(ang-0.45)} ${y-L*Math.sin(ang-0.45)} L ${x2-L*Math.cos(ang+0.45)} ${y-L*Math.sin(ang+0.45)} Z`);sp.setAttribute("fill",farbe);
-  const r=document.createElementNS(NS,"rect"),t=document.createElementNS(NS,"text");t.setAttribute("x",xm);t.setAttribute("y",y+dir*h+(dir<0?-2:16));t.setAttribute("text-anchor","middle");t.setAttribute("font-size",19);t.setAttribute("font-weight",800);t.setAttribute("fill",farbe);t.textContent=text;
-  r.setAttribute("x",xm-30);r.setAttribute("y",y+dir*h+(dir<0?-22:-4));r.setAttribute("width",60);r.setAttribute("height",26);r.setAttribute("fill","white");
-  g.append(p,sp,r,t);S.appendChild(g);return g;}
+  g.append(p,sp);
+  if(text){const xl=x1+lt*(x2-x1),yl=y+dir*4*lt*(1-lt)*h,r=document.createElementNS(NS,"rect"),t=document.createElementNS(NS,"text");
+    t.setAttribute("x",xl);t.setAttribute("y",yl+(dir<0?-6:20));t.setAttribute("text-anchor","middle");t.setAttribute("font-size",19);t.setAttribute("font-weight",800);t.setAttribute("fill",farbe);t.textContent=text;
+    r.setAttribute("x",xl-30);r.setAttribute("y",yl+(dir<0?-26:2));r.setAttribute("width",60);r.setAttribute("height",24);r.setAttribute("fill","white");g.append(r,t);}
+  S.appendChild(g);return g;}
 const YO=Y0-34,YU=Y0+H+40;
-const runter=[bogen(1,E,YO,-1,66,": 100","#c0700f"),bogen(1,E,YU,1,66,": 100","#1b2a3a")];
-const hoch=[bogen(E,0.65,YO,-1,50,"· 65","#c0700f"),bogen(E,0.65,YU,1,50,"· 65","#1b2a3a")];
-const faecher=[bogen(E,0.2,YO,-1,16,"· 20","#c0700f"),bogen(E,0.2,YU,1,16,"· 20","#1b2a3a"),bogen(E,0.37,YO,-1,32,"· 37","#c0700f"),bogen(E,0.37,YU,1,32,"· 37","#1b2a3a")];
+const runter=[bogen(1,E,YO,-1,76,": 100","#c0700f"),bogen(1,E,YU,1,76,": 100","#1b2a3a")];
+const hoch=[bogen(E,0.65,YO,-1,30,"· 65","#c0700f",null,0.7),bogen(E,0.65,YU,1,30,"· 65","#1b2a3a",null,0.7)];
+const faecher=[bogen(E,0.2,YO,-1,16,"· 20","#c0700f",null,0.8),bogen(E,0.2,YU,1,16,"· 20","#1b2a3a",null,0.8),bogen(E,0.37,YO,-1,36,"· 37","#c0700f",null,0.8),bogen(E,0.37,YU,1,36,"· 37","#1b2a3a",null,0.8),bogen(E,0.65,YO,-1,60,"· 65","#c0700f",null,0.8),bogen(E,0.65,YU,1,60,"· 65","#1b2a3a",null,0.8)];
 const zeig=(e,an)=>e.classList.toggle("aus",!an);
 const S1=[["Das Ufer des Bodensees ist rund 270 km lang. Gesucht: 65 % davon. Kein Viertel, Fünftel oder Zehntel passt genau.",0],
  ["Wir teilen in 100 Stücke. Ein Stück ist 1 % – dieser Strich ist zum Lesen etwas weiter rechts gezeichnet.",0],
@@ -75,7 +79,7 @@ const S1=[["Das Ufer des Bodensees ist rund 270 km lang. Gesucht: 65 % davon. Ke
  ["Jetzt du: Zeichne die Bögen in deinem Streifen ein und schreibe die Rechnungen daran.",3]];
 function zustand(k){
   runter.forEach(x=>zeig(x,k>=1&&k<3));zeig(w1,k>=1);
-  hoch.forEach(x=>zeig(x,k>=2));zeig(w65,k>=2);zeig(fz,k<2);zeig(fuell,k===2);
+  hoch.forEach(x=>zeig(x,k===2));zeig(w65,k>=2);zeig(fz,k<2);zeig(fuell,k===2);
   faecher.forEach(x=>zeig(x,k>=3));wf.forEach(x=>zeig(x,k>=3));o2.forEach(x=>zeig(x,k>=3));strich.forEach(x=>zeig(x,k>=3));
 }
 const cap=document.getElementById("cap"),pb=document.getElementById("pause");let n=0,timer=null,steht=false;

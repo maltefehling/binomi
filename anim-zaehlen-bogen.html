@@ -31,14 +31,14 @@
 <main>
   <div class="auftrag"><b>Auftrag:</b> Schau zu, wie aus sieben gleichen Schritten ein einziger Bogen wird. Achte darauf, dass oben und unten immer dasselbe passiert.</div>
   <div class="knoepfe"><button class="haupt" id="play">▶ Abspielen</button><button id="pause">⏸ Pause</button></div>
-  <div class="bild"><svg id="s" viewBox="0 0 720 330"></svg></div>
+  <div class="bild"><svg id="s" viewBox="0 0 720 370"></svg></div>
   <div class="cap" id="cap">Tippe auf ▶ Abspielen.</div>
   <footer>Fehling · VII Prozente · Runter und hoch am Streifen · Animation</footer>
 </main>
 <script>
 "use strict";
 const NS="http://www.w3.org/2000/svg",S=document.getElementById("s");
-const X0=80,WD=600,Y0=140,H=50,X=a=>X0+a*WD;
+const X0=80,WD=600,Y0=150,H=50,X=a=>X0+a*WD;
 const el=(t,a,txt)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(txt!=null)e.textContent=txt;S.appendChild(e);return e;};
 // Streifen in Zehnteln
 el("rect",{x:X0,y:Y0,width:WD,height:H,fill:"#eef1f5"});
@@ -48,19 +48,22 @@ el("text",{x:8,y:Y0-12,"font-size":16,fill:"#c0700f"},"in %");el("text",{x:8,y:Y
 for(let i=0;i<=10;i++)el("text",{x:X(i/10),y:Y0-12,"text-anchor":"middle","font-size":17,"font-weight":700,fill:"#c0700f"},String(i*10));
 const werte=[];for(let i=0;i<=10;i++){const t=el("text",{x:X(i/10),y:Y0+H+26,"text-anchor":"middle","font-size":17,"font-weight":700,fill:"#1b2a3a",class:"f"+(i===0||i===10?"":" aus")},String(6*i));werte.push(t);}
 // Bogen: oben (dir=-1) oder unten (dir=1), Höhe h, Text in der Mitte
-function bogen(a,b,y,dir,h,text,farbe,klasse){
+function bogen(a,b,y,dir,h,text,farbe,klasse,lt){
+  // Malte 14.11.2026: kein Bogen darf durch die Beschriftung eines anderen laufen – Beschriftung bei lt (0,5 = Scheitel, 0,8 = nahe am Ziel)
+  lt=lt==null?0.5:lt;
   const x1=X(a),x2=X(b),xm=(x1+x2)/2,g=document.createElementNS(NS,"g");g.setAttribute("class","f aus"+(klasse?" "+klasse:""));
   const p=document.createElementNS(NS,"path");p.setAttribute("d",`M ${x1} ${y} Q ${xm} ${y+dir*h*2} ${x2} ${y}`);p.setAttribute("fill","none");p.setAttribute("stroke",farbe);p.setAttribute("stroke-width",3);
-  const sp=document.createElementNS(NS,"path");const ang=Math.atan2(y-(y+dir*h*2),x2-xm),L=11;
+  const ang=Math.atan2(y-(y+dir*h*2),x2-xm),L=11,sp=document.createElementNS(NS,"path");
   sp.setAttribute("d",`M ${x2} ${y} L ${x2-L*Math.cos(ang-0.45)} ${y-L*Math.sin(ang-0.45)} L ${x2-L*Math.cos(ang+0.45)} ${y-L*Math.sin(ang+0.45)} Z`);sp.setAttribute("fill",farbe);
-  g.appendChild(p);g.appendChild(sp);
-  if(text){const r=document.createElementNS(NS,"rect"),t=document.createElementNS(NS,"text");t.setAttribute("x",xm);t.setAttribute("y",y+dir*h+(dir<0?-2:16));t.setAttribute("text-anchor","middle");t.setAttribute("font-size",20);t.setAttribute("font-weight",800);t.setAttribute("fill",farbe);t.textContent=text;
-    r.setAttribute("x",xm-30);r.setAttribute("y",y+dir*h+(dir<0?-22:-4));r.setAttribute("width",60);r.setAttribute("height",26);r.setAttribute("fill","white");g.appendChild(r);g.appendChild(t);}
+  g.append(p,sp);
+  if(text){const xl=x1+lt*(x2-x1),yl=y+dir*4*lt*(1-lt)*h,r=document.createElementNS(NS,"rect"),t=document.createElementNS(NS,"text");
+    t.setAttribute("x",xl);t.setAttribute("y",yl+(dir<0?-6:20));t.setAttribute("text-anchor","middle");t.setAttribute("font-size",19);t.setAttribute("font-weight",800);t.setAttribute("fill",farbe);t.textContent=text;
+    r.setAttribute("x",xl-30);r.setAttribute("y",yl+(dir<0?-26:2));r.setAttribute("width",60);r.setAttribute("height",24);r.setAttribute("fill","white");g.append(r,t);}
   S.appendChild(g);return g;}
 const YO=Y0-34,YU=Y0+H+40;
 const klein=[];for(let i=1;i<7;i++)klein.push([bogen(i/10,(i+1)/10,YO,-1,14,"","#c0700f"),bogen(i/10,(i+1)/10,YU,1,14,"","#1b2a3a")]);
-const gross=[bogen(0.1,0.7,YO,-1,40,"· 7","#c0700f"),bogen(0.1,0.7,YU,1,40,"· 7","#1b2a3a")];
-const zehn=[bogen(1,0.1,YO,-1,70,": 10","#c0700f"),bogen(1,0.1,YU,1,70,": 10","#1b2a3a")];
+const gross=[bogen(0.1,0.7,YO,-1,36,"· 7","#c0700f",null,0.62),bogen(0.1,0.7,YU,1,36,"· 7","#1b2a3a",null,0.62)];
+const zehn=[bogen(1,0.1,YO,-1,84,": 10","#c0700f"),bogen(1,0.1,YU,1,84,": 10","#1b2a3a")];
 const zeig=(e,an)=>e.classList.toggle("aus",!an);
 // Schritte: [Text, Zustand]
 const S1=[["Der Untersee ist rund 60 km² groß. Der Streifen ist in zehn gleiche Stücke geteilt.",0],
