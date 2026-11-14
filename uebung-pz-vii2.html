@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Übung VII.2 · Grundwert, Prozentwert, Prozentsatz</title>
+<!-- Kapitel VII Prozente (Kl. 7): QR-Übung zur Stunde (QR-Code im Skript). Nur Aufgaben – gerechnet wird im Heft.
+     Aufbau: Aufgabe 1 für alle, dann ★ / ★★ / ★★★. Tipp zu jeder Aufgabe, Lösungen je Stufe erst nach Rückfrage. -->
+<style>
+  :root{--ink:#1b2a3a;--muted:#5b6b7c;--acc:#1f4e79;--bg:#f4f7fb;--card:#fff;--line:#c9d6e5;
+    --merk:#dde8f5;--merkL:#a9c1e0;--auf:#e8f4e6;--aufL:#c6e8c0;--hilf:#fdf6ea;--hilfL:#fbd9a8;--grau:#f2f2f2;--rot:#b03a2e;--gruen:#3f8f3a}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
+  button{font:inherit;touch-action:manipulation}
+  header{padding:12px 16px;background:var(--acc);color:#fff}
+  header h1{font-size:20px;margin:0}
+  main{max-width:880px;margin:0 auto;padding:14px 16px 32px}
+  .hinweis{background:#fff;border:1px solid #bfbfbf;border-radius:12px;padding:10px 14px;font-size:18px;line-height:1.45;margin-bottom:12px}
+  details.erin{background:var(--merk);border:1px solid var(--merkL);border-radius:12px;padding:10px 14px;margin-bottom:14px;font-size:18px;line-height:1.5}
+  details.erin summary{font-weight:700;color:var(--acc);cursor:pointer;min-height:30px}
+  details.erin ul{margin:6px 0 0;padding-left:22px}
+  h2{font-size:21px;color:var(--acc);margin:18px 0 8px;padding-bottom:4px;border-bottom:2px solid var(--acc)}
+  .aufg{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:10px}
+  .aufg .kopf{font-weight:700;color:var(--acc);font-size:18px;margin-bottom:4px}
+  .aufg .txt{font-size:20px;line-height:1.45}
+  .form{display:inline-block;font-size:14px;font-weight:800;border-radius:8px;padding:2px 8px;margin-left:8px;vertical-align:middle;background:#eef3fa;color:var(--acc)}
+  .form::first-letter{font-size:1.4em}
+  .subbild{flex-basis:100%;margin:6px 0 2px} .subbild svg{width:100%;height:auto;display:block}
+  .form.mini{margin:0 6px 0 2px;padding:0 6px;font-size:15px}
+  .form.voll{background:#1f4e79;color:#fff} .form.blitz{background:#fff1c9;color:#7a5b00}
+  .legende{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;margin:6px 0 4px;align-items:baseline}
+  .aufg .heft{font-size:16px;color:var(--muted);margin-top:4px}
+  /* Teilaufgaben als getrennte Kärtchen (15.10.2026, Malte): SuS hielten a), b), c) für eine zusammenhängende Aufgabe */
+  .aufg ol{margin:10px 0 0;padding-left:0;list-style:none;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px}
+  .aufg li{font-size:21px;line-height:1.5;white-space:nowrap;overflow-x:auto;border:2px solid #c9d6e5;border-radius:12px;background:#f7f9fc;padding:8px 12px}
+  .aufg li.breit{grid-column:1/-1}
+  .aufg li b.tb{display:inline-block;min-width:34px;text-align:center;background:#1f4e79;color:#fff;border-radius:8px;padding:0 8px;margin-right:10px;font-weight:700}
+  .tag{display:inline-block;font-size:14px;font-weight:700;border-radius:8px;padding:2px 8px;margin-left:8px;vertical-align:middle}
+  .tag.v{background:#fff3c4;color:#7a5b00}.tag.w{background:#e2d6f0;color:#4f2f7a}.tag.m{background:#dff0e6;color:#1d5a35}
+  details.idee{margin-top:8px;font-size:18px}
+  details.idee summary{color:var(--acc);cursor:pointer;font-weight:600}
+  details.idee div{background:var(--grau);border-radius:8px;padding:8px 10px;margin-top:6px;line-height:1.45}
+  .wahl{display:flex;gap:10px;flex-wrap:wrap;margin:6px 0 10px}
+  .wahl button{flex:1 1 200px;border:2px solid var(--acc);background:#fff;color:var(--acc);border-radius:12px;padding:12px 14px;font-size:19px;font-weight:700;min-height:56px;text-align:left}
+  .wahl button[aria-pressed="true"]{background:var(--acc);color:#fff}
+  .wahl small{display:block;font-weight:500;font-size:15px;opacity:.85}
+  .stufe[hidden]{display:none}
+  .loesbtn{border:1px solid var(--hilfL);background:var(--hilf);color:var(--ink);border-radius:10px;padding:10px 16px;font-size:18px;font-weight:700;min-height:48px;margin-top:4px}
+  .loes{background:var(--hilf);border:1px solid var(--hilfL);border-radius:12px;padding:10px 14px;margin-top:8px}
+  .loes p{margin:0 0 8px;font-size:16px;color:var(--rot);font-weight:700}
+  .loes .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:6px}
+  .loes .grid span{background:#fff;border:1px solid var(--line);border-radius:8px;padding:6px 8px;text-align:center;font-size:19px}
+  .loes[hidden]{display:none}
+  details.tipp{margin-top:8px;font-size:18px}
+  details.tipp summary{display:inline-block;cursor:pointer;font-weight:700;color:#6d4a9e;background:#f1eaf8;border:1px solid #b79bd6;border-radius:10px;padding:6px 12px;min-height:40px;list-style:none}
+  details.tipp summary::-webkit-details-marker{display:none}
+  details.tipp div{background:#f1eaf8;border-radius:8px;padding:8px 10px;margin-top:6px;line-height:1.45}
+  .frag{background:#fff;border:2px solid var(--acc);border-radius:12px;padding:12px 14px;margin-top:8px;font-size:19px}
+  .frag[hidden]{display:none}
+  .frag p{margin:0 0 10px;font-weight:700;color:var(--acc)}
+  .frag button{border-radius:10px;padding:10px 16px;font-size:17px;font-weight:700;min-height:46px;margin:0 8px 6px 0;border:2px solid var(--acc)}
+  .frag .ja{background:var(--acc);color:#fff}.frag .nein{background:#fff;color:var(--acc)}
+  .loes .zeile{background:#fff;border:1px solid var(--line);border-radius:8px;padding:8px 10px;margin-bottom:6px;font-size:19px;line-height:1.5}
+  .loes .zeile b{color:var(--acc)}
+  .loes .warum{display:block;font-size:16px;color:var(--muted);margin-top:2px}
+  footer{color:var(--muted);font-size:13px;text-align:center;margin-top:24px}
+  /* Lösungsweg (1.11.2026, wie Kap. V): erst das Ergebnis, daneben „Lösungsweg anzeigen“ */
+  .wegbtn{border:1px solid var(--acc);background:#fff;color:var(--acc);border-radius:10px;padding:8px 14px;font-size:17px;font-weight:700;min-height:44px;margin-top:6px}
+  .weg{background:#fff;border:1px solid var(--line);border-left:4px solid var(--acc);border-radius:8px;padding:8px 12px;margin-top:6px;font-size:18px;line-height:1.6}
+  .weg[hidden]{display:none}
+  /* Animierter Tipp (1.11.2026): Beispiel mit anderen Zahlen baut sich Zeile für Zeile auf */
+  details.anim{margin-top:8px}
+  details.anim summary{display:inline-block;cursor:pointer;font-weight:700;color:#6d4a9e;background:#f1eaf8;border:1px solid #b79bd6;border-radius:10px;padding:6px 12px;min-height:40px;list-style:none;font-size:18px}
+  details.anim summary::-webkit-details-marker{display:none}
+  .abox{background:#f1eaf8;border-radius:10px;padding:10px 12px;margin-top:6px}
+  .abox .az{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:4px 14px;align-items:baseline;opacity:0;transition:opacity .6s;margin-bottom:6px}
+  .abox .az.da{opacity:1}
+  .abox .az .r{font-size:20px;line-height:1.4}
+  .abox .az .h{font-size:16px;color:#6d4a9e}
+  .abox .az.neu .r{background:#fff;border-radius:6px;box-shadow:0 0 0 2px #b79bd6}
+  .abox .kn{display:flex;gap:8px;margin-top:6px}
+  .abox .kn button{min-height:42px;padding:0 14px;border-radius:10px;border:2px solid #6d4a9e;background:#fff;color:#6d4a9e;font-size:16px;font-weight:700}
+  .cr{color:#b33c3c;font-weight:700}.cg{color:#3f8f3a;font-weight:700}.cb{color:#2e5d9f;font-weight:700}.co{color:#c0700f;font-weight:700}.cl{color:#6d4a9e;font-weight:800}
+  @media (max-width:560px){.abox .az{grid-template-columns:1fr}}
+  .frage{font-size:18px;font-weight:700;color:var(--acc);margin:4px 0 2px}
+  .teilkopf{font-size:22px;font-weight:800;color:var(--acc);margin:14px 0 8px}
+  .teil[hidden]{display:none}
+  .rot{color:#d0021b;font-weight:800}
+  .fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;font-size:.82em;line-height:1.15;margin:0 2px}
+  .fr>span:first-child{border-bottom:1.5px solid currentColor;padding:0 3px}
+  /* Flächen-Baukasten: Teilaufgaben sind Sätze → umbrechen statt seitlich scrollen; Eingabefeld unter dem Text */
+  .aufg li{white-space:normal;overflow-x:visible}
+  .aufg li .eing{display:flex;flex-wrap:wrap;margin:8px 0 0}
+  .abild{margin:8px 0;background:#fff;border:1px solid var(--line);border-radius:10px;padding:6px} .abild svg{display:block;width:100%;max-width:560px;height:auto;margin:0 auto}
+  /* Flächen-Baukasten: Eingabe, Empfehlung, Uhr, Ergebnis-Karte */
+  .eing{display:inline-flex;align-items:center;gap:6px;margin-left:10px;flex-wrap:wrap;max-width:100%}
+  .eing .einh[aria-pressed="true"]{background:var(--acc);color:#fff}
+  .eing .einh{min-height:44px;min-width:52px;margin-left:0;font-size:18px;font-weight:700;border:2px solid var(--acc);border-radius:10px;background:#eef3fa;color:var(--acc)}
+  .eing input{width:120px;min-height:44px;font-size:20px;border:2px solid var(--acc);border-radius:10px;padding:2px 8px;text-align:right}
+  .eing .einhfix{font-size:21px;font-weight:700}
+  .eing .mk{font-size:22px;font-weight:800;min-width:24px}
+  .eing .mk.ok{color:var(--gruen)} .eing .mk.no{color:var(--rot)}
+  .einzeln{margin-top:8px}
+  .pruef{border:2px solid var(--acc);background:var(--acc);color:#fff;border-radius:10px;padding:8px 16px;font-size:17px;font-weight:700;min-height:46px;margin-top:8px}
+  .empf{background:#e8f4e6;border:2px solid #9fcf9a;border-radius:12px;padding:10px 14px;font-size:19px;margin:8px 0 4px}
+  .wahl button .badge{display:inline-block;margin-left:8px;font-size:13px;background:#2e7d32;color:#fff;border-radius:8px;padding:1px 8px;vertical-align:middle}
+  .uhr{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:#fff;border:1px solid var(--line);border-radius:12px;padding:8px 12px;margin:6px 0 10px;font-size:18px}
+  .uhr button{border:2px solid var(--acc);background:#fff;color:var(--acc);border-radius:10px;padding:6px 14px;font-weight:700;min-height:44px}
+  .weiterbox{background:#eef3fa;border:2px solid var(--acc);border-radius:12px;padding:12px 14px;margin:18px 0;font-size:18px;line-height:1.5}
+  .weiterbtn{display:inline-block;margin-top:8px;padding:10px 16px;border-radius:12px;background:var(--acc);color:#fff;font-weight:700;text-decoration:none}
+  .hakasten{margin-top:26px;border-top:3px solid var(--acc);padding-top:6px}
+  .uhr .zeit{font-size:22px;font-weight:800;color:var(--acc);font-variant-numeric:tabular-nums}
+  .uhr.um{background:#fff4dc;border-color:#e6c65a}
+  .kartebtn{border:2px solid var(--acc);background:#fff;color:var(--acc);border-radius:10px;padding:10px 16px;font-size:18px;font-weight:700;min-height:48px;margin:10px 0 0 8px}
+  .ekarte{background:#fff;border:3px solid var(--acc);border-radius:14px;padding:12px 16px;margin-top:10px;font-size:19px;line-height:1.6}
+  .ekarte h3{margin:0 0 6px;color:var(--acc)} .ekarte textarea{width:100%;min-height:70px;font:inherit;font-size:18px;border:2px solid var(--line);border-radius:10px;padding:6px 8px}
+  .ekarte .ok{color:var(--gruen);font-weight:800}.ekarte .no{color:var(--rot);font-weight:800}
+  .lwahl{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 4px} .lwahl button{min-height:44px;padding:6px 14px;border-radius:10px;border:2px solid #c9d6e5;background:#fff;font-size:17px;font-weight:700;color:inherit} .lwahl button[aria-pressed="true"]{border-color:#1b2a3a;background:#fff4dc}
+</style>
+</head>
+<body>
+<header><h1>Übung VII.2 · Grundwert, Prozentwert, Prozentsatz</h1></header>
+<main>
+  <div class="hinweis"><b>So schreibst du ins Heft</b> – das Zeichen an jeder Aufgabe sagt es dir:<div class="legende"><span class="form voll">☰ Rechenweg</span><span>① Bruch ② auf Hundertstel erweitern ③ Prozent.</span><span class="form kurz">▬ Kurzform</span><span>eine Zeile, z. B. 3/4 = 75 %.</span><span class="form blitz">⚡ Blitz</span><span>nur das Ergebnis mit %-Zeichen – im Kopf.</span></div><b>Faustregel:</b> Aufschreiben musst du alles, was du sonst verwechseln oder vergessen könntest. Bei Aufgaben mit Eingabefeld tippst du dein <b>Endergebnis</b> ein (nur die Zahl) und prüfst es. Wenn du nicht weiterkommst, hilft der Tipp.<br><b>Heute in der Stunde: Aufgabe 1 (ca. 5 Minuten). Geübt wird in der Übungsstunde (Knopf unten). Hausaufgabe – nur wenn die Lehrkraft sie aufgibt: der Kasten 🏠 (ca. 10 Minuten).</b></div>
+  <div id="teilwahl" hidden><div class="frage">Welche Stunde hattet ihr zuletzt?</div><div class="wahl" id="tw"></div></div>
+  <div id="teile"></div>
+  <footer>Fehling · VII Prozente</footer>
+</main>
+<script>
+"use strict";
+// Versionsprüfung (12.10.2026): Safari zeigt sonst bis zu 10 Minuten (oft länger) eine alte, gespeicherte Fassung.
+// Beim Öffnen wird die Seite ohne Zwischenspeicher abgefragt; ist sie neuer, lädt sie sich einmal neu.
+const STAND="20261114221302";
+fetch(location.pathname+"?nocache="+Date.now(),{cache:"no-store"}).then(r=>r.text()).then(t=>{
+  const m=t.match(/const STAND="(\d+)"/);
+  if(m&&m[1]!==STAND&&!sessionStorage.getItem("neu"+m[1])){sessionStorage.setItem("neu"+m[1],"1");location.replace(location.pathname+"?v="+m[1]);}
+}).catch(()=>{});
+// D.teile: ein Teil pro Stunde eines aufgeteilten Buchkapitels (z. B. II.2a/b/c); Stundenauswahl nur bei aufgeteilten Kapiteln (D.mehrteilig).
+const D={"titel": "VII.2 · Grundwert, Prozentwert, Prozentsatz", "untertitel": ["Mit Beispiel und Bild", "Ohne Beispiel, auch rückwärts", "Nur Text, mehrere Schritte"], "heft": {"voll": "Nummer, dann ① Bruch ② Hundertstel ③ Prozent, z. B. 3/4 = 75/100 = 75 %.", "kurz": "Nummer und eine Zeile, z. B. 3/4 = 75 % – bei Ankreuz-Aufgaben: Nummer und deine Antwort.", "blitz": "Nummer und nur das Ergebnis mit %-Zeichen – im Kopf rechnen."}, "mehrteilig": false, "teile": [{"name": "", "stunde": "", "kurz": "", "erinnerung": ["Oben am Streifen stehen die Prozent, unten die Werte mit Einheit (ha, €, km …).", "Grundwert: das Ganze, gehört immer zu 100 % – steht unten rechts.", "Prozentwert: der Teil – steht unten, genau unter dem Prozentsatz.", "Prozentsatz: der Anteil in Prozent – steht oben.", "Eselsbrücke: Grundwert und Prozentwert – beide „wert“, beide unten, beide mit Einheit. So sagt man es: 60 % von 1200 ha sind 720 ha."], "a1": {"t": "Ein Bauer auf der Höri hat 400 Obstbäume. 30 % davon sind Apfelbäume.", "l": ["120 Bäume", "der Grundwert", "der Prozentsatz", "70 %"], "tipp": "Suche oben die 30 und lies darunter ab. Das Ganze steht unter den 100 %.", "weg": ["a) unter 30 % steht 120 → 120 Apfelbäume", "b) 400 Bäume = das Ganze → Grundwert", "c) 30 % = der Anteil in Prozent → Prozentsatz", "d) 100 % − 30 % = 70 %"], "sub": ["Lies ab: Wie viele Apfelbäume sind das? (in Bäume)", "Kreuze an: 400 Bäume sind ☐ der Grundwert ☐ der Prozentwert ☐ der Prozentsatz.", "Kreuze an: 30 % sind ☐ der Grundwert ☐ der Prozentwert ☐ der Prozentsatz.", "Wie viel Prozent der Bäume sind keine Apfelbäume? (in %)"], "check": [120, null, null, 70], "svg": "<svg viewBox=\"0 0 488 94\" style=\"max-width:500px\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"74\" y=\"30\" width=\"380\" height=\"34\" fill=\"#eef1f5\"/><rect x=\"74\" y=\"30\" width=\"114.0\" height=\"34\" fill=\"#8fc77f\"/><line x1=\"112.0\" y1=\"30\" x2=\"112.0\" y2=\"64\" stroke=\"#3b4a5a\" stroke-width=\"2\"/><line x1=\"150.0\" y1=\"30\" x2=\"150.0\" y2=\"64\" stroke=\"#3b4a5a\" stroke-width=\"2\"/><line x1=\"188.0\" y1=\"30\" x2=\"188.0\" y2=\"64\" stroke=\"#3b4a5a\" stroke-width=\"2\"/><line x1=\"226.0\" y1=\"30\" x2=\"226.0\" y2=\"64\" stroke=\"#3b4a5a\" stroke-width=\"2\"/><line x1=\"264.0\" y1=\"30\" x2=\"264.0\" y2=\"64\" stroke=\"#3b4a5a\" stroke-width=\"2\"/><line x1=\"302.0\" y1=\"30\" x2=\"302.0\" y2=\"64\" stroke=\"#3b4a5a\" stroke-width=\"2\"/><line x1=\"340.0\" y1=\"30\" x2=\"340.0\" y2=\"64\" stroke=\"#3b4a5a\" stroke-width=\"2\"/><line x1=\"378.0\" y1=\"30\" x2=\"378.0\" y2=\"64\" stroke=\"#3b4a5a\" stroke-width=\"2\"/><line x1=\"416.0\" y1=\"30\" x2=\"416.0\" y2=\"64\" stroke=\"#3b4a5a\" stroke-width=\"2\"/><rect x=\"74\" y=\"30\" width=\"380\" height=\"34\" fill=\"none\" stroke=\"#3b4a5a\" stroke-width=\"2.5\"/><text x=\"74.0\" y=\"23\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"700\" fill=\"#c0700f\">0</text><text x=\"74.0\" y=\"82\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"700\" fill=\"#1b2a3a\">0</text><text x=\"112.0\" y=\"23\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"700\" fill=\"#c0700f\">10</text><text x=\"112.0\" y=\"82\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"700\" fill=\"#1b2a3a\">40</text><text x=\"150.0\" y=\"23\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"700\" fill=\"#c0700f\">20</text><text x=\"150.0\" y=\"82\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"700\" fill=\"#1b2a3a\">80</text><text x=\"188.0\" y=\"23\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"700\" fill=\"#c0700f\">30</text><text x=\"188.0\" y=\"82\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"700\" fill=\"#1b2a3a\">120</text><text x=\"226.0\" y=\"23\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"700\" fill=\"#c0700f\">40</text><text x=\"226.0\" y=\"82\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"700\" fill=\"#1b2a3a\">160</text><text x=\"264.0\" y=\"23\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"700\" fill=\"#c0700f\">50</text><text x=\"264.0\" y=\"82\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"700\" fill=\"#1b2a3a\">200</text><text x=\"302.0\" y=\"23\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"700\" fill=\"#c0700f\">60</text><text x=\"302.0\" y=\"82\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"700\" fill=\"#1b2a3a\">240</text><text x=\"340.0\" y=\"23\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"700\" fill=\"#c0700f\">70</text><text x=\"340.0\" y=\"82\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"700\" fill=\"#1b2a3a\">280</text><text x=\"378.0\" y=\"23\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"700\" fill=\"#c0700f\">80</text><text x=\"378.0\" y=\"82\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"700\" fill=\"#1b2a3a\">320</text><text x=\"416.0\" y=\"23\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"700\" fill=\"#c0700f\">90</text><text x=\"416.0\" y=\"82\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"700\" fill=\"#1b2a3a\">360</text><text x=\"454.0\" y=\"23\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"700\" fill=\"#c0700f\">100</text><text x=\"454.0\" y=\"82\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"700\" fill=\"#1b2a3a\">400</text><text x=\"2\" y=\"23\" font-size=\"13\" fill=\"#c0700f\">in %</text><text x=\"2\" y=\"82\" font-size=\"13\" fill=\"#1b2a3a\">in Bäume</text></svg>", "form": "voll", "subform": ["voll", "kurz", "kurz", "kurz"]}, "ha": [{"t": "Von heute: Ein Ausflugsschiff auf dem Untersee hat 300 Plätze. 40 % sind besetzt.", "l": ["120 Plätze", "der Grundwert"], "tipp": "Oben die 40 suchen, darunter ablesen.", "weg": ["a) unter 40 steht 120 → 120 Plätze", "b) 300 Plätze = das Ganze → Grundwert"], "sub": ["Wie viele Plätze sind besetzt? (in Plätze)", "Kreuze an: 300 Plätze sind ☐ der Grundwert ☐ der Prozentwert ☐ der Prozentsatz."], "check": [120, null], "svg": "<svg viewBox=\"0 0 488 94\" style=\"max-width:500px\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"74\" y=\"30\" width=\"380\" height=\"34\" fill=\"#eef1f5\"/><rect x=\"74\" y=\"30\" width=\"152.0\" height=\"34\" fill=\"#8fc77f\"/><line x1=\"112.0\" y1=\"30\" x2=\"112.0\" y2=\"64\" stroke=\"#3b4a5a\" stroke-width=\"2\"/><line x1=\"150.0\" y1=\"30\" x2=\"150.0\" y2=\"64\" stroke=\"#3b4a5a\" stroke-width=\"2\"/><line x1=\"188.0\" y1=\"30\" x2=\"188.0\" y2=\"64\" stroke=\"#3b4a5a\" stroke-width=\"2\"/><line x1=\"226.0\" y1=\"30\" x2=\"226.0\" y2=\"64\" stroke=\"#3b4a5a\" stroke-width=\"2\"/><line x1=\"264.0\" y1=\"30\" x2=\"264.0\" y2=\"64\" stroke=\"#3b4a5a\" stroke-width=\"2\"/><line x1=\"302.0\" y1=\"30\" x2=\"302.0\" y2=\"64\" stroke=\"#3b4a5a\" stroke-width=\"2\"/><line x1=\"340.0\" y1=\"30\" x2=\"340.0\" y2=\"64\" stroke=\"#3b4a5a\" stroke-width=\"2\"/><line x1=\"378.0\" y1=\"30\" x2=\"378.0\" y2=\"64\" stroke=\"#3b4a5a\" stroke-width=\"2\"/><line x1=\"416.0\" y1=\"30\" x2=\"416.0\" y2=\"64\" stroke=\"#3b4a5a\" stroke-width=\"2\"/><rect x=\"74\" y=\"30\" width=\"380\" height=\"34\" fill=\"none\" stroke=\"#3b4a5a\" stroke-width=\"2.5\"/><text x=\"74.0\" y=\"23\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"700\" fill=\"#c0700f\">0</text><text x=\"74.0\" y=\"82\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"700\" fill=\"#1b2a3a\">0</text><text x=\"112.0\" y=\"23\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"700\" fill=\"#c0700f\">10</text><text x=\"112.0\" y=\"82\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"700\" fill=\"#1b2a3a\">30</text><text x=\"150.0\" y=\"23\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"700\" fill=\"#c0700f\">20</text><text x=\"150.0\" y=\"82\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"700\" fill=\"#1b2a3a\">60</text><text x=\"188.0\" y=\"23\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"700\" fill=\"#c0700f\">30</text><text x=\"188.0\" y=\"82\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"700\" fill=\"#1b2a3a\">90</text><text x=\"226.0\" y=\"23\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"700\" fill=\"#c0700f\">40</text><text x=\"226.0\" y=\"82\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"700\" fill=\"#1b2a3a\">120</text><text x=\"264.0\" y=\"23\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"700\" fill=\"#c0700f\">50</text><text x=\"264.0\" y=\"82\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"700\" fill=\"#1b2a3a\">150</text><text x=\"302.0\" y=\"23\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"700\" fill=\"#c0700f\">60</text><text x=\"302.0\" y=\"82\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"700\" fill=\"#1b2a3a\">180</text><text x=\"340.0\" y=\"23\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"700\" fill=\"#c0700f\">70</text><text x=\"340.0\" y=\"82\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"700\" fill=\"#1b2a3a\">210</text><text x=\"378.0\" y=\"23\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"700\" fill=\"#c0700f\">80</text><text x=\"378.0\" y=\"82\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"700\" fill=\"#1b2a3a\">240</text><text x=\"416.0\" y=\"23\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"700\" fill=\"#c0700f\">90</text><text x=\"416.0\" y=\"82\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"700\" fill=\"#1b2a3a\">270</text><text x=\"454.0\" y=\"23\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"700\" fill=\"#c0700f\">100</text><text x=\"454.0\" y=\"82\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"700\" fill=\"#1b2a3a\">300</text><text x=\"2\" y=\"23\" font-size=\"13\" fill=\"#c0700f\">in %</text><text x=\"2\" y=\"82\" font-size=\"13\" fill=\"#1b2a3a\">in Plätzen</text></svg>", "form": "voll", "subform": ["voll", "kurz"]}, {"t": "Von früher (VII.1): Schreibe {3/4} in Prozent. (in %)", "l": ["75 %"], "tipp": "Erweitere auf Hundertstel.", "weg": ["{3/4} = {75/100} = 75 %"], "tag": "w", "check": [75], "form": "kurz", "subform": null}, {"t": "Zum Verstehen: Kreuze an.", "l": ["unten"], "tipp": "Denk an die Eselsbrücke.", "weg": ["Grundwert und Prozentwert – beide „wert“, beide unten, beide mit Einheit."], "sub": ["Grundwert und Prozentwert stehen beide ☐ oben ☐ unten."], "tag": "v", "form": "kurz", "subform": ["kurz"]}, {"t": "★ freiwillig: Wie viele Hektar sind 5 % von 1200 ha? Zeichne einen Streifen in Zehnteln ins Heft. (in ha)", "l": ["60 ha"], "tipp": "5 % liegen genau in der Mitte zwischen 0 % und 10 %.", "weg": ["10 % sind 120 ha, 5 % sind die Hälfte davon → 60 ha"], "check": [60], "form": "voll", "subform": null}], "weiter": ["uebung-pz-ue-streifen.html", "Prozent am Streifen · Übungsstunde"], "stufen": {}}]};
+const esc=s=>s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/(^|[^A-Za-zäöüÄÖÜß])h_([abc])(?![A-Za-zäöüÄÖÜß])/g,"$1h<sub>$2</sub>").replace(/\{([^{}\/]+)\/([^{}]+)\}/g,'<span class="fr"><span>$1</span><span>$2</span></span>').replace(/\[([+−])\]/g,'<span class="rot">$1</span>');
+const el=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e;};
+// 13.11.2026 (Malte): Wie viel ins Heft? Kurzform mit ▬ (eine Zeile) statt ✎ – ✎ heißt im Skript „schriftlich“.
+// Drei Formen, an jeder Aufgabe sichtbar (Expertise-Umkehr: Gerüst nur, wo es hilft)
+const FORM={voll:"☰ Rechenweg",kurz:"▬ Kurzform",blitz:"⚡ Blitz"};
+const formHtml=f=>f?`<span class="form ${f}">${FORM[f]}</span>`:"";
+const HEFT=D.heft;
+const tagHtml=t=>t==="v"?'<span class="tag v">💡 Verständnis</span>':t==="w"?'<span class="tag w">↩ Wiederholung</span>':t==="m"?'<span class="tag m">🔀 Mix: erst entscheiden</span>':"";   // „m“ seit 13.11.2026 (II.3b)
+// Farbmarkup [r:…] [g:…] [b:…] [o:…] [l:…] (nach esc, damit Brüche weiter funktionieren)
+const farbe=s=>s.replace(/\[([rgbol]):([^\]]+)\]/g,'<span class="c$1">$2</span>');
+function animTipp(zeilen){
+  const d=el("details","anim",'<summary>▶ Tipp: Beispiel mit anderen Zahlen</summary>');
+  const box=el("div","abox");d.appendChild(box);
+  const rows=zeilen.map(([z,h])=>{const r=el("div","az",`<div class="r">${farbe(esc(z))}</div><div class="h">${esc(h)}</div>`);box.appendChild(r);return r;});
+  const kn=el("div","kn",'<button class="p">⏸ Pause</button><button class="n">↻ Nochmal</button>');box.appendChild(kn);
+  const pb=kn.querySelector(".p");let n=0,timer=null,steht=false;
+  const zeig=()=>rows.forEach((r,i)=>{r.classList.toggle("da",i<n);r.classList.toggle("neu",i===n-1);});
+  const dauer=()=>1800+((zeilen[n-1]||["",""])[0].length+(zeilen[n-1]||["",""])[1].length)*55;   // Lesezeit nach Textlänge
+  const weiter=()=>{if(steht)return;n++;zeig();if(n<rows.length)timer=setTimeout(weiter,dauer());else pb.disabled=true;};
+  const start=()=>{clearTimeout(timer);steht=false;pb.disabled=false;pb.textContent="⏸ Pause";n=0;zeig();timer=setTimeout(weiter,400);};
+  pb.onclick=()=>{steht=!steht;pb.textContent=steht?"▶ Weiter":"⏸ Pause";clearTimeout(timer);if(!steht)weiter();};
+  kn.querySelector(".n").onclick=start;
+  d.addEventListener("toggle",()=>{if(d.open)start();else clearTimeout(timer);});
+  return d;
+}
+const ERG={};   // Ergebnisse der geprüften Felder: Schlüssel "Aufgabe★ 2 b" → true/false (erster Versuch)
+const ohneEinh=s=>String(s).replace(/\s*\(in [^()]+\)/g,"");   // „(in %)“ steht nur in den Daten – die Einheit erscheint am Eingabefeld
+const zahl=s=>{const m=String(s).replace(/[a-zA-Z%€]+[²³]?/g,"").replace(/\s/g,"").replace(",",".").match(/-?\d+(\.\d+)?/);return m?parseFloat(m[0]):NaN;};
+const gleich=(x,w)=>Math.abs(x-w)<=Math.max(0.011,Math.abs(w)*1e-6);
+function aufgabe(nr,a,stufe){
+  const gemischt=a.subform&&new Set(a.subform).size>1;
+  const kopfForm=!gemischt?formHtml(a.form):(a.subform[0]==="voll"&&a.subform.slice(1).every(f=>f!=="voll")?'<span class="form voll">☰ a)</span><span class="form kurz">▬ danach</span>':'<span class="form kurz">☰ / ▬ je Teilaufgabe</span>');
+  let h=`<div class="kopf">Aufgabe ${nr}${tagHtml(a.tag)}${kopfForm}</div><div class="txt">${esc(ohneEinh(a.tag==="w"?a.t.replace(/^Wiederholung: /,""):a.t))}</div>`;
+  if(a.svg)h+=`<div class="abild">${a.svg}</div>`;   // Bild zur Aufgabe (Flächen-Baukasten 6.11.2026): rohes SVG aus den Daten
+  // 2.11.2026 (Malte): klar machen, dass Aufgabe + Rechenweg ins Heft gehören, nicht nur das Ergebnis
+  h+=`<div class="heft">Ins Heft: ${a.subform&&a.subform.some(f=>f!==a.form)?"Das Zeichen an jeder Teilaufgabe sagt es dir: ☰ mit Rechenweg, ▬ eine Zeile, ⚡ nur das Ergebnis.":(HEFT[a.form]||HEFT.voll)}</div>`;
+  // 13.11.2026 (Malte): Taste für die Flächeneinheit (² ist auf dem iPad schwer zu tippen) – Einheit aus „(in m²)“ im Aufgabentext
+  // 13.11.2026 (Malte): nicht nur eine Einheiten-Taste, sondern Auswahl aus Länge/Fläche/Volumen (z. B. cm · cm² · cm³) in wechselnder Reihenfolge –
+  // die richtige Einheit muss gewählt werden. Der Hinweis „(in m²)“ bleibt in den Daten, wird aber nicht angezeigt.
+  const einheit=(i)=>{const m=String((a.sub&&a.sub[i])||a.t).match(/\(in ([^()]+)\)/);if(!m)return null;
+    const w=m[1].split("|").map(x=>x.trim());return {wahl:w.length>1?w:null,richtig:w[0]};};
+  const feld=(i)=>{if(!(a.check&&a.check[i]!=null))return "";const u=einheit(i);
+    const knoepfe=u&&u.wahl?u.wahl.slice().sort(()=>Math.random()-0.5).map(x=>`<button type="button" class="einh" data-u="${x}" aria-pressed="false">${x}</button>`).join(""):(u?`<span class="einhfix">${u.richtig}</span>`:"");
+    return `<span class="eing" data-i="${i}"${u&&u.wahl?` data-soll="${u.richtig}"`:""}><input inputmode="decimal" autocomplete="off" placeholder="Ergebnis">${knoepfe}<span class="mk"></span></span>`;};
+  const subSym=i=>(a.subform&&a.subform[i])?`<span class="form mini ${a.subform[i]}" title="${FORM[a.subform[i]]}">${FORM[a.subform[i]].split(" ")[0]}</span>`:"";
+  if(a.sub)h+="<ol>"+a.sub.map((s,i)=>`<li class="${feld(i)?"breit":""}"><b class="tb">${"abcdefgh"[i]})</b>${subSym(i)}${esc(ohneEinh(s))}${a.subsvg&&a.subsvg[i]?`<div class="subbild">${a.subsvg[i]}</div>`:""}${feld(i)}</li>`).join("")+"</ol>";
+  else if(a.check&&a.check[0]!=null)h+=`<div class="einzeln">${feld(0)}</div>`;
+  if(a.check&&a.check.some(v=>v!=null))h+=`<button class="pruef">Ergebnis prüfen</button>`;
+  if(a.tipp)h+=`<details class="tipp"><summary>💡 Tipp</summary><div>${esc(a.tipp)}</div></details>`;
+  const e=el("div","aufg",h);
+  e.querySelectorAll(".einh").forEach(b=>b.onclick=()=>{const f=b.parentNode;f.querySelectorAll(".einh").forEach(x=>x.setAttribute("aria-pressed",x===b));f.dataset.wahl=b.dataset.u;});
+  if(a.anim)e.appendChild(animTipp(a.anim));
+  const pb=e.querySelector(".pruef");
+  if(pb)pb.onclick=()=>{let alle=0,rich=0;
+    e.querySelectorAll(".eing").forEach(f=>{const i=+f.dataset.i,w=a.check[i],x=zahl(f.querySelector("input").value),mk=f.querySelector(".mk");
+      if(isNaN(x)){mk.textContent="?";mk.className="mk";return;}
+      if(f.dataset.soll&&!f.dataset.wahl){mk.textContent="Einheit?";mk.className="mk";return;}
+      const zahlOk=gleich(x,w),einhOk=!f.dataset.soll||f.dataset.wahl===f.dataset.soll,ok=zahlOk&&einhOk;
+      mk.textContent=ok?"✓":(zahlOk?"✗ Einheit":"✗");mk.className="mk "+(ok?"ok":"no");alle++;if(ok)rich++;
+      const key=`${nr}${a.sub?" "+"abcdefgh"[i]:""}`;if(!(key in ERG))ERG[key]={ok,stufe};});
+    if(e.onGeprueft)e.onGeprueft(rich,alle);};
+  return e;
+}
+// Lösungen (15.10.2026, Malte): nach „Lösungen anzeigen“ erst die Aufgabe wählen – nie alle Lösungen auf einmal. Nur richtige Lösungen.
+function loesung(liste){
+  const box=el("div");
+  const b=el("button","loesbtn");b.textContent="Lösungen anzeigen";
+  const f=el("div","frag",'<p>Stehen die Aufgabe und dein Rechenweg im Heft? Zu welcher Aufgabe möchtest du die Lösung sehen?</p>');f.hidden=true;
+  const kn=el("div","lwahl"),w=el("div","loes");w.hidden=true;f.appendChild(kn);
+  const zeile=([nr,a])=>{const l=a.sub?a.l.map((x,i)=>`${"abcdefgh"[i]}) ${esc(x)}`).join("&nbsp;&nbsp;&nbsp; "):a.l.map(esc).join("<br>");
+    const weg=a.weg?`<br><button class="wegbtn">Lösungsweg anzeigen</button><div class="weg" hidden>${a.weg.map(z=>"<div>"+esc(z)+"</div>").join("")}</div>`:"";
+    return `<div class="zeile"><b>Aufgabe ${nr}:</b> ${l}${a.idee?`<span class="warum">Warum: ${esc(a.idee)}</span>`:""}${weg}</div>`;};
+  liste.forEach((e,i)=>{const k=el("button","",`Aufgabe ${esc(String(e[0]))}`);k.setAttribute("aria-pressed","false");
+    k.onclick=()=>{kn.querySelectorAll("button").forEach((x,j)=>x.setAttribute("aria-pressed",j===i));w.innerHTML=zeile(e);w.hidden=false;
+      const wb=w.querySelector(".wegbtn");if(wb)wb.onclick=()=>{const g=w.querySelector(".weg");g.hidden=!g.hidden;wb.textContent=g.hidden?"Lösungsweg anzeigen":"Lösungsweg ausblenden";};};kn.appendChild(k);});
+  b.onclick=()=>{const offen=!f.hidden;f.hidden=offen;w.hidden=true;kn.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed","false"));
+    b.textContent=offen?"Lösungen anzeigen":"Lösungen ausblenden";};
+  box.append(b,f,w);return box;
+}
+function teil(T){
+  const root=el("section","teil");
+  if(D.mehrteilig)root.appendChild(el("div","teilkopf",esc(T.name)));
+  root.appendChild(el("details","erin",`<summary>Erinnerung: Das brauchst du</summary><ul>${T.erinnerung.map(e=>"<li>"+esc(e)+"</li>").join("")}</ul>`));
+  root.appendChild(el("h2","","Aufgabe 1 · für alle"));
+  const a1=aufgabe(1,T.a1,"1");const empf=el("div","empf");empf.hidden=true;root.append(a1,empf,loesung([[1,T.a1]]));
+  const wahl=el("div","wahl"),st=el("div");
+  if(T.weiter){root.appendChild(el("div","weiterbox",`<b>Üben auf deinem Niveau ★ / ★★ / ★★★</b> gibt es in der Übungsstunde:<br><a class="weiterbtn" href="${T.weiter[0]}">➜ ${esc(T.weiter[1])}</a>`));}
+  else{root.appendChild(el("h2","","Jetzt wählst du dein Niveau"));root.append(wahl,st);}
+  [["1","★"],["2","★★"],["3","★★★"]].filter(([k])=>T.stufen&&T.stufen[k]).forEach(([k,stern])=>{
+    const s=T.stufen[k];
+    const b=el("button","",`${stern}  ${esc(s.name)}<small>${D.untertitel[k-1]}</small>`);b.setAttribute("aria-pressed","false");b.dataset.k=k;
+    const sec=el("section","stufe");sec.hidden=true;
+    sec.appendChild(el("h2","",esc(stern+"  "+s.name)));
+    s.aufg.forEach((a,i)=>sec.appendChild(aufgabe(stern+" "+(i+2),a,stern)));
+    const lz=loesung(s.aufg.map((a,i)=>[stern+" "+(i+2),a]));sec.appendChild(lz);
+    const kb=el("button","kartebtn","📋 Ergebnis-Karte");lz.appendChild(kb);const kk=el("div");sec.appendChild(kk);
+    kb.onclick=()=>{kk.innerHTML="";kk.appendChild(karte(stern));};
+    b.onclick=()=>{wahl.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b));st.querySelectorAll(".stufe").forEach(x=>x.hidden=x!==sec);};
+    wahl.appendChild(b);st.appendChild(sec);
+  });
+  // Hausaufgabe (13.11.2026, Malte + Hausaufgabenforschung): eigener, kurzer Kasten für alle – heute · früher · verstehen, ★ freiwillig
+  if(T.ha){const ha=el("section","hakasten");
+    ha.appendChild(el("h2","","🏠 Hausaufgabe · für alle"));
+    ha.appendChild(el("div","hinweis",'Drei kurze Aufgaben: <b>eine von heute, eine von früher, eine zum Verstehen</b>. Die ★-Aufgabe ist freiwillig. <b>Höchstens 15 Minuten</b> – dann hörst du auf und schreibst eine Hänge-Zeile. Das Zeichen an der Aufgabe (☰ Rechenweg · ▬ Kurzform · ⚡ Blitz) sagt dir, was ins Heft kommt.'));
+    ha.appendChild(uhr());
+    T.ha.forEach((a,i)=>ha.appendChild(aufgabe("H"+(i+1),a,"H")));
+    const lz=loesung(T.ha.map((a,i)=>["H"+(i+1),a]));ha.appendChild(lz);
+    const kb=el("button","kartebtn","📋 Ergebnis-Karte Hausaufgabe");lz.appendChild(kb);const kk=el("div");ha.appendChild(kk);
+    kb.onclick=()=>{kk.innerHTML="";kk.appendChild(karte("H"));};
+    root.appendChild(ha);}
+  // Niveau-Empfehlung aus Aufgabe 1 (Konzept: Schüler schätzen sich oft falsch ein – die Wahl bleibt bei ihnen)
+  a1.onGeprueft=(rich,alle)=>{if(!alle)return;const k=rich===alle?"3":(rich>=alle/2?"2":"1");const st=["","★","★★","★★★"][k];
+    empf.hidden=false;empf.innerHTML=`Aufgabe 1: <b>${rich} von ${alle}</b> richtig. Wir empfehlen dir <b>${st}</b>${T.weiter?" für die Übungsstunde":""}. Du darfst trotzdem selbst wählen.`;
+    wahl.querySelectorAll("button").forEach(x=>{const alt=x.querySelector(".badge");if(alt)alt.remove();if(x.dataset.k===k)x.insertAdjacentHTML("beforeend",'<span class="badge">empfohlen</span>');});};
+  return root;
+}
+// 15-Minuten-Uhr (Hausaufgabe nach Zeit, Konzept 5a)
+function uhr(){
+  const u=el("div","uhr",'<span>⏱ Hausaufgabe: <b>höchstens 15 Minuten</b>, dann aufhören.</span><span class="zeit">15:00</span><button>Uhr starten</button>');
+  const z=u.querySelector(".zeit"),b=u.querySelector("button");let ende=0,t=null;
+  const tick=()=>{const r=Math.max(0,Math.round((ende-Date.now())/1000));z.textContent=`${Math.floor(r/60)}:${String(r%60).padStart(2,"0")}`;
+    if(r<=0){clearInterval(t);u.classList.add("um");z.textContent="Zeit um – hör auf. Schreib ggf. eine Hänge-Zeile.";b.textContent="Neu starten";}};
+  b.onclick=()=>{clearInterval(t);u.classList.remove("um");ende=Date.now()+15*60000;b.textContent="Neu starten";tick();t=setInterval(tick,1000);};
+  return u;
+}
+// Ergebnis-Karte: kein Name, kein Server – die Lehrkraft schaut in der Folgestunde aufs Tablet
+const KEY="karte-"+location.pathname.split("/").pop();
+function karte(stern){
+  const jetzt=new Date();let alt={};try{alt=JSON.parse(localStorage.getItem(KEY)||"{}");}catch(e){}
+  const zeilen=Object.entries(ERG).filter(([k,v])=>v.stufe===stern||v.stufe==="1").map(([k,v])=>`<span class="${v.ok?"ok":"no"}">${v.ok?"✓":"✗"}</span> Aufgabe ${esc(k.replace(/^1 /,"1 "))}`);
+  const c=el("div","ekarte",`<h3>Ergebnis-Karte · ${esc(D.titel)} · Stufe ${stern}</h3>`+
+    `<div>${jetzt.toLocaleDateString("de-DE")} · ${jetzt.toLocaleTimeString("de-DE",{hour:"2-digit",minute:"2-digit"})}</div>`+
+    `<div>${zeilen.length?zeilen.join("<br>"):"Noch keine Ergebnisse geprüft."}</div>`+
+    `<div style="margin-top:8px"><b>Hänge-Zeile</b> (wo genau hängst du – und warum?)</div><textarea placeholder="Ich hänge bei Aufgabe …, weil …"></textarea>`);
+  const ta=c.querySelector("textarea");ta.value=alt.haenge||"";
+  ta.oninput=()=>{try{localStorage.setItem(KEY,JSON.stringify({haenge:ta.value,erg:ERG,stufe:stern,zeit:Date.now()}));}catch(e){}};
+  try{localStorage.setItem(KEY,JSON.stringify({haenge:ta.value,erg:ERG,stufe:stern,zeit:Date.now()}));}catch(e){}
+  return c;
+}
+const box=document.getElementById("teile"),secs=D.teile.map(teil);
+secs.forEach(s=>box.appendChild(s));
+if(D.mehrteilig){
+  document.getElementById("teilwahl").hidden=false;const tw=document.getElementById("tw");
+  const zeig=i=>{secs.forEach((s,j)=>s.hidden=j!==i);tw.querySelectorAll("button").forEach((b,j)=>b.setAttribute("aria-pressed",j===i));};
+  D.teile.forEach((T,i)=>{const b=el("button","",esc(T.stunde)+`<small>${esc(T.kurz)}</small>`);b.onclick=()=>zeig(i);tw.appendChild(b);});
+  zeig(D.teile.length-1);
+}
+</script>
+</body>
+</html>
