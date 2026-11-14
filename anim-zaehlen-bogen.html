@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Animation: Vom Zählen zum Bogen</title>
+<!-- Kapitel VII Prozente (Kl. 7), Animation zu VII.3 „Runter und hoch am Streifen“ (QR im Skript, Einstieg „Wie viel ist ein Schritt?“).
+     Mehrwert: Bewegung – sieben gleiche Schritte oben und unten verschmelzen zu einem Bogen „· 7“; danach der Bogen „: 10“ von 100 % zu 10 %.
+     Zahlen wie im Skript (Untersee 60 km²), weil die Seite den gemeinsamen Einstieg begleitet und nichts vorwegnimmt, was die Schüler allein lösen sollen.
+     Lesezeit je Satz 1500 ms + 80 ms je Zeichen, Pause/Weiter und Nochmal. Kein Login, keine Daten. -->
+<style>
+  :root{--acc:#1f4e79;--ink:#1b2a3a;--muted:#5b6b7c;--bg:#f4f7fb;--line:#c9d6e5;--ps:#c0700f;--rand:#3b4a5a}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;-webkit-user-select:none;user-select:none}
+  button{font:inherit;touch-action:manipulation}
+  header{padding:12px 16px;background:var(--acc);color:#fff} header h1{font-size:20px;margin:0}
+  main{padding:12px 16px 24px;max-width:900px;margin:0 auto}
+  .auftrag{font-size:18px;line-height:1.45;background:#fff;border:1px solid #bfbfbf;border-radius:12px;padding:10px 14px;margin-bottom:10px}
+  .knoepfe{display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+  .knoepfe button{flex:1 1 150px;min-height:52px;border-radius:12px;font-size:18px;font-weight:700;border:2px solid var(--acc);background:#fff;color:var(--acc)}
+  .knoepfe button.haupt{background:var(--acc);color:#fff}
+  .bild{background:#fff;border:1px solid var(--line);border-radius:14px;padding:6px;margin-bottom:10px}
+  svg{width:100%;height:auto;display:block}
+  .cap{background:#fff;border:2px solid var(--line);border-radius:12px;padding:10px 14px;font-size:21px;line-height:1.45;min-height:64px}
+  .f{transition:opacity .8s} .aus{opacity:0}
+  footer{color:var(--muted);font-size:13px;text-align:center;padding:14px 0}
+</style>
+</head>
+<body>
+<header><h1>Animation: Vom Zählen zum Bogen</h1></header>
+<main>
+  <div class="auftrag"><b>Auftrag:</b> Schau zu, wie aus sieben gleichen Schritten ein einziger Bogen wird. Achte darauf, dass oben und unten immer dasselbe passiert.</div>
+  <div class="knoepfe"><button class="haupt" id="play">▶ Abspielen</button><button id="pause">⏸ Pause</button></div>
+  <div class="bild"><svg id="s" viewBox="0 0 720 330"></svg></div>
+  <div class="cap" id="cap">Tippe auf ▶ Abspielen.</div>
+  <footer>Fehling · VII Prozente · Runter und hoch am Streifen · Animation</footer>
+</main>
+<script>
+"use strict";
+const NS="http://www.w3.org/2000/svg",S=document.getElementById("s");
+const X0=80,WD=600,Y0=140,H=50,X=a=>X0+a*WD;
+const el=(t,a,txt)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(txt!=null)e.textContent=txt;S.appendChild(e);return e;};
+// Streifen in Zehnteln
+el("rect",{x:X0,y:Y0,width:WD,height:H,fill:"#eef1f5"});
+for(let i=1;i<10;i++)el("line",{x1:X(i/10),y1:Y0,x2:X(i/10),y2:Y0+H,stroke:"#3b4a5a","stroke-width":2.5});
+el("rect",{x:X0,y:Y0,width:WD,height:H,fill:"none",stroke:"#3b4a5a","stroke-width":3});
+el("text",{x:8,y:Y0-12,"font-size":16,fill:"#c0700f"},"in %");el("text",{x:8,y:Y0+H+26,"font-size":16,fill:"#1b2a3a"},"in km²");
+for(let i=0;i<=10;i++)el("text",{x:X(i/10),y:Y0-12,"text-anchor":"middle","font-size":17,"font-weight":700,fill:"#c0700f"},String(i*10));
+const werte=[];for(let i=0;i<=10;i++){const t=el("text",{x:X(i/10),y:Y0+H+26,"text-anchor":"middle","font-size":17,"font-weight":700,fill:"#1b2a3a",class:"f"+(i===0||i===10?"":" aus")},String(6*i));werte.push(t);}
+// Bogen: oben (dir=-1) oder unten (dir=1), Höhe h, Text in der Mitte
+function bogen(a,b,y,dir,h,text,farbe,klasse){
+  const x1=X(a),x2=X(b),xm=(x1+x2)/2,g=document.createElementNS(NS,"g");g.setAttribute("class","f aus"+(klasse?" "+klasse:""));
+  const p=document.createElementNS(NS,"path");p.setAttribute("d",`M ${x1} ${y} Q ${xm} ${y+dir*h*2} ${x2} ${y}`);p.setAttribute("fill","none");p.setAttribute("stroke",farbe);p.setAttribute("stroke-width",3);
+  const sp=document.createElementNS(NS,"path");const ang=Math.atan2(y-(y+dir*h*2),x2-xm),L=11;
+  sp.setAttribute("d",`M ${x2} ${y} L ${x2-L*Math.cos(ang-0.45)} ${y-L*Math.sin(ang-0.45)} L ${x2-L*Math.cos(ang+0.45)} ${y-L*Math.sin(ang+0.45)} Z`);sp.setAttribute("fill",farbe);
+  g.appendChild(p);g.appendChild(sp);
+  if(text){const r=document.createElementNS(NS,"rect"),t=document.createElementNS(NS,"text");t.setAttribute("x",xm);t.setAttribute("y",y+dir*h+(dir<0?-2:16));t.setAttribute("text-anchor","middle");t.setAttribute("font-size",20);t.setAttribute("font-weight",800);t.setAttribute("fill",farbe);t.textContent=text;
+    r.setAttribute("x",xm-30);r.setAttribute("y",y+dir*h+(dir<0?-22:-4));r.setAttribute("width",60);r.setAttribute("height",26);r.setAttribute("fill","white");g.appendChild(r);g.appendChild(t);}
+  S.appendChild(g);return g;}
+const YO=Y0-34,YU=Y0+H+40;
+const klein=[];for(let i=1;i<7;i++)klein.push([bogen(i/10,(i+1)/10,YO,-1,14,"","#c0700f"),bogen(i/10,(i+1)/10,YU,1,14,"","#1b2a3a")]);
+const gross=[bogen(0.1,0.7,YO,-1,40,"· 7","#c0700f"),bogen(0.1,0.7,YU,1,40,"· 7","#1b2a3a")];
+const zehn=[bogen(1,0.1,YO,-1,70,": 10","#c0700f"),bogen(1,0.1,YU,1,70,": 10","#1b2a3a")];
+const zeig=(e,an)=>e.classList.toggle("aus",!an);
+// Schritte: [Text, Zustand]
+const S1=[["Der Untersee ist rund 60 km² groß. Der Streifen ist in zehn gleiche Stücke geteilt.",0],
+ ["10 % sind 6 km². Das ist ein Schritt.",1],
+ ["Wir zählen weiter: 20 % sind 12 km², 30 % sind 18 km² … – oben ein Schritt, unten ein Schritt.",2],
+ ["Bis 70 % sind es sieben gleiche Schritte: 70 % sind 42 km².",3],
+ ["Sieben gleiche Schritte – das ist dasselbe wie mal 7. Aus vielen kleinen Bögen wird ein großer Bogen.",4],
+ ["Oben: 10 % · 7 = 70 %. Unten: 6 km² · 7 = 42 km². Oben und unten steht dieselbe Rechnung.",5],
+ ["Und von 100 % zu 10 %? Das ist geteilt durch 10 – oben und unten: 60 km² : 10 = 6 km².",6],
+ ["Jetzt du: Zeichne die Bögen in deinem Streifen ein und schreibe die Rechnungen daran.",6]];
+function zustand(k){
+  werte.forEach((w,i)=>zeig(w,i===0||i===10||(k>=1&&i===1)||(k>=2&&i<=4)||(k>=3&&i<=7)||k>=6));
+  klein.forEach((b,i)=>b.forEach(x=>zeig(x,(k===2&&i<3)||k===3)));
+  gross.forEach(x=>zeig(x,k>=4));zehn.forEach(x=>zeig(x,k>=6));
+}
+const cap=document.getElementById("cap"),pb=document.getElementById("pause");let n=0,timer=null,steht=false;
+const lese=t=>1500+80*t.length;
+function zeigeN(){const s=S1[n-1];cap.textContent=s?s[0]:"Tippe auf ▶ Abspielen.";zustand(s?s[1]:0);}
+function weiter(){if(steht)return;if(n<S1.length){n++;zeigeN();timer=setTimeout(weiter,lese(S1[n-1][0])+900);}else pb.disabled=true;}
+document.getElementById("play").onclick=()=>{clearTimeout(timer);steht=false;pb.disabled=false;pb.textContent="⏸ Pause";n=0;zeigeN();timer=setTimeout(weiter,400);};
+pb.onclick=()=>{steht=!steht;pb.textContent=steht?"▶ Weiter":"⏸ Pause";clearTimeout(timer);if(!steht)weiter();};
+zustand(0);
+</script>
+</body>
+</html>

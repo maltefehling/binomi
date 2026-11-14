@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tipp: Welches Stück passt?</title>
+<!-- Kapitel VII Prozente (Kl. 7): lila Tipp-Seite, gebaut mit tipp_pz_bau.py. Anderes Beispiel, nie die Lösung einer Aufgabe. -->
+<style>
+  :root{--tipp:#6d4a9e;--tippH:#f1eaf8;--tippL:#b79bd6;--ink:#1b2a3a;--muted:#5b6b7c;--bg:#f7f4fb;--line:#d8cce8;--a:#2e5d9f;--hl:#c0700f}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;-webkit-user-select:none;user-select:none}
+  button{font:inherit;touch-action:manipulation}
+  header{padding:12px 16px;background:var(--tipp);color:#fff} header h1{font-size:20px;margin:0}
+  main{padding:12px 16px 24px;max-width:860px;margin:0 auto}
+  .start{font-size:19px;color:var(--tipp);font-weight:700;margin:4px 0 10px}
+  .knoepfe{display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+  .knoepfe button{flex:1 1 150px;min-height:52px;border-radius:12px;font-size:18px;font-weight:700;border:2px solid var(--tipp);background:#fff;color:var(--tipp)}
+  .knoepfe button.haupt{background:var(--tipp);color:#fff}
+  .bild{background:#fff;border:1px solid var(--line);border-radius:14px;padding:8px;margin-bottom:10px}
+  .bild svg{width:100%;height:auto;display:block}
+  .cap{background:#fff;border:2px solid var(--tippL);border-radius:12px;padding:10px 14px;font-size:21px;line-height:1.45;min-height:64px;margin-bottom:10px}
+  .tafel{background:#fff;border:1px solid var(--line);border-radius:14px;padding:6px 16px;min-height:40px}
+  .z{font-size:27px;line-height:1.6;opacity:0;transition:opacity .6s;font-variant-numeric:tabular-nums}
+  .z.da{opacity:1} .z.neu{color:var(--tipp)}
+  .hl{color:var(--hl);font-weight:800}
+  .du{display:none;margin-top:14px;background:var(--tippH);border:1px solid var(--tippL);border-radius:12px;padding:10px 14px;font-size:19px;line-height:1.45}
+  .du.da{display:block}
+  footer{color:var(--muted);font-size:13px;text-align:center;padding:14px 0}
+  .geo,.sichtbar{transition:transform 1.4s ease, opacity .8s}
+  .fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;font-size:.8em;line-height:1.15;margin:0 4px}
+  .fr>span:first-child{border-bottom:2px solid currentColor;padding:0 6px}
+</style>
+</head>
+<body>
+<header><h1>Tipp: Welches Stück passt?</h1></header>
+<main>
+  <div class="start">Beispiel mit anderen Zahlen:  Beim Schulfest gibt es 300 Lose. 60 % davon sind Gewinne.</div>
+  <div class="knoepfe"><button class="haupt" id="play">▶ Abspielen</button><button id="pause">⏸ Pause</button></div>
+  <div class="bild"><svg viewBox="0 0 640 290" aria-label="Streifen 300 Lose, Fünftel"><rect x="50" y="92" width="560" height="50" fill="#eef1f5"/><rect id="fuell" class="sichtbar" style="opacity:0" x="50" y="92" width="336.0" height="50" fill="#8fc77f"/><g id="teile" class="sichtbar" style="opacity:0"><line x1="162.0" y1="92" x2="162.0" y2="142" stroke="#3b4a5a" stroke-width="3"/><line x1="274.0" y1="92" x2="274.0" y2="142" stroke="#3b4a5a" stroke-width="3"/><line x1="386.0" y1="92" x2="386.0" y2="142" stroke="#3b4a5a" stroke-width="3"/><line x1="498.0" y1="92" x2="498.0" y2="142" stroke="#3b4a5a" stroke-width="3"/></g><rect x="50" y="92" width="560" height="50" fill="none" stroke="#3b4a5a" stroke-width="3"/><text x="50" y="82" text-anchor="middle" font-size="17" font-weight="700" fill="#c0700f">0</text><text x="386.0" y="82" text-anchor="middle" font-size="17" font-weight="700" fill="#c0700f">60</text><text x="610" y="82" text-anchor="middle" font-size="17" font-weight="700" fill="#c0700f">100</text><text x="50" y="164" text-anchor="middle" font-size="17" font-weight="700" fill="#1b2a3a">0</text><text x="610" y="164" text-anchor="middle" font-size="17" font-weight="700" fill="#1b2a3a">300</text><g id="s20" class="sichtbar" style="opacity:0"><text x="162.0" y="82" text-anchor="middle" font-size="17" font-weight="700" fill="#c0700f">20</text><text x="162.0" y="164" text-anchor="middle" font-size="17" font-weight="700" fill="#1b2a3a">60</text><path d="M 610 62 Q 386.0 -3 168.0 62" fill="none" stroke="#6d4a9e" stroke-width="3"/><text x="386.0" y="26" text-anchor="middle" font-size="18" font-weight="800" fill="#6d4a9e">: 5</text><path d="M 610 176 Q 386.0 254 168.0 176" fill="none" stroke="#6d4a9e" stroke-width="3"/><text x="386.0" y="240" text-anchor="middle" font-size="18" font-weight="800" fill="#6d4a9e">: 5</text></g><g id="s60" class="sichtbar" style="opacity:0"><text x="386.0" y="164" text-anchor="middle" font-size="17" font-weight="800" fill="#2e7d32">180</text><path d="M 162.0 176 Q 274.0 212 380.0 176" fill="none" stroke="#6d4a9e" stroke-width="3"/><text x="274.0" y="206" text-anchor="middle" font-size="18" font-weight="800" fill="#6d4a9e">· 3</text><path d="M 162.0 62 Q 274.0 26 380.0 62" fill="none" stroke="#6d4a9e" stroke-width="3"/><text x="274.0" y="48" text-anchor="middle" font-size="18" font-weight="800" fill="#6d4a9e">· 3</text></g><text x="4" y="82" font-size="15" fill="#c0700f">in %</text><text x="4" y="164" font-size="15" fill="#1b2a3a">Lose</text></svg></div>
+  <div class="cap" id="cap"></div>
+  <div class="tafel"><div class="z">&nbsp;</div>
+    <div class="z">60 = 3 · 20</div>
+    <div class="z">300 : 5 = 60</div>
+    <div class="z">60 · 3 = 180</div>
+    <div class="z">&nbsp;</div></div>
+  <div class="du" id="du"><b>Jetzt du:</b> Prüfe bei deiner Prozentzahl: Ist sie ein Vielfaches von 10, 20 oder 25? Dann teile in Zehntel, Fünftel oder Viertel.</div>
+</main>
+<footer>Fehling · Runter und hoch am Streifen · Tipp</footer>
+<script>
+
+function bildZustand(k){document.getElementById("teile").style.opacity=k>=2?1:0;document.getElementById("s20").style.opacity=k>=3?1:0;
+ document.getElementById("s60").style.opacity=k>=4?1:0;document.getElementById("fuell").style.opacity=k>=4?1:0;}
+
+
+"use strict";
+const S=[["", "Gesucht sind die Gewinne: 60 % von 300 Losen.", true], ["60 = 3 · 20", "60 ist ein Vielfaches von 20. Also passen Fünftel – jedes Stück ist 20 %.", true], ["300 : 5 = 60", "Runter zu einem Fünftel: geteilt durch 5. Oben 100 % : 5 = 20 %, unten 300 : 5 = 60 Lose.", true], ["60 · 3 = 180", "Hoch zu 60 %: mal 3. Oben 20 % · 3 = 60 %, unten 60 · 3 = 180 Lose.", true], ["", "Oben und unten steht an jedem Bogen dieselbe Rechnung.", false]];
+const cap=document.getElementById("cap"),du=document.getElementById("du"),Z=[...document.querySelectorAll(".z")],pb=document.getElementById("pause");
+let n=0,timer=null,steht=false;
+const lese=t=>1500+80*t.length;            // Lesezeit nach Textlänge (Regel 16.10.2026)
+function zustand(k){if(typeof bildZustand==="function")bildZustand(k);}
+function zeig(){
+  const s=S[n-1];cap.textContent=s?s[1]:"Tippe auf ▶ Abspielen.";
+  Z.forEach((z,i)=>{z.classList.toggle("da",i<n&&S[i][0]!=="");z.classList.toggle("neu",i===n-1);});
+  zustand(n);du.classList.toggle("da",n>=S.length);
+}
+function weiter(){if(steht)return;if(n<S.length){n++;zeig();timer=setTimeout(weiter,lese(S[n-1][1])+(S[n-1][2]?1400:0));}else pb.disabled=true;}
+function start(){clearTimeout(timer);steht=false;pb.disabled=false;pb.textContent="⏸ Pause";n=0;zeig();timer=setTimeout(weiter,500);}
+document.getElementById("play").onclick=start;
+pb.onclick=()=>{steht=!steht;pb.textContent=steht?"▶ Weiter":"⏸ Pause";clearTimeout(timer);if(!steht)weiter();};
+zeig();
+
+</script>
+</body>
+</html>
