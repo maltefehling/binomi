@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tipp: Der Dreischritt über 1 %</title>
+<!-- Kapitel VII Prozente (Kl. 7): lila Tipp-Seite, gebaut mit tipp_pz_bau.py. Anderes Beispiel, nie die Lösung einer Aufgabe. -->
+<style>
+  :root{--tipp:#6d4a9e;--tippH:#f1eaf8;--tippL:#b79bd6;--ink:#1b2a3a;--muted:#5b6b7c;--bg:#f7f4fb;--line:#d8cce8;--a:#2e5d9f;--hl:#c0700f}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;-webkit-user-select:none;user-select:none}
+  button{font:inherit;touch-action:manipulation}
+  header{padding:12px 16px;background:var(--tipp);color:#fff} header h1{font-size:20px;margin:0}
+  main{padding:12px 16px 24px;max-width:860px;margin:0 auto}
+  .start{font-size:19px;color:var(--tipp);font-weight:700;margin:4px 0 10px}
+  .knoepfe{display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+  .knoepfe button{flex:1 1 150px;min-height:52px;border-radius:12px;font-size:18px;font-weight:700;border:2px solid var(--tipp);background:#fff;color:var(--tipp)}
+  .knoepfe button.haupt{background:var(--tipp);color:#fff}
+  .bild{background:#fff;border:1px solid var(--line);border-radius:14px;padding:8px;margin-bottom:10px}
+  .bild svg{width:100%;height:auto;display:block}
+  .cap{background:#fff;border:2px solid var(--tippL);border-radius:12px;padding:10px 14px;font-size:21px;line-height:1.45;min-height:64px;margin-bottom:10px}
+  .tafel{background:#fff;border:1px solid var(--line);border-radius:14px;padding:6px 16px;min-height:40px}
+  .z{font-size:27px;line-height:1.6;opacity:0;transition:opacity .6s;font-variant-numeric:tabular-nums}
+  .z.da{opacity:1} .z.neu{color:var(--tipp)}
+  .hl{color:var(--hl);font-weight:800}
+  .du{display:none;margin-top:14px;background:var(--tippH);border:1px solid var(--tippL);border-radius:12px;padding:10px 14px;font-size:19px;line-height:1.45}
+  .du.da{display:block}
+  footer{color:var(--muted);font-size:13px;text-align:center;padding:14px 0}
+  .geo,.sichtbar{transition:transform 1.4s ease, opacity .8s}
+  .fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;font-size:.8em;line-height:1.15;margin:0 4px}
+  .fr>span:first-child{border-bottom:2px solid currentColor;padding:0 6px}
+</style>
+</head>
+<body>
+<header><h1>Tipp: Der Dreischritt über 1 %</h1></header>
+<main>
+  <div class="start">Beispiel mit anderen Zahlen:  Ein Fahrrad kostet 350 €. Wie viel Euro sind 40 %?</div>
+  <div class="knoepfe"><button class="haupt" id="play">▶ Abspielen</button><button id="pause">⏸ Pause</button></div>
+  <div class="bild"><svg viewBox="0 0 660 300" aria-label="Streifen 350 €, 40 %"><rect x="60" y="110" width="560" height="50" fill="#eef1f5"/><rect id="fuell" class="sichtbar" style="opacity:0" x="60" y="110" width="224.0" height="50" fill="#8fc77f"/><line x1="85.2" y1="110" x2="85.2" y2="160" stroke="#3b4a5a" stroke-width="2.5"/><rect x="60" y="110" width="560" height="50" fill="none" stroke="#3b4a5a" stroke-width="3"/><text x="4" y="100" font-size="15" fill="#c0700f">in %</text><text x="4" y="182" font-size="15" fill="#1b2a3a">in €</text><text x="60" y="100" text-anchor="middle" font-size="17" font-weight="700" fill="#c0700f">0</text><text x="85.2" y="100" text-anchor="middle" font-size="17" font-weight="700" fill="#c0700f">1</text><text x="284.0" y="100" text-anchor="middle" font-size="17" font-weight="700" fill="#c0700f">40</text><text x="620" y="100" text-anchor="middle" font-size="17" font-weight="700" fill="#c0700f">100</text><text x="60" y="182" text-anchor="middle" font-size="17" font-weight="700" fill="#2e5d9f">0</text><text x="620" y="182" text-anchor="middle" font-size="17" font-weight="700" fill="#2e5d9f">350</text><text id="w1" class="sichtbar" style="opacity:0" x="91.2" y="182" text-anchor="middle" font-size="17" font-weight="700">3,5</text><text id="w2" class="sichtbar" style="opacity:0" x="284.0" y="182" text-anchor="middle" font-size="17" font-weight="800" fill="#2e7d32">140</text><g id="b1o" class="sichtbar" style="opacity:0"><path d="M 620 80 Q 352.6 0 85.2 80" fill="none" stroke="#6d4a9e" stroke-width="3"/><text x="352.6" y="36" text-anchor="middle" font-size="19" font-weight="800" fill="#6d4a9e">: 100</text></g><g id="b1u" class="sichtbar" style="opacity:0"><path d="M 620 194 Q 352.6 274 85.2 194" fill="none" stroke="#6d4a9e" stroke-width="3"/><text x="352.6" y="252" text-anchor="middle" font-size="19" font-weight="800" fill="#6d4a9e">: 100</text></g><g id="b2o" class="sichtbar" style="opacity:0"><path d="M 85.2 80 Q 184.6 56 284.0 80" fill="none" stroke="#6d4a9e" stroke-width="3"/><text x="184.6" y="64" text-anchor="middle" font-size="19" font-weight="800" fill="#6d4a9e">· 40</text></g><g id="b2u" class="sichtbar" style="opacity:0"><path d="M 85.2 194 Q 184.6 218 284.0 194" fill="none" stroke="#6d4a9e" stroke-width="3"/><text x="184.6" y="224" text-anchor="middle" font-size="19" font-weight="800" fill="#6d4a9e">· 40</text></g></svg></div>
+  <div class="cap" id="cap"></div>
+  <div class="tafel"><div class="z">&nbsp;</div>
+    <div class="z">350 € : 100 = 3,5 €</div>
+    <div class="z">3,5 € · 40 = 140 €</div>
+    <div class="z">&nbsp;</div></div>
+  <div class="du" id="du"><b>Jetzt du:</b> Rechne bei deiner Aufgabe genauso: erst durch 100, dann mal deine Prozentzahl.</div>
+</main>
+<footer>Fehling · Der Dreischritt über 1 % · Tipp</footer>
+<script>
+
+function bildZustand(k){const on=(id,b)=>document.getElementById(id).style.opacity=b?1:0;
+ on("b1o",k>=2);on("b1u",k>=2);on("w1",k>=2);on("b2o",k>=3);on("b2u",k>=3);on("w2",k>=3);on("fuell",k>=3);}
+
+
+"use strict";
+const S=[["", "Beschriften: oben 40 % und 100 %, unten 350 € beim Ganzen. An die 40 % kommt unten ein Fragezeichen.", true], ["350 € : 100 = 3,5 €", "Runter zu 1 %: geteilt durch 100 – oben und unten. 1 % sind 3,5 €.", true], ["3,5 € · 40 = 140 €", "Hoch zu 40 %: mal 40 – oben und unten. 40 % sind 140 €.", true], ["", "Der Prozentwert ist 140 €.", false]];
+const cap=document.getElementById("cap"),du=document.getElementById("du"),Z=[...document.querySelectorAll(".z")],pb=document.getElementById("pause");
+let n=0,timer=null,steht=false;
+const lese=t=>1500+80*t.length;            // Lesezeit nach Textlänge (Regel 16.10.2026)
+function zustand(k){if(typeof bildZustand==="function")bildZustand(k);}
+function zeig(){
+  const s=S[n-1];cap.textContent=s?s[1]:"Tippe auf ▶ Abspielen.";
+  Z.forEach((z,i)=>{z.classList.toggle("da",i<n&&S[i][0]!=="");z.classList.toggle("neu",i===n-1);});
+  zustand(n);du.classList.toggle("da",n>=S.length);
+}
+function weiter(){if(steht)return;if(n<S.length){n++;zeig();timer=setTimeout(weiter,lese(S[n-1][1])+(S[n-1][2]?1400:0));}else pb.disabled=true;}
+function start(){clearTimeout(timer);steht=false;pb.disabled=false;pb.textContent="⏸ Pause";n=0;zeig();timer=setTimeout(weiter,500);}
+document.getElementById("play").onclick=start;
+pb.onclick=()=>{steht=!steht;pb.textContent=steht?"▶ Weiter":"⏸ Pause";clearTimeout(timer);if(!steht)weiter();};
+zeig();
+
+</script>
+</body>
+</html>
