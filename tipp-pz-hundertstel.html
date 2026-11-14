@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tipp: Auf Hundertstel erweitern</title>
+<!-- Kapitel VII Prozente (Kl. 7): lila Tipp-Seite, gebaut mit tipp_pz_bau.py. Anderes Beispiel, nie die Lösung einer Aufgabe. -->
+<style>
+  :root{--tipp:#6d4a9e;--tippH:#f1eaf8;--tippL:#b79bd6;--ink:#1b2a3a;--muted:#5b6b7c;--bg:#f7f4fb;--line:#d8cce8;--a:#2e5d9f;--hl:#c0700f}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;-webkit-user-select:none;user-select:none}
+  button{font:inherit;touch-action:manipulation}
+  header{padding:12px 16px;background:var(--tipp);color:#fff} header h1{font-size:20px;margin:0}
+  main{padding:12px 16px 24px;max-width:860px;margin:0 auto}
+  .start{font-size:19px;color:var(--tipp);font-weight:700;margin:4px 0 10px}
+  .knoepfe{display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+  .knoepfe button{flex:1 1 150px;min-height:52px;border-radius:12px;font-size:18px;font-weight:700;border:2px solid var(--tipp);background:#fff;color:var(--tipp)}
+  .knoepfe button.haupt{background:var(--tipp);color:#fff}
+  .bild{background:#fff;border:1px solid var(--line);border-radius:14px;padding:8px;margin-bottom:10px}
+  .bild svg{width:100%;height:auto;display:block}
+  .cap{background:#fff;border:2px solid var(--tippL);border-radius:12px;padding:10px 14px;font-size:21px;line-height:1.45;min-height:64px;margin-bottom:10px}
+  .tafel{background:#fff;border:1px solid var(--line);border-radius:14px;padding:6px 16px;min-height:40px}
+  .z{font-size:27px;line-height:1.6;opacity:0;transition:opacity .6s;font-variant-numeric:tabular-nums}
+  .z.da{opacity:1} .z.neu{color:var(--tipp)}
+  .hl{color:var(--hl);font-weight:800}
+  .du{display:none;margin-top:14px;background:var(--tippH);border:1px solid var(--tippL);border-radius:12px;padding:10px 14px;font-size:19px;line-height:1.45}
+  .du.da{display:block}
+  footer{color:var(--muted);font-size:13px;text-align:center;padding:14px 0}
+  .geo,.sichtbar{transition:transform 1.4s ease, opacity .8s}
+  .fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;font-size:.8em;line-height:1.15;margin:0 4px}
+  .fr>span:first-child{border-bottom:2px solid currentColor;padding:0 6px}
+</style>
+</head>
+<body>
+<header><h1>Tipp: Auf Hundertstel erweitern</h1></header>
+<main>
+  <div class="start">Beispiel mit anderen Zahlen:  7 von 20 gleichen Teilen sind voll</div>
+  <div class="knoepfe"><button class="haupt" id="play">▶ Abspielen</button><button id="pause">⏸ Pause</button></div>
+  <div class="bild"><svg viewBox="0 0 620 150" aria-label="Streifen mit 20 Teilen, 7 voll"><rect x="10" y="40" width="600" height="70" fill="#eef1f5"/><rect x="10" y="40" width="210.0" height="70" fill="#8fc77f"/><g id="fein" class="sichtbar" style="opacity:0"><line x1="16.0" y1="40" x2="16.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="22.0" y1="40" x2="22.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="28.0" y1="40" x2="28.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="34.0" y1="40" x2="34.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="46.0" y1="40" x2="46.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="52.0" y1="40" x2="52.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="58.0" y1="40" x2="58.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="64.0" y1="40" x2="64.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="76.0" y1="40" x2="76.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="82.0" y1="40" x2="82.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="88.0" y1="40" x2="88.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="94.0" y1="40" x2="94.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="106.0" y1="40" x2="106.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="112.0" y1="40" x2="112.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="118.0" y1="40" x2="118.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="124.0" y1="40" x2="124.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="136.0" y1="40" x2="136.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="142.0" y1="40" x2="142.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="148.0" y1="40" x2="148.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="154.0" y1="40" x2="154.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="166.0" y1="40" x2="166.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="172.0" y1="40" x2="172.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="178.0" y1="40" x2="178.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="184.0" y1="40" x2="184.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="196.0" y1="40" x2="196.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="202.0" y1="40" x2="202.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="208.0" y1="40" x2="208.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="214.0" y1="40" x2="214.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="226.0" y1="40" x2="226.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="232.0" y1="40" x2="232.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="238.0" y1="40" x2="238.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="244.0" y1="40" x2="244.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="256.0" y1="40" x2="256.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="262.0" y1="40" x2="262.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="268.0" y1="40" x2="268.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="274.0" y1="40" x2="274.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="286.0" y1="40" x2="286.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="292.0" y1="40" x2="292.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="298.0" y1="40" x2="298.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="304.0" y1="40" x2="304.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="316.0" y1="40" x2="316.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="322.0" y1="40" x2="322.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="328.0" y1="40" x2="328.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="334.0" y1="40" x2="334.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="346.0" y1="40" x2="346.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="352.0" y1="40" x2="352.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="358.0" y1="40" x2="358.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="364.0" y1="40" x2="364.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="376.0" y1="40" x2="376.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="382.0" y1="40" x2="382.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="388.0" y1="40" x2="388.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="394.0" y1="40" x2="394.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="406.0" y1="40" x2="406.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="412.0" y1="40" x2="412.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="418.0" y1="40" x2="418.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="424.0" y1="40" x2="424.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="436.0" y1="40" x2="436.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="442.0" y1="40" x2="442.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="448.0" y1="40" x2="448.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="454.0" y1="40" x2="454.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="466.0" y1="40" x2="466.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="472.0" y1="40" x2="472.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="478.0" y1="40" x2="478.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="484.0" y1="40" x2="484.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="496.0" y1="40" x2="496.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="502.0" y1="40" x2="502.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="508.0" y1="40" x2="508.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="514.0" y1="40" x2="514.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="526.0" y1="40" x2="526.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="532.0" y1="40" x2="532.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="538.0" y1="40" x2="538.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="544.0" y1="40" x2="544.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="556.0" y1="40" x2="556.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="562.0" y1="40" x2="562.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="568.0" y1="40" x2="568.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="574.0" y1="40" x2="574.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="586.0" y1="40" x2="586.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="592.0" y1="40" x2="592.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="598.0" y1="40" x2="598.0" y2="110" stroke="#b79bd6" stroke-width="1"/><line x1="604.0" y1="40" x2="604.0" y2="110" stroke="#b79bd6" stroke-width="1"/></g><line x1="40.0" y1="40" x2="40.0" y2="110" stroke="#3b4a5a" stroke-width="2.5"/><line x1="70.0" y1="40" x2="70.0" y2="110" stroke="#3b4a5a" stroke-width="2.5"/><line x1="100.0" y1="40" x2="100.0" y2="110" stroke="#3b4a5a" stroke-width="2.5"/><line x1="130.0" y1="40" x2="130.0" y2="110" stroke="#3b4a5a" stroke-width="2.5"/><line x1="160.0" y1="40" x2="160.0" y2="110" stroke="#3b4a5a" stroke-width="2.5"/><line x1="190.0" y1="40" x2="190.0" y2="110" stroke="#3b4a5a" stroke-width="2.5"/><line x1="220.0" y1="40" x2="220.0" y2="110" stroke="#3b4a5a" stroke-width="2.5"/><line x1="250.0" y1="40" x2="250.0" y2="110" stroke="#3b4a5a" stroke-width="2.5"/><line x1="280.0" y1="40" x2="280.0" y2="110" stroke="#3b4a5a" stroke-width="2.5"/><line x1="310.0" y1="40" x2="310.0" y2="110" stroke="#3b4a5a" stroke-width="2.5"/><line x1="340.0" y1="40" x2="340.0" y2="110" stroke="#3b4a5a" stroke-width="2.5"/><line x1="370.0" y1="40" x2="370.0" y2="110" stroke="#3b4a5a" stroke-width="2.5"/><line x1="400.0" y1="40" x2="400.0" y2="110" stroke="#3b4a5a" stroke-width="2.5"/><line x1="430.0" y1="40" x2="430.0" y2="110" stroke="#3b4a5a" stroke-width="2.5"/><line x1="460.0" y1="40" x2="460.0" y2="110" stroke="#3b4a5a" stroke-width="2.5"/><line x1="490.0" y1="40" x2="490.0" y2="110" stroke="#3b4a5a" stroke-width="2.5"/><line x1="520.0" y1="40" x2="520.0" y2="110" stroke="#3b4a5a" stroke-width="2.5"/><line x1="550.0" y1="40" x2="550.0" y2="110" stroke="#3b4a5a" stroke-width="2.5"/><line x1="580.0" y1="40" x2="580.0" y2="110" stroke="#3b4a5a" stroke-width="2.5"/><rect x="10" y="40" width="600" height="70" fill="none" stroke="#3b4a5a" stroke-width="3"/><text id="t20" class="sichtbar" x="115.0" y="28" text-anchor="middle" font-size="22" font-weight="700" fill="#1b2a3a">7 von 20 Teilen</text><text id="t100" class="sichtbar" style="opacity:0" x="115.0" y="140" text-anchor="middle" font-size="22" font-weight="800" fill="#6d4a9e">35 von 100 Teilen</text><text id="tp" class="sichtbar" style="opacity:0" x="232.0" y="28" font-size="24" font-weight="800" fill="#c0700f">35 %</text></svg></div>
+  <div class="cap" id="cap"></div>
+  <div class="tafel"><div class="z">&nbsp;</div>
+    <div class="z"><span class="fr"><span>7</span><span>20</span></span></div>
+    <div class="z"><span class="fr"><span>7</span><span>20</span></span> = <span class="fr"><span>?</span><span>100</span></span></div>
+    <div class="z">20 · <span class='hl'>5</span> = 100</div>
+    <div class="z"><span class="fr"><span>7</span><span>20</span></span> = <span class="fr"><span>7 · <span class='hl'>5</span></span><span>20 · <span class='hl'>5</span></span></span> = <span class="fr"><span>35</span><span>100</span></span></div>
+    <div class="z"><span class="fr"><span>35</span><span>100</span></span> = <span class='hl'>35 %</span></div></div>
+  <div class="du" id="du"><b>Jetzt du:</b> Suche bei deinem Bruch zuerst die Zahl, mit der der Nenner zu 100 wird. Nimm dann den Zähler mit derselben Zahl mal.</div>
+</main>
+<footer>Fehling · Prozent am Streifen · Tipp</footer>
+<script>
+
+function bildZustand(k){document.getElementById("fein").style.opacity=k>=4?1:0;document.getElementById("t100").style.opacity=k>=5?1:0;document.getElementById("tp").style.opacity=k>=6?1:0;}
+
+
+"use strict";
+const S=[["", "Der Streifen hat 20 gleiche Teile. 7 davon sind voll.", true], ["<span class=\"fr\"><span>7</span><span>20</span></span>", "Als Bruch: 7 Zwanzigstel.", true], ["<span class=\"fr\"><span>7</span><span>20</span></span> = <span class=\"fr\"><span>?</span><span>100</span></span>", "Prozent sind Hundertstel. Du brauchst also den Nenner 100.", true], ["20 · <span class='hl'>5</span> = 100", "Mit welcher Zahl musst du 20 malnehmen, damit 100 herauskommt? Mit 5. Jedes Teil wird in 5 kleine Teile geteilt.", true], ["<span class=\"fr\"><span>7</span><span>20</span></span> = <span class=\"fr\"><span>7 · <span class='hl'>5</span></span><span>20 · <span class='hl'>5</span></span></span> = <span class=\"fr\"><span>35</span><span>100</span></span>", "Nimm auch den Zähler mal 5: 7 mal 5 sind 35. Jetzt sind 35 von 100 Teilen voll.", true], ["<span class=\"fr\"><span>35</span><span>100</span></span> = <span class='hl'>35 %</span>", "35 Hundertstel sind 35 Prozent.", true]];
+const cap=document.getElementById("cap"),du=document.getElementById("du"),Z=[...document.querySelectorAll(".z")],pb=document.getElementById("pause");
+let n=0,timer=null,steht=false;
+const lese=t=>1500+80*t.length;            // Lesezeit nach Textlänge (Regel 16.10.2026)
+function zustand(k){if(typeof bildZustand==="function")bildZustand(k);}
+function zeig(){
+  const s=S[n-1];cap.textContent=s?s[1]:"Tippe auf ▶ Abspielen.";
+  Z.forEach((z,i)=>{z.classList.toggle("da",i<n&&S[i][0]!=="");z.classList.toggle("neu",i===n-1);});
+  zustand(n);du.classList.toggle("da",n>=S.length);
+}
+function weiter(){if(steht)return;if(n<S.length){n++;zeig();timer=setTimeout(weiter,lese(S[n-1][1])+(S[n-1][2]?1400:0));}else pb.disabled=true;}
+function start(){clearTimeout(timer);steht=false;pb.disabled=false;pb.textContent="⏸ Pause";n=0;zeig();timer=setTimeout(weiter,500);}
+document.getElementById("play").onclick=start;
+pb.onclick=()=>{steht=!steht;pb.textContent=steht?"▶ Weiter":"⏸ Pause";clearTimeout(timer);if(!steht)weiter();};
+zeig();
+
+</script>
+</body>
+</html>

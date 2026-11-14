@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Labor: Ladebalken stoppen</title>
+<!-- Kapitel VII Prozente (Kl. 7), Labor zu VII.1 Prozent am Streifen. Steht nicht im Schülerskript – für den Einstieg am Beamer
+     (Lehrkraft bedient, alle schätzen) oder als Abschluss auf dem Schüler-Tablet. Mehrwert gegenüber Papier: Der Balken bewegt sich und stoppt,
+     die Einteilung blendet erst nach der Schätzung ein (Kontrolle). Kein Login, kein Server, keine Daten. -->
+<style>
+  :root{--acc:#1f4e79;--ink:#1b2a3a;--muted:#5b6b7c;--bg:#f4f7fb;--line:#c9d6e5;--voll:#8fc77f;--leer:#eef1f5;--rand:#3b4a5a;--ps:#c0700f;--ok:#2e7d32;--okH:#e8f4e6;--gold:#8a6d00;--goldH:#fff6d6}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
+  button,input{font:inherit;touch-action:manipulation}
+  header{padding:12px 16px;background:var(--acc);color:#fff} header h1{font-size:20px;margin:0}
+  main{max-width:900px;margin:0 auto;padding:14px 16px 32px}
+  .hinweis{background:#fff;border:1px solid #bfbfbf;border-radius:12px;padding:10px 14px;font-size:19px;line-height:1.45;margin-bottom:12px}
+  .stufen{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+  .stufen button{flex:1 1 220px;min-height:52px;border-radius:12px;border:2px solid var(--acc);background:#fff;color:var(--acc);font-size:18px;font-weight:700;text-align:left;padding:6px 14px}
+  .stufen button[aria-pressed="true"]{background:var(--acc);color:#fff}
+  .stufen small{display:block;font-weight:500;font-size:14px;opacity:.85}
+  .fenster{background:#fff;border:1px solid #9aa7b5;border-radius:14px;padding:12px 16px 18px;margin-bottom:12px}
+  .fenster .titel{font-size:18px;color:#2b3a4a;margin-bottom:34px}
+  .bahn{position:relative;height:64px;background:var(--leer);border:3px solid var(--rand)}
+  .bahn .voll{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--voll)}
+  .bahn .strich{position:absolute;top:0;bottom:0;width:0;border-left:2px solid var(--rand);opacity:0;transition:opacity .6s}
+  .bahn .strich.fein{border-left:1px solid #8795a6}
+  .bahn.zeig .strich{opacity:1}
+  .skala{position:relative;height:26px;margin-top:4px;opacity:0;transition:opacity .6s}
+  .skala.zeig{opacity:1}
+  .skala span{position:absolute;transform:translateX(-50%);font-size:15px;font-weight:700;color:var(--ps)}
+  @media (max-width:640px){.skala span:nth-child(even){display:none}.skala span{font-size:13px}}
+  .marke{position:absolute;top:-32px;transform:translateX(-50%);font-size:22px;font-weight:800;color:var(--ps);opacity:0;transition:opacity .6s;white-space:nowrap}
+  .marke.zeig{opacity:1}
+  .reihe{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+  .reihe label{font-size:20px;font-weight:700}
+  .reihe input{width:130px;min-height:54px;font-size:26px;border:2px solid var(--acc);border-radius:12px;padding:4px 10px;text-align:right}
+  .reihe .einh{font-size:24px;font-weight:700}
+  .btn{min-height:54px;border-radius:12px;border:2px solid var(--acc);background:var(--acc);color:#fff;font-size:19px;font-weight:700;padding:0 18px}
+  .btn.hell{background:#fff;color:var(--acc)} .btn:disabled{opacity:.4}
+  .rm{border-radius:12px;padding:10px 14px;font-size:20px;line-height:1.5;margin-bottom:12px;background:#fff;border:2px solid var(--line)}
+  .rm.gut{background:var(--okH);border-color:#9fcf9a} .rm.gold{background:var(--goldH);border-color:#e6c65a}
+  .rm b{color:var(--acc)}
+  .stand{font-size:19px;font-weight:700;color:var(--gold)}
+  .fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;font-size:.85em;line-height:1.1;margin:0 4px}
+  .fr>span:first-child{border-bottom:2px solid currentColor;padding:0 5px}
+  footer{color:var(--muted);font-size:13px;text-align:center;margin-top:24px}
+  [hidden]{display:none!important}
+</style>
+</head>
+<body>
+<header><h1>Labor: Ladebalken stoppen</h1></header>
+<main>
+  <div class="hinweis"><b>Auftrag:</b> Starte den Ladebalken. Er bleibt irgendwo stehen. <b>Schätze</b>, wie viel <b>Prozent</b> geladen sind, und tippe deine Schätzung ein. Danach zeigt dir die Einteilung, wie nah du warst. Spiele fünf Runden.</div>
+  <div class="stufen" id="stufen">
+    <button data-s="1" aria-pressed="true">Stufe 1<small>Der Balken stoppt bei 10 %, 20 %, 25 %, 50 %, 75 % …</small></button>
+    <button data-s="2" aria-pressed="false">Stufe 2<small>Der Balken stoppt irgendwo – auch bei 37 % oder 82 %.</small></button>
+  </div>
+  <div class="fenster">
+    <div class="titel" id="titel">Update wird geladen …</div>
+    <div class="bahn" id="bahn"><div class="voll" id="voll"></div><div class="marke" id="marke"></div></div>
+    <div class="skala" id="skala"></div>
+  </div>
+  <div class="reihe">
+    <button class="btn" id="start">▶ Laden starten</button>
+    <label for="tipp">Meine Schätzung:</label><input id="tipp" inputmode="numeric" autocomplete="off" placeholder="?" disabled><span class="einh">%</span>
+    <button class="btn hell" id="pruef" disabled>Prüfen</button>
+  </div>
+  <div class="rm" id="rm" hidden></div>
+  <div class="stand" id="stand">Runde 0 von 5 · 0 Punkte</div>
+  <footer>Fehling · VII Prozente · Labor</footer>
+</main>
+<script>
+"use strict";
+const $=s=>document.querySelector(s);
+const bahn=$("#bahn"),voll=$("#voll"),marke=$("#marke"),skala=$("#skala"),rm=$("#rm"),tipp=$("#tipp"),bS=$("#start"),bP=$("#pruef");
+// Einteilung: 10 dicke Teile, dazwischen je ein feiner Strich – erscheint erst nach der Schätzung
+for(let i=5;i<100;i+=5){const s=document.createElement("div");s.className="strich"+(i%10?" fein":"");s.style.left=i+"%";bahn.appendChild(s);}   // 20 Kästchen wie im Skript: 1 Kästchen = 5 %
+for(let i=0;i<=10;i++){const t=document.createElement("span");t.style.left=(i*10)+"%";t.textContent=(i*10)+" %";skala.appendChild(t);}
+const BRUCH={10:[1,10],20:[1,5],25:[1,4],30:[3,10],40:[2,5],50:[1,2],60:[3,5],70:[7,10],75:[3,4],80:[4,5],90:[9,10]};
+let stufe=1,ziel=0,runde=0,punkte=0,laeuft=false,letzte=-1;
+document.querySelectorAll("#stufen button").forEach(b=>b.onclick=()=>{stufe=+b.dataset.s;document.querySelectorAll("#stufen button").forEach(x=>x.setAttribute("aria-pressed",x===b));neu();});
+function stand(){$("#stand").textContent=`Runde ${runde} von 5 · ${punkte} Punkte`;}
+function neu(){runde=0;punkte=0;stand();zurueck();bS.textContent="▶ Laden starten";bS.disabled=false;}
+function zurueck(){bahn.classList.remove("zeig");skala.classList.remove("zeig");marke.classList.remove("zeig");voll.style.width="0%";rm.hidden=true;tipp.value="";tipp.disabled=true;bP.disabled=true;$("#titel").textContent="Update wird geladen …";}
+function start(){
+  if(laeuft)return;if(runde>=5){neu();}
+  zurueck();laeuft=true;bS.disabled=true;
+  do{ziel=stufe===1?[10,20,25,30,40,50,60,70,75,80,90][Math.floor(Math.random()*11)]:5+Math.floor(Math.random()*91);}while(ziel===letzte);letzte=ziel;
+  const dauer=1400+ziel*22,t0=performance.now();
+  // ungleichmäßig laden (wie ein echter Download): kurze Pausen, dann weiter
+  const lauf=t=>{const x=Math.min(1,(t-t0)/dauer),e=x<1?1-Math.pow(1-x,2.2):1,ruck=x<1?Math.sin(x*18)*0.012:0;
+    voll.style.width=Math.max(0,Math.min(ziel,ziel*(e+ruck)))+"%";
+    if(x<1)requestAnimationFrame(lauf);else{voll.style.width=ziel+"%";laeuft=false;$("#titel").textContent="Angehalten – wie viel Prozent sind geladen?";tipp.disabled=false;bP.disabled=false;tipp.focus();}};
+  requestAnimationFrame(lauf);
+}
+function pruefe(){
+  const v=parseFloat(String(tipp.value).replace(",","."));
+  if(isNaN(v)||v<0||v>100){rm.hidden=false;rm.className="rm";rm.textContent="Tippe eine Zahl zwischen 0 und 100 ein.";return;}
+  tipp.disabled=true;bP.disabled=true;runde++;
+  const d=Math.abs(v-ziel),p=d<=2?3:d<=5?2:d<=10?1:0;punkte+=p;
+  bahn.classList.add("zeig");skala.classList.add("zeig");marke.style.left=ziel+"%";marke.textContent=ziel+" %";marke.classList.add("zeig");
+  const b=BRUCH[ziel],br=b?` Als Bruch: <span class="fr"><span>${b[0]}</span><span>${b[1]}</span></span> des Balkens.`:"";
+  rm.hidden=false;rm.className="rm "+(p===3?"gold":p?"gut":"");
+  rm.innerHTML=`Geladen sind <b>${ziel} %</b>. Deine Schätzung: ${String(v).replace(".",",")} %. `+
+    (d===0?"Genau getroffen!":`Du lagst um ${String(Math.round(d*10)/10).replace(".",",")} daneben.`)+` <b>${p===3?"3 Punkte ⭐":p+(p===1?" Punkt":" Punkte")}</b>.${br}`+
+    (runde>=5?`<br><b>Fertig: ${punkte} von 15 Punkten.</b> ${punkte>=12?"Du hast ein sehr gutes Augenmaß.":punkte>=7?"Schon gut – achte auf die Hälfte und die Viertel als Hilfe.":"Tipp: Suche zuerst die Mitte (50 %), dann die Viertel (25 %, 75 %)."}`:"");
+  stand();bS.disabled=false;bS.textContent=runde>=5?"↻ Neues Spiel":"▶ Nächster Balken";
+}
+bS.onclick=start;bP.onclick=pruefe;tipp.addEventListener("keydown",e=>{if(e.key==="Enter")pruefe();});
+</script>
+</body>
+</html>
