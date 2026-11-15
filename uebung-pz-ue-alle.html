@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Übung Alle drei Lücken · Übungsstunde</title>
+<!-- Kapitel VII Prozente (Kl. 7): QR-Übung zur Stunde (QR-Code im Skript). Nur Aufgaben – gerechnet wird im Heft.
+     Aufbau: Aufgabe 1 für alle, dann ★ / ★★ / ★★★. Tipp zu jeder Aufgabe, Lösungen je Stufe erst nach Rückfrage. -->
+<style>
+  :root{--ink:#1b2a3a;--muted:#5b6b7c;--acc:#1f4e79;--bg:#f4f7fb;--card:#fff;--line:#c9d6e5;
+    --merk:#dde8f5;--merkL:#a9c1e0;--auf:#e8f4e6;--aufL:#c6e8c0;--hilf:#fdf6ea;--hilfL:#fbd9a8;--grau:#f2f2f2;--rot:#b03a2e;--gruen:#3f8f3a}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
+  button{font:inherit;touch-action:manipulation}
+  header{padding:12px 16px;background:var(--acc);color:#fff}
+  header h1{font-size:20px;margin:0}
+  main{max-width:880px;margin:0 auto;padding:14px 16px 32px}
+  .hinweis{background:#fff;border:1px solid #bfbfbf;border-radius:12px;padding:10px 14px;font-size:18px;line-height:1.45;margin-bottom:12px}
+  details.erin{background:var(--merk);border:1px solid var(--merkL);border-radius:12px;padding:10px 14px;margin-bottom:14px;font-size:18px;line-height:1.5}
+  details.erin summary{font-weight:700;color:var(--acc);cursor:pointer;min-height:30px}
+  details.erin ul{margin:6px 0 0;padding-left:22px}
+  h2{font-size:21px;color:var(--acc);margin:18px 0 8px;padding-bottom:4px;border-bottom:2px solid var(--acc)}
+  .aufg{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:10px}
+  .aufg .kopf{font-weight:700;color:var(--acc);font-size:18px;margin-bottom:4px}
+  .aufg .txt{font-size:20px;line-height:1.45}
+  .form{display:inline-block;font-size:14px;font-weight:800;border-radius:8px;padding:2px 8px;margin-left:8px;vertical-align:middle;background:#eef3fa;color:var(--acc)}
+  .form::first-letter{font-size:1.4em}
+  .szene{display:block;width:100%;max-width:460px;height:auto;border-radius:12px;margin:6px 0 10px;border:1px solid #d9e1ea}
+  .subbild{flex-basis:100%;margin:6px 0 2px} .subbild svg{width:100%;height:auto;display:block}
+  .form.mini{margin:0 6px 0 2px;padding:0 6px;font-size:15px}
+  .form.voll{background:#1f4e79;color:#fff} .form.blitz{background:#fff1c9;color:#7a5b00}
+  .legende{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;margin:6px 0 4px;align-items:baseline}
+  .aufg .heft{font-size:16px;color:var(--muted);margin-top:4px}
+  /* Teilaufgaben als getrennte Kärtchen (15.10.2026, Malte): SuS hielten a), b), c) für eine zusammenhängende Aufgabe */
+  .aufg ol{margin:10px 0 0;padding-left:0;list-style:none;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px}
+  .aufg li{font-size:21px;line-height:1.5;white-space:nowrap;overflow-x:auto;border:2px solid #c9d6e5;border-radius:12px;background:#f7f9fc;padding:8px 12px}
+  .aufg li.breit{grid-column:1/-1}
+  .aufg li b.tb{display:inline-block;min-width:34px;text-align:center;background:#1f4e79;color:#fff;border-radius:8px;padding:0 8px;margin-right:10px;font-weight:700}
+  .tag{display:inline-block;font-size:14px;font-weight:700;border-radius:8px;padding:2px 8px;margin-left:8px;vertical-align:middle}
+  .tag.v{background:#fff3c4;color:#7a5b00}.tag.w{background:#e2d6f0;color:#4f2f7a}.tag.m{background:#dff0e6;color:#1d5a35}
+  details.idee{margin-top:8px;font-size:18px}
+  details.idee summary{color:var(--acc);cursor:pointer;font-weight:600}
+  details.idee div{background:var(--grau);border-radius:8px;padding:8px 10px;margin-top:6px;line-height:1.45}
+  .wahl{display:flex;gap:10px;flex-wrap:wrap;margin:6px 0 10px}
+  .wahl button{flex:1 1 200px;border:2px solid var(--acc);background:#fff;color:var(--acc);border-radius:12px;padding:12px 14px;font-size:19px;font-weight:700;min-height:56px;text-align:left}
+  .wahl button[aria-pressed="true"]{background:var(--acc);color:#fff}
+  .wahl small{display:block;font-weight:500;font-size:15px;opacity:.85}
+  .stufe[hidden]{display:none}
+  .loesbtn{border:1px solid var(--hilfL);background:var(--hilf);color:var(--ink);border-radius:10px;padding:10px 16px;font-size:18px;font-weight:700;min-height:48px;margin-top:4px}
+  .loes{background:var(--hilf);border:1px solid var(--hilfL);border-radius:12px;padding:10px 14px;margin-top:8px}
+  .loes p{margin:0 0 8px;font-size:16px;color:var(--rot);font-weight:700}
+  .loes .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:6px}
+  .loes .grid span{background:#fff;border:1px solid var(--line);border-radius:8px;padding:6px 8px;text-align:center;font-size:19px}
+  .loes[hidden]{display:none}
+  details.tipp{margin-top:8px;font-size:18px}
+  details.tipp summary{display:inline-block;cursor:pointer;font-weight:700;color:#6d4a9e;background:#f1eaf8;border:1px solid #b79bd6;border-radius:10px;padding:6px 12px;min-height:40px;list-style:none}
+  details.tipp summary::-webkit-details-marker{display:none}
+  details.tipp div{background:#f1eaf8;border-radius:8px;padding:8px 10px;margin-top:6px;line-height:1.45}
+  .frag{background:#fff;border:2px solid var(--acc);border-radius:12px;padding:12px 14px;margin-top:8px;font-size:19px}
+  .frag[hidden]{display:none}
+  .frag p{margin:0 0 10px;font-weight:700;color:var(--acc)}
+  .frag button{border-radius:10px;padding:10px 16px;font-size:17px;font-weight:700;min-height:46px;margin:0 8px 6px 0;border:2px solid var(--acc)}
+  .frag .ja{background:var(--acc);color:#fff}.frag .nein{background:#fff;color:var(--acc)}
+  .loes .zeile{background:#fff;border:1px solid var(--line);border-radius:8px;padding:8px 10px;margin-bottom:6px;font-size:19px;line-height:1.5}
+  .loes .zeile b{color:var(--acc)}
+  .loes .warum{display:block;font-size:16px;color:var(--muted);margin-top:2px}
+  footer{color:var(--muted);font-size:13px;text-align:center;margin-top:24px}
+  /* Lösungsweg (1.11.2026, wie Kap. V): erst das Ergebnis, daneben „Lösungsweg anzeigen“ */
+  .wegbtn{border:1px solid var(--acc);background:#fff;color:var(--acc);border-radius:10px;padding:8px 14px;font-size:17px;font-weight:700;min-height:44px;margin-top:6px}
+  .weg{background:#fff;border:1px solid var(--line);border-left:4px solid var(--acc);border-radius:8px;padding:8px 12px;margin-top:6px;font-size:18px;line-height:1.6}
+  .weg[hidden]{display:none}
+  /* Animierter Tipp (1.11.2026): Beispiel mit anderen Zahlen baut sich Zeile für Zeile auf */
+  details.anim{margin-top:8px}
+  details.anim summary{display:inline-block;cursor:pointer;font-weight:700;color:#6d4a9e;background:#f1eaf8;border:1px solid #b79bd6;border-radius:10px;padding:6px 12px;min-height:40px;list-style:none;font-size:18px}
+  details.anim summary::-webkit-details-marker{display:none}
+  .abox{background:#f1eaf8;border-radius:10px;padding:10px 12px;margin-top:6px}
+  .abox .az{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:4px 14px;align-items:baseline;opacity:0;transition:opacity .6s;margin-bottom:6px}
+  .abox .az.da{opacity:1}
+  .abox .az .r{font-size:20px;line-height:1.4}
+  .abox .az .h{font-size:16px;color:#6d4a9e}
+  .abox .az.neu .r{background:#fff;border-radius:6px;box-shadow:0 0 0 2px #b79bd6}
+  .abox .kn{display:flex;gap:8px;margin-top:6px}
+  .abox .kn button{min-height:42px;padding:0 14px;border-radius:10px;border:2px solid #6d4a9e;background:#fff;color:#6d4a9e;font-size:16px;font-weight:700}
+  .cr{color:#b33c3c;font-weight:700}.cg{color:#3f8f3a;font-weight:700}.cb{color:#2e5d9f;font-weight:700}.co{color:#c0700f;font-weight:700}.cl{color:#6d4a9e;font-weight:800}
+  @media (max-width:560px){.abox .az{grid-template-columns:1fr}}
+  .frage{font-size:18px;font-weight:700;color:var(--acc);margin:4px 0 2px}
+  .teilkopf{font-size:22px;font-weight:800;color:var(--acc);margin:14px 0 8px}
+  .teil[hidden]{display:none}
+  .rot{color:#d0021b;font-weight:800}
+  .fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;font-size:.82em;line-height:1.15;margin:0 2px}
+  .fr>span:first-child{border-bottom:1.5px solid currentColor;padding:0 3px}
+  /* Flächen-Baukasten: Teilaufgaben sind Sätze → umbrechen statt seitlich scrollen; Eingabefeld unter dem Text */
+  .aufg li{white-space:normal;overflow-x:visible}
+  .aufg li .eing{display:flex;flex-wrap:wrap;margin:8px 0 0}
+  .abild{margin:8px 0;background:#fff;border:1px solid var(--line);border-radius:10px;padding:6px} .abild svg{display:block;width:100%;max-width:560px;height:auto;margin:0 auto}
+  /* Flächen-Baukasten: Eingabe, Empfehlung, Uhr, Ergebnis-Karte */
+  .eing{display:inline-flex;align-items:center;gap:6px;margin-left:10px;flex-wrap:wrap;max-width:100%}
+  .eing .einh[aria-pressed="true"]{background:var(--acc);color:#fff}
+  .eing .einh{min-height:44px;min-width:52px;margin-left:0;font-size:18px;font-weight:700;border:2px solid var(--acc);border-radius:10px;background:#eef3fa;color:var(--acc)}
+  .eing input{width:120px;min-height:44px;font-size:20px;border:2px solid var(--acc);border-radius:10px;padding:2px 8px;text-align:right}
+  .eing .einhfix{font-size:21px;font-weight:700}
+  .eing .mk{font-size:22px;font-weight:800;min-width:24px}
+  .eing .mk.ok{color:var(--gruen)} .eing .mk.no{color:var(--rot)}
+  .einzeln{margin-top:8px}
+  .pruef{border:2px solid var(--acc);background:var(--acc);color:#fff;border-radius:10px;padding:8px 16px;font-size:17px;font-weight:700;min-height:46px;margin-top:8px}
+  .empf{background:#e8f4e6;border:2px solid #9fcf9a;border-radius:12px;padding:10px 14px;font-size:19px;margin:8px 0 4px}
+  .wahl button .badge{display:inline-block;margin-left:8px;font-size:13px;background:#2e7d32;color:#fff;border-radius:8px;padding:1px 8px;vertical-align:middle}
+  .uhr{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:#fff;border:1px solid var(--line);border-radius:12px;padding:8px 12px;margin:6px 0 10px;font-size:18px}
+  .uhr button{border:2px solid var(--acc);background:#fff;color:var(--acc);border-radius:10px;padding:6px 14px;font-weight:700;min-height:44px}
+  .weiterbox{background:#eef3fa;border:2px solid var(--acc);border-radius:12px;padding:12px 14px;margin:18px 0;font-size:18px;line-height:1.5}
+  .weiterbtn{display:inline-block;margin-top:8px;padding:10px 16px;border-radius:12px;background:var(--acc);color:#fff;font-weight:700;text-decoration:none}
+  .hakasten{margin-top:26px;border-top:3px solid var(--acc);padding-top:6px}
+  .uhr .zeit{font-size:22px;font-weight:800;color:var(--acc);font-variant-numeric:tabular-nums}
+  .uhr.um{background:#fff4dc;border-color:#e6c65a}
+  .kartebtn{border:2px solid var(--acc);background:#fff;color:var(--acc);border-radius:10px;padding:10px 16px;font-size:18px;font-weight:700;min-height:48px;margin:10px 0 0 8px}
+  .ekarte{background:#fff;border:3px solid var(--acc);border-radius:14px;padding:12px 16px;margin-top:10px;font-size:19px;line-height:1.6}
+  .ekarte h3{margin:0 0 6px;color:var(--acc)} .ekarte textarea{width:100%;min-height:70px;font:inherit;font-size:18px;border:2px solid var(--line);border-radius:10px;padding:6px 8px}
+  .ekarte .ok{color:var(--gruen);font-weight:800}.ekarte .no{color:var(--rot);font-weight:800}
+  .lwahl{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 4px} .lwahl button{min-height:44px;padding:6px 14px;border-radius:10px;border:2px solid #c9d6e5;background:#fff;font-size:17px;font-weight:700;color:inherit} .lwahl button[aria-pressed="true"]{border-color:#1b2a3a;background:#fff4dc}
+</style>
+</head>
+<body>
+<header><h1>Übung Alle drei Lücken · Übungsstunde</h1></header>
+<main>
+  <div class="hinweis"><b>So schreibst du ins Heft</b> – das Zeichen an jeder Aufgabe sagt es dir:<div class="legende"><span class="form voll">☰ Rechenweg</span><span>Streifen mit „?“, Bögen runter und hoch, Rechenzeile, Antwortsatz.</span><span class="form kurz">▬ Kurzform</span><span>eine Rechenzeile, z. B. 1 % = 270 km : 100 = 2,7 km · 65 % = 175,5 km.</span><span class="form blitz">⚡ Blitz</span><span>nur das Ergebnis mit Einheit – im Kopf.</span></div><b>Faustregel:</b> Aufschreiben musst du alles, was du sonst verwechseln oder vergessen könntest. Bei Aufgaben mit Eingabefeld tippst du dein <b>Endergebnis</b> ein (nur die Zahl) und prüfst es. Wenn du nicht weiterkommst, hilft der Tipp.<br><b>Übungsstunde: Aufgabe 1 (ca. 5 Minuten), dann dein Niveau (ca. 25 Minuten). Wer fertig ist, macht im nächsten Niveau weiter. Hausaufgabe – nur wenn die Lehrkraft sie aufgibt: der Kasten 🏠 ganz unten (ca. 10 Minuten).</b></div>
+  <div id="teilwahl" hidden><div class="frage">Welche Stunde hattet ihr zuletzt?</div><div class="wahl" id="tw"></div></div>
+  <div id="teile"></div>
+  <footer>Fehling · VII Prozente</footer>
+</main>
+<script>
+"use strict";
+// Versionsprüfung (12.10.2026): Safari zeigt sonst bis zu 10 Minuten (oft länger) eine alte, gespeicherte Fassung.
+// Beim Öffnen wird die Seite ohne Zwischenspeicher abgefragt; ist sie neuer, lädt sie sich einmal neu.
+const STAND="20261115205453";
+fetch(location.pathname+"?nocache="+Date.now(),{cache:"no-store"}).then(r=>r.text()).then(t=>{
+  const m=t.match(/const STAND="(\d+)"/);
+  if(m&&m[1]!==STAND&&!sessionStorage.getItem("neu"+m[1])){sessionStorage.setItem("neu"+m[1],"1");location.replace(location.pathname+"?v="+m[1]);}
+}).catch(()=>{});
+// D.teile: ein Teil pro Stunde eines aufgeteilten Buchkapitels (z. B. II.2a/b/c); Stundenauswahl nur bei aufgeteilten Kapiteln (D.mehrteilig).
+const D={"titel": "Alle drei Lücken · Übungsstunde", "untertitel": ["Mit Beispiel und Bild", "Ohne Beispiel, auch rückwärts", "Nur Text, mehrere Schritte"], "heft": {"voll": "Nummer, Streifen mit „?“ und Bögen, Rechenzeile und Antwortsatz mit Fachwort.", "kurz": "Nummer und eine Rechenzeile – bei Ankreuz-Aufgaben: Nummer und deine Antwort.", "blitz": "Nummer und nur das Ergebnis mit Einheit – im Kopf rechnen."}, "mehrteilig": false, "teile": [{"name": "", "stunde": "", "kurz": "", "erinnerung": ["Erst fragen: Was ist das Ganze? Fehlt der Teil → Prozentwert. Fehlt das Ganze → Grundwert (das „?“ unter 100 %). Fehlt die Prozentzahl → Prozentsatz (das „?“ oben).", "Dreischritt: runter rechnen auf 1 %, hoch rechnen auf das „?“. Beim Prozentsatz: Wie viele 1-%-Schritte sind es bis zum Teil?", "Der Dreisatz deiner Eltern ist derselbe Weg: 100 % ≙ 360 € → 1 % ≙ 3,60 € → 35 % ≙ 126 €.", "Kurzform für den Taschenrechner – der Dreisatz in einer Zeile: Prozentwert 360 : 100 · 35 · Grundwert 28 : 40 · 100 · Prozentsatz 60 : (200 : 100).", "Im Heft: Streifen als Skizze mit „?“, dann die Rechenzeile oder die Kurzform."], "a1": {"t": "Nach der Gruppenarbeit – jetzt allein: Noah blättert im alten Heft seiner Eltern weiter und findet diesen Dreisatz:  100 % ≙ 80 €  ·  1 % ≙ 0,80 €  ·  15 % ≙ 12 €.", "l": [": 100", "der Bogen runter auf 1 %", "12 €", "der Prozentwert"], "tipp": "Vergleiche mit eurer Arbeitskarte: Welche Zeile ist welcher Schritt am Streifen?", "weg": ["a) 80 € : 100 = 0,8 € – von der ersten zur zweiten Zeile wird durch 100 geteilt.", "b) Zeile 2 (1 % ≙ 0,80 €) ist am Streifen der Bogen runter auf 1 %.", "c) 80 € : 100 = 0,8 € → · 15 = 12 € (in den TR: 80 : 100 · 15)", "d) Das Ganze (80 €) und 15 % sind gegeben, der Teil fehlt → Prozentwert."], "sub": ["Von der ersten zur zweiten Zeile rechnen die Eltern ☐ : 100 ☐ − 99 ☐ · 100.", "Die zweite Zeile ist am Streifen ☐ das Ganze ☐ der Bogen runter auf 1 % ☐ der Bogen hoch auf 15 %.", "Tippe als Kurzform in den Taschenrechner: 80 : 100 · 15 = ? (in €)", "Gesucht war im Heft ☐ der Grundwert ☐ der Prozentwert ☐ der Prozentsatz."], "check": [null, null, 12, null], "svg": "<svg viewBox=\"0 0 494 134\" style=\"max-width:500px\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"74\" y=\"50\" width=\"380\" height=\"34\" fill=\"#eef1f5\"/><line x1=\"91.1\" y1=\"50\" x2=\"91.1\" y2=\"84\" stroke=\"#3b4a5a\" stroke-width=\"2\"/><rect x=\"74\" y=\"50\" width=\"380\" height=\"34\" fill=\"none\" stroke=\"#3b4a5a\" stroke-width=\"2.5\"/><text x=\"74.0\" y=\"43\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"700\" fill=\"#1b2a3a\">0</text><text x=\"454.0\" y=\"43\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"700\" fill=\"#1b2a3a\">100</text><text x=\"91.1\" y=\"43\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"700\" fill=\"#1b2a3a\">1</text><text x=\"131.0\" y=\"43\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"700\" fill=\"#1b2a3a\">15</text><text x=\"74.0\" y=\"102\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"700\" fill=\"#1b2a3a\">0</text><text x=\"454.0\" y=\"102\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"700\" fill=\"#1b2a3a\">80</text><text x=\"2\" y=\"43\" font-size=\"13\" fill=\"#1b2a3a\">in %</text><text x=\"2\" y=\"102\" font-size=\"13\" fill=\"#1b2a3a\">in €</text></svg>", "bild": "eltern_heft_noah", "form": "voll", "subform": ["voll", "kurz", "kurz", "kurz"], "_fertig": true}, "ha": [{"t": "Von heute: Erst entscheiden, dann rechnen. Bei einer Tombola gibt es 250 Lose. 40 davon sind Gewinne. Wie viel Prozent der Lose gewinnen? (in %)", "l": ["16 %"], "tipp": "Das Ganze sind 250 Lose. 1 % = 2,5 Lose.", "weg": ["250 : 100 = 2,5 → 40 : 2,5 = 16 → 16 %"], "check": [16], "bild": "tombola_lose", "form": "voll", "subform": null, "_fertig": true}, {"t": "Von früher (VII.4): 15 % von 60 km. (in km)", "l": ["9 km"], "tipp": "Erst durch 100.", "weg": ["60 km : 100 = 0,6 km → · 15 = 9 km"], "tag": "w", "check": [9], "form": "kurz", "subform": null, "_fertig": true}, {"t": "Zum Verstehen: Kreuze an.", "l": ["1 %"], "tipp": "Denk an den Dreisatz der Eltern.", "weg": ["In der zweiten Zeile rechnet man runter auf 1 % – wie der Bogen am Streifen."], "sub": ["In der zweiten Zeile des Dreisatzes steht ☐ 1 % ☐ 10 % ☐ 50 %."], "tag": "v", "form": "kurz", "subform": ["kurz"], "_fertig": true}, {"t": "★ freiwillig: Frag zu Hause, wie deine Eltern „20 % von 45 €“ rechnen. Rechne selbst am Streifen. (in €)", "l": ["9 €"], "tipp": "1 % = 0,45 €.", "weg": ["45 € : 100 = 0,45 € → · 20 = 9 €"], "check": [9], "form": "voll", "subform": null, "_fertig": true}], "weiter": null, "stufen": {"1": {"name": "Mit Hilfe", "aufg": [{"t": "Anteile vergleichen: Am Fahrradständer der Schule (ausgedachte Zahlen). In der 7a kommen 15 von 25 Kindern mit dem Rad, in der 7b 16 von 32 Kindern. Beispiel: 1 % = 25 Kinder : 100 = 0,25 Kinder → 15 : 0,25 = 60 → 60 %.", "l": ["60 %", "50 %", "7b mehr Radfahrer, 7a größerer Anteil"], "tipp": "Rechne beide Anteile in Prozent. Mehr Kinder heißt nicht größerer Anteil.", "weg": ["a) 25 Kinder : 100 = 0,25 Kinder → 15 Kinder : 0,25 Kinder = 60 → 60 %", "b) 32 Kinder : 100 = 0,32 Kinder → 16 Kinder : 0,32 Kinder = 50 → 50 %", "c) Mehr Radfahrer: 7b (16). Größerer Anteil: 7a (60 %)."], "sub": ["Anteil der Radfahrer in der 7a (in %)", "Anteil der Radfahrer in der 7b (in %)", "Kreuze an: Mehr Radfahrer hat ☐ die 7a ☐ die 7b. Den größeren Anteil hat ☐ die 7a ☐ die 7b."], "tag": "m", "check": [60, 50, null], "bild": "fahrradstaender_schule", "form": "voll", "subform": ["voll", "kurz", "kurz"], "_fertig": true}, {"t": "Wo steht das „?“? Frag zuerst: Was ist das Ganze? Beispiel: „Von 200 Rädern sind 60 E-Bikes. Wie viel Prozent?“ → Das Ganze (200) und der Teil (60) sind gegeben, die Prozentzahl fehlt → oben.", "l": ["unter der Prozentzahl", "oben", "unter 100 %", "oben"], "tipp": "Steht das Ganze im Text? Steht schon eine Prozentzahl da?", "weg": ["a) Das Ganze (80 €) und 25 % sind gegeben → der Teil fehlt → unter der Prozentzahl", "b) Das Ganze (40 Kinder) und der Teil (10) sind gegeben → oben", "c) Das Ganze fehlt → unter 100 %", "d) Das Ganze (300 Plätze) und der Teil (150) sind gegeben → oben"], "sub": ["„25 % von 80 € …“ → das „?“ steht ☐ oben ☐ unter der Prozentzahl ☐ unter 100 %", "„10 von 40 Kindern … Wie viel Prozent?“ → ☐ oben ☐ unter der Prozentzahl ☐ unter 100 %", "„12 km sind 40 % der Strecke. Wie lang ist die Strecke?“ → ☐ oben ☐ unter der Prozentzahl ☐ unter 100 %", "„150 von 300 Plätzen sind besetzt. Wie viel Prozent?“ → ☐ oben ☐ unter der Prozentzahl ☐ unter 100 %"], "tag": "v", "form": "kurz", "subform": ["kurz", "kurz", "kurz", "kurz"], "_fertig": true}, {"t": "Ein Fischer verkauft 40 % seines Fangs an Restaurants. Das sind 600 kg (ausgedachte Zahlen). Beispiel: 1 % → 600 kg : 40.", "l": ["15 kg", "1500 kg"], "tipp": "Starte bei 40 %: dort stehen oben 40 und unten 600 kg.", "weg": ["a) 600 kg : 40 = 15 kg", "b) 600 kg : 40 = 15 kg → · 100 = 1500 kg"], "sub": ["Wie viel ist 1 %? (in kg)", "Wie viel Fisch hat er insgesamt gefangen? (in kg)"], "check": [15, 1500], "svg": "<svg viewBox=\"0 0 494 134\" style=\"max-width:500px\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"74\" y=\"50\" width=\"380\" height=\"34\" fill=\"#eef1f5\"/><line x1=\"91.1\" y1=\"50\" x2=\"91.1\" y2=\"84\" stroke=\"#3b4a5a\" stroke-width=\"2\"/><rect x=\"74\" y=\"50\" width=\"380\" height=\"34\" fill=\"none\" stroke=\"#3b4a5a\" stroke-width=\"2.5\"/><text x=\"74.0\" y=\"43\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"700\" fill=\"#1b2a3a\">0</text><text x=\"454.0\" y=\"43\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"700\" fill=\"#1b2a3a\">100</text><text x=\"91.1\" y=\"43\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"700\" fill=\"#1b2a3a\">1</text><text x=\"226.0\" y=\"43\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"700\" fill=\"#1b2a3a\">40</text><text x=\"74.0\" y=\"102\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"700\" fill=\"#1b2a3a\">0</text><text x=\"226.0\" y=\"102\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"700\" fill=\"#1b2a3a\">600</text><text x=\"454.0\" y=\"102\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"700\" fill=\"#1b2a3a\">?</text><text x=\"2\" y=\"43\" font-size=\"13\" fill=\"#1b2a3a\">in %</text><text x=\"2\" y=\"102\" font-size=\"13\" fill=\"#1b2a3a\">in kg</text></svg>", "form": "voll", "subform": ["voll", "kurz"], "_fertig": true}, {"t": "Wiederholung (VII.3): Rechne mit einem passenden Stück. Beispiel: 40 % von 75 km → 75 km : 5 = 15 km → · 2 = 30 km.", "l": ["900 ha", "60 km"], "tipp": "Viertel bzw. Fünftel.", "weg": ["a) 1200 ha : 4 = 300 ha → · 3 = 900 ha", "b) 75 km : 5 = 15 km → · 4 = 60 km"], "sub": ["75 % von 1200 ha (in ha)", "80 % von 75 km (in km)"], "tag": "w", "check": [900, 60], "form": "voll", "subform": ["voll", "kurz"], "_fertig": true}, {"t": "Blitz: Rest bis 100 % – im Kopf.", "l": ["70 %", "25 %", "40 %"], "tipp": "Nur das Ergebnis ins Heft – rechne im Kopf.", "weg": ["30 % sind geschafft. Es fehlen … = 70 %", "75 % sind voll. Leer sind … = 25 %", "60 % sind E-Bikes. Keine E-Bikes sind … = 40 %"], "sub": ["30 % sind geschafft. Es fehlen … (in %)", "75 % sind voll. Leer sind … (in %)", "60 % sind E-Bikes. Keine E-Bikes sind … (in %)"], "check": [70, 25, 40], "form": "blitz", "subform": ["blitz", "blitz", "blitz"], "_fertig": true}]}, "2": {"name": "Sicher rechnen", "aufg": [{"t": "Kurzform für den Taschenrechner: Schreib den Dreisatz in eine Zeile und tippe ihn ein. Beispiel: 35 % von 360 € → 360 : 100 · 35 = 126 €. Kreuze vorher an, was gesucht ist.", "l": ["Prozentwert: 224 €", "Grundwert: 140 km", "Prozentsatz: 15 %"], "tipp": "Prozentwert: Ganzes : 100 · Prozentzahl. Grundwert: Teil : Prozentzahl · 100. Prozentsatz: Teil : (Ganzes : 100).", "weg": ["a) Prozentwert: 640 € : 100 = 6,4 € → · 35 = 224 €", "b) Grundwert: 84 km : 60 = 1,4 km → · 100 = 140 km", "c) Prozentsatz: 360 € : 100 = 3,6 € → 54 € : 3,6 € = 15 → 15 %"], "sub": ["35 % von 640 €. Gesucht ist ☐ der Grundwert ☐ der Prozentwert ☐ der Prozentsatz. Kurzform: 640 : 100 · 35 (in €)", "84 km sind 60 % der Strecke. Gesucht ist ☐ der Grundwert ☐ der Prozentwert ☐ der Prozentsatz. Kurzform: 84 : 60 · 100 (in km)", "54 € von 360 €. Gesucht ist ☐ der Grundwert ☐ der Prozentwert ☐ der Prozentsatz. Kurzform: 54 : (360 : 100) (in %)"], "tag": "m", "check": [224, 140, 15], "bild": "taschenrechner_jonas", "form": "voll", "subform": ["voll", "kurz", "kurz"], "_fertig": true}, {"t": "Im Strandbad Allensbach (ausgedachte Zahlen). Zeichne zuerst den Streifen ins Heft und setze das „?“.", "l": ["25 %", "36 Eis", "30 Liegen"], "tipp": "Bei jeder Teilaufgabe: Was ist das Ganze – gegeben oder gesucht?", "weg": ["a) Prozentsatz: 160 : 100 = 1,6 → 40 : 1,6 = 25 → 25 %", "b) Prozentwert: 80 : 100 = 0,8 → · 45 = 36 Eis", "c) Grundwert: 18 : 60 = 0,3 → · 100 = 30 Liegen"], "sub": ["Von 160 Badegästen sind 40 Kinder. Wie viel Prozent sind das? (in %)", "Der Kiosk hatte 80 Eis. 45 % davon sind schon verkauft. Wie viele Eis sind das? (in Eis)", "18 Liegen sind belegt. Das sind 60 % aller Liegen. Wie viele Liegen gibt es? (in Liegen)"], "tag": "m", "check": [25, 36, 30], "bild": "strandbad_gaienhofen", "form": "kurz", "subform": ["kurz", "kurz", "kurz"], "_fertig": true}, {"t": "Echte Zahlen: Der Untersee ist 62 km² groß, 47 km² gehören zu Deutschland. Wie viel Prozent sind das? Runde auf ganze Prozent. (in %)", "l": ["76 %"], "tipp": "1 % = 0,62 km².", "weg": ["62 km² : 100 = 0,62 km² → 47 km² : 0,62 km² ≈ 75,8 → ≈ 76 %"], "check": [76], "form": "kurz", "subform": null, "_fertig": true}, {"t": "Paul: „35 % sind 70 €. Dann sind 100 %: 70 € : 100 · 35 = 24,50 €.“", "l": ["nein", "200 €"], "tipp": "Kann das Ganze kleiner sein als ein Teil?", "weg": ["a) Nein: Paul hat 70 € als Grundwert genommen. Das Ganze (100 %) muss mehr sein als 70 €.", "b) 70 € : 35 = 2 € → · 100 = 200 €"], "sub": ["Kreuze an: Paul hat recht. ☐ ja ☐ nein", "Rechne richtig: Wie viel sind 100 %? (in €)"], "tag": "v", "check": [null, 200], "form": "kurz", "subform": ["kurz", "kurz"], "_fertig": true}, {"t": "Wiederholung (VII.2): Kreuze an.", "l": ["unten", "oben"], "tipp": "Eselsbrücke.", "weg": ["a) Grundwert und Prozentwert stehen unten.", "b) Der Prozentsatz steht oben."], "sub": ["Der Prozentwert steht ☐ oben ☐ unten.", "Der Prozentsatz steht ☐ oben ☐ unten."], "tag": "w", "form": "voll", "subform": ["voll", "kurz"], "_fertig": true}, {"t": "Blitz: 1 % – im Kopf.", "l": ["2 Räder", "1,8 €", "40 "], "tipp": "Nur das Ergebnis ins Heft – rechne im Kopf.", "weg": ["200 Räder : 100 = 2 Räder", "180 € : 100 = 1,8 €", "4000 : 100 = 40 "], "sub": ["200 Räder : 100 (in Räder)", "180 € : 100 (in €)", "4000 : 100"], "check": [2, 1.8, 40], "form": "blitz", "subform": ["blitz", "blitz", "blitz"], "_fertig": true}]}, "3": {"name": "Knifflig", "aufg": [{"t": "Wege vergleichen: 75 % von 48 €. Zwei Kinder rechnen verschieden.", "l": ["36 €", "36 €", "mit Vierteln"], "tipp": "75 % sind drei Viertel.", "weg": ["a) 48 € : 100 = 0,48 € → · 75 = 36 €", "b) 48 € : 4 = 12 € → · 3 = 36 €", "c) Mit Vierteln geht es hier im Kopf. Über 1 % (oder mit dem Dreisatz) klappt es immer – auch bei 73 %."], "sub": ["über 1 % (wie der Dreisatz): 48 € : 100, dann mal 75 (in €)", "mit Vierteln: 48 € : 4, dann mal 3 (in €)", "Kreuze an: Im Kopf geht hier leichter ☐ der Weg über 1 % ☐ der Weg mit Vierteln."], "tag": "v", "check": [36, 36, null], "form": "kurz", "subform": ["kurz", "kurz", "kurz"], "_fertig": true}, {"t": "Echte Zahlen vergleichen: Die Reichenau ist 430 ha groß, auf 240 ha wächst Gemüse. Gaienhofen ist 1256 ha groß, 716 ha sind Felder und Wiesen. Runde auf ganze Prozent.", "l": ["56 %", "57 %", "fast gleich – Gaienhofen knapp größer"], "tipp": "Zwei Prozentsätze: jeweils 1 % = das Ganze : 100.", "weg": ["a) 430 ha : 100 = 4,3 ha → 240 ha : 4,3 ha ≈ 55,8 → ≈ 56 %", "b) 1256 ha : 100 = 12,56 ha → 716 ha : 12,56 ha ≈ 57,0 → ≈ 57 %", "c) Fast gleich: Gaienhofen ist dreimal so groß, der Anteil ist nur knapp größer."], "sub": ["Anteil Gemüse auf der Reichenau (in %)", "Anteil Felder und Wiesen in Gaienhofen (in %)", "Kreuze an: Der Anteil ist ☐ fast gleich ☐ in Gaienhofen dreimal so groß."], "tag": "m", "check": [56, 57, null], "form": "voll", "subform": ["voll", "kurz", "kurz"], "_fertig": true}, {"t": "Die Tour ist 75 km lang. Bis Allensbach hat die 7c 72 % geschafft.", "l": ["54 km", "21 km", "28 %"], "tipp": "Erst den Teil, dann den Rest. Probe: 21 km von 75 km.", "weg": ["a) 75 km : 100 = 0,75 km → · 72 = 54 km", "b) 75 km − 54 km = 21 km", "c) 100 % − 72 % = 28 % (Probe: 75 km : 100 = 0,75 km → 21 km : 0,75 km = 28 → 28 %)"], "sub": ["Wie viele Kilometer sind geschafft? (in km)", "Wie viele Kilometer fehlen noch? (in km)", "Wie viel Prozent fehlen noch? (in %)"], "tag": "m", "check": [54, 21, 28], "form": "voll", "subform": ["voll", "voll", "voll"], "_fertig": true}, {"t": "Formuliere um: „18 von 24 Äpfeln sind 75 %.“ Schreibe drei Fragen mit denselben Zahlen: einmal ist der Prozentwert gesucht, einmal der Grundwert, einmal der Prozentsatz.", "l": ["z. B. „Wie viele Äpfel sind 75 % von 24 Äpfeln?“ · „18 Äpfel sind 75 %. Wie viele Äpfel sind es insgesamt?“ · „Wie viel Prozent sind 18 von 24 Äpfeln?“"], "tipp": "Decke in Gedanken jeweils eine Zahl ab.", "weg": ["Prozentwert: 18 fehlt · Grundwert: 24 fehlt · Prozentsatz: 75 % fehlt"], "tag": "v", "form": "kurz", "subform": null, "_fertig": true}, {"t": "Wiederholung (VII.1): Schreibe {7/20} in Prozent. (in %)", "l": ["35 %"], "tipp": "Erweitere auf Hundertstel: 20 · 5 = 100.", "weg": ["{7/20} = {35/100} = 35 %"], "tag": "w", "check": [35], "form": "voll", "subform": null, "_fertig": true}, {"t": "Blitz: Was ist das Ganze? – Zahl eingeben.", "l": ["24 ", "90 km", "60 €"], "tipp": "Nur das Ergebnis ins Heft – rechne im Kopf.", "weg": ["„18 von 24 Äpfeln“ – das Ganze ist … = 24 ", "„30 % von 90 km“ – das Ganze ist … = 90 km", "„12 € sind 20 % von …“ – das Ganze ist … = 60 €"], "sub": ["„18 von 24 Äpfeln“ – das Ganze ist …", "„30 % von 90 km“ – das Ganze ist … (in km)", "„12 € sind 20 % von …“ – das Ganze ist … (in €)"], "check": [24, 90, 60], "form": "blitz", "subform": ["blitz", "blitz", "blitz"], "_fertig": true}]}}}]};
+const esc=s=>s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/(^|[^A-Za-zäöüÄÖÜß])h_([abc])(?![A-Za-zäöüÄÖÜß])/g,"$1h<sub>$2</sub>").replace(/\{([^{}\/]+)\/([^{}]+)\}/g,'<span class="fr"><span>$1</span><span>$2</span></span>').replace(/\[([+−])\]/g,'<span class="rot">$1</span>');
+const el=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e;};
+// 13.11.2026 (Malte): Wie viel ins Heft? Kurzform mit ▬ (eine Zeile) statt ✎ – ✎ heißt im Skript „schriftlich“.
+// Drei Formen, an jeder Aufgabe sichtbar (Expertise-Umkehr: Gerüst nur, wo es hilft)
+const FORM={voll:"☰ Rechenweg",kurz:"▬ Kurzform",blitz:"⚡ Blitz"};
+const formHtml=f=>f?`<span class="form ${f}">${FORM[f]}</span>`:"";
+const HEFT=D.heft;
+const tagHtml=t=>t==="v"?'<span class="tag v">💡 Verständnis</span>':t==="w"?'<span class="tag w">↩ Wiederholung</span>':t==="m"?'<span class="tag m">🔀 Mix: erst entscheiden</span>':"";   // „m“ seit 13.11.2026 (II.3b)
+// Farbmarkup [r:…] [g:…] [b:…] [o:…] [l:…] (nach esc, damit Brüche weiter funktionieren)
+const farbe=s=>s.replace(/\[([rgbol]):([^\]]+)\]/g,'<span class="c$1">$2</span>');
+function animTipp(zeilen){
+  const d=el("details","anim",'<summary>▶ Tipp: Beispiel mit anderen Zahlen</summary>');
+  const box=el("div","abox");d.appendChild(box);
+  const rows=zeilen.map(([z,h])=>{const r=el("div","az",`<div class="r">${farbe(esc(z))}</div><div class="h">${esc(h)}</div>`);box.appendChild(r);return r;});
+  const kn=el("div","kn",'<button class="p">⏸ Pause</button><button class="n">↻ Nochmal</button>');box.appendChild(kn);
+  const pb=kn.querySelector(".p");let n=0,timer=null,steht=false;
+  const zeig=()=>rows.forEach((r,i)=>{r.classList.toggle("da",i<n);r.classList.toggle("neu",i===n-1);});
+  const dauer=()=>1800+((zeilen[n-1]||["",""])[0].length+(zeilen[n-1]||["",""])[1].length)*55;   // Lesezeit nach Textlänge
+  const weiter=()=>{if(steht)return;n++;zeig();if(n<rows.length)timer=setTimeout(weiter,dauer());else pb.disabled=true;};
+  const start=()=>{clearTimeout(timer);steht=false;pb.disabled=false;pb.textContent="⏸ Pause";n=0;zeig();timer=setTimeout(weiter,400);};
+  pb.onclick=()=>{steht=!steht;pb.textContent=steht?"▶ Weiter":"⏸ Pause";clearTimeout(timer);if(!steht)weiter();};
+  kn.querySelector(".n").onclick=start;
+  d.addEventListener("toggle",()=>{if(d.open)start();else clearTimeout(timer);});
+  return d;
+}
+const ERG={};   // Ergebnisse der geprüften Felder: Schlüssel "Aufgabe★ 2 b" → true/false (erster Versuch)
+const ohneEinh=s=>String(s).replace(/\s*\(in [^()]+\)/g,"");   // „(in %)“ steht nur in den Daten – die Einheit erscheint am Eingabefeld
+const zahl=s=>{const m=String(s).replace(/[a-zA-Z%€]+[²³]?/g,"").replace(/\s/g,"").replace(",",".").match(/-?\d+(\.\d+)?/);return m?parseFloat(m[0]):NaN;};
+const gleich=(x,w)=>Math.abs(x-w)<=Math.max(0.011,Math.abs(w)*1e-6);
+function aufgabe(nr,a,stufe){
+  const gemischt=a.subform&&new Set(a.subform).size>1;
+  const kopfForm=!gemischt?formHtml(a.form):(a.subform[0]==="voll"&&a.subform.slice(1).every(f=>f!=="voll")?'<span class="form voll">☰ a)</span><span class="form kurz">▬ danach</span>':'<span class="form kurz">☰ / ▬ je Teilaufgabe</span>');
+  // 15.11.2026 (Malte): Szenenbild über einzelnen Aufgaben (bilder_pz.py, Stil der Leitfiguren, ohne Zahlen im Bild)
+  let h=`<div class="kopf">Aufgabe ${nr}${tagHtml(a.tag)}${kopfForm}</div>${a.bild?`<img class="szene" src="bild-pz/${a.bild}.webp" alt="" loading="lazy">`:""}<div class="txt">${esc(ohneEinh(a.tag==="w"?a.t.replace(/^Wiederholung: /,""):a.t))}</div>`;
+  if(a.svg)h+=`<div class="abild">${a.svg}</div>`;   // Bild zur Aufgabe (Flächen-Baukasten 6.11.2026): rohes SVG aus den Daten
+  // 2.11.2026 (Malte): klar machen, dass Aufgabe + Rechenweg ins Heft gehören, nicht nur das Ergebnis
+  h+=`<div class="heft">Ins Heft: ${a.subform&&a.subform.some(f=>f!==a.form)?"Das Zeichen an jeder Teilaufgabe sagt es dir: ☰ mit Rechenweg, ▬ eine Zeile, ⚡ nur das Ergebnis.":(HEFT[a.form]||HEFT.voll)}</div>`;
+  // 13.11.2026 (Malte): Taste für die Flächeneinheit (² ist auf dem iPad schwer zu tippen) – Einheit aus „(in m²)“ im Aufgabentext
+  // 13.11.2026 (Malte): nicht nur eine Einheiten-Taste, sondern Auswahl aus Länge/Fläche/Volumen (z. B. cm · cm² · cm³) in wechselnder Reihenfolge –
+  // die richtige Einheit muss gewählt werden. Der Hinweis „(in m²)“ bleibt in den Daten, wird aber nicht angezeigt.
+  const einheit=(i)=>{const m=String((a.sub&&a.sub[i])||a.t).match(/\(in ([^()]+)\)/);if(!m)return null;
+    const w=m[1].split("|").map(x=>x.trim());return {wahl:w.length>1?w:null,richtig:w[0]};};
+  const feld=(i)=>{if(!(a.check&&a.check[i]!=null))return "";const u=einheit(i);
+    const knoepfe=u&&u.wahl?u.wahl.slice().sort(()=>Math.random()-0.5).map(x=>`<button type="button" class="einh" data-u="${x}" aria-pressed="false">${x}</button>`).join(""):(u?`<span class="einhfix">${u.richtig}</span>`:"");
+    return `<span class="eing" data-i="${i}"${u&&u.wahl?` data-soll="${u.richtig}"`:""}><input inputmode="decimal" autocomplete="off" placeholder="Ergebnis">${knoepfe}<span class="mk"></span></span>`;};
+  const subSym=i=>(a.subform&&a.subform[i])?`<span class="form mini ${a.subform[i]}" title="${FORM[a.subform[i]]}">${FORM[a.subform[i]].split(" ")[0]}</span>`:"";
+  if(a.sub)h+="<ol>"+a.sub.map((s,i)=>`<li class="${feld(i)?"breit":""}"><b class="tb">${"abcdefgh"[i]})</b>${subSym(i)}${esc(ohneEinh(s))}${a.subsvg&&a.subsvg[i]?`<div class="subbild">${a.subsvg[i]}</div>`:""}${feld(i)}</li>`).join("")+"</ol>";
+  else if(a.check&&a.check[0]!=null)h+=`<div class="einzeln">${feld(0)}</div>`;
+  if(a.check&&a.check.some(v=>v!=null))h+=`<button class="pruef">Ergebnis prüfen</button>`;
+  if(a.tipp)h+=`<details class="tipp"><summary>💡 Tipp</summary><div>${esc(a.tipp)}</div></details>`;
+  const e=el("div","aufg",h);
+  e.querySelectorAll(".einh").forEach(b=>b.onclick=()=>{const f=b.parentNode;f.querySelectorAll(".einh").forEach(x=>x.setAttribute("aria-pressed",x===b));f.dataset.wahl=b.dataset.u;});
+  if(a.anim)e.appendChild(animTipp(a.anim));
+  const pb=e.querySelector(".pruef");
+  if(pb)pb.onclick=()=>{let alle=0,rich=0;
+    e.querySelectorAll(".eing").forEach(f=>{const i=+f.dataset.i,w=a.check[i],x=zahl(f.querySelector("input").value),mk=f.querySelector(".mk");
+      if(isNaN(x)){mk.textContent="?";mk.className="mk";return;}
+      if(f.dataset.soll&&!f.dataset.wahl){mk.textContent="Einheit?";mk.className="mk";return;}
+      const zahlOk=gleich(x,w),einhOk=!f.dataset.soll||f.dataset.wahl===f.dataset.soll,ok=zahlOk&&einhOk;
+      mk.textContent=ok?"✓":(zahlOk?"✗ Einheit":"✗");mk.className="mk "+(ok?"ok":"no");alle++;if(ok)rich++;
+      const key=`${nr}${a.sub?" "+"abcdefgh"[i]:""}`;if(!(key in ERG))ERG[key]={ok,stufe};});
+    if(e.onGeprueft)e.onGeprueft(rich,alle);};
+  return e;
+}
+// Lösungen (15.10.2026, Malte): nach „Lösungen anzeigen“ erst die Aufgabe wählen – nie alle Lösungen auf einmal. Nur richtige Lösungen.
+function loesung(liste){
+  const box=el("div");
+  const b=el("button","loesbtn");b.textContent="Lösungen anzeigen";
+  const f=el("div","frag",'<p>Stehen die Aufgabe und dein Rechenweg im Heft? Zu welcher Aufgabe möchtest du die Lösung sehen?</p>');f.hidden=true;
+  const kn=el("div","lwahl"),w=el("div","loes");w.hidden=true;f.appendChild(kn);
+  const zeile=([nr,a])=>{const l=a.sub?a.l.map((x,i)=>`${"abcdefgh"[i]}) ${esc(x)}`).join("&nbsp;&nbsp;&nbsp; "):a.l.map(esc).join("<br>");
+    const weg=a.weg?`<br><button class="wegbtn">Lösungsweg anzeigen</button><div class="weg" hidden>${a.weg.map(z=>"<div>"+esc(z)+"</div>").join("")}</div>`:"";
+    return `<div class="zeile"><b>Aufgabe ${nr}:</b> ${l}${a.idee?`<span class="warum">Warum: ${esc(a.idee)}</span>`:""}${weg}</div>`;};
+  liste.forEach((e,i)=>{const k=el("button","",`Aufgabe ${esc(String(e[0]))}`);k.setAttribute("aria-pressed","false");
+    k.onclick=()=>{kn.querySelectorAll("button").forEach((x,j)=>x.setAttribute("aria-pressed",j===i));w.innerHTML=zeile(e);w.hidden=false;
+      const wb=w.querySelector(".wegbtn");if(wb)wb.onclick=()=>{const g=w.querySelector(".weg");g.hidden=!g.hidden;wb.textContent=g.hidden?"Lösungsweg anzeigen":"Lösungsweg ausblenden";};};kn.appendChild(k);});
+  b.onclick=()=>{const offen=!f.hidden;f.hidden=offen;w.hidden=true;kn.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed","false"));
+    b.textContent=offen?"Lösungen anzeigen":"Lösungen ausblenden";};
+  box.append(b,f,w);return box;
+}
+function teil(T){
+  const root=el("section","teil");
+  if(D.mehrteilig)root.appendChild(el("div","teilkopf",esc(T.name)));
+  root.appendChild(el("details","erin",`<summary>Erinnerung: Das brauchst du</summary><ul>${T.erinnerung.map(e=>"<li>"+esc(e)+"</li>").join("")}</ul>`));
+  root.appendChild(el("h2","","Aufgabe 1 · für alle"));
+  const a1=aufgabe(1,T.a1,"1");const empf=el("div","empf");empf.hidden=true;root.append(a1,empf,loesung([[1,T.a1]]));
+  const wahl=el("div","wahl"),st=el("div");
+  if(T.weiter){root.appendChild(el("div","weiterbox",`<b>Üben auf deinem Niveau ★ / ★★ / ★★★</b> gibt es in der Übungsstunde:<br><a class="weiterbtn" href="${T.weiter[0]}">➜ ${esc(T.weiter[1])}</a>`));}
+  else{root.appendChild(el("h2","","Jetzt wählst du dein Niveau"));root.append(wahl,st);}
+  [["1","★"],["2","★★"],["3","★★★"]].filter(([k])=>T.stufen&&T.stufen[k]).forEach(([k,stern])=>{
+    const s=T.stufen[k];
+    const b=el("button","",`${stern}  ${esc(s.name)}<small>${D.untertitel[k-1]}</small>`);b.setAttribute("aria-pressed","false");b.dataset.k=k;
+    const sec=el("section","stufe");sec.hidden=true;
+    sec.appendChild(el("h2","",esc(stern+"  "+s.name)));
+    s.aufg.forEach((a,i)=>sec.appendChild(aufgabe(stern+" "+(i+2),a,stern)));
+    const lz=loesung(s.aufg.map((a,i)=>[stern+" "+(i+2),a]));sec.appendChild(lz);
+    const kb=el("button","kartebtn","📋 Ergebnis-Karte");lz.appendChild(kb);const kk=el("div");sec.appendChild(kk);
+    kb.onclick=()=>{kk.innerHTML="";kk.appendChild(karte(stern));};
+    b.onclick=()=>{wahl.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b));st.querySelectorAll(".stufe").forEach(x=>x.hidden=x!==sec);};
+    wahl.appendChild(b);st.appendChild(sec);
+  });
+  // Hausaufgabe (13.11.2026, Malte + Hausaufgabenforschung): eigener, kurzer Kasten für alle – heute · früher · verstehen, ★ freiwillig
+  if(T.ha){const ha=el("section","hakasten");
+    ha.appendChild(el("h2","","🏠 Hausaufgabe · für alle"));
+    ha.appendChild(el("div","hinweis",'Drei kurze Aufgaben: <b>eine von heute, eine von früher, eine zum Verstehen</b>. Die ★-Aufgabe ist freiwillig. <b>Höchstens 15 Minuten</b> – dann hörst du auf und schreibst eine Hänge-Zeile. Das Zeichen an der Aufgabe (☰ Rechenweg · ▬ Kurzform · ⚡ Blitz) sagt dir, was ins Heft kommt.'));
+    ha.appendChild(uhr());
+    T.ha.forEach((a,i)=>ha.appendChild(aufgabe("H"+(i+1),a,"H")));
+    const lz=loesung(T.ha.map((a,i)=>["H"+(i+1),a]));ha.appendChild(lz);
+    const kb=el("button","kartebtn","📋 Ergebnis-Karte Hausaufgabe");lz.appendChild(kb);const kk=el("div");ha.appendChild(kk);
+    kb.onclick=()=>{kk.innerHTML="";kk.appendChild(karte("H"));};
+    root.appendChild(ha);}
+  // Niveau-Empfehlung aus Aufgabe 1 (Konzept: Schüler schätzen sich oft falsch ein – die Wahl bleibt bei ihnen)
+  a1.onGeprueft=(rich,alle)=>{if(!alle)return;const k=rich===alle?"3":(rich>=alle/2?"2":"1");const st=["","★","★★","★★★"][k];
+    empf.hidden=false;empf.innerHTML=`Aufgabe 1: <b>${rich} von ${alle}</b> richtig. Wir empfehlen dir <b>${st}</b>${T.weiter?" für die Übungsstunde":""}. Du darfst trotzdem selbst wählen.`;
+    wahl.querySelectorAll("button").forEach(x=>{const alt=x.querySelector(".badge");if(alt)alt.remove();if(x.dataset.k===k)x.insertAdjacentHTML("beforeend",'<span class="badge">empfohlen</span>');});};
+  return root;
+}
+// 15-Minuten-Uhr (Hausaufgabe nach Zeit, Konzept 5a)
+function uhr(){
+  const u=el("div","uhr",'<span>⏱ Hausaufgabe: <b>höchstens 15 Minuten</b>, dann aufhören.</span><span class="zeit">15:00</span><button>Uhr starten</button>');
+  const z=u.querySelector(".zeit"),b=u.querySelector("button");let ende=0,t=null;
+  const tick=()=>{const r=Math.max(0,Math.round((ende-Date.now())/1000));z.textContent=`${Math.floor(r/60)}:${String(r%60).padStart(2,"0")}`;
+    if(r<=0){clearInterval(t);u.classList.add("um");z.textContent="Zeit um – hör auf. Schreib ggf. eine Hänge-Zeile.";b.textContent="Neu starten";}};
+  b.onclick=()=>{clearInterval(t);u.classList.remove("um");ende=Date.now()+15*60000;b.textContent="Neu starten";tick();t=setInterval(tick,1000);};
+  return u;
+}
+// Ergebnis-Karte: kein Name, kein Server – die Lehrkraft schaut in der Folgestunde aufs Tablet
+const KEY="karte-"+location.pathname.split("/").pop();
+function karte(stern){
+  const jetzt=new Date();let alt={};try{alt=JSON.parse(localStorage.getItem(KEY)||"{}");}catch(e){}
+  const zeilen=Object.entries(ERG).filter(([k,v])=>v.stufe===stern||v.stufe==="1").map(([k,v])=>`<span class="${v.ok?"ok":"no"}">${v.ok?"✓":"✗"}</span> Aufgabe ${esc(k.replace(/^1 /,"1 "))}`);
+  const c=el("div","ekarte",`<h3>Ergebnis-Karte · ${esc(D.titel)} · Stufe ${stern}</h3>`+
+    `<div>${jetzt.toLocaleDateString("de-DE")} · ${jetzt.toLocaleTimeString("de-DE",{hour:"2-digit",minute:"2-digit"})}</div>`+
+    `<div>${zeilen.length?zeilen.join("<br>"):"Noch keine Ergebnisse geprüft."}</div>`+
+    `<div style="margin-top:8px"><b>Hänge-Zeile</b> (wo genau hängst du – und warum?)</div><textarea placeholder="Ich hänge bei Aufgabe …, weil …"></textarea>`);
+  const ta=c.querySelector("textarea");ta.value=alt.haenge||"";
+  ta.oninput=()=>{try{localStorage.setItem(KEY,JSON.stringify({haenge:ta.value,erg:ERG,stufe:stern,zeit:Date.now()}));}catch(e){}};
+  try{localStorage.setItem(KEY,JSON.stringify({haenge:ta.value,erg:ERG,stufe:stern,zeit:Date.now()}));}catch(e){}
+  return c;
+}
+const box=document.getElementById("teile"),secs=D.teile.map(teil);
+secs.forEach(s=>box.appendChild(s));
+if(D.mehrteilig){
+  document.getElementById("teilwahl").hidden=false;const tw=document.getElementById("tw");
+  const zeig=i=>{secs.forEach((s,j)=>s.hidden=j!==i);tw.querySelectorAll("button").forEach((b,j)=>b.setAttribute("aria-pressed",j===i));};
+  D.teile.forEach((T,i)=>{const b=el("button","",esc(T.stunde)+`<small>${esc(T.kurz)}</small>`);b.onclick=()=>zeig(i);tw.appendChild(b);});
+  zeig(D.teile.length-1);
+}
+</script>
+</body>
+</html>

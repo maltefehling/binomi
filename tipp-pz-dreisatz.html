@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tipp: Dreisatz und Streifen</title>
+<!-- Kapitel VII Prozente (Kl. 7): lila Tipp-Seite, gebaut mit tipp_pz_bau.py. Anderes Beispiel, nie die Lösung einer Aufgabe. -->
+<style>
+  :root{--tipp:#6d4a9e;--tippH:#f1eaf8;--tippL:#b79bd6;--ink:#1b2a3a;--muted:#5b6b7c;--bg:#f7f4fb;--line:#d8cce8;--a:#2e5d9f;--hl:#c0700f}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;-webkit-user-select:none;user-select:none}
+  button{font:inherit;touch-action:manipulation}
+  header{padding:12px 16px;background:var(--tipp);color:#fff} header h1{font-size:20px;margin:0}
+  main{padding:12px 16px 24px;max-width:860px;margin:0 auto}
+  .start{font-size:19px;color:var(--tipp);font-weight:700;margin:4px 0 10px}
+  .knoepfe{display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+  .knoepfe button{flex:1 1 150px;min-height:52px;border-radius:12px;font-size:18px;font-weight:700;border:2px solid var(--tipp);background:#fff;color:var(--tipp)}
+  .knoepfe button.haupt{background:var(--tipp);color:#fff}
+  .bild{background:#fff;border:1px solid var(--line);border-radius:14px;padding:8px;margin-bottom:10px}
+  .bild svg{width:100%;height:auto;display:block}
+  .cap{background:#fff;border:2px solid var(--tippL);border-radius:12px;padding:10px 14px;font-size:21px;line-height:1.45;min-height:64px;margin-bottom:10px}
+  .tafel{background:#fff;border:1px solid var(--line);border-radius:14px;padding:6px 16px;min-height:40px}
+  .z{font-size:27px;line-height:1.6;opacity:0;transition:opacity .6s;font-variant-numeric:tabular-nums}
+  .z.da{opacity:1} .z.neu{color:var(--tipp)}
+  .hl{color:var(--hl);font-weight:800}
+  .du{display:none;margin-top:14px;background:var(--tippH);border:1px solid var(--tippL);border-radius:12px;padding:10px 14px;font-size:19px;line-height:1.45}
+  .du.da{display:block}
+  footer{color:var(--muted);font-size:13px;text-align:center;padding:14px 0}
+  .geo,.sichtbar{transition:transform 1.4s ease, opacity .8s}
+  .fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;font-size:.8em;line-height:1.15;margin:0 4px}
+  .fr>span:first-child{border-bottom:2px solid currentColor;padding:0 6px}
+</style>
+</head>
+<body>
+<header><h1>Tipp: Dreisatz und Streifen</h1></header>
+<main>
+  <div class="start">Beispiel mit anderen Zahlen:  Eine Klasse hat 200 €. 30 % gibt sie für Eintritt aus. Links rechnen die Eltern mit dem Dreisatz, rechts rechnest du am Streifen.</div>
+  <div class="knoepfe"><button class="haupt" id="play">▶ Abspielen</button><button id="pause">⏸ Pause</button></div>
+  <div class="bild"><svg viewBox="0 0 900 350" aria-label="Links der Dreisatz 100 % entspricht 200 €, 1 % entspricht 2 €, 30 % entspricht 60 €; rechts derselbe Weg am Prozentstreifen"><defs><marker id="pfc0700f" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#c0700f"/></marker><marker id="pf2e7d32" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d32"/></marker></defs><text x="200" y="26" text-anchor="middle" font-size="18" font-weight="700" fill="#5b6b7c">Dreisatz (Heft der Eltern)</text><text x="675.0" y="26" text-anchor="middle" font-size="18" font-weight="700" fill="#5b6b7c">Prozentstreifen</text><line x1="430" y1="40" x2="430" y2="335" stroke="#d8cce8" stroke-width="2"/><g id="z1" class="sichtbar" style="opacity:0"><text x="190" y="130" text-anchor="end" font-size="30" font-weight="800" fill="#2e5d9f">100 %</text><text x="210" y="130" text-anchor="middle" font-size="30" font-weight="800" fill="#1b2a3a">≙</text><text x="232" y="130" font-size="30" font-weight="800" fill="#2e5d9f">200 €</text></g><g id="z2" class="sichtbar" style="opacity:0"><text x="190" y="200" text-anchor="end" font-size="30" font-weight="800" fill="#c0700f">1 %</text><text x="210" y="200" text-anchor="middle" font-size="30" font-weight="800" fill="#1b2a3a">≙</text><text x="232" y="200" font-size="30" font-weight="800" fill="#c0700f">2 €</text></g><g id="z3" class="sichtbar" style="opacity:0"><text x="190" y="270" text-anchor="end" font-size="30" font-weight="800" fill="#2e7d32">30 %</text><text x="210" y="270" text-anchor="middle" font-size="30" font-weight="800" fill="#1b2a3a">≙</text><text x="232" y="270" font-size="30" font-weight="800" fill="#2e7d32">60 €</text></g><g id="p1l" class="sichtbar" style="opacity:0"><path d="M 112 132 Q 74 160.0 112 188" fill="none" stroke="#c0700f" stroke-width="3.5" marker-end="url(#pfc0700f)"/><text x="68.30000000000001" y="166.0" text-anchor="end" font-size="19" font-weight="800" fill="#c0700f">: 100</text></g><g id="p1r" class="sichtbar" style="opacity:0"><path d="M 330 132 Q 368 160.0 330 188" fill="none" stroke="#c0700f" stroke-width="3.5" marker-end="url(#pfc0700f)"/><text x="373.7" y="166.0" text-anchor="start" font-size="19" font-weight="800" fill="#c0700f">: 100</text></g><g id="p2l" class="sichtbar" style="opacity:0"><path d="M 112 202 Q 74 230.0 112 258" fill="none" stroke="#2e7d32" stroke-width="3.5" marker-end="url(#pf2e7d32)"/><text x="68.30000000000001" y="236.0" text-anchor="end" font-size="19" font-weight="800" fill="#2e7d32">· 30</text></g><g id="p2r" class="sichtbar" style="opacity:0"><path d="M 330 202 Q 368 230.0 330 258" fill="none" stroke="#2e7d32" stroke-width="3.5" marker-end="url(#pf2e7d32)"/><text x="373.7" y="236.0" text-anchor="start" font-size="19" font-weight="800" fill="#2e7d32">· 30</text></g><rect x="480" y="165" width="390" height="50" fill="#eef1f5"/><rect id="fuell" class="sichtbar" style="opacity:0" x="480" y="165" width="117.0" height="50" fill="#8fc77f"/><line x1="497.55" y1="165" x2="497.55" y2="215" stroke="#3b4a5a" stroke-width="2.5"/><rect x="480" y="165" width="390" height="50" fill="none" stroke="#3b4a5a" stroke-width="3"/><text x="480" y="155" text-anchor="middle" font-size="17" font-weight="700" fill="#5b6b7c">0</text><text x="480" y="237" text-anchor="middle" font-size="17" font-weight="700" fill="#5b6b7c">0</text><text x="472" y="131" text-anchor="end" font-size="14" fill="#5b6b7c">in %</text><text x="472" y="261" text-anchor="end" font-size="14" fill="#5b6b7c">in €</text><g id="s1" class="sichtbar" style="opacity:0"><text x="870" y="155" text-anchor="middle" font-size="18" font-weight="800" fill="#2e5d9f">100</text><text x="870" y="237" text-anchor="middle" font-size="18" font-weight="800" fill="#2e5d9f">200</text></g><g id="s2" class="sichtbar" style="opacity:0"><text x="503.55" y="155" text-anchor="middle" font-size="18" font-weight="800" fill="#c0700f">1</text><text x="503.55" y="237" text-anchor="middle" font-size="18" font-weight="800" fill="#c0700f">2</text></g><g id="s3" class="sichtbar" style="opacity:0"><text x="597.0" y="155" text-anchor="middle" font-size="18" font-weight="800" fill="#2e7d32">30</text><text x="597.0" y="237" text-anchor="middle" font-size="18" font-weight="800" fill="#2e7d32">60</text></g><g id="b1o" class="sichtbar" style="opacity:0"><path d="M 870 133 Q 683.775 57 497.55 133" fill="none" stroke="#c0700f" stroke-width="3.5" marker-end="url(#pfc0700f)"/><rect x="651.775" y="71.0" width="64" height="22" fill="white"/><text x="683.775" y="89.0" text-anchor="middle" font-size="19" font-weight="800" fill="#c0700f">: 100</text></g><g id="b1u" class="sichtbar" style="opacity:0"><path d="M 870 247 Q 683.775 323 497.55 247" fill="none" stroke="#c0700f" stroke-width="3.5" marker-end="url(#pfc0700f)"/><rect x="651.775" y="287.0" width="64" height="22" fill="white"/><text x="683.775" y="303.0" text-anchor="middle" font-size="19" font-weight="800" fill="#c0700f">: 100</text></g><g id="b2o" class="sichtbar" style="opacity:0"><path d="M 497.55 133 Q 547.275 105 597.0 133" fill="none" stroke="#2e7d32" stroke-width="3.5" marker-end="url(#pf2e7d32)"/><rect x="525.22" y="95.56" width="64" height="22" fill="white"/><text x="557.22" y="113.56" text-anchor="middle" font-size="19" font-weight="800" fill="#2e7d32">· 30</text></g><g id="b2u" class="sichtbar" style="opacity:0"><path d="M 497.55 247 Q 547.275 275 597.0 247" fill="none" stroke="#2e7d32" stroke-width="3.5" marker-end="url(#pf2e7d32)"/><rect x="525.22" y="262.44" width="64" height="22" fill="white"/><text x="557.22" y="278.44" text-anchor="middle" font-size="19" font-weight="800" fill="#2e7d32">· 30</text></g></svg></div>
+  <div class="cap" id="cap"></div>
+  
+  <div class="du" id="du"><b>Jetzt du:</b> Markiere auf eurer Karte die drei Zeilen im Dreisatz und die drei Schritte am Streifen in denselben Farben. Dann schreibt eure Erklärung mit den Satzanfängen.</div>
+</main>
+<footer>Fehling · Übungsstunde Alle drei Lücken · Tipp</footer>
+<script>
+
+function bildZustand(k){const on=(id,b)=>document.getElementById(id).style.opacity=b?1:0;
+ on("z1",k>=2);on("s1",k>=2);on("z2",k>=3);on("p1l",k>=3);on("p1r",k>=3);on("s2",k>=3);on("b1o",k>=3);on("b1u",k>=3);
+ on("z3",k>=4);on("p2l",k>=4);on("p2r",k>=4);on("s3",k>=4);on("b2o",k>=4);on("b2u",k>=4);on("fuell",k>=4);}
+
+
+"use strict";
+const S=[["", "Achte auf die Farben: Gleiche Farbe heißt gleicher Schritt.", false], ["", "Blau: Die erste Zeile ist das Ganze. 100 % entsprechen 200 €. Am Streifen steht das Ganze unter 100 %.", true], ["", "Orange: Die Eltern rechnen runter auf 1 % – geteilt durch 100, links und rechts. Am Streifen ist das der Bogen runter auf 1 %, oben und unten.", true], ["", "Grün: Dann rechnen sie hoch auf 30 % – mal 30, links und rechts. Am Streifen ist das der Bogen hoch auf 30 %.", true], ["", "Der Dreisatz schreibt die drei Schritte untereinander. Der Streifen zeigt dieselben Schritte als Bild. Die Rechnung ist genau dieselbe.", false]];
+const cap=document.getElementById("cap"),du=document.getElementById("du"),Z=[...document.querySelectorAll(".z")],pb=document.getElementById("pause");
+let n=0,timer=null,steht=false;
+const lese=t=>1500+80*t.length;            // Lesezeit nach Textlänge (Regel 16.10.2026)
+function zustand(k){if(typeof bildZustand==="function")bildZustand(k);}
+function zeig(){
+  const s=S[n-1];cap.textContent=s?s[1]:"Tippe auf ▶ Abspielen.";
+  Z.forEach((z,i)=>{z.classList.toggle("da",i<n&&S[i][0]!=="");z.classList.toggle("neu",i===n-1);});
+  zustand(n);du.classList.toggle("da",n>=S.length);
+}
+function weiter(){if(steht)return;if(n<S.length){n++;zeig();timer=setTimeout(weiter,lese(S[n-1][1])+(S[n-1][2]?1400:0));}else pb.disabled=true;}
+function start(){clearTimeout(timer);steht=false;pb.disabled=false;pb.textContent="⏸ Pause";n=0;zeig();timer=setTimeout(weiter,500);}
+document.getElementById("play").onclick=start;
+pb.onclick=()=>{steht=!steht;pb.textContent=steht?"▶ Weiter":"⏸ Pause";clearTimeout(timer);if(!steht)weiter();};
+zeig();
+
+</script>
+</body>
+</html>
