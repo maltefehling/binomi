@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Check-in VII.7 · Rast in Allensbach – Was ist gesucht?</title>
+<!-- Kapitel VII Prozente (Kl. 7), Check-in zu VII.7 (QR neben dem Check-in-Merkkasten im Skript). Aus check-in-vorlage.html (Kap. II) abgeleitet; diese Datei ist die Quelle.
+     Drei Aufgabentypen: ① Wo ist das „?“ (Lücke im Text erkennen) ② Prozentsatz mit Schritten ③ Rest bis 100 %.
+     Falsch → Erklärung mit Bild, dann neue Aufgabe desselben Typs. Alle drei geschafft → Profi-Runde (endlos, schwerer, mit Hundertsteln).
+     Kein Login, kein Server; das Ergebnis bleibt nur auf diesem Gerät (localStorage). Belegte Beispiele: 7/20 (Tipp VII.1), Schulhof 200 m² / 30 % (Tipp VII.2) – kommen hier nicht vor. -->
+<style>
+  :root{--acc:#1f4e79;--ink:#1b2a3a;--muted:#5b6b7c;--bg:#f4f7fb;--line:#c9d6e5;--merk:#dde8f5;--merkL:#a9c1e0;
+    --tipp:#6d4a9e;--tippH:#f1eaf8;--tippL:#b79bd6;--ok:#2e7d32;--okH:#e8f4e6;--fehl:#b03a2e;--fehlH:#fbeceb;--hl:#c0700f;--gold:#8a6d00;--goldH:#fff6d6}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
+  button,input{font:inherit;touch-action:manipulation}
+  header{padding:12px 16px;background:var(--acc);color:#fff} header h1{font-size:20px;margin:0}
+  main{max-width:860px;margin:0 auto;padding:14px 16px 32px}
+  .hinweis{background:#fff;border:1px solid #bfbfbf;border-radius:12px;padding:10px 14px;font-size:18px;line-height:1.45;margin-bottom:12px}
+  .fort{display:flex;gap:8px;margin:0 0 12px;flex-wrap:wrap}
+  .fort span{flex:1 1 150px;border:2px solid var(--line);border-radius:10px;padding:6px 10px;font-size:16px;font-weight:700;color:var(--muted);background:#fff}
+  .fort span.jetzt{border-color:var(--acc);color:var(--acc)} .fort span.fertig{border-color:var(--ok);color:var(--ok);background:var(--okH)}
+  .karte{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:12px}
+  .karte h2{font-size:21px;color:var(--acc);margin:0 0 8px}
+  .auf{font-size:24px;line-height:1.5;margin:6px 0 10px}
+  .ein{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .ein input{width:170px;min-height:54px;font-size:26px;border:2px solid var(--acc);border-radius:12px;padding:4px 10px;text-align:right}
+  .ein .einh{font-size:24px}
+  .btn{min-height:54px;border-radius:12px;border:2px solid var(--acc);background:var(--acc);color:#fff;font-size:19px;font-weight:700;padding:0 18px}
+  .btn.hell{background:#fff;color:var(--acc)}
+  .btn.tipp{background:var(--tippH);color:var(--tipp);border-color:var(--tippL)}
+  .knopfreihe{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+  .rm{border-radius:12px;padding:10px 14px;margin-top:12px;font-size:19px;line-height:1.5}
+  .rm.ok{background:var(--okH);border:1px solid #9fcf9a;color:#1d5a21}
+  .rm.fehl{background:var(--fehlH);border:1px solid #e3aaa4}
+  .rm.tipp{background:var(--tippH);border:1px solid var(--tippL)}
+  .rm b{color:var(--acc)}
+  .hl{color:var(--hl);font-weight:800}
+  svg{width:100%;height:auto;display:block}
+  .bild{background:#fff;border:1px solid var(--line);border-radius:12px;margin:8px 0}
+  .strecke{cursor:pointer}
+  .fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1.1;margin:0 4px}
+  .fr>span:first-child{border-bottom:2.5px solid currentColor;padding:0 6px}
+  .wahlk{display:flex;gap:12px;flex-wrap:wrap;margin-top:6px}
+  .wahlk button{min-width:96px;min-height:76px;border-radius:12px;border:2px solid var(--acc);background:#fff;color:var(--acc);font-size:26px;font-weight:700;padding:6px 14px}
+  .profi{background:var(--goldH);border:2px solid #e6c65a}
+  .profi h2{color:var(--gold)}
+  .punkte{font-size:20px;font-weight:800;color:var(--gold)}
+  .ergebnis{background:#fff;border:2px solid var(--acc);border-radius:14px;padding:12px 16px;font-size:19px;line-height:1.6;margin-top:12px}
+  .ergebnis h3{margin:0 0 6px;color:var(--acc);font-size:20px}
+  footer{color:var(--muted);font-size:13px;text-align:center;margin-top:24px}
+  [hidden]{display:none!important}
+</style>
+</head>
+<body>
+<header><h1>Check-in VII.7 · Rast in Allensbach – Was ist gesucht?</h1></header>
+<main>
+  <div class="hinweis">Drei kurze Aufgaben zu dem, was du heute brauchst. Rechne im Kopf oder mit dem Taschenrechner. Tippe das Ergebnis ein oder tippe die richtige Antwort an. Ist es falsch, bekommst du eine Erklärung und eine neue Aufgabe. <b>Ca. 6 Minuten.</b></div>
+  <div class="fort" id="fort"><span data-k="0">① Wo ist das „?“</span><span data-k="1">② Prozentsatz</span><span data-k="2">③ Rest bis 100 %</span></div>
+  <div id="bereich"></div>
+  <div class="ergebnis" id="ergebnis" hidden></div>
+  <footer>Fehling · VII Prozente · Check-in</footer>
+</main>
+<script>
+"use strict";
+const $=s=>document.querySelector(s);
+const el=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e;};
+const zuf=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const wahl=a=>a[Math.floor(Math.random()*a.length)];
+const zahl=s=>{const m=String(s).replace(/\s/g,"").replace(/\./g,"").replace(",",".").match(/-?\d+(\.\d+)?/);return m?parseFloat(m[0]):NaN;};
+const de=x=>String(Math.round(x*1000)/1000).replace(".",",").replace(/\B(?=(\d{3})+(?!\d))/g," ");
+const NS="http://www.w3.org/2000/svg";
+const br=(z,n)=>`<span class="fr"><span>${z}</span><span>${n}</span></span>`;
+const ggt=(a,b)=>b?ggt(b,a%b):a;
+// Streifen mit n gleichen Teilen, k davon gefärbt
+function streifen(n,k,farbe="#b9cfe8"){
+  const W=560,H=64,x0=6,y0=6;let s=`<svg viewBox="0 0 ${W+12} ${H+12}"><rect x="${x0}" y="${y0}" width="${W}" height="${H}" fill="#eef1f5"/>`+
+    `<rect x="${x0}" y="${y0}" width="${W*k/n}" height="${H}" fill="${farbe}"/>`;
+  for(let i=1;i<n;i++)s+=`<line x1="${x0+i*W/n}" y1="${y0}" x2="${x0+i*W/n}" y2="${y0+H}" stroke="#3b4a5a" stroke-width="3"/>`;
+  return s+`<rect x="${x0}" y="${y0}" width="${W}" height="${H}" fill="none" stroke="#3b4a5a" stroke-width="3"/></svg>`;
+}
+
+// ---------------- Aufgabengeneratoren: {html, pruef(eingabe)→bool, loesung, erkl (HTML), tipp (HTML), art:"zahl"|"tippen"} ----------------
+function genWo(schwer){
+  // ① Wo ist das „?“ – Lücke im Text erkennen (VII.5–VII.7)
+  const fs=schwer?[
+    ["In der Klasse sind 25 Kinder. 15 davon fahren mit dem Rad. Wie viel Prozent sind das?",2,"Das Ganze (25 Kinder) und der Teil (15) sind gegeben. Es fehlt die Prozentzahl → oben."],
+    ["15 Kinder fahren mit dem Rad. Das sind 60 % der Klasse. Wie viele Kinder sind in der Klasse?",1,"Die Prozentzahl und der Teil sind gegeben. Es fehlt das Ganze → unter 100 %."],
+    ["60 % von 25 Kindern fahren mit dem Rad. Wie viele Kinder sind das?",0,"Das Ganze (25) und die Prozentzahl sind gegeben. Es fehlt der Teil → unter der Prozentzahl."],
+    ["Ein Akku hat noch 1000 mAh von 4000 mAh. Wie viel Prozent zeigt das Handy an?",2,"Das Ganze (4000 mAh) und der Teil sind gegeben. Es fehlt die Prozentzahl → oben."],
+    ["Nina hat 36 € gespart. Das sind 60 % des Preises. Wie teuer ist der Helm?",1,"Es fehlt das Ganze (der Preis) → unter 100 %."]]:[
+    ["30 % von 200 Rädern sind E-Bikes. Wie viele Räder sind das?",0,"Das Ganze (200 Räder) und die Prozentzahl sind gegeben. Es fehlt der Teil → unter der Prozentzahl."],
+    ["60 von 200 Rädern sind E-Bikes. Wie viel Prozent sind das?",2,"Das Ganze (200) und der Teil (60) sind gegeben. Es fehlt die Prozentzahl → oben."],
+    ["54 km sind 72 % der Tour. Wie lang ist die ganze Tour?",1,"Gesucht ist die ganze Tour – das Ganze → unter 100 %."],
+    ["Von 75 km sind 40 % geschafft. Wie viele Kilometer sind das?",0,"Das Ganze (75 km) und die Prozentzahl sind gegeben. Es fehlt der Teil → unter der Prozentzahl."],
+    ["Von 400 ha sind 220 ha Gemüsefelder. Wie viel Prozent sind das?",2,"Das Ganze (400 ha) und der Teil sind gegeben. Es fehlt die Prozentzahl → oben."]];
+  const [t,richtig,erk]=wahl(fs),opts=["unter der Prozentzahl","unter 100 %","oben"];
+  return {art:"tippen",richtig,html:`<div class="auf">${t}<br>Wo steht am Streifen das „?“? Tippe an.</div><div class="wahlk">${opts.map((o,i)=>`<button class="strecke" style="font-size:20px" data-i="${i}">${o}</button>`).join("")}</div>`,
+    pruef:i=>i===richtig,loesung:opts[richtig],
+    erkl:`${erk}<br>Frag immer zuerst: <b>Was ist das Ganze?</b> Das Ganze steht unter 100 %.`,
+    tipp:`Was ist das Ganze? Ist es gegeben? Steht im Text schon eine Prozentzahl?`};
+}
+function genPS(schwer){
+  // ② Prozentsatz mit Schritten (VII.6)
+  const fs=schwer?[[270,67.5,"km"],[4000,2600,"mAh"],[48,12,"Fotos"],[1200,840,"ha"],[62,46.5,"km²"]]:[[200,60,"km"],[400,220,"ha"],[200,50,"Räder"],[1200,720,"ha"],[300,45,"€"]];
+  const [G,W,e]=wahl(fs),E=G/100,L=Math.round(W/E*1000)/1000;
+  return {art:"zahl",einh:"%",html:`<div class="auf"><b style="color:#2e7d32">${de(W)} ${e}</b> von <b style="color:#2e5d9f">${de(G)} ${e}</b> sind wie viel Prozent?</div><div style="font-size:17px;color:#5b6b7c">Erst 1 % (durch 100), dann: Wie viele Schritte bis ${de(W)}? Taschenrechner erlaubt.</div>`,
+    pruef:v=>Math.abs(v-L)<1e-6,loesung:`1 % = ${de(G)} ${e} : 100 = ${de(E)} ${e} · ${de(W)} : ${de(E)} = ${de(L)} Schritte → ${de(L)} %`,
+    erkl:`Das „?“ steht oben.<br>Runter rechnen auf 1 %: ${de(G)} ${e} : 100 = <b>${de(E)} ${e}</b>.<br>Hoch rechnen auf den Teil: Wie viele ${de(E)}er-Schritte bis ${de(W)}? ${de(W)} : ${de(E)} = <b>${de(L)}</b> Schritte → <b>${de(L)} %</b>.`,
+    tipp:`1 % sind ${de(E)} ${e}. Wie viele solche Schritte sind es bis ${de(W)} ${e}? Teile.`};
+}
+function genRest(schwer){
+  // ③ Rest bis 100 % (Vorbereitung VII.8)
+  const p=schwer?wahl([37,64,19,72.5,88]):wahl([30,40,75,60,25,90]),L=Math.round((100-p)*100)/100;
+  const t=wahl([`${de(p)} % der Tour sind geschafft. Wie viel Prozent fehlen noch?`,`${de(p)} % der Räder sind E-Bikes. Wie viel Prozent sind keine E-Bikes?`,`Der Akku ist zu ${de(p)} % voll. Wie viel Prozent sind leer?`]);
+  return {art:"zahl",einh:"%",html:`<div class="auf">${t}</div><div style="font-size:17px;color:#5b6b7c">Das Ganze sind 100 %.</div>`,
+    pruef:v=>Math.abs(v-L)<1e-6,loesung:`100 % − ${de(p)} % = ${de(L)} %`,
+    erkl:`Der ganze Streifen sind 100 %. Der Rest ist 100 % − ${de(p)} % = <b>${de(L)} %</b>.`,
+    tipp:`Rechne 100 minus ${de(p)}.`};
+}
+const TYPEN=[{name:"① Wo ist das „?“",gen:genWo},{name:"② Prozentsatz",gen:genPS},{name:"③ Rest bis 100 %",gen:genRest}];
+
+// ---------------- Ablauf ----------------
+const log=[{versuche:0,ok:false},{versuche:0,ok:false},{versuche:0,ok:false}];
+let k=0,profi=false,punkte=0;
+function fort(){document.querySelectorAll("#fort span").forEach((s,i)=>{s.classList.toggle("fertig",log[i].ok);s.classList.toggle("jetzt",!profi&&i===k);});}
+function zeigeAufgabe(){
+  const T=TYPEN[k],A=T.gen(profi),b=$("#bereich");b.innerHTML="";fort();
+  const kt=el("div","karte"+(profi?" profi":""));
+  kt.appendChild(el("h2","",profi?`⭐ Profi-Runde · ${T.name.slice(2)}  <span class="punkte">· ${punkte} Punkte</span>`:T.name+(log[k].versuche?" · neue Aufgabe":"")));
+  kt.insertAdjacentHTML("beforeend",A.html);
+  const rm=el("div","rm");rm.hidden=true;
+  const tippBox=el("div","rm tipp",`<b>💡 Tipp:</b> ${A.tipp}`);tippBox.hidden=true;
+  let eing=null;
+  if(A.art==="zahl"){const r=el("div","ein");eing=el("input");eing.inputMode="decimal";eing.autocomplete="off";eing.placeholder="?";r.appendChild(eing);
+    if(A.einh)r.appendChild(el("span","einh",A.einh));kt.appendChild(r);setTimeout(()=>eing.focus(),50);
+    eing.addEventListener("keydown",e=>{if(e.key==="Enter")pruefe(zahl(eing.value));});}
+  const reihe=el("div","knopfreihe");
+  const bP=el("button","btn","Prüfen"),bT=el("button","btn tipp","💡 Tipp");
+  if(A.art==="zahl")reihe.appendChild(bP);reihe.appendChild(bT);kt.append(reihe,tippBox,rm);b.appendChild(kt);
+  bT.onclick=()=>{tippBox.hidden=!tippBox.hidden;};
+  if(A.art==="tippen")kt.querySelectorAll(".strecke").forEach(g=>g.onclick=()=>pruefe(+g.dataset.i));
+  bP.onclick=()=>pruefe(zahl(eing.value));
+  let fertig=false;
+  function pruefe(v){
+    if(fertig)return; if(A.art==="zahl"&&isNaN(v)){rm.hidden=false;rm.className="rm fehl";rm.innerHTML="Tippe eine Zahl ein.";return;}
+    fertig=true;bP.disabled=true;if(!profi)log[k].versuche++;
+    const ok=A.pruef(v);rm.hidden=false;
+    const nb=el("button","btn",ok?"Weiter ▶":"Neue Aufgabe ▶");
+    if(ok){rm.className="rm ok";rm.innerHTML=`✓ Richtig! ${A.loesung}`;if(profi)punkte++;else log[k].ok=true;}
+    else{rm.className="rm fehl";rm.innerHTML=`✗ Noch nicht. Richtig ist <b>${A.loesung}</b>.<br>${A.erkl}`;}
+    rm.appendChild(el("div","knopfreihe")).appendChild(nb);
+    nb.onclick=()=>{if(ok&&!profi){k++;}else if(profi){k=Math.floor(Math.random()*3);}
+      if(!profi&&k>=3){profi=true;k=0;zeigeErgebnis();}zeigeAufgabe();};
+    nb.focus();speichern();
+  }
+}
+function zeigeErgebnis(){
+  const e=$("#ergebnis"),jetzt=new Date();e.hidden=false;
+  const zeile=(i,t)=>`${t}: ${log[i].versuche===1?"✓ sofort richtig":`✓ nach ${log[i].versuche-1} Erklärung${log[i].versuche>2?"en":""}`}`;
+  e.innerHTML=`<h3>Check-in geschafft – ${jetzt.toLocaleDateString("de-DE")} ${jetzt.toLocaleTimeString("de-DE",{hour:"2-digit",minute:"2-digit"})}</h3>`+
+    [zeile(0,"① Wo ist das „?“"),zeile(1,"② Prozentsatz"),zeile(2,"③ Rest bis 100 %")].join("<br>")+
+    (log[0].versuche>1?`<br><b>Tipp:</b> Schau dir im Skript den Merkkasten von VII.6 noch einmal an (drei Streifen).`:"")+
+    `<br><br>Bis die Lehrkraft weitermacht: <b>Profi-Runde</b> oben – sammle Punkte mit schwereren Aufgaben.`;
+}
+function speichern(){try{localStorage.setItem("checkin-pz-vii7",JSON.stringify({log,punkte,zeit:Date.now()}));}catch(e){}}
+zeigeAufgabe();
+</script>
+</body>
+</html>
