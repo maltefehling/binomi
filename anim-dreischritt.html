@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Animation: Der Dreischritt über 1 %</title>
 <!-- Kapitel VII Prozente (Kl. 7), Animation zu VII.4 „Der Dreischritt über 1 %“ (QR im Skript, Erarbeitung „Welches Stück passt immer?“).
-     Mehrwert: Bewegung – Bogen runter (: 100) und Bogen hoch (· 65) wachsen oben und unten gleichzeitig; danach fächert der Bogen hoch zu 20 %, 37 %, 65 % auf.
+     Mehrwert: Bewegung – Bogen runter (: 100) und Bogen hoch (· 65) wachsen oben und unten gleichzeitig; danach fächert der Hoch rechnen auf 20 %, 37 %, 65 % auf.
      Zahlen wie im Skript (Bodenseeufer 270 km), weil die Seite die gemeinsame Erarbeitung begleitet. Lesezeit 1500 ms + 80 ms je Zeichen, Pause, Nochmal. -->
 <style>
   :root{--acc:#1f4e79;--ink:#1b2a3a;--muted:#5b6b7c;--bg:#f4f7fb;--line:#c9d6e5;--ps:#c0700f;--rand:#3b4a5a}
@@ -71,9 +71,9 @@ const faecher=[bogen(E,0.2,YO,-1,16,"· 20","#c0700f",null,0.8),bogen(E,0.2,YU,1
 const zeig=(e,an)=>e.classList.toggle("aus",!an);
 const S1=[["Das Ufer des Bodensees ist rund 270 km lang. Gesucht: 65 % davon. Kein Viertel, Fünftel oder Zehntel passt genau.",0],
  ["Wir teilen in 100 Stücke. Ein Stück ist 1 % – dieser Strich ist zum Lesen etwas weiter rechts gezeichnet.",0],
- ["Bogen runter zu 1 %: durch 100. Oben 100 % : 100 = 1 %, unten 270 km : 100 = 2,7 km.",1],
- ["Bogen hoch zu 65 %: mal 65. Oben 1 % · 65 = 65 %, unten 2,7 km · 65 = 175,5 km.",2],
- ["Der Prozentwert ist 175,5 km. Oben und unten stand an jedem Bogen dieselbe Rechnung.",2],
+ ["Runter rechnen auf 1 %: durch 100. Oben 100 % : 100 = 1 %, unten 270 km : 100 = 2,7 km.",1],
+ ["Hoch rechnen auf 65 %: mal 65. Oben 1 % · 65 = 65 %, unten 2,7 km · 65 = 175,5 km.",2],
+ ["Der Prozentwert ist 175,5 km. Oben und unten rechnest du gleich.",2],
  ["Vom selben 1-%-Stück kommst du mit einem Bogen auch zu 20 % (54 km) und zu 37 % (99,9 km).",3],
  ["1 % passt in jede Prozentzahl. Von 1 % kommst du mit mal zu jeder Zahl.",3],
  ["Jetzt du: Zeichne die Bögen in deinem Streifen ein und schreibe die Rechnungen daran.",3]];

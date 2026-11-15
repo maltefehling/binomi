@@ -53,7 +53,7 @@ function bildZustand(k){document.getElementById("teile").style.opacity=k>=2?1:0;
 
 
 "use strict";
-const S=[["", "Gesucht sind die Gewinne: 60 % von 300 Losen.", true], ["60 = 3 · 20", "60 ist ein Vielfaches von 20. Also passen Fünftel – jedes Stück ist 20 %.", true], ["300 : 5 = 60", "Runter zu einem Fünftel: geteilt durch 5. Oben 100 % : 5 = 20 %, unten 300 : 5 = 60 Lose.", true], ["60 · 3 = 180", "Hoch zu 60 %: mal 3. Oben 20 % · 3 = 60 %, unten 60 · 3 = 180 Lose.", true], ["", "Oben und unten steht an jedem Bogen dieselbe Rechnung.", false]];
+const S=[["", "Gesucht sind die Gewinne: 60 % von 300 Losen.", true], ["60 = 3 · 20", "60 ist ein Vielfaches von 20. Also passen Fünftel – jedes Stück ist 20 %.", true], ["300 : 5 = 60", "Runter rechnen auf ein Fünftel: geteilt durch 5. Oben 100 % : 5 = 20 %, unten 300 : 5 = 60 Lose.", true], ["60 · 3 = 180", "Hoch rechnen auf 60 %: mal 3. Oben 20 % · 3 = 60 %, unten 60 · 3 = 180 Lose.", true], ["", "Oben und unten steht an jedem Bogen dieselbe Rechnung.", false]];
 const cap=document.getElementById("cap"),du=document.getElementById("du"),Z=[...document.querySelectorAll(".z")],pb=document.getElementById("pause");
 let n=0,timer=null,steht=false;
 const lese=t=>1500+80*t.length;            // Lesezeit nach Textlänge (Regel 16.10.2026)

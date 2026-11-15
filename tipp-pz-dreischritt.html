@@ -52,7 +52,7 @@ function bildZustand(k){const on=(id,b)=>document.getElementById(id).style.opaci
 
 
 "use strict";
-const S=[["", "Beschriften: oben 40 % und 100 %, unten 350 € beim Ganzen. An die 40 % kommt unten ein Fragezeichen.", true], ["350 € : 100 = 3,5 €", "Runter zu 1 %: geteilt durch 100 – oben und unten. 1 % sind 3,5 €.", true], ["3,5 € · 40 = 140 €", "Hoch zu 40 %: mal 40 – oben und unten. 40 % sind 140 €.", true], ["", "Der Prozentwert ist 140 €.", false]];
+const S=[["", "Beschriften: oben 40 % und 100 %, unten 350 € beim Ganzen. An die 40 % kommt unten ein Fragezeichen.", true], ["350 € : 100 = 3,5 €", "Runter rechnen auf 1 %: geteilt durch 100 – oben und unten. 1 % sind 3,5 €.", true], ["3,5 € · 40 = 140 €", "Hoch rechnen auf 40 %: mal 40 – oben und unten. 40 % sind 140 €.", true], ["", "Der Prozentwert ist 140 €.", false]];
 const cap=document.getElementById("cap"),du=document.getElementById("du"),Z=[...document.querySelectorAll(".z")],pb=document.getElementById("pause");
 let n=0,timer=null,steht=false;
 const lese=t=>1500+80*t.length;            // Lesezeit nach Textlänge (Regel 16.10.2026)

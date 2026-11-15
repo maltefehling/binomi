@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Check-in VII.6 · Eine Situation, drei Fragen – der Prozentsatz</title>
 <!-- Kapitel VII Prozente (Kl. 7), Check-in zu VII.6 (QR neben dem Check-in-Merkkasten im Skript). Aus check-in-vorlage.html (Kap. II) abgeleitet; diese Datei ist die Quelle.
-     Drei Aufgabentypen: ① Grundwert mit dem Dreischritt ② „Wie oft passt …?“ (teilen) ③ Fachwort antippen.
+     Drei Aufgabentypen: ① Grundwert mit dem Dreischritt ② „Wie viele Schritte?“ (teilen) ③ Fachwort antippen.
      Falsch → Erklärung mit Bild, dann neue Aufgabe desselben Typs. Alle drei geschafft → Profi-Runde (endlos, schwerer, mit Hundertsteln).
      Kein Login, kein Server; das Ergebnis bleibt nur auf diesem Gerät (localStorage). Belegte Beispiele: 7/20 (Tipp VII.1), Schulhof 200 m² / 30 % (Tipp VII.2) – kommen hier nicht vor. -->
 <style>
@@ -56,7 +56,7 @@
 <header><h1>Check-in VII.6 · Eine Situation, drei Fragen – der Prozentsatz</h1></header>
 <main>
   <div class="hinweis">Drei kurze Aufgaben zu dem, was du heute brauchst. Rechne im Kopf oder mit dem Taschenrechner. Tippe das Ergebnis ein oder tippe die richtige Antwort an. Ist es falsch, bekommst du eine Erklärung und eine neue Aufgabe. <b>Ca. 6 Minuten.</b></div>
-  <div class="fort" id="fort"><span data-k="0">① Grundwert</span><span data-k="1">② Wie oft passt …?</span><span data-k="2">③ Fachwörter</span></div>
+  <div class="fort" id="fort"><span data-k="0">① Grundwert</span><span data-k="1">② Wie viele Schritte?</span><span data-k="2">③ Fachwörter</span></div>
   <div id="bereich"></div>
   <div class="ergebnis" id="ergebnis" hidden></div>
   <footer>Fehling · VII Prozente · Check-in</footer>
@@ -87,16 +87,16 @@ function genGW(schwer){
   const [W,p,e]=wahl(fs),E=W/p,L=Math.round(E*100*100)/100,rund=schwer&&p===31;
   return {art:"zahl",einh:e,html:`<div class="auf"><b style="color:#2e7d32">${de(W)} ${e}</b> sind <b style="color:#c0700f">${p} %</b>. Wie viel sind <b style="color:#2e5d9f">100 %</b>?</div><div style="font-size:17px;color:#5b6b7c">Dreischritt: erst 1 % (durch ${p}), dann 100 %.${rund?" Runde auf Ganze.":""} Taschenrechner erlaubt.</div>`,
     pruef:v=>rund?Math.abs(v-Math.round(L))<0.6:Math.abs(v-L)<1e-6,loesung:`${de(W)} ${e} : ${p} = ${de(Math.round(E*1000)/1000)} ${e}, · 100 = ${de(rund?Math.round(L):L)} ${e}`,
-    erkl:`Das Ganze ist gesucht – das „?“ steht unter 100 %.<br>Runter zu 1 %: ${de(W)} ${e} : ${p} = <b>${de(Math.round(E*1000)/1000)} ${e}</b>.<br>Hoch zu 100 %: · 100 = <b>${de(rund?Math.round(L):L)} ${e}</b>.`,
+    erkl:`Das Ganze ist gesucht – das „?“ steht unter 100 %.<br>Runter rechnen auf 1 %: ${de(W)} ${e} : ${p} = <b>${de(Math.round(E*1000)/1000)} ${e}</b>.<br>Hoch zu 100 %: · 100 = <b>${de(rund?Math.round(L):L)} ${e}</b>.`,
     tipp:`Starte bei ${p} %: dort steht oben und unten eine Zahl. Erst durch ${p}, dann mal 100.`};
 }
 function genWieOft(schwer){
-  // ② „Wie oft passt …?“ – genau der neue Schritt am letzten Bogen
+  // ② „Wie viele Schritte?“ – genau der neue Schritt am letzten Bogen (Maco-Sprache)
   const fs=schwer?[[2.7,67.5],[0.75,45],[12.56,628],[0.62,47.12],[3.5,52.5]]:[[4,220],[12,720],[5,150],[3,90],[2,70],[6,240]];
   const [a,b]=wahl(fs),L=Math.round(b/a*1000)/1000;
-  return {art:"zahl",einh:"",html:`<div class="auf">Wie oft passt <b>${de(a)}</b> in <b>${de(b)}</b>?</div><div style="font-size:17px;color:#5b6b7c">„Wie oft passt?“ heißt: geteilt. Taschenrechner erlaubt.</div>`,
+  return {art:"zahl",einh:"",html:`<div class="auf">Wie viele Schritte der Länge <b>${de(a)}</b> sind es bis <b>${de(b)}</b>?</div><div style="font-size:17px;color:#5b6b7c">„Wie viele Schritte?“ heißt: geteilt. Taschenrechner erlaubt.</div>`,
     pruef:v=>Math.abs(v-L)<1e-6,loesung:`${de(b)} : ${de(a)} = ${de(L)}`,
-    erkl:`„Wie oft passt ${de(a)} in ${de(b)}?“ – du teilst: ${de(b)} : ${de(a)} = <b>${de(L)}</b>. Probe: ${de(a)} · ${de(L)} = ${de(b)}.`,
+    erkl:`„Wie viele ${de(a)}er-Schritte sind es bis ${de(b)}?“ – du teilst: ${de(b)} : ${de(a)} = <b>${de(L)}</b>. Probe: ${de(a)} · ${de(L)} = ${de(b)}.`,
     tipp:`Rechne ${de(b)} ÷ ${de(a)} (die größere Zahl zuerst).`};
 }
 function genWort(schwer){
@@ -110,7 +110,7 @@ function genWort(schwer){
     erkl:`Satzmuster: <b style="color:#c0700f">Prozentsatz</b> von <b style="color:#2e5d9f">Grundwert</b> sind <b style="color:#2e7d32">Prozentwert</b>.<br>${p} % von ${G} ${e} sind ${W} ${e} → der ${frage} ist <b>${richtigText}</b>.<br>Eselsbrücke: Grundwert und Prozentwert haben eine Einheit, der Prozentsatz hat das Zeichen %. Der Grundwert ist das Ganze (100 %).`,
     tipp:`Der Prozentsatz hat das Zeichen %. Der Grundwert ist das Ganze, er steht nach „von“. Der Prozentwert ist der Teil.`};
 }
-const TYPEN=[{name:"① Grundwert",gen:genGW},{name:"② Wie oft passt …?",gen:genWieOft},{name:"③ Fachwörter",gen:genWort}];
+const TYPEN=[{name:"① Grundwert",gen:genGW},{name:"② Wie viele Schritte?",gen:genWieOft},{name:"③ Fachwörter",gen:genWort}];
 
 // ---------------- Ablauf ----------------
 const log=[{versuche:0,ok:false},{versuche:0,ok:false},{versuche:0,ok:false}];
@@ -151,7 +151,7 @@ function zeigeErgebnis(){
   const e=$("#ergebnis"),jetzt=new Date();e.hidden=false;
   const zeile=(i,t)=>`${t}: ${log[i].versuche===1?"✓ sofort richtig":`✓ nach ${log[i].versuche-1} Erklärung${log[i].versuche>2?"en":""}`}`;
   e.innerHTML=`<h3>Check-in geschafft – ${jetzt.toLocaleDateString("de-DE")} ${jetzt.toLocaleTimeString("de-DE",{hour:"2-digit",minute:"2-digit"})}</h3>`+
-    [zeile(0,"① Grundwert"),zeile(1,"② Wie oft passt …?"),zeile(2,"③ Fachwörter")].join("<br>")+
+    [zeile(0,"① Grundwert"),zeile(1,"② Wie viele Schritte?"),zeile(2,"③ Fachwörter")].join("<br>")+
     (log[2].versuche>1?`<br><b>Tipp:</b> Schau dir im Skript den Merkkasten von VII.2 noch einmal an (Eselsbrücke).`:"")+
     `<br><br>Bis die Lehrkraft weitermacht: <b>Profi-Runde</b> oben – sammle Punkte mit schwereren Aufgaben.`;
 }

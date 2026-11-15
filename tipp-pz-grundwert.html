@@ -53,7 +53,7 @@ function bildZustand(k){const on=(id,b)=>document.getElementById(id).style.opaci
 
 
 "use strict";
-const S=[["", "Frag zuerst: Was ist das Ganze? Der ganze Preis. Das Ganze steht unter 100 % – dort kommt das Fragezeichen hin.", true], ["", "Die 12 € sind nur ein Teil. Sie stehen unter 40 %.", true], ["12 € : 40 = 0,30 €", "Runter zu 1 %: Starte bei 40 %, denn dort steht oben und unten eine Zahl. Geteilt durch 40 – oben und unten.", true], ["0,30 € · 100 = 30 €", "Hoch zu 100 %: mal 100 – oben und unten. Das Ganze sind 30 €.", true], ["", "Der Grundwert ist 30 €. Probe: 40 % von 30 € sind 12 €.", false]];
+const S=[["", "Frag zuerst: Was ist das Ganze? Der ganze Preis. Das Ganze steht unter 100 % – dort kommt das Fragezeichen hin.", true], ["", "Die 12 € sind nur ein Teil. Sie stehen unter 40 %.", true], ["12 € : 40 = 0,30 €", "Runter rechnen auf 1 %: Starte bei 40 %, denn dort steht oben und unten eine Zahl. Geteilt durch 40 – oben und unten.", true], ["0,30 € · 100 = 30 €", "Hoch rechnen auf 100 %: mal 100 – oben und unten. Das Ganze sind 30 €.", true], ["", "Der Grundwert ist 30 €. Probe: 40 % von 30 € sind 12 €.", false]];
 const cap=document.getElementById("cap"),du=document.getElementById("du"),Z=[...document.querySelectorAll(".z")],pb=document.getElementById("pause");
 let n=0,timer=null,steht=false;
 const lese=t=>1500+80*t.length;            // Lesezeit nach Textlänge (Regel 16.10.2026)

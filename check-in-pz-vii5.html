@@ -87,7 +87,7 @@ function genPW(schwer){
   const [p,G,e]=wahl(fs),E=G/100,L=Math.round(E*p*10000)/10000;
   return {art:"zahl",einh:e,html:`<div class="auf">Wie viel sind <b style="color:#c0700f">${p} %</b> von <b style="color:#2e5d9f">${de(G)} ${e}</b>?</div><div style="font-size:17px;color:#5b6b7c">Dreischritt: erst 1 %, dann ${p} %. Taschenrechner erlaubt.</div>`,
     pruef:v=>Math.abs(v-L)<1e-6,loesung:`${p} % von ${de(G)} ${e} = ${de(L)} ${e}`,
-    erkl:`Runter zu 1 %: ${de(G)} ${e} : 100 = <b>${de(E)} ${e}</b>.<br>Hoch zu ${p} %: ${de(E)} ${e} · ${p} = <b>${de(L)} ${e}</b>.`,
+    erkl:`Runter rechnen auf 1 %: ${de(G)} ${e} : 100 = <b>${de(E)} ${e}</b>.<br>Hoch rechnen auf ${p} %: ${de(E)} ${e} · ${p} = <b>${de(L)} ${e}</b>.`,
     tipp:`Erst durch 100 (das ist 1 %), dann mal ${p}.`};
 }
 function genTM(schwer){

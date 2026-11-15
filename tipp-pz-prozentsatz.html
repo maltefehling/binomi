@@ -43,7 +43,7 @@
     <div class="z">144 : 4 = 36</div>
     <div class="z">1 % · 36 = 36 %</div>
     <div class="z">&nbsp;</div></div>
-  <div class="du" id="du"><b>Jetzt du:</b> Geh bei deiner Aufgabe runter zu 1 %. Frag dann: Wie oft passt das 1-%-Stück in den Teil? So viel Prozent sind es.</div>
+  <div class="du" id="du"><b>Jetzt du:</b> Rechne bei deiner Aufgabe runter auf 1 %. Rechne dann hoch auf den Teil: Wie viele 1-%-Schritte sind es bis zum Teil? So viele Prozent sind es.</div>
 </main>
 <footer>Fehling · Eine Situation, drei Fragen – der Prozentsatz · Tipp</footer>
 <script>
@@ -53,7 +53,7 @@ function bildZustand(k){const on=(id,b)=>document.getElementById(id).style.opaci
 
 
 "use strict";
-const S=[["", "Das Ganze sind 400 Schüler – sie stehen unter 100 %. Die 144 sind ein Teil. Gesucht ist der Anteil in Prozent: Das Fragezeichen steht oben.", true], ["400 : 100 = 4", "Runter zu 1 %: geteilt durch 100 – oben und unten. 1 % sind 4 Schüler.", true], ["144 : 4 = 36", "Jetzt die neue Frage: Wie oft passt das 1-%-Stück, also 4, in 144? Du teilst: 144 durch 4 ist 36.", true], ["1 % · 36 = 36 %", "36-mal 1 % – das ist der Bogen hoch, mal 36. Oben steht jetzt 36 %.", true], ["", "Der Prozentsatz ist 36 %. Probe: 36 % von 400 sind 144.", false]];
+const S=[["", "Das Ganze sind 400 Schüler – sie stehen unter 100 %. Die 144 sind ein Teil. Gesucht ist der Anteil in Prozent: Das Fragezeichen steht oben.", true], ["400 : 100 = 4", "Runter rechnen auf 1 %: geteilt durch 100 – oben und unten. 1 % sind 4 Schüler.", true], ["144 : 4 = 36", "Jetzt rechnest du hoch auf den Teil: Wie viele 4er-Schritte sind es bis 144? Du teilst: 144 durch 4 ist 36 – also 36 Schritte zu je 1 %.", true], ["1 % · 36 = 36 %", "36 Schritte zu je 1 % – das ist der Bogen hoch auf den Teil, mal 36. Oben steht jetzt 36 %.", true], ["", "Der Prozentsatz ist 36 %. Probe: 36 % von 400 sind 144.", false]];
 const cap=document.getElementById("cap"),du=document.getElementById("du"),Z=[...document.querySelectorAll(".z")],pb=document.getElementById("pause");
 let n=0,timer=null,steht=false;
 const lese=t=>1500+80*t.length;            // Lesezeit nach Textlänge (Regel 16.10.2026)
