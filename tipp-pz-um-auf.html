@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tipp: Um oder auf?</title>
+<!-- Kapitel VII Prozente (Kl. 7): lila Tipp-Seite, gebaut mit tipp_pz_bau.py. Anderes Beispiel, nie die Lösung einer Aufgabe. -->
+<style>
+  :root{--tipp:#6d4a9e;--tippH:#f1eaf8;--tippL:#b79bd6;--ink:#1b2a3a;--muted:#5b6b7c;--bg:#f7f4fb;--line:#d8cce8;--a:#2e5d9f;--hl:#c0700f}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;-webkit-user-select:none;user-select:none}
+  button{font:inherit;touch-action:manipulation}
+  header{padding:12px 16px;background:var(--tipp);color:#fff} header h1{font-size:20px;margin:0}
+  main{padding:12px 16px 24px;max-width:860px;margin:0 auto}
+  .start{font-size:19px;color:var(--tipp);font-weight:700;margin:4px 0 10px}
+  .knoepfe{display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+  .knoepfe button{flex:1 1 150px;min-height:52px;border-radius:12px;font-size:18px;font-weight:700;border:2px solid var(--tipp);background:#fff;color:var(--tipp)}
+  .knoepfe button.haupt{background:var(--tipp);color:#fff}
+  .bild{background:#fff;border:1px solid var(--line);border-radius:14px;padding:8px;margin-bottom:10px}
+  .bild svg{width:100%;height:auto;display:block}
+  .cap{background:#fff;border:2px solid var(--tippL);border-radius:12px;padding:10px 14px;font-size:21px;line-height:1.45;min-height:64px;margin-bottom:10px}
+  .tafel{background:#fff;border:1px solid var(--line);border-radius:14px;padding:6px 16px;min-height:40px}
+  .z{font-size:27px;line-height:1.6;opacity:0;transition:opacity .6s;font-variant-numeric:tabular-nums}
+  .z.da{opacity:1} .z.neu{color:var(--tipp)}
+  .hl{color:var(--hl);font-weight:800}
+  .du{display:none;margin-top:14px;background:var(--tippH);border:1px solid var(--tippL);border-radius:12px;padding:10px 14px;font-size:19px;line-height:1.45}
+  .du.da{display:block}
+  footer{color:var(--muted);font-size:13px;text-align:center;padding:14px 0}
+  .geo,.sichtbar{transition:transform 1.4s ease, opacity .8s}
+  .fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;font-size:.8em;line-height:1.15;margin:0 4px}
+  .fr>span:first-child{border-bottom:2px solid currentColor;padding:0 6px}
+</style>
+</head>
+<body>
+<header><h1>Tipp: Um oder auf?</h1></header>
+<main>
+  <div class="start">Beispiel mit anderen Zahlen:  Eine Jacke kostet 80 €. Sie ist um 25 % reduziert. Was kostet sie jetzt?</div>
+  <div class="knoepfe"><button class="haupt" id="play">▶ Abspielen</button><button id="pause">⏸ Pause</button></div>
+  <div class="bild"><svg viewBox="0 0 660 330" aria-label="Streifen: Jacke 80 Euro, um 25 Prozent reduziert, es bleiben 75 Prozent"><defs><pattern id="schraff" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="10" stroke="#c9d2dc" stroke-width="4"/></pattern></defs><rect x="82" y="135" width="540" height="50" fill="#eef1f5"/><rect id="weg" class="sichtbar" style="opacity:0" x="487.0" y="135" width="135.0" height="50" fill="url(#schraff)"/><rect id="fuell" class="sichtbar" style="opacity:0" x="82" y="135" width="405.0" height="50" fill="#8fc77f"/><text id="wegt" class="sichtbar" style="opacity:0" x="554.5" y="167" text-anchor="middle" font-size="16" font-weight="800" fill="#5b6b7c">25 % weg</text><line id="eins" class="sichtbar" style="opacity:0" x1="106.3" y1="135" x2="106.3" y2="185" stroke="#3b4a5a" stroke-width="2.5"/><rect x="82" y="135" width="540" height="50" fill="none" stroke="#3b4a5a" stroke-width="3"/><text x="4" y="125" font-size="15" fill="#c0700f">in %</text><text x="4" y="207" font-size="15" fill="#1b2a3a">in €</text><text x="82" y="125" text-anchor="middle" font-size="17" font-weight="700" fill="#c0700f">0</text><text x="622" y="125" text-anchor="middle" font-size="17" font-weight="700" fill="#c0700f">100</text><text x="82" y="207" text-anchor="middle" font-size="17" font-weight="700" fill="#2e5d9f">0</text><text x="622" y="207" text-anchor="middle" font-size="17" font-weight="700" fill="#2e5d9f">80</text><text id="o75" class="sichtbar" style="opacity:0" x="487.0" y="125" text-anchor="middle" font-size="18" font-weight="800" fill="#c0700f">75</text><text id="o1" class="sichtbar" style="opacity:0" x="112.3" y="125" text-anchor="middle" font-size="16" font-weight="700" fill="#c0700f">1</text><text id="u08" class="sichtbar" style="opacity:0" x="120.3" y="207" text-anchor="middle" font-size="16" font-weight="700">0,80</text><text id="u60" class="sichtbar" style="opacity:0" x="487.0" y="207" text-anchor="middle" font-size="18" font-weight="800" fill="#2e7d32">60</text><g id="b1o" class="sichtbar" style="opacity:0"><path d="M 622 105 Q 364.15 -51 106.3 105" fill="none" stroke="#6d4a9e" stroke-width="3"/><rect x="334.15" y="3.0" width="60" height="22" fill="white"/><text x="364.15" y="21.0" text-anchor="middle" font-size="19" font-weight="800" fill="#6d4a9e">: 100</text></g><g id="b1u" class="sichtbar" style="opacity:0"><path d="M 622 219 Q 364.15 375 106.3 219" fill="none" stroke="#6d4a9e" stroke-width="3"/><rect x="334.15" y="299.0" width="60" height="22" fill="white"/><text x="364.15" y="315.0" text-anchor="middle" font-size="19" font-weight="800" fill="#6d4a9e">: 100</text></g><g id="b2o" class="sichtbar" style="opacity:0"><path d="M 106.3 105 Q 296.65 61 487.0 105" fill="none" stroke="#6d4a9e" stroke-width="3"/><rect x="285.685" y="59.22" width="60" height="22" fill="white"/><text x="315.685" y="77.22" text-anchor="middle" font-size="19" font-weight="800" fill="#6d4a9e">· 75</text></g><g id="b2u" class="sichtbar" style="opacity:0"><path d="M 106.3 219 Q 296.65 263 487.0 219" fill="none" stroke="#6d4a9e" stroke-width="3"/><rect x="285.685" y="242.78" width="60" height="22" fill="white"/><text x="315.685" y="258.78" text-anchor="middle" font-size="19" font-weight="800" fill="#6d4a9e">· 75</text></g></svg></div>
+  <div class="cap" id="cap"></div>
+  <div class="tafel"><div class="z">&nbsp;</div>
+    <div class="z">&nbsp;</div>
+    <div class="z">100 % − 25 % = 75 %</div>
+    <div class="z">1 % = 80 € : 100 = 0,80 €</div>
+    <div class="z">75 % = 0,80 € · 75 = 60 €</div>
+    <div class="z">&nbsp;</div></div>
+  <div class="du" id="du"><b>Jetzt du:</b> Frag bei deiner Aufgabe zuerst: Heißt es „um“ oder „auf“? Rechne oben aus, wie viel Prozent bleiben. Dann der Dreischritt.</div>
+</main>
+<footer>Fehling · Am Hafen Radolfzell – Um oder auf? · Tipp</footer>
+<script>
+
+function bildZustand(k){const on=(id,b)=>document.getElementById(id).style.opacity=b?1:0;
+ on("weg",k>=2);on("wegt",k>=2);on("fuell",k>=3);on("o75",k>=3);on("eins",k>=4);on("o1",k>=4);on("u08",k>=4);on("b1o",k>=4);on("b1u",k>=4);
+ on("b2o",k>=5);on("b2u",k>=5);on("u60",k>=5);}
+
+
+"use strict";
+const S=[["", "Der ganze Streifen ist der alte Preis: 100 % sind 80 €.", true], ["", "„Um 25 % reduziert“ heißt: 25 % fallen weg. Dieser Teil bleibt weiß – das ist der Rabatt.", true], ["100 % − 25 % = 75 %", "Rechne zuerst oben: Es bleiben 100 % minus 25 %, also 75 %. Das ist der grüne Teil – der neue Preis.", true], ["1 % = 80 € : 100 = 0,80 €", "Jetzt der Dreischritt. Rechne runter auf 1 %: geteilt durch 100, oben und unten.", true], ["75 % = 0,80 € · 75 = 60 €", "Rechne hoch auf 75 %: mal 75. Die Jacke kostet jetzt 60 €.", true], ["", "Probe: 80 € minus 60 € sind 20 € Rabatt – das sind 25 % von 80 €. Achtung: Bei „auf 25 % reduziert“ blieben nur 25 %. Dann kostete die Jacke 20 €.", false]];
+const cap=document.getElementById("cap"),du=document.getElementById("du"),Z=[...document.querySelectorAll(".z")],pb=document.getElementById("pause");
+let n=0,timer=null,steht=false;
+const lese=t=>1500+80*t.length;            // Lesezeit nach Textlänge (Regel 16.10.2026)
+function zustand(k){if(typeof bildZustand==="function")bildZustand(k);}
+function zeig(){
+  const s=S[n-1];cap.textContent=s?s[1]:"Tippe auf ▶ Abspielen.";
+  Z.forEach((z,i)=>{z.classList.toggle("da",i<n&&S[i][0]!=="");z.classList.toggle("neu",i===n-1);});
+  zustand(n);du.classList.toggle("da",n>=S.length);
+}
+function weiter(){if(steht)return;if(n<S.length){n++;zeig();timer=setTimeout(weiter,lese(S[n-1][1])+(S[n-1][2]?1400:0));}else pb.disabled=true;}
+function start(){clearTimeout(timer);steht=false;pb.disabled=false;pb.textContent="⏸ Pause";n=0;zeig();timer=setTimeout(weiter,500);}
+document.getElementById("play").onclick=start;
+pb.onclick=()=>{steht=!steht;pb.textContent=steht?"▶ Weiter":"⏸ Pause";clearTimeout(timer);if(!steht)weiter();};
+zeig();
+
+</script>
+</body>
+</html>
