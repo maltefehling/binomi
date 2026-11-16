@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tipp: Wo ist die 100 %?</title>
+<!-- Kapitel VII Prozente (Kl. 7): lila Tipp-Seite, gebaut mit tipp_pz_bau.py. Anderes Beispiel, nie die Lösung einer Aufgabe. -->
+<style>
+  :root{--tipp:#6d4a9e;--tippH:#f1eaf8;--tippL:#b79bd6;--ink:#1b2a3a;--muted:#5b6b7c;--bg:#f7f4fb;--line:#d8cce8;--a:#2e5d9f;--hl:#c0700f}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;-webkit-user-select:none;user-select:none}
+  button{font:inherit;touch-action:manipulation}
+  header{padding:12px 16px;background:var(--tipp);color:#fff} header h1{font-size:20px;margin:0}
+  main{padding:12px 16px 24px;max-width:860px;margin:0 auto}
+  .start{font-size:19px;color:var(--tipp);font-weight:700;margin:4px 0 10px}
+  .knoepfe{display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+  .knoepfe button{flex:1 1 150px;min-height:52px;border-radius:12px;font-size:18px;font-weight:700;border:2px solid var(--tipp);background:#fff;color:var(--tipp)}
+  .knoepfe button.haupt{background:var(--tipp);color:#fff}
+  .bild{background:#fff;border:1px solid var(--line);border-radius:14px;padding:8px;margin-bottom:10px}
+  .bild svg{width:100%;height:auto;display:block}
+  .cap{background:#fff;border:2px solid var(--tippL);border-radius:12px;padding:10px 14px;font-size:21px;line-height:1.45;min-height:64px;margin-bottom:10px}
+  .tafel{background:#fff;border:1px solid var(--line);border-radius:14px;padding:6px 16px;min-height:40px}
+  .z{font-size:27px;line-height:1.6;opacity:0;transition:opacity .6s;font-variant-numeric:tabular-nums}
+  .z.da{opacity:1} .z.neu{color:var(--tipp)}
+  .hl{color:var(--hl);font-weight:800}
+  .du{display:none;margin-top:14px;background:var(--tippH);border:1px solid var(--tippL);border-radius:12px;padding:10px 14px;font-size:19px;line-height:1.45}
+  .du.da{display:block}
+  footer{color:var(--muted);font-size:13px;text-align:center;padding:14px 0}
+  .geo,.sichtbar{transition:transform 1.4s ease, opacity .8s}
+  .fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;font-size:.8em;line-height:1.15;margin:0 4px}
+  .fr>span:first-child{border-bottom:2px solid currentColor;padding:0 6px}
+</style>
+</head>
+<body>
+<header><h1>Tipp: Wo ist die 100 %?</h1></header>
+<main>
+  <div class="start">Beispiel mit anderen Zahlen:  Ein Rucksack ist um 20 % teurer geworden. Jetzt kostet er 48 €. Wie viel kostete er vorher?</div>
+  <div class="knoepfe"><button class="haupt" id="play">▶ Abspielen</button><button id="pause">⏸ Pause</button></div>
+  <div class="bild"><svg viewBox="0 0 660 360" aria-label="Streifen bis 120 Prozent: 48 Euro unter 120 Prozent, gesucht der Preis vorher unter 100 Prozent"><rect x="70" y="150" width="460" height="50" fill="#8fc77f"/><rect x="530" y="150" width="92.0" height="50" fill="#f2c48d"/><line x1="90.7" y1="150" x2="90.7" y2="200" stroke="#3b4a5a" stroke-width="2.5"/><rect x="70" y="150" width="460" height="50" fill="none" stroke="#3b4a5a" stroke-width="3"/><rect x="530" y="150" width="92.0" height="50" fill="none" stroke="#3b4a5a" stroke-width="3"/><text x="4" y="140" font-size="15" fill="#c0700f">in %</text><text x="4" y="222" font-size="15" fill="#1b2a3a">in €</text><rect id="ring" class="sichtbar" style="opacity:0" x="496" y="116" width="68" height="120" rx="14" fill="none" stroke="#2e5d9f" stroke-width="3.5"/><text id="vorher" class="sichtbar" style="opacity:0" x="484" y="181" text-anchor="end" font-size="15" font-weight="800" fill="#1b4d1e">100 % = Preis vorher</text><text x="70" y="140" text-anchor="middle" font-size="17" font-weight="700" fill="#c0700f">0</text><text x="96.7" y="140" text-anchor="middle" font-size="17" font-weight="700" fill="#c0700f">1</text><text x="530" y="140" text-anchor="middle" font-size="17" font-weight="700" fill="#c0700f">100</text><text x="622.0" y="140" text-anchor="middle" font-size="17" font-weight="700" fill="#c0700f">120</text><text x="70" y="222" text-anchor="middle" font-size="17" font-weight="700">0</text><text x="622.0" y="222" text-anchor="middle" font-size="18" font-weight="800" fill="#2e7d32">48</text><text id="q" class="sichtbar" style="opacity:0" x="530" y="222" text-anchor="middle" font-size="19" font-weight="800" fill="#2e5d9f">?</text><text id="u40" class="sichtbar" style="opacity:0" x="530" y="222" text-anchor="middle" font-size="18" font-weight="800" fill="#2e5d9f">40</text><text id="u04" class="sichtbar" style="opacity:0" x="104.7" y="222" text-anchor="middle" font-size="16" font-weight="700">0,40</text><g id="b1o" class="sichtbar" style="opacity:0"><path d="M 622.0 120 Q 356.35 -76 90.7 120" fill="none" stroke="#6d4a9e" stroke-width="3"/><rect x="324.35" y="-2.0" width="64" height="22" fill="white"/><text x="356.35" y="16.0" text-anchor="middle" font-size="19" font-weight="800" fill="#6d4a9e">: 120</text></g><g id="b1u" class="sichtbar" style="opacity:0"><path d="M 622.0 234 Q 356.35 430 90.7 234" fill="none" stroke="#6d4a9e" stroke-width="3"/><rect x="324.35" y="334.0" width="64" height="22" fill="white"/><text x="356.35" y="350.0" text-anchor="middle" font-size="19" font-weight="800" fill="#6d4a9e">: 120</text></g><g id="b2o" class="sichtbar" style="opacity:0"><path d="M 90.7 120 Q 310.35 10 530 120" fill="none" stroke="#6d4a9e" stroke-width="3"/><rect x="300.31500000000005" y="41.55" width="64" height="22" fill="white"/><text x="332.31500000000005" y="59.55" text-anchor="middle" font-size="19" font-weight="800" fill="#6d4a9e">· 100</text></g><g id="b2u" class="sichtbar" style="opacity:0"><path d="M 90.7 234 Q 310.35 344 530 234" fill="none" stroke="#6d4a9e" stroke-width="3"/><rect x="300.31500000000005" y="290.45" width="64" height="22" fill="white"/><text x="332.31500000000005" y="306.45" text-anchor="middle" font-size="19" font-weight="800" fill="#6d4a9e">· 100</text></g></svg></div>
+  <div class="cap" id="cap"></div>
+  <div class="tafel"><div class="z">&nbsp;</div>
+    <div class="z">&nbsp;</div>
+    <div class="z">Nicht: 48 € − 20 %</div>
+    <div class="z">1 % = 48 € : 120 = 0,40 €</div>
+    <div class="z">100 % = 0,40 € · 100 = 40 €</div>
+    <div class="z">&nbsp;</div></div>
+  <div class="du" id="du"><b>Jetzt du:</b> Frag bei deiner Aufgabe zuerst: Wo ist die 100 %? Dann rechne von der Prozentzahl, die du kennst, runter auf 1 % und hoch auf 100 %.</div>
+</main>
+<footer>Fehling · Kassenbon aus Radolfzell – Wie viel war es vorher? · Tipp</footer>
+<script>
+
+function bildZustand(k){const on=(id,b)=>document.getElementById(id).style.opacity=b?1:0;
+ on("ring",k>=2&&k<5);on("vorher",k>=2);on("q",k>=2&&k<5);on("b1o",k>=4);on("b1u",k>=4);on("u04",k>=4);on("b2o",k>=5);on("b2u",k>=5);on("u40",k>=5);}
+
+
+"use strict";
+const S=[["", "Der Preis jetzt ist 100 % + 20 % = 120 %. Darunter stehen die 48 €.", true], ["", "Frag: Wo ist die 100 %? Die 100 % gehören immer zum Preis vorher. Dort steht das Fragezeichen.", true], ["Nicht: 48 € − 20 %", "Achtung: Die 20 % darfst du nicht von 48 € abziehen. Sie gehören zum Preis vorher, nicht zum Preis jetzt.", true], ["1 % = 48 € : 120 = 0,40 €", "Starte dort, wo oben und unten eine Zahl steht: bei 120 %. Rechne runter auf 1 % – geteilt durch 120.", true], ["100 % = 0,40 € · 100 = 40 €", "Rechne hoch auf 100 %: mal 100. Der Rucksack kostete vorher 40 €.", true], ["", "Probe: 20 % von 40 € sind 8 €. 40 € plus 8 € sind 48 €. Das passt.", false]];
+const cap=document.getElementById("cap"),du=document.getElementById("du"),Z=[...document.querySelectorAll(".z")],pb=document.getElementById("pause");
+let n=0,timer=null,steht=false;
+const lese=t=>1500+80*t.length;            // Lesezeit nach Textlänge (Regel 16.10.2026)
+function zustand(k){if(typeof bildZustand==="function")bildZustand(k);}
+function zeig(){
+  const s=S[n-1];cap.textContent=s?s[1]:"Tippe auf ▶ Abspielen.";
+  Z.forEach((z,i)=>{z.classList.toggle("da",i<n&&S[i][0]!=="");z.classList.toggle("neu",i===n-1);});
+  zustand(n);du.classList.toggle("da",n>=S.length);
+}
+function weiter(){if(steht)return;if(n<S.length){n++;zeig();timer=setTimeout(weiter,lese(S[n-1][1])+(S[n-1][2]?1400:0));}else pb.disabled=true;}
+function start(){clearTimeout(timer);steht=false;pb.disabled=false;pb.textContent="⏸ Pause";n=0;zeig();timer=setTimeout(weiter,500);}
+document.getElementById("play").onclick=start;
+pb.onclick=()=>{steht=!steht;pb.textContent=steht?"▶ Weiter":"⏸ Pause";clearTimeout(timer);if(!steht)weiter();};
+zeig();
+
+</script>
+</body>
+</html>
