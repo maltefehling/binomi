@@ -38,7 +38,7 @@
   <div class="bild"><svg id="svg" viewBox="0 0 600 300"></svg></div>
   <div class="regler"><span>Punkt C</span><input type="range" id="rg" min="-3.5" max="5" step="0.1" value="3.5" aria-label="Punkt C verschieben"></div>
   <div class="anz">
-    <div><span class="k">Seite c mal ihre Höhe h<sub>c</sub>, durch 2</span>A = <span id="aRichtig"></span></div>
+    <div><span class="k">Grundseite g = c mal ihre Höhe h = h<sub>c</sub>, durch 2</span>A = <span id="aRichtig"></span></div>
     <div id="benBox"><span class="k">Bens Regel: Seite mal Seite, durch 2</span><span id="aBen"></span></div>
   </div>
   <div class="knoepfe"><button class="haupt" id="play">▶ Abspielen</button><button id="pause">⏸ Pause</button></div>
@@ -83,7 +83,7 @@ function zeichne(){
   const mB=[(A[0]+C[0])/2,(A[1]+C[1])/2];tB.setAttribute("x",mB[0]+(x>=0?-16:16));tB.setAttribute("y",mB[1]+(x>=0?0:16));
   tHin.textContent=rechts?"Rechtwinklig: Die Seite b ist die Höhe zu c!":(x<0?"Stumpfwinklig: Die Höhe liegt außerhalb.":"");
   const b=Math.hypot(x,H),ben=b*C_/2,stimmt=Math.abs(ben-9)<0.05;
-  document.getElementById("aRichtig").innerHTML=`${FR("c · h<sub>c</sub>","2")} = ${FR("6 cm · 3 cm","2")} = <b>9 cm²</b>`;
+  document.getElementById("aRichtig").innerHTML=`${FR("g · h","2")} = ${FR("6 cm · 3 cm","2")} = <b>9 cm²</b>`;
   document.getElementById("aBen").innerHTML=`${FR("b · c","2")} = ${FR(de(b)+" cm · 6 cm","2")} = <b>${de(ben)} cm²</b> ${stimmt?"✓":"✗"}`;
   document.getElementById("benBox").className=stimmt?"ok":"fehl";
   document.getElementById("rg").value=x;
