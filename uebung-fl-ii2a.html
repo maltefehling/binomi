@@ -130,7 +130,7 @@
 "use strict";
 // Versionsprüfung (12.10.2026): Safari zeigt sonst bis zu 10 Minuten (oft länger) eine alte, gespeicherte Fassung.
 // Beim Öffnen wird die Seite ohne Zwischenspeicher abgefragt; ist sie neuer, lädt sie sich einmal neu.
-const STAND="20261116142702";
+const STAND="20261119110833";
 fetch(location.pathname+"?nocache="+Date.now(),{cache:"no-store"}).then(r=>r.text()).then(t=>{
   const m=t.match(/const STAND="(\d+)"/);
   if(m&&m[1]!==STAND&&!sessionStorage.getItem("neu"+m[1])){sessionStorage.setItem("neu"+m[1],"1");location.replace(location.pathname+"?v="+m[1]);}
@@ -224,7 +224,7 @@ function teil(T){
   const root=el("section","teil");
   if(D.mehrteilig)root.appendChild(el("div","teilkopf",esc(T.name)));
   root.appendChild(el("details","erin",`<summary>Erinnerung: Das brauchst du</summary><ul>${T.erinnerung.map(e=>"<li>"+esc(e)+"</li>").join("")}</ul>`));
-  root.appendChild(el("h2","","Aufgabe 1 · für alle"));
+  root.appendChild(el("h2","","Zuerst · für alle"));
   const a1=aufgabe(1,T.a1,"1");const empf=el("div","empf");empf.hidden=true;root.append(a1,empf,loesung([[1,T.a1]]));
   const wahl=el("div","wahl"),st=el("div");
   if(T.weiter){root.appendChild(el("div","weiterbox",`<b>Üben auf deinem Niveau ★ / ★★ / ★★★</b> gibt es in der Übungsstunde:<br><a class="weiterbtn" href="${T.weiter[0]}">➜ ${esc(T.weiter[1])}</a>`));}
