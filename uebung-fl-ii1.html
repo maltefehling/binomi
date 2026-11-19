@@ -111,6 +111,14 @@
   .wahl button .badge{display:inline-block;margin-left:8px;font-size:13px;background:#2e7d32;color:#fff;border-radius:8px;padding:1px 8px;vertical-align:middle}
   .uhr{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:#fff;border:1px solid var(--line);border-radius:12px;padding:8px 12px;margin:6px 0 10px;font-size:18px}
   .uhr button{border:2px solid var(--acc);background:#fff;color:var(--acc);border-radius:10px;padding:6px 14px;font-weight:700;min-height:44px}
+  .sowie{background:#fff8e1;border:2px solid #e0b84a;border-radius:12px;padding:10px 14px;font-size:18px;margin:6px 0 10px}
+  .kontrolle{margin:22px 0 10px;border:2px solid #2e7d32;border-radius:14px;background:#f1f8f1;padding:0 14px}
+  .kontrolle>summary{cursor:pointer;padding:14px 0;font-size:20px;font-weight:700;color:#2e7d32}
+  .kontrolle>summary small{display:block;font-size:15px;font-weight:400;color:#555}
+  .kontrolle .krow{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:8px 0;border-top:1px solid #cfe3cf;font-size:18px}
+  .kontrolle .krow>b{min-width:130px}
+  .kontrolle .pruef{margin:10px 0}
+  .kerg{font-size:18px;margin:4px 0 14px}
   .reiter{display:flex;gap:10px;margin:4px 0 12px}
   .reiter button{flex:1;min-height:64px;padding:8px 12px;border-radius:14px;border:2px solid var(--acc);background:#fff;color:var(--acc);font-size:20px;font-weight:700;text-align:left}
   .reiter button small{display:block;font-size:15px;font-weight:400;color:#555}
@@ -135,7 +143,7 @@
 <body>
 <header><h1>Übung II.1 · Rechteck und Quadrat</h1></header>
 <main>
-  <details class="hinweis hz"><summary><b>So schreibst du ins Heft</b> <span class="form voll">☰</span> <span class="form kurz">▬</span> <span class="form blitz">⚡</span></summary>Das Zeichen an jeder Aufgabe sagt es dir:<div class="legende"><span class="form voll">☰ Rechenweg</span><span>① Formel ② Zahlen mit Einheit einsetzen ③ Ergebnis mit Einheit.</span><span class="form kurz">▬ Kurzform</span><span>eine Zeile, z. B. 4 cm · 8 cm = 32 cm².</span><span class="form blitz">⚡ Blitz</span><span>nur das Ergebnis mit Einheit – im Kopf.</span></div><b>Faustregel:</b> Aufschreiben musst du alles, was du sonst verwechseln oder vergessen könntest. Bei Aufgaben mit Eingabefeld tippst du dein <b>Endergebnis</b> ein (nur die Zahl), <b>wählst die richtige Einheit</b> (cm, cm² oder cm³?) und prüfst es. Wenn du nicht weiterkommst, hilft der Tipp.</details>
+  <details class="hinweis hz"><summary><b>So schreibst du ins Heft</b> <span class="form voll">☰</span> <span class="form kurz">▬</span> <span class="form blitz">⚡</span></summary>Das Zeichen an jeder Aufgabe sagt es dir:<div class="legende"><span class="form voll">☰ Rechenweg</span><span>① Formel ② Zahlen mit Einheit einsetzen ③ Ergebnis mit Einheit.</span><span class="form kurz">▬ Kurzform</span><span>eine Zeile, z. B. 4 cm · 8 cm = 32 cm².</span><span class="form blitz">⚡ Blitz</span><span>nur das Ergebnis mit Einheit – im Kopf.</span></div><b>Faustregel:</b> Aufschreiben musst du alles, was du sonst verwechseln oder vergessen könntest. Die Lösung gehört ins Heft. Am Ende vergleichst du nur dein <b>Endergebnis</b> (Zahl + richtige Einheit: cm, cm² oder cm³?). Wenn du nicht weiterkommst, hilft der Tipp.</details>
   <div id="teilwahl" hidden><div class="frage">Welche Stunde hattet ihr zuletzt?</div><div class="wahl" id="tw"></div></div>
   <div id="teile"></div>
   <footer>Fehling · II Umfang und Flächeninhalt</footer>
@@ -144,7 +152,7 @@
 "use strict";
 // Versionsprüfung (12.10.2026): Safari zeigt sonst bis zu 10 Minuten (oft länger) eine alte, gespeicherte Fassung.
 // Beim Öffnen wird die Seite ohne Zwischenspeicher abgefragt; ist sie neuer, lädt sie sich einmal neu.
-const STAND="20261119122125";
+const STAND="20261119122824";
 fetch(location.pathname+"?nocache="+Date.now(),{cache:"no-store"}).then(r=>r.text()).then(t=>{
   const m=t.match(/const STAND="(\d+)"/);
   if(m&&m[1]!==STAND&&!sessionStorage.getItem("neu"+m[1])){sessionStorage.setItem("neu"+m[1],"1");location.replace(location.pathname+"?v="+m[1]);}
@@ -184,52 +192,66 @@ const ERG={};   // Ergebnisse der geprüften Felder: Schlüssel "Aufgabe★ 2 b"
 const ohneEinh=s=>String(s).replace(/\s*\(in (?:mm|cm|dm|km|m)[²³]?\)/g,"");   // Einheit wird über die Tasten gewählt
 const zahl=s=>{const m=String(s).replace(/[a-zA-Z]+[²³]?/g,"").replace(/\s/g,"").replace(",",".").match(/-?\d+(\.\d+)?/);return m?parseFloat(m[0]):NaN;};
 const gleich=(x,w)=>Math.abs(x-w)<=Math.max(0.011,Math.abs(w)*1e-6);
+// 19.11.2026 (Malte): Das Heft ist der Arbeitsort, die Seite ist Aufgabenblatt + Kontrolle (nicht Bettermarks). Deshalb KEINE Eingabefelder
+// an den Aufgaben – alles wird im Heft gerechnet, erst am Ende eines Blocks werden die Ergebnisse gesammelt verglichen (kontrolle()).
 function aufgabe(nr,a,stufe){
   const gemischt=a.subform&&new Set(a.subform).size>1;
   const kopfForm=!gemischt?formHtml(a.form):(a.subform[0]==="voll"&&a.subform.slice(1).every(f=>f!=="voll")?'<span class="form voll">☰ a)</span><span class="form kurz">▬ danach</span>':'<span class="form kurz">☰ / ▬ je Teilaufgabe</span>');
   let h=`<div class="kopf">Aufgabe ${nr}${tagHtml(a.tag)}${kopfForm}</div><div class="txt">${esc(ohneEinh(a.tag==="w"?a.t.replace(/^Wiederholung: /,""):a.t))}</div>`;
-  if(a.svg)h+=`<div class="abild">${a.svg}</div>`;   // Bild zur Aufgabe (Flächen-Baukasten 6.11.2026): rohes SVG aus den Daten
-  // 2.11.2026 (Malte): klar machen, dass Aufgabe + Rechenweg ins Heft gehören, nicht nur das Ergebnis
+  if(a.svg)h+=`<div class="abild">${a.svg}</div>`;
   h+=`<div class="heft">Ins Heft: ${a.subform&&a.subform.some(f=>f!==a.form)?"Das Zeichen an jeder Teilaufgabe sagt es dir: ☰ mit Formel, ▬ eine Zeile mit deinen Zahlen, ⚡ nur das Ergebnis.":(HEFT[a.form]||HEFT.voll)}</div>`;
-  // 13.11.2026 (Malte): Taste für die Flächeneinheit (² ist auf dem iPad schwer zu tippen) – Einheit aus „(in m²)“ im Aufgabentext
-  // 13.11.2026 (Malte): nicht nur eine Einheiten-Taste, sondern Auswahl aus Länge/Fläche/Volumen (z. B. cm · cm² · cm³) in wechselnder Reihenfolge –
-  // die richtige Einheit muss gewählt werden. Der Hinweis „(in m²)“ bleibt in den Daten, wird aber nicht angezeigt.
+  // Einheit: Auswahl aus Länge/Fläche/Volumen in wechselnder Reihenfolge (13.11.2026) – jetzt in der Kontrolle
   const einheit=(i)=>{const m=String((a.sub&&a.sub[i])||a.t).match(/\(in (mm|cm|dm|km|m)([²³]?)\)|in (mm|cm|dm|km|m)([²³]?)\./);
     return m?{basis:m[1]||m[3],richtig:(m[1]||m[3])+(m[2]||m[4]||"")}:null;};
-  const feld=(i)=>{if(!(a.check&&a.check[i]!=null))return "";const u=einheit(i);
+  const feld=(i)=>{const u=einheit(i);
     const knoepfe=u?["","²","³"].map(x=>u.basis+x).sort(()=>Math.random()-0.5).map(x=>`<button type="button" class="einh" data-u="${x}" aria-pressed="false">${x}</button>`).join(""):"";
     return `<span class="eing" data-i="${i}"${u?` data-soll="${u.richtig}"`:""}><input inputmode="decimal" autocomplete="off" placeholder="Ergebnis">${knoepfe}<span class="mk"></span></span>`;};
   const subSym=i=>(a.subform&&a.subform[i])?`<span class="form mini ${a.subform[i]}" title="${FORM[a.subform[i]]}">${FORM[a.subform[i]].split(" ")[0]}</span>`:"";
-  // 19.11.2026 (Malte): „☐ …“ war nur Text – jetzt Knöpfe zum Antippen, „Ergebnis prüfen“ prüft sie mit (a.kreuz aus kreuz.py)
-  const kz=(s,i)=>{const t=esc(ohneEinh(s));if(!(a.kreuz&&a.kreuz[i]))return t;const p=t.split("☐");let g=0,o=0,h2=`<span class="kzs" data-i="${i}">`+p[0];
+  // Ankreuzen (a.kreuz aus kreuz.py): an der Aufgabe als Text (Antwort ins Heft), in der Kontrolle als Knöpfe
+  const kz=(s,i)=>{const t=esc(ohneEinh(s));const p=t.split("☐");let g=0,o=0,h2=`<span class="kzs" data-i="${i}">`+p[0];
     p.slice(1).forEach(x=>{x=x.trim();let nach="";const k=x.indexOf(", ");if(k>=0){nach=x.slice(k);x=x.slice(0,k);}
       h2+=`<button type="button" class="kz" data-g="${g}" data-o="${o}" aria-pressed="false">${x.replace(/\.$/,"")}</button>`+(nach?nach+" ":" ");o++;if(nach){g++;o=0;}});
     return h2+`<span class="mk"></span></span>`;};
-  if(a.sub)h+="<ol>"+a.sub.map((s,i)=>`<li class="${feld(i)?"breit":""}"><b class="tb">${"abcdefgh"[i]})</b>${subSym(i)}${kz(s,i)}${a.subsvg&&a.subsvg[i]?`<div class="subbild">${a.subsvg[i]}</div>`:""}${feld(i)}</li>`).join("")+"</ol>";
-  else if(a.check&&a.check[0]!=null)h+=`<div class="einzeln">${feld(0)}</div>`;
-  if((a.check&&a.check.some(v=>v!=null))||a.kreuz)h+=`<button class="pruef">Ergebnis prüfen</button>`;
+  if(a.sub)h+="<ol>"+a.sub.map((s,i)=>`<li><b class="tb">${"abcdefgh"[i]})</b>${subSym(i)}${esc(ohneEinh(s))}${a.subsvg&&a.subsvg[i]?`<div class="subbild">${a.subsvg[i]}</div>`:""}</li>`).join("")+"</ol>";
   if(a.tipp)h+=`<details class="tipp"><summary>💡 Tipp</summary><div>${esc(a.tipp)}</div></details>`;
   const e=el("div","aufg",h);
-  e.querySelectorAll(".einh").forEach(b=>b.onclick=()=>{const f=b.parentNode;f.querySelectorAll(".einh").forEach(x=>x.setAttribute("aria-pressed",x===b));f.dataset.wahl=b.dataset.u;});
-  e.querySelectorAll(".kz").forEach(b=>b.onclick=()=>{const gr=[...b.parentNode.querySelectorAll(`.kz[data-g="${b.dataset.g}"]`)];
-    const an=b.getAttribute("aria-pressed")!=="true";if(gr.length>1)gr.forEach(x=>x.setAttribute("aria-pressed","false"));b.setAttribute("aria-pressed",an);});
   if(a.anim)e.appendChild(animTipp(a.anim));
-  const pb=e.querySelector(".pruef");
-  if(pb)pb.onclick=()=>{let alle=0,rich=0;
-    e.querySelectorAll(".eing").forEach(f=>{const i=+f.dataset.i,w=a.check[i],x=zahl(f.querySelector("input").value),mk=f.querySelector(".mk");
-      if(isNaN(x)){mk.textContent="?";mk.className="mk";return;}
-      if(f.dataset.soll&&!f.dataset.wahl){mk.textContent="Einheit?";mk.className="mk";return;}
-      const zahlOk=gleich(x,w),einhOk=!f.dataset.soll||f.dataset.wahl===f.dataset.soll,ok=zahlOk&&einhOk;
-      mk.textContent=ok?"✓":(zahlOk?"✗ Einheit":"✗");mk.className="mk "+(ok?"ok":"no");alle++;if(ok)rich++;
-      const key=`${nr}${a.sub?" "+"abcdefgh"[i]:""}`;if(!(key in ERG))ERG[key]={ok,stufe};});
-    e.querySelectorAll(".kzs").forEach(z=>{const i=+z.dataset.i,soll=a.kreuz[i],mk=z.querySelector(".mk");
-      const gew=soll.map((_,g)=>[...z.querySelectorAll(`.kz[data-g="${g}"]`)].filter(b=>b.getAttribute("aria-pressed")==="true").map(b=>+b.dataset.o));
-      const leer=soll.some((r,g)=>r.length&&!gew[g].length);if(leer){mk.textContent="?";mk.className="mk";return;}
-      const ok=soll.every((r,g)=>r.length===gew[g].length&&r.every(x=>gew[g].includes(x)));
-      mk.textContent=ok?"✓":"✗";mk.className="mk "+(ok?"ok":"no");alle++;if(ok)rich++;
-      const key=`${nr}${a.sub?" "+"abcdefgh"[i]:""}`;if(!(key in ERG))ERG[key]={ok,stufe};});
-    if(e.onGeprueft)e.onGeprueft(rich,alle);};
+  // Kontrollzeilen (werden von kontrolle() eingesammelt)
+  const n=a.sub?a.sub.length:1,zeilen=[];
+  for(let i=0;i<n;i++){const lab=`Aufgabe ${nr}${a.sub?" "+"abcdefgh"[i]+")":""}`;
+    if(a.check&&a.check[i]!=null)zeilen.push(`<div class="krow"><b>${lab}</b>${feld(i)}</div>`);
+    else if(a.kreuz&&a.kreuz[i])zeilen.push(`<div class="krow"><b>${lab}</b>${kz(a.sub?a.sub[i]:a.t,i)}</div>`);}
+  if(zeilen.length){
+    const c=el("div","kgr",zeilen.join(""));e.ctl=c;
+    c.querySelectorAll(".einh").forEach(b=>b.onclick=()=>{const f=b.parentNode;f.querySelectorAll(".einh").forEach(x=>x.setAttribute("aria-pressed",x===b));f.dataset.wahl=b.dataset.u;});
+    c.querySelectorAll(".kz").forEach(b=>b.onclick=()=>{const gr=[...b.parentNode.querySelectorAll(`.kz[data-g="${b.dataset.g}"]`)];
+      const an=b.getAttribute("aria-pressed")!=="true";if(gr.length>1)gr.forEach(x=>x.setAttribute("aria-pressed","false"));b.setAttribute("aria-pressed",an);});
+    e.pruefe=()=>{let alle=0,rich=0;
+      c.querySelectorAll(".eing").forEach(f=>{const i=+f.dataset.i,w=a.check[i],x=zahl(f.querySelector("input").value),mk=f.querySelector(".mk");
+        if(isNaN(x)){mk.textContent="?";mk.className="mk";return;}
+        if(f.dataset.soll&&!f.dataset.wahl){mk.textContent="Einheit?";mk.className="mk";return;}
+        const zahlOk=gleich(x,w),einhOk=!f.dataset.soll||f.dataset.wahl===f.dataset.soll,ok=zahlOk&&einhOk;
+        mk.textContent=ok?"✓":(zahlOk?"✗ Einheit":"✗");mk.className="mk "+(ok?"ok":"no");alle++;if(ok)rich++;
+        const key=`${nr}${a.sub?" "+"abcdefgh"[i]:""}`;if(!(key in ERG))ERG[key]={ok,stufe};});
+      c.querySelectorAll(".kzs").forEach(z=>{const i=+z.dataset.i,soll=a.kreuz[i],mk=z.querySelector(".mk");
+        const gew=soll.map((_,g)=>[...z.querySelectorAll(`.kz[data-g="${g}"]`)].filter(b=>b.getAttribute("aria-pressed")==="true").map(b=>+b.dataset.o));
+        const leer=soll.some((r,g)=>r.length&&!gew[g].length);if(leer){mk.textContent="?";mk.className="mk";return;}
+        const ok=soll.every((r,g)=>r.length===gew[g].length&&r.every(x=>gew[g].includes(x)));
+        mk.textContent=ok?"✓":"✗";mk.className="mk "+(ok?"ok":"no");alle++;if(ok)rich++;
+        const key=`${nr}${a.sub?" "+"abcdefgh"[i]:""}`;if(!(key in ERG))ERG[key]={ok,stufe};});
+      if(e.onGeprueft)e.onGeprueft(rich,alle);return [rich,alle];};
+  }
   return e;
+}
+// Ein Kontrollblock am Ende jedes Teils: zugeklappt, erst öffnen, wenn alles im Heft steht.
+function kontrolle(aufg){
+  const mit=aufg.filter(e=>e.ctl);if(!mit.length)return el("div");
+  const d=el("details","kontrolle",`<summary>✔ Ergebnisse vergleichen<small>erst öffnen, wenn alle Aufgaben im Heft stehen</small></summary><p class="khin">Schau in dein Heft und gib nur dein <b>Endergebnis</b> ein (Zahl + Einheit) bzw. tippe deine Antwort an.</p>`);
+  mit.forEach(e=>d.appendChild(e.ctl));
+  const b=el("button","pruef","Vergleichen");const erg=el("div","kerg");d.append(b,erg);
+  b.onclick=()=>{let r=0,n=0;mit.forEach(e=>{const [a,b2]=e.pruefe();r+=a;n+=b2;});
+    erg.innerHTML=n?`<b>${r} von ${n}</b> stimmen. ${r<n?"Bei ✗: Rechnung im Heft suchen, den Fehler verbessern – dann hilft der Lösungsweg.":"Super!"}`:"Gib erst deine Ergebnisse aus dem Heft ein – mit Einheit.";};
+  return d;
 }
 // Lösungen (15.10.2026, Malte): nach „Lösungen anzeigen“ erst die Aufgabe wählen – nie alle Lösungen auf einmal. Nur richtige Lösungen.
 function loesung(liste){
@@ -260,10 +282,12 @@ function teil(T){
   reiter.append(rS);if(T.ha)reiter.append(rH);root.appendChild(reiter);
   const hz=document.querySelector(".hz");if(hz)root.appendChild(hz);
   root.append(pS,pH);
+  const so='<div class="sowie">So arbeitest du: <b>✏️ Alle Aufgaben im Heft rechnen</b> → <b>✔ am Ende Ergebnisse vergleichen</b> (unten). Das Tablet brauchst du zwischendurch nur für einen Tipp.</div>';
+  pS.insertAdjacentHTML("beforeend",so);pH.insertAdjacentHTML("beforeend",so);
   pS.appendChild(el("p","zeit",esc(T.zeitA||"")));
   pS.appendChild(el("details","erin",`<summary>Erinnerung: Das brauchst du</summary><ul>${T.erinnerung.map(e=>"<li>"+esc(e)+"</li>").join("")}</ul>`));
   pS.appendChild(el("h2","",T.weiter?"Aufgabe 1 · für alle":"Einstieg · für alle"));
-  const a1=aufgabe(1,T.a1,"1");const empf=el("div","empf");empf.hidden=true;pS.append(a1,empf,loesung([[1,T.a1]]));
+  const a1=aufgabe(1,T.a1,"1");const empf=el("div","empf");empf.hidden=true;pS.append(a1,kontrolle([a1]),empf,loesung([[1,T.a1]]));
   const wahl=el("div","wahl"),st=el("div");
   // 19.11.2026 (Malte: „erst Aufgaben für alle, dann Hausaufgaben, dann wieder die Aufgabentabelle – Durcheinander“): kein Sprung-Knopf zur
   // Übungsseite mehr (die hat ihren eigenen QR-Code), Hausaufgabe zugeklappt ganz am Ende → eine Seite = ein klarer Weg von oben nach unten.
@@ -274,7 +298,7 @@ function teil(T){
     const b=el("button","",`${stern}  ${esc(s.name)}<small>${D.untertitel[k-1]}</small>`);b.setAttribute("aria-pressed","false");b.dataset.k=k;
     const sec=el("section","stufe");sec.hidden=true;
     sec.appendChild(el("h2","",esc(stern+"  "+s.name)));
-    s.aufg.forEach((a,i)=>sec.appendChild(aufgabe(stern+" "+(i+2),a,stern)));
+    const AU=s.aufg.map((a,i)=>aufgabe(stern+" "+(i+2),a,stern));AU.forEach(x=>sec.appendChild(x));sec.appendChild(kontrolle(AU));
     const lz=loesung(s.aufg.map((a,i)=>[stern+" "+(i+2),a]));sec.appendChild(lz);
     const kb=el("button","kartebtn","📋 Ergebnis-Karte");lz.appendChild(kb);const kk=el("div");sec.appendChild(kk);
     kb.onclick=()=>{kk.innerHTML="";kk.appendChild(karte(stern));};
@@ -286,7 +310,7 @@ function teil(T){
     ha.appendChild(el("h2","","🏠 Hausaufgabe"));
     ha.appendChild(el("div","hinweis",'Drei kurze Aufgaben: <b>eine von heute, eine von früher, eine zum Verstehen</b>. Die ★-Aufgabe ist freiwillig. <b>Höchstens 15 Minuten</b> – dann hörst du auf und schreibst eine Hänge-Zeile. Das Zeichen an der Aufgabe (☰ Rechenweg · ▬ Kurzform · ⚡ Blitz) sagt dir, was ins Heft kommt.'));
     ha.appendChild(uhr());
-    T.ha.forEach((a,i)=>ha.appendChild(aufgabe("H"+(i+1),a,"H")));
+    const HU=T.ha.map((a,i)=>aufgabe("H"+(i+1),a,"H"));HU.forEach(x=>ha.appendChild(x));ha.appendChild(kontrolle(HU));
     const lz=loesung(T.ha.map((a,i)=>["H"+(i+1),a]));ha.appendChild(lz);
     const kb=el("button","kartebtn","📋 Ergebnis-Karte Hausaufgabe");lz.appendChild(kb);const kk=el("div");ha.appendChild(kk);
     kb.onclick=()=>{kk.innerHTML="";kk.appendChild(karte("H"));};}
