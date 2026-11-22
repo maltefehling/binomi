@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Übung II.5a · Vielecke</title>
+<!-- Kapitel II Umfang und Flächeninhalt (Kl. 8): QR-Übung nach dem Buchkapitel (QR-Code im Skript). Nur Aufgaben – gerechnet wird im Heft.
+     Aufbau: Aufgabe 1 für alle, dann ★ / ★★ / ★★★. Tipp zu jeder Aufgabe, Lösungen je Stufe erst nach Rückfrage. -->
+<style>
+  :root{--ink:#1b2a3a;--muted:#5b6b7c;--acc:#1f4e79;--bg:#f4f7fb;--card:#fff;--line:#c9d6e5;
+    --merk:#dde8f5;--merkL:#a9c1e0;--auf:#e8f4e6;--aufL:#c6e8c0;--hilf:#fdf6ea;--hilfL:#fbd9a8;--grau:#f2f2f2;--rot:#b03a2e;--gruen:#3f8f3a}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
+  button{font:inherit;touch-action:manipulation}
+  header{padding:12px 16px;background:var(--acc);color:#fff}
+  header h1{font-size:20px;margin:0}
+  main{max-width:880px;margin:0 auto;padding:14px 16px 32px}
+  .hinweis{background:#fff;border:1px solid #bfbfbf;border-radius:12px;padding:10px 14px;font-size:18px;line-height:1.45;margin-bottom:12px}
+  details.erin{background:var(--merk);border:1px solid var(--merkL);border-radius:12px;padding:10px 14px;margin-bottom:14px;font-size:18px;line-height:1.5}
+  details.erin summary{font-weight:700;color:var(--acc);cursor:pointer;min-height:30px}
+  details.erin ul{margin:6px 0 0;padding-left:22px}
+  h2{font-size:21px;color:var(--acc);margin:18px 0 8px;padding-bottom:4px;border-bottom:2px solid var(--acc)}
+  .aufg{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:10px}
+  .aufg .kopf{font-weight:700;color:var(--acc);font-size:18px;margin-bottom:4px}
+  .aufg .txt{font-size:20px;line-height:1.45}
+  .form{display:inline-block;font-size:14px;font-weight:800;border-radius:8px;padding:2px 8px;margin-left:8px;vertical-align:middle;background:#eef3fa;color:var(--acc)}
+  .form::first-letter{font-size:1.4em}
+  .abild .foto,.foto{display:block;max-width:min(340px,100%);height:auto;border-radius:10px;margin:4px 0 8px}
+  .subbild{flex-basis:100%;margin:4px 0 2px} .subbild svg{max-width:100% !important;height:auto;display:block}
+  .form.mini{margin:0 6px 0 2px;padding:0 6px;font-size:15px}
+  .form.voll{background:#1f4e79;color:#fff} .form.blitz{background:#fff1c9;color:#7a5b00}
+  .legende{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;margin:6px 0 4px;align-items:baseline}
+  .aufg .heft{font-size:16px;color:var(--muted);margin-top:4px}
+  /* Teilaufgaben als getrennte Kärtchen (15.10.2026, Malte): SuS hielten a), b), c) für eine zusammenhängende Aufgabe */
+  .aufg ol{margin:10px 0 0;padding-left:0;list-style:none;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px}
+  .aufg li{font-size:21px;line-height:1.5;white-space:nowrap;overflow-x:auto;border:2px solid #c9d6e5;border-radius:12px;background:#f7f9fc;padding:8px 12px}
+  .aufg li.breit{grid-column:1/-1}
+  .aufg li b.tb{display:inline-block;min-width:34px;text-align:center;background:#1f4e79;color:#fff;border-radius:8px;padding:0 8px;margin-right:10px;font-weight:700}
+  .tag{display:inline-block;font-size:14px;font-weight:700;border-radius:8px;padding:2px 8px;margin-left:8px;vertical-align:middle}
+  .tag.v{background:#fff3c4;color:#7a5b00}.tag.w{background:#e2d6f0;color:#4f2f7a}.tag.m{background:#dff0e6;color:#1d5a35}
+  details.idee{margin-top:8px;font-size:18px}
+  details.idee summary{color:var(--acc);cursor:pointer;font-weight:600}
+  details.idee div{background:var(--grau);border-radius:8px;padding:8px 10px;margin-top:6px;line-height:1.45}
+  .wahl{display:flex;gap:10px;flex-wrap:wrap;margin:6px 0 10px}
+  .wahl button{flex:1 1 200px;border:2px solid var(--acc);background:#fff;color:var(--acc);border-radius:12px;padding:12px 14px;font-size:19px;font-weight:700;min-height:56px;text-align:left}
+  .wahl button[aria-pressed="true"]{background:var(--acc);color:#fff}
+  .wahl small{display:block;font-weight:500;font-size:15px;opacity:.85}
+  .stufe[hidden]{display:none}
+  .loesbtn{border:1px solid var(--hilfL);background:var(--hilf);color:var(--ink);border-radius:10px;padding:10px 16px;font-size:18px;font-weight:700;min-height:48px;margin-top:4px}
+  .loes{background:var(--hilf);border:1px solid var(--hilfL);border-radius:12px;padding:10px 14px;margin-top:8px}
+  .loes p{margin:0 0 8px;font-size:16px;color:var(--rot);font-weight:700}
+  .loes .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:6px}
+  .loes .grid span{background:#fff;border:1px solid var(--line);border-radius:8px;padding:6px 8px;text-align:center;font-size:19px}
+  .loes[hidden]{display:none}
+  details.tipp{margin-top:8px;font-size:18px}
+  details.tipp summary{display:inline-block;cursor:pointer;font-weight:700;color:#6d4a9e;background:#f1eaf8;border:1px solid #b79bd6;border-radius:10px;padding:6px 12px;min-height:40px;list-style:none}
+  details.tipp summary::-webkit-details-marker{display:none}
+  details.tipp div{background:#f1eaf8;border-radius:8px;padding:8px 10px;margin-top:6px;line-height:1.45}
+  .frag{background:#fff;border:2px solid var(--acc);border-radius:12px;padding:12px 14px;margin-top:8px;font-size:19px}
+  .frag[hidden]{display:none}
+  .frag p{margin:0 0 10px;font-weight:700;color:var(--acc)}
+  .frag button{border-radius:10px;padding:10px 16px;font-size:17px;font-weight:700;min-height:46px;margin:0 8px 6px 0;border:2px solid var(--acc)}
+  .frag .ja{background:var(--acc);color:#fff}.frag .nein{background:#fff;color:var(--acc)}
+  .loes .zeile{background:#fff;border:1px solid var(--line);border-radius:8px;padding:8px 10px;margin-bottom:6px;font-size:19px;line-height:1.5}
+  .loes .zeile b{color:var(--acc)}
+  .loes .warum{display:block;font-size:16px;color:var(--muted);margin-top:2px}
+  footer{color:var(--muted);font-size:13px;text-align:center;margin-top:24px}
+  /* Lösungsweg (1.11.2026, wie Kap. V): erst das Ergebnis, daneben „Lösungsweg anzeigen“ */
+  .wegbtn{border:1px solid var(--acc);background:#fff;color:var(--acc);border-radius:10px;padding:8px 14px;font-size:17px;font-weight:700;min-height:44px;margin-top:6px}
+  .weg{background:#fff;border:1px solid var(--line);border-left:4px solid var(--acc);border-radius:8px;padding:8px 12px;margin-top:6px;font-size:18px;line-height:1.6}
+  .weg[hidden]{display:none}
+  /* Animierter Tipp (1.11.2026): Beispiel mit anderen Zahlen baut sich Zeile für Zeile auf */
+  details.anim{margin-top:8px}
+  details.anim summary{display:inline-block;cursor:pointer;font-weight:700;color:#6d4a9e;background:#f1eaf8;border:1px solid #b79bd6;border-radius:10px;padding:6px 12px;min-height:40px;list-style:none;font-size:18px}
+  details.anim summary::-webkit-details-marker{display:none}
+  .abox{background:#f1eaf8;border-radius:10px;padding:10px 12px;margin-top:6px}
+  .abox .az{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:4px 14px;align-items:baseline;opacity:0;transition:opacity .6s;margin-bottom:6px}
+  .abox .az.da{opacity:1}
+  .abox .az .r{font-size:20px;line-height:1.4}
+  .abox .az .h{font-size:16px;color:#6d4a9e}
+  .abox .az.neu .r{background:#fff;border-radius:6px;box-shadow:0 0 0 2px #b79bd6}
+  .abox .kn{display:flex;gap:8px;margin-top:6px}
+  .abox .kn button{min-height:42px;padding:0 14px;border-radius:10px;border:2px solid #6d4a9e;background:#fff;color:#6d4a9e;font-size:16px;font-weight:700}
+  .cr{color:#b33c3c;font-weight:700}.cg{color:#3f8f3a;font-weight:700}.cb{color:#2e5d9f;font-weight:700}.co{color:#c0700f;font-weight:700}.cl{color:#6d4a9e;font-weight:800}
+  @media (max-width:560px){.abox .az{grid-template-columns:1fr}}
+  .frage{font-size:18px;font-weight:700;color:var(--acc);margin:4px 0 2px}
+  .teilkopf{font-size:22px;font-weight:800;color:var(--acc);margin:14px 0 8px}
+  .teil[hidden]{display:none}
+  .rot{color:#d0021b;font-weight:800}
+  .fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;font-size:.82em;line-height:1.15;margin:0 2px}
+  .fr>span:first-child{border-bottom:1.5px solid currentColor;padding:0 3px}
+  /* Flächen-Baukasten: Teilaufgaben sind Sätze → umbrechen statt seitlich scrollen; Eingabefeld unter dem Text */
+  .aufg li{white-space:normal;overflow-x:visible}
+  .aufg li .eing{display:flex;flex-wrap:wrap;margin:8px 0 0}
+  .abild{margin:8px 0;background:#fff;border:1px solid var(--line);border-radius:10px;padding:6px} .abild svg{display:block;width:100%;max-width:min(560px,100%) !important;height:auto;margin:0 auto}
+  /* Flächen-Baukasten: Eingabe, Empfehlung, Uhr, Ergebnis-Karte */
+  .eing{display:inline-flex;align-items:center;gap:6px;margin-left:10px;flex-wrap:wrap;max-width:100%}
+  .eing .einh[aria-pressed="true"]{background:var(--acc);color:#fff}
+  .eing .einh{min-height:44px;min-width:52px;margin-left:0;font-size:18px;font-weight:700;border:2px solid var(--acc);border-radius:10px;background:#eef3fa;color:var(--acc)}
+  .kz{min-height:44px;padding:4px 14px;margin:4px 4px 4px 0;font-size:17px;border:2px solid var(--acc);border-radius:10px;background:#fff;color:var(--acc);text-align:left}
+  .kz::before{content:"☐ ";font-weight:700}
+  .kz[aria-pressed="true"]{background:var(--acc);color:#fff}
+  .kz[aria-pressed="true"]::before{content:"☒ "}
+  .kzs .mk{margin-left:6px}
+  .eing input{width:120px;min-height:44px;font-size:20px;border:2px solid var(--acc);border-radius:10px;padding:2px 8px;text-align:right}
+  .eing .mk{font-size:22px;font-weight:800;min-width:24px}
+  .eing .mk.ok{color:var(--gruen)} .eing .mk.no{color:var(--rot)}
+  .einzeln{margin-top:8px}
+  .pruef{border:2px solid var(--acc);background:var(--acc);color:#fff;border-radius:10px;padding:8px 16px;font-size:17px;font-weight:700;min-height:46px;margin-top:8px}
+  .empf{background:#e8f4e6;border:2px solid #9fcf9a;border-radius:12px;padding:10px 14px;font-size:19px;margin:8px 0 4px}
+  .wahl button .badge{display:inline-block;margin-left:8px;font-size:13px;background:#2e7d32;color:#fff;border-radius:8px;padding:1px 8px;vertical-align:middle}
+  .uhr{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:#fff;border:1px solid var(--line);border-radius:12px;padding:8px 12px;margin:6px 0 10px;font-size:18px}
+  .uhr button{border:2px solid var(--acc);background:#fff;color:var(--acc);border-radius:10px;padding:6px 14px;font-weight:700;min-height:44px}
+  .lbild{margin:8px 0;background:#fff;border:1px solid var(--line);border-radius:10px;padding:6px} .lbild svg{display:block;width:100%;max-width:min(520px,100%) !important;height:auto}
+  .blattref{display:inline-block;background:#fff3c4;border:1px solid #e0b84a;border-radius:8px;padding:2px 8px;font-size:15px;font-weight:700;margin-left:6px}
+  .sowie{background:#fff8e1;border:2px solid #e0b84a;border-radius:12px;padding:10px 14px;font-size:18px;margin:6px 0 10px}
+  .kontrolle{margin:22px 0 10px;border:2px solid #2e7d32;border-radius:14px;background:#f1f8f1;padding:0 14px}
+  .kontrolle>summary{cursor:pointer;padding:14px 0;font-size:20px;font-weight:700;color:#2e7d32}
+  .kontrolle>summary small{display:block;font-size:15px;font-weight:400;color:#555}
+  .kontrolle .krow{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:8px 0;border-top:1px solid #cfe3cf;font-size:18px}
+  .kontrolle .krow>b{min-width:130px}
+  .kontrolle .pruef{margin:10px 0}
+  .kerg{font-size:18px;margin:4px 0 14px}
+  .reiter{display:flex;gap:8px;margin:4px 0 12px;flex-wrap:wrap}
+  .reiter button{flex:1 1 180px}
+  .plan{background:#fff;border:2px solid #c9d6e5;border-radius:12px;padding:10px 12px;margin:6px 0 12px} .planti{font-weight:700;margin-bottom:6px}
+  .pk{min-height:44px;margin:3px 4px 3px 0;padding:6px 12px;border-radius:10px;border:2px solid #9aa9bb;background:#fff;font-size:17px}
+  .pk::before{content:"☐ "} .pk[aria-pressed="true"]{background:#e8f4e6;border-color:#2e7d32;color:#1f5a22} .pk[aria-pressed="true"]::before{content:"✓ "}
+  .weiterniv{display:block;margin:16px 0;min-height:52px;padding:10px 16px;border-radius:12px;border:2px solid var(--acc);background:#eef3fa;color:var(--acc);font-size:19px;font-weight:700}
+  .reiter button{flex:1;min-height:64px;padding:8px 12px;border-radius:14px;border:2px solid var(--acc);background:#fff;color:var(--acc);font-size:20px;font-weight:700;text-align:left}
+  .reiter button small{display:block;font-size:15px;font-weight:400;color:#555}
+  .reiter button[aria-pressed="true"]{background:var(--acc);color:#fff} .reiter button[aria-pressed="true"] small{color:#dfe8f3}
+  .hz>summary{cursor:pointer} .zeit{font-size:17px;color:#444;margin:4px 0 8px}
+  .hazu{margin:34px 0 10px;border-top:3px dashed var(--line);padding-top:18px}
+  .hazu>summary{cursor:pointer;list-style:none;display:block;padding:14px 16px;border:2px solid var(--acc);border-radius:12px;background:#eef3fa;color:var(--acc);font-size:20px;font-weight:700}
+  .hazu>summary small{font-weight:400;font-size:16px;color:#555}
+  .hazu[open]>summary{margin-bottom:10px}
+  .weiterbox{background:#eef3fa;border:2px solid var(--acc);border-radius:12px;padding:12px 14px;margin:18px 0;font-size:18px;line-height:1.5}
+  .weiterbtn{display:inline-block;margin-top:8px;padding:10px 16px;border-radius:12px;background:var(--acc);color:#fff;font-weight:700;text-decoration:none}
+  .hakasten{margin-top:26px;border-top:3px solid var(--acc);padding-top:6px}
+  .uhr .zeit{font-size:22px;font-weight:800;color:var(--acc);font-variant-numeric:tabular-nums}
+  .uhr.um{background:#fff4dc;border-color:#e6c65a}
+  .kartebtn{border:2px solid var(--acc);background:#fff;color:var(--acc);border-radius:10px;padding:10px 16px;font-size:18px;font-weight:700;min-height:48px;margin:10px 0 0 8px}
+  .ekarte{background:#fff;border:3px solid var(--acc);border-radius:14px;padding:12px 16px;margin-top:10px;font-size:19px;line-height:1.6}
+  .ekarte h3{margin:0 0 6px;color:var(--acc)} .ekarte textarea{width:100%;min-height:70px;font:inherit;font-size:18px;border:2px solid var(--line);border-radius:10px;padding:6px 8px}
+  .ekarte .ok{color:var(--gruen);font-weight:800}.ekarte .no{color:var(--rot);font-weight:800}
+  .lwahl{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 4px} .lwahl button{min-height:44px;padding:6px 14px;border-radius:10px;border:2px solid #c9d6e5;background:#fff;font-size:17px;font-weight:700;color:inherit} .lwahl button[aria-pressed="true"]{border-color:#1b2a3a;background:#fff4dc}
+</style>
+</head>
+<body>
+<header><h1>Übung II.5a · Vielecke</h1></header>
+<main>
+  <details class="hinweis hz"><summary><b>So schreibst du ins Heft</b> <span class="form voll">☰</span> <span class="form kurz">▬</span> <span class="form blitz">⚡</span></summary>Das Zeichen an jeder Aufgabe sagt es dir:<div class="legende"><span class="form voll">☰ Rechenweg</span><span>① Formel ② Zahlen mit Einheit einsetzen ③ Ergebnis mit Einheit.</span><span class="form kurz">▬ Kurzform</span><span>eine Zeile, z. B. 4 cm · 8 cm = 32 cm².</span><span class="form blitz">⚡ Blitz</span><span>nur das Ergebnis mit Einheit – im Kopf.</span></div><b>Faustregel:</b> Aufschreiben musst du alles, was du sonst verwechseln oder vergessen könntest. Die Lösung gehört ins Heft. Am Ende vergleichst du nur dein <b>Endergebnis</b> (Zahl + richtige Einheit: cm, cm² oder cm³?). Wenn du nicht weiterkommst, hilft der Tipp.</details>
+  <div id="teilwahl" hidden><div class="frage">Welche Stunde hattet ihr zuletzt?</div><div class="wahl" id="tw"></div></div>
+  <div id="teile"></div>
+  <footer>Fehling · II Umfang und Flächeninhalt</footer>
+</main>
+<script>
+"use strict";
+// Versionsprüfung (12.10.2026): Safari zeigt sonst bis zu 10 Minuten (oft länger) eine alte, gespeicherte Fassung.
+// Beim Öffnen wird die Seite ohne Zwischenspeicher abgefragt; ist sie neuer, lädt sie sich einmal neu.
+const STAND="20261122202806";
+fetch(location.pathname+"?nocache="+Date.now(),{cache:"no-store"}).then(r=>r.text()).then(t=>{
+  const m=t.match(/const STAND="(\d+)"/);
+  if(m&&m[1]!==STAND&&!sessionStorage.getItem("neu"+m[1])){sessionStorage.setItem("neu"+m[1],"1");location.replace(location.pathname+"?v="+m[1]);}
+}).catch(()=>{});
+// D.teile: ein Teil pro Stunde eines aufgeteilten Buchkapitels (z. B. II.2a/b/c); Stundenauswahl nur bei aufgeteilten Kapiteln (D.mehrteilig).
+const D={"titel": "II.5a · Vielecke", "untertitel": ["Mit Beispiel und Hilfe", "Angaben im Text, auch rückwärts", "Mehrere Schritte, begründen"], "mehrteilig": false, "teile": [{"name": "", "stunde": "", "kurz": "", "erinnerung": ["Vieleck: zerlegen in Figuren, die du kennst (Rechteck, Dreieck, Trapez – auch rechtwinklig).", "Jede Teilfläche einzeln berechnen, dann alle addieren: A = A₁ + A₂ + …", "Umfang: nur die Seiten am Rand addieren – Zerlegungslinien liegen innen und zählen nicht.", "Regelmäßiges Sechseck: 6 gleiche Dreiecke um den Mittelpunkt – ein Dreieck berechnen, mal 6."], "a1": {"t": "Die Figuren sind schon zerlegt (1 Kästchen = 1 m). Berechne.", "l": ["A = 20 m²", "A = 33 m²", "U = 24 m"], "tipp": "Jede Teilfläche einzeln, dann addieren. Beim Umfang nur der Rand ringsum.", "sub": ["Figur 1: Flächeninhalt (in m²)", "Figur 2: Flächeninhalt (in m²)", "Figur 1: Umfang (in m)"], "check": [20, 33, 24], "svg": "<svg viewBox=\"0 0 570 224\" style=\"max-width:684px\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"12\" y1=\"194\" x2=\"12\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"38\" y1=\"194\" x2=\"38\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"64\" y1=\"194\" x2=\"64\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"90\" y1=\"194\" x2=\"90\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"116\" y1=\"194\" x2=\"116\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"142\" y1=\"194\" x2=\"142\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"168\" y1=\"194\" x2=\"168\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"194\" y1=\"194\" x2=\"194\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"220\" y1=\"194\" x2=\"220\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"246\" y1=\"194\" x2=\"246\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"272\" y1=\"194\" x2=\"272\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"298\" y1=\"194\" x2=\"298\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"324\" y1=\"194\" x2=\"324\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"350\" y1=\"194\" x2=\"350\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"376\" y1=\"194\" x2=\"376\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"402\" y1=\"194\" x2=\"402\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"428\" y1=\"194\" x2=\"428\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"454\" y1=\"194\" x2=\"454\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"480\" y1=\"194\" x2=\"480\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"506\" y1=\"194\" x2=\"506\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"532\" y1=\"194\" x2=\"532\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"558\" y1=\"194\" x2=\"558\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"194\" x2=\"558\" y2=\"194\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"168\" x2=\"558\" y2=\"168\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"142\" x2=\"558\" y2=\"142\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"116\" x2=\"558\" y2=\"116\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"90\" x2=\"558\" y2=\"90\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"64\" x2=\"558\" y2=\"64\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"38\" x2=\"558\" y2=\"38\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"12\" x2=\"558\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><polygon points=\"38,168 220,168 220,116 38,116\" fill=\"#cfe3f5\" fill-opacity=\"0.85\" stroke=\"#6b5a45\" stroke-width=\"2.5\"/><text x=\"129.0\" y=\"149.0\" font-size=\"20\" font-weight=\"800\" fill=\"#1f4e79\" text-anchor=\"middle\">1</text><polygon points=\"38,116 90,116 90,38 38,38\" fill=\"#f6dcb8\" fill-opacity=\"0.85\" stroke=\"#6b5a45\" stroke-width=\"2.5\"/><polygon points=\"298,168 454,168 454,64 298,64\" fill=\"#cfe3f5\" fill-opacity=\"0.85\" stroke=\"#6b5a45\" stroke-width=\"2.5\"/><text x=\"376.0\" y=\"123.0\" font-size=\"20\" font-weight=\"800\" fill=\"#1f4e79\" text-anchor=\"middle\">2</text><polygon points=\"454,168 532,168 532,116 454,64\" fill=\"#f6dcb8\" fill-opacity=\"0.85\" stroke=\"#6b5a45\" stroke-width=\"2.5\"/><text x=\"558\" y=\"212\" font-size=\"13\" fill=\"#555\" text-anchor=\"end\">1 Kästchen = 1 m</text></svg>", "form": "voll", "subform": ["voll", "kurz", "kurz"], "weg": ["a) Figur 1: Rechteck 7 m · 2 m = 14 m²", "a) Rechteck 2 m · 3 m = 6 m²", "a) A = 14 m² + 6 m²", "a) A = 20 m²", "b) Figur 2: Rechteck 6 m · 4 m = 24 m²", "b) rechtwinkliges Trapez {(4 m + 2 m) · 3 m/2} = 9 m²", "b) A = 24 m² + 9 m²", "b) A = 33 m²", "c) U = 7 m + 2 m + 5 m + 3 m + 2 m + 5 m", "c) U = 24 m"]}, "ha": [{"t": "Von heute: Die Figur ist schon zerlegt (1 Kästchen = 1 m). Berechne den Flächeninhalt. (in m²)", "l": ["30 m²"], "tipp": "Teilflächen einzeln, dann addieren.", "check": [30], "svg": "<svg viewBox=\"0 0 232 276\" style=\"max-width:278px\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"12\" y1=\"246\" x2=\"12\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"38\" y1=\"246\" x2=\"38\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"64\" y1=\"246\" x2=\"64\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"90\" y1=\"246\" x2=\"90\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"116\" y1=\"246\" x2=\"116\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"142\" y1=\"246\" x2=\"142\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"168\" y1=\"246\" x2=\"168\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"194\" y1=\"246\" x2=\"194\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"220\" y1=\"246\" x2=\"220\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"246\" x2=\"220\" y2=\"246\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"220\" x2=\"220\" y2=\"220\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"194\" x2=\"220\" y2=\"194\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"168\" x2=\"220\" y2=\"168\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"142\" x2=\"220\" y2=\"142\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"116\" x2=\"220\" y2=\"116\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"90\" x2=\"220\" y2=\"90\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"64\" x2=\"220\" y2=\"64\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"38\" x2=\"220\" y2=\"38\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"12\" x2=\"220\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><polygon points=\"38,220 194,220 194,142 38,142\" fill=\"#cfe3f5\" fill-opacity=\"0.85\" stroke=\"#6b5a45\" stroke-width=\"2.5\"/><text x=\"116.0\" y=\"188.0\" font-size=\"20\" font-weight=\"800\" fill=\"#1f4e79\" text-anchor=\"middle\">①</text><polygon points=\"38,142 194,142 90,38\" fill=\"#f6dcb8\" fill-opacity=\"0.85\" stroke=\"#6b5a45\" stroke-width=\"2.5\"/><line x1=\"90\" y1=\"38\" x2=\"90\" y2=\"142\" stroke=\"#c0700f\" stroke-width=\"3\" stroke-dasharray=\"6 4\"/><path d=\"M 101.7 142 A 11.700000000000001 11.700000000000001 0 0 0 90 130.3\" fill=\"none\" stroke=\"#c0700f\" stroke-width=\"2\"/><circle cx=\"94.914\" cy=\"137.086\" r=\"2.4\" fill=\"#c0700f\"/><text x=\"107.33333333333333\" y=\"114.33333333333334\" font-size=\"20\" font-weight=\"800\" fill=\"#1f4e79\" text-anchor=\"middle\">②</text><text x=\"220\" y=\"264\" font-size=\"13\" fill=\"#555\" text-anchor=\"end\">1 Kästchen = 1 m</text></svg>", "form": "voll", "subform": null, "weg": ["Rechteck: 6 m · 3 m = 18 m²", "Dreieck: {6 m · 4 m/2} = 12 m²", "A = 18 m² + 12 m²", "A = 30 m²"]}, {"t": "Von früher (II.4a): Ein Trapez hat a = 9 m, c = 5 m und h = 4 m. Berechne den Flächeninhalt. (in m²)", "l": ["28 m²"], "tipp": "Erst a + c, dann mal h, dann durch 2.", "tag": "w", "check": [28], "form": "kurz", "subform": null, "weg": ["A = {(9 m + 5 m) · 4 m/2}", "A = {56 m²/2}", "A = 28 m²"]}, {"t": "Zum Verstehen: Paul zerlegt ein L-Beet in zwei Rechtecke. Für den Zaun zählt er die Zerlegungslinie mit.", "l": ["falsch"], "tipp": "Wo steht der Zaun – am Rand oder in der Mitte?", "sub": ["Kreuze an: Pauls Zaunlänge ist ☐ richtig ☐ falsch."], "tag": "v", "form": "kurz", "subform": ["kurz"], "weg": ["Der Zaun steht am Rand.", "Die Zerlegungslinie liegt innen – sie gehört nicht zum Umfang."], "kreuz": {"0": [[1]]}}, {"t": "★ freiwillig: Ein regelmäßiges Sechseck hat g = 4 cm und h = 3,5 cm. Berechne den Flächeninhalt. (in cm²)", "l": ["42 cm²"], "tipp": "Ein Dreieck, dann mal 6.", "check": [42], "form": "voll", "subform": null, "weg": ["ein Dreieck: {4 cm · 3,5 cm/2} = 7 cm²", "Sechseck: 6 · 7 cm²", "Sechseck: 42 cm²"]}], "weiter": null, "stufen": {"1": {"name": "Mit Hilfe", "aufg": [{"t": "Übungsblatt ★ 2: L-Beet – eine Linie, zwei Rechtecke.", "l": ["18 m²", "22 m"], "tipp": "Verlängere die innere Kante bis zum Rand. Dann hast du zwei Rechtecke.", "sub": ["Flächeninhalt (in m²)", "Umfang (in m)"], "check": [18, 22], "blatt": true, "loesbild": "<svg viewBox=\"0 0 232 224\" style=\"max-width:278px\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"12\" y1=\"194\" x2=\"12\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"38\" y1=\"194\" x2=\"38\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"64\" y1=\"194\" x2=\"64\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"90\" y1=\"194\" x2=\"90\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"116\" y1=\"194\" x2=\"116\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"142\" y1=\"194\" x2=\"142\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"168\" y1=\"194\" x2=\"168\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"194\" y1=\"194\" x2=\"194\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"220\" y1=\"194\" x2=\"220\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"194\" x2=\"220\" y2=\"194\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"168\" x2=\"220\" y2=\"168\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"142\" x2=\"220\" y2=\"142\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"116\" x2=\"220\" y2=\"116\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"90\" x2=\"220\" y2=\"90\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"64\" x2=\"220\" y2=\"64\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"38\" x2=\"220\" y2=\"38\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"12\" x2=\"220\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><polygon points=\"38,168 194,168 194,116 38,116\" fill=\"#cfe3f5\" fill-opacity=\"0.85\" stroke=\"#6b5a45\" stroke-width=\"2.5\"/><text x=\"116.0\" y=\"149.0\" font-size=\"20\" font-weight=\"800\" fill=\"#1f4e79\" text-anchor=\"middle\">①</text><polygon points=\"38,116 90,116 90,38 38,38\" fill=\"#f6dcb8\" fill-opacity=\"0.85\" stroke=\"#6b5a45\" stroke-width=\"2.5\"/><text x=\"64.0\" y=\"84.0\" font-size=\"20\" font-weight=\"800\" fill=\"#1f4e79\" text-anchor=\"middle\">②</text><text x=\"220\" y=\"212\" font-size=\"13\" fill=\"#555\" text-anchor=\"end\">1 Kästchen = 1 m</text></svg>", "form": "voll", "subform": ["voll", "kurz"], "weg": ["Rechteck unten: 6 m · 2 m = 12 m²", "Rechteck oben: 2 m · 3 m = 6 m²", "A = 12 m² + 6 m²", "A = 18 m²", "U = 6 m + 2 m + 4 m + 3 m + 2 m + 5 m", "U = 22 m"], "_fertig": true}, {"t": "Übungsblatt ★ 3: dieselbe Figur, zwei verschiedene Zerlegungen.", "l": ["29 m²", "29 m²", "denselben Flächeninhalt"], "tipp": "Einmal waagrecht, einmal senkrecht zerlegen.", "sub": ["Weg 1 (in m²)", "Weg 2 (in m²)", "Kreuze an: Beide Wege ergeben ☐ denselben Flächeninhalt ☐ verschiedene Flächeninhalte."], "check": [29, 29, null], "blatt": true, "loesbild": "<svg viewBox=\"0 0 492 224\" style=\"max-width:590px\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"12\" y1=\"194\" x2=\"12\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"38\" y1=\"194\" x2=\"38\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"64\" y1=\"194\" x2=\"64\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"90\" y1=\"194\" x2=\"90\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"116\" y1=\"194\" x2=\"116\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"142\" y1=\"194\" x2=\"142\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"168\" y1=\"194\" x2=\"168\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"194\" y1=\"194\" x2=\"194\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"220\" y1=\"194\" x2=\"220\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"246\" y1=\"194\" x2=\"246\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"272\" y1=\"194\" x2=\"272\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"298\" y1=\"194\" x2=\"298\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"324\" y1=\"194\" x2=\"324\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"350\" y1=\"194\" x2=\"350\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"376\" y1=\"194\" x2=\"376\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"402\" y1=\"194\" x2=\"402\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"428\" y1=\"194\" x2=\"428\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"454\" y1=\"194\" x2=\"454\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"480\" y1=\"194\" x2=\"480\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"194\" x2=\"480\" y2=\"194\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"168\" x2=\"480\" y2=\"168\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"142\" x2=\"480\" y2=\"142\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"116\" x2=\"480\" y2=\"116\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"90\" x2=\"480\" y2=\"90\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"64\" x2=\"480\" y2=\"64\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"38\" x2=\"480\" y2=\"38\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"12\" x2=\"480\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><polygon points=\"38,168 220,168 220,90 38,90\" fill=\"#cfe3f5\" fill-opacity=\"0.85\" stroke=\"#6b5a45\" stroke-width=\"2.5\"/><text x=\"129.0\" y=\"136.0\" font-size=\"20\" font-weight=\"800\" fill=\"#1f4e79\" text-anchor=\"middle\">①</text><polygon points=\"38,90 142,90 142,38 38,38\" fill=\"#f6dcb8\" fill-opacity=\"0.85\" stroke=\"#6b5a45\" stroke-width=\"2.5\"/><text x=\"90.0\" y=\"71.0\" font-size=\"20\" font-weight=\"800\" fill=\"#1f4e79\" text-anchor=\"middle\">②</text><polygon points=\"272,168 376,168 376,38 272,38\" fill=\"#cfe3f5\" fill-opacity=\"0.85\" stroke=\"#6b5a45\" stroke-width=\"2.5\"/><text x=\"324.0\" y=\"110.0\" font-size=\"20\" font-weight=\"800\" fill=\"#1f4e79\" text-anchor=\"middle\">①</text><polygon points=\"376,168 454,168 454,90 376,90\" fill=\"#f6dcb8\" fill-opacity=\"0.85\" stroke=\"#6b5a45\" stroke-width=\"2.5\"/><text x=\"415.0\" y=\"136.0\" font-size=\"20\" font-weight=\"800\" fill=\"#1f4e79\" text-anchor=\"middle\">②</text><text x=\"480\" y=\"212\" font-size=\"13\" fill=\"#555\" text-anchor=\"end\">1 Kästchen = 1 m</text></svg>", "form": "voll", "subform": ["voll", "kurz", "kurz"], "weg": ["Weg 1: 7 m · 3 m = 21 m²", "Weg 1: 4 m · 2 m = 8 m²", "Weg 1: A = 21 m² + 8 m²", "A = 29 m²", "Weg 2: 4 m · 5 m = 20 m²", "Weg 2: 3 m · 3 m = 9 m²", "Weg 2: A = 20 m² + 9 m²", "A = 29 m²"], "_fertig": true, "kreuz": {"2": [[0]]}}, {"t": "Übungsblatt ★ 4: Sechseck mit g = 3 cm und h = 2,6 cm.", "l": ["6 Dreiecke", "3,9 cm²", "23,4 cm²"], "tipp": "Ein Dreieck: g · h, durch 2. Dann mal 6.", "sub": ["Wie viele gleiche Dreiecke?", "ein Dreieck (in cm²)", "ganzes Sechseck (in cm²)"], "check": [6, 3.9, 23.4], "blatt": true, "form": "voll", "subform": ["voll", "kurz", "kurz"], "weg": ["6 gleiche Dreiecke", "ein Dreieck: {3 cm · 2,6 cm/2}", "ein Dreieck: {7,8 cm²/2} = 3,9 cm²", "Sechseck: 6 · 3,9 cm²", "Sechseck: 23,4 cm²"], "_fertig": true}, {"t": "Übungsblatt ★ 5: Giebelwand – Rechteck und Dreieck.", "l": ["40 m²", "12 m²", "52 m²"], "tipp": "Das Rechteck ist 8 m breit und 5 m hoch. Die Spitze ist 3 m über dem Rechteck.", "sub": ["Rechteck (in m²)", "Dreieck (in m²)", "ganze Wand (in m²)"], "check": [40, 12, 52], "blatt": true, "loesbild": "<svg viewBox=\"0 0 284 302\" style=\"max-width:341px\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"12\" y1=\"272\" x2=\"12\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"38\" y1=\"272\" x2=\"38\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"64\" y1=\"272\" x2=\"64\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"90\" y1=\"272\" x2=\"90\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"116\" y1=\"272\" x2=\"116\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"142\" y1=\"272\" x2=\"142\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"168\" y1=\"272\" x2=\"168\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"194\" y1=\"272\" x2=\"194\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"220\" y1=\"272\" x2=\"220\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"246\" y1=\"272\" x2=\"246\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"272\" y1=\"272\" x2=\"272\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"272\" x2=\"272\" y2=\"272\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"246\" x2=\"272\" y2=\"246\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"220\" x2=\"272\" y2=\"220\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"194\" x2=\"272\" y2=\"194\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"168\" x2=\"272\" y2=\"168\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"142\" x2=\"272\" y2=\"142\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"116\" x2=\"272\" y2=\"116\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"90\" x2=\"272\" y2=\"90\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"64\" x2=\"272\" y2=\"64\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"38\" x2=\"272\" y2=\"38\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"12\" x2=\"272\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><polygon points=\"38,246 246,246 246,116 38,116\" fill=\"#cfe3f5\" fill-opacity=\"0.85\" stroke=\"#6b5a45\" stroke-width=\"2.5\"/><text x=\"142.0\" y=\"188.0\" font-size=\"20\" font-weight=\"800\" fill=\"#1f4e79\" text-anchor=\"middle\">①</text><polygon points=\"38,116 246,116 142,38\" fill=\"#f6dcb8\" fill-opacity=\"0.85\" stroke=\"#6b5a45\" stroke-width=\"2.5\"/><line x1=\"142\" y1=\"38\" x2=\"142\" y2=\"116\" stroke=\"#c0700f\" stroke-width=\"3\" stroke-dasharray=\"6 4\"/><path d=\"M 153.7 116 A 11.700000000000001 11.700000000000001 0 0 0 142 104.3\" fill=\"none\" stroke=\"#c0700f\" stroke-width=\"2\"/><circle cx=\"146.914\" cy=\"111.086\" r=\"2.4\" fill=\"#c0700f\"/><text x=\"142.0\" y=\"97.0\" font-size=\"20\" font-weight=\"800\" fill=\"#1f4e79\" text-anchor=\"middle\">②</text><text x=\"272\" y=\"290\" font-size=\"13\" fill=\"#555\" text-anchor=\"end\">1 Kästchen = 1 m</text></svg>", "form": "voll", "subform": ["voll", "kurz", "kurz"], "weg": ["Rechteck: 8 m · 5 m = 40 m²", "Dreieck: {8 m · 3 m/2}", "Dreieck: {24 m²/2} = 12 m²", "A = 40 m² + 12 m²", "A = 52 m²"], "_fertig": true}, {"t": "Blitz: zwei Rechtecke zusammen.", "l": ["10 + 9 = 19 m²", "16 + 10 = 26 m²", "18 + 4 = 22 m²"], "tipp": "Nur das Ergebnis mit Einheit ins Heft – rechne im Kopf.", "sub": ["5 m · 2 m und 3 m · 3 m (in m²)", "4 m · 4 m und 2 m · 5 m (in m²)", "6 m · 3 m und 2 m · 2 m (in m²)"], "check": [19, 26, 22], "form": "blitz", "subform": ["blitz", "blitz", "blitz"], "weg": ["10 + 9 = 19 m²", "16 + 10 = 26 m²", "18 + 4 = 22 m²"], "_fertig": true}]}, "2": {"name": "Sicher rechnen", "aufg": [{"t": "Übungsblatt ★★ 2: Beet mit schräger Ecke.", "l": ["37 m²"], "tipp": "Waagrecht bei 3 m zerlegen: unten ein Rechteck, oben ein rechtwinkliges Trapez.", "check": [37], "blatt": true, "loesbild": "<svg viewBox=\"0 0 284 224\" style=\"max-width:341px\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"12\" y1=\"194\" x2=\"12\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"38\" y1=\"194\" x2=\"38\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"64\" y1=\"194\" x2=\"64\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"90\" y1=\"194\" x2=\"90\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"116\" y1=\"194\" x2=\"116\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"142\" y1=\"194\" x2=\"142\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"168\" y1=\"194\" x2=\"168\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"194\" y1=\"194\" x2=\"194\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"220\" y1=\"194\" x2=\"220\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"246\" y1=\"194\" x2=\"246\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"272\" y1=\"194\" x2=\"272\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"194\" x2=\"272\" y2=\"194\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"168\" x2=\"272\" y2=\"168\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"142\" x2=\"272\" y2=\"142\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"116\" x2=\"272\" y2=\"116\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"90\" x2=\"272\" y2=\"90\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"64\" x2=\"272\" y2=\"64\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"38\" x2=\"272\" y2=\"38\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"12\" x2=\"272\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><polygon points=\"38,168 246,168 246,90 38,90\" fill=\"#cfe3f5\" fill-opacity=\"0.85\" stroke=\"#6b5a45\" stroke-width=\"2.5\"/><text x=\"142.0\" y=\"136.0\" font-size=\"20\" font-weight=\"800\" fill=\"#1f4e79\" text-anchor=\"middle\">①</text><polygon points=\"38,90 246,90 168,38 38,38\" fill=\"#f6dcb8\" fill-opacity=\"0.85\" stroke=\"#6b5a45\" stroke-width=\"2.5\"/><text x=\"122.5\" y=\"71.0\" font-size=\"20\" font-weight=\"800\" fill=\"#1f4e79\" text-anchor=\"middle\">②</text><text x=\"272\" y=\"212\" font-size=\"13\" fill=\"#555\" text-anchor=\"end\">1 Kästchen = 1 m</text></svg>", "form": "kurz", "subform": null, "weg": ["Rechteck: 8 m · 3 m = 24 m²", "Trapez: {(8 m + 5 m) · 2 m/2}", "Trapez: {26 m²/2} = 13 m²", "A = 24 m² + 13 m²", "A = 37 m²"], "_fertig": true}, {"t": "Übungsblatt ★★ 3: Umfang desselben Beets.", "l": ["24,6 m"], "tipp": "Nur der Rand ringsum – die Zerlegungslinie liegt innen.", "check": [24.6], "blatt": true, "form": "voll", "subform": null, "weg": ["U = 8 m + 3 m + 3,6 m + 5 m + 5 m", "U = 24,6 m"], "_fertig": true}, {"t": "Übungsblatt ★★ 4: Achteck mit g = 2 cm und h = 2,4 cm.", "l": ["8 Dreiecke", "19,2 cm²"], "tipp": "Ein Dreieck: g · h, durch 2. Dann mal 8.", "sub": ["Wie viele gleiche Dreiecke?", "ganzes Achteck (in cm²)"], "check": [8, 19.2], "blatt": true, "form": "voll", "subform": ["voll", "kurz"], "weg": ["8 gleiche Dreiecke", "ein Dreieck: {2 cm · 2,4 cm/2} = 2,4 cm²", "Achteck: 8 · 2,4 cm²", "Achteck: 19,2 cm²"], "_fertig": true}, {"t": "Übungsblatt ★★ 5: abzeichnen, zerlegen, berechnen.", "l": ["21 m²"], "tipp": "Bei 2 m waagrecht zerlegen: unten ein Rechteck, oben ein rechtwinkliges Trapez.", "check": [21], "blatt": true, "loesbild": "<svg viewBox=\"0 0 232 198\" style=\"max-width:278px\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"12\" y1=\"168\" x2=\"12\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"38\" y1=\"168\" x2=\"38\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"64\" y1=\"168\" x2=\"64\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"90\" y1=\"168\" x2=\"90\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"116\" y1=\"168\" x2=\"116\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"142\" y1=\"168\" x2=\"142\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"168\" y1=\"168\" x2=\"168\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"194\" y1=\"168\" x2=\"194\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"220\" y1=\"168\" x2=\"220\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"168\" x2=\"220\" y2=\"168\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"142\" x2=\"220\" y2=\"142\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"116\" x2=\"220\" y2=\"116\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"90\" x2=\"220\" y2=\"90\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"64\" x2=\"220\" y2=\"64\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"38\" x2=\"220\" y2=\"38\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"12\" x2=\"220\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><polygon points=\"38,142 194,142 194,90 38,90\" fill=\"#cfe3f5\" fill-opacity=\"0.85\" stroke=\"#6b5a45\" stroke-width=\"2.5\"/><text x=\"116.0\" y=\"123.0\" font-size=\"20\" font-weight=\"800\" fill=\"#1f4e79\" text-anchor=\"middle\">①</text><polygon points=\"38,90 194,90 194,38 116,38\" fill=\"#f6dcb8\" fill-opacity=\"0.85\" stroke=\"#6b5a45\" stroke-width=\"2.5\"/><text x=\"135.5\" y=\"71.0\" font-size=\"20\" font-weight=\"800\" fill=\"#1f4e79\" text-anchor=\"middle\">②</text><text x=\"220\" y=\"186\" font-size=\"13\" fill=\"#555\" text-anchor=\"end\">1 Kästchen = 1 m</text></svg>", "form": "voll", "subform": null, "weg": ["Rechteck: 6 m · 2 m = 12 m²", "Trapez: {(6 m + 3 m) · 2 m/2}", "Trapez: {18 m²/2} = 9 m²", "A = 12 m² + 9 m²", "A = 21 m²"], "_fertig": true}, {"t": "Blitz: regelmäßiges Vieleck – ein Dreieck mal Anzahl.", "l": ["6 · 5 = 30 cm²", "8 · 3 = 24 cm²", "5 · 7 = 35 cm²"], "tipp": "Nur das Ergebnis mit Einheit ins Heft – rechne im Kopf.", "sub": ["6 Dreiecke zu je 5 cm² (in cm²)", "8 Dreiecke zu je 3 cm² (in cm²)", "5 Dreiecke zu je 7 cm² (in cm²)"], "check": [30, 24, 35], "form": "blitz", "subform": ["blitz", "blitz", "blitz"], "weg": ["6 · 5 = 30 cm²", "8 · 3 = 24 cm²", "5 · 7 = 35 cm²"], "_fertig": true}]}, "3": {"name": "Knifflig", "aufg": [{"t": "Übungsblatt ★★★ 2: Viereck mit Diagonale – messen (Messwerte dürfen um 1 mm abweichen).", "l": ["20 cm²"], "tipp": "Die Diagonale AC ist für beide Dreiecke die Grundseite. Miss die beiden Höhen senkrecht auf AC.", "check": [20], "blatt": true, "form": "voll", "subform": null, "weg": ["AC = 8 cm, Höhe von D auf AC", "AC = 3 cm, Höhe von B auf AC", "AC = 2 cm", "Dreieck ACD: {8 cm · 3 cm/2} = 12 cm²", "Dreieck ABC: {8 cm · 2 cm/2} = 8 cm²", "A = 12 cm² + 8 cm²", "A = 20 cm²"], "_fertig": true}, {"t": "Übungsblatt ★★★ 3: eigenes Fünfeck mit 20 m².", "l": ["z. B. Rechteck 4 m · 4 m + Dreieck {4 m · 2 m/2} (Haus)"], "tipp": "Beginne mit einem Rechteck von 16 m² und setze ein Dreieck mit 4 m² auf.", "blatt": true, "loesbild": "<svg viewBox=\"0 0 180 250\" style=\"max-width:216px\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"12\" y1=\"220\" x2=\"12\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"38\" y1=\"220\" x2=\"38\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"64\" y1=\"220\" x2=\"64\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"90\" y1=\"220\" x2=\"90\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"116\" y1=\"220\" x2=\"116\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"142\" y1=\"220\" x2=\"142\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"168\" y1=\"220\" x2=\"168\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"220\" x2=\"168\" y2=\"220\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"194\" x2=\"168\" y2=\"194\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"168\" x2=\"168\" y2=\"168\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"142\" x2=\"168\" y2=\"142\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"116\" x2=\"168\" y2=\"116\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"90\" x2=\"168\" y2=\"90\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"64\" x2=\"168\" y2=\"64\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"38\" x2=\"168\" y2=\"38\" stroke=\"#d3dce6\" stroke-width=\"1\"/><line x1=\"12\" y1=\"12\" x2=\"168\" y2=\"12\" stroke=\"#d3dce6\" stroke-width=\"1\"/><polygon points=\"38,194 142,194 142,90 38,90\" fill=\"#cfe3f5\" fill-opacity=\"0.85\" stroke=\"#6b5a45\" stroke-width=\"2.5\"/><text x=\"90.0\" y=\"149.0\" font-size=\"20\" font-weight=\"800\" fill=\"#1f4e79\" text-anchor=\"middle\">①</text><polygon points=\"38,90 142,90 90,38\" fill=\"#f6dcb8\" fill-opacity=\"0.85\" stroke=\"#6b5a45\" stroke-width=\"2.5\"/><text x=\"90.0\" y=\"79.66666666666666\" font-size=\"20\" font-weight=\"800\" fill=\"#1f4e79\" text-anchor=\"middle\">②</text><text x=\"168\" y=\"238\" font-size=\"13\" fill=\"#555\" text-anchor=\"end\">1 Kästchen = 1 m</text></svg>", "form": "voll", "subform": null, "weg": ["Beispiel: Rechteck 4 m · 4 m = 16 m²", "Dreieck oben: {4 m · 2 m/2} = 4 m²", "A = 16 m² + 4 m²", "A = 20 m² ✓", "Prüft gegenseitig – es gibt viele Lösungen."], "_fertig": true}, {"t": "Übungsblatt ★★★ 4: sechseckiger Pflasterstein, g = 10 cm, h = 8,7 cm.", "l": ["261 cm²", "39 Steine"], "tipp": "Erst ein Dreieck, mal 6. Dann 10 000 cm² durch die Fläche eines Steins – aufrunden.", "sub": ["ein Stein (in cm²)", "Steine für 1 m² (aufgerundet)"], "check": [261, 39], "blatt": true, "form": "voll", "subform": ["voll", "kurz"], "weg": ["ein Dreieck: {10 cm · 8,7 cm/2} = 43,5 cm²", "ein Stein: 6 · 43,5 cm² = 261 cm²", "10 000 : 261 ≈ 38,3", "aufrunden: 39 Steine"], "_fertig": true}, {"t": "Übungsblatt ★★★ 5: Bens Satz über den Umfang.", "l": ["nie – der Umfang ist der Rand ringsum, die Zerlegungslinien liegen innen"], "tipp": "Was gehört zum Umfang – der Rand oder die Linien innen?", "sub": ["Kreuze an: Bens Satz stimmt ☐ immer ☐ manchmal ☐ nie."], "tag": "v", "blatt": true, "form": "kurz", "subform": ["kurz"], "weg": ["Der Umfang ist der Rand ringsum.", "Zerlegungslinien liegen innen und zählen nicht.", "Bens Satz stimmt nie."], "_fertig": true, "kreuz": {"0": [[2]]}}, {"t": "Blitz: Rechteck plus Dreieck.", "l": ["24 + 6 = 30 m²", "25 + 10 = 35 m²", "30 + 5 = 35 m²"], "tipp": "Nur das Ergebnis mit Einheit ins Heft – rechne im Kopf.", "sub": ["Rechteck 6 m · 4 m, Dreieck g = 6 m, h = 2 m (in m²)", "Rechteck 5 m · 5 m, Dreieck g = 5 m, h = 4 m (in m²)", "Rechteck 10 m · 3 m, Dreieck g = 10 m, h = 1 m (in m²)"], "check": [30, 35, 35], "form": "blitz", "subform": ["blitz", "blitz", "blitz"], "weg": ["24 + 6 = 30 m²", "25 + 10 = 35 m²", "30 + 5 = 35 m²"], "_fertig": true}]}}, "zeitA": "In der Stunde: Aufgabe 1 (ca. 10 Minuten), gemeinsam oder allein – wie die Lehrkraft es sagt.", "zeitP": "Arbeitsplan: ca. 25 Minuten je Niveau. Wer fertig ist, macht im nächsten Niveau weiter.", "zeitH": "Höchstens 15 Minuten (ca. 10 Minuten)."}]};
+// 16.11.2026 (Malte): Zeilenumbrüche nie mitten in „a = 8 m“ – geschützte Leerzeichen um =, ·, : und zwischen Zahl und Einheit
+const NB=s=>s.replace(/(\d) (mm|cm|dm|km|m|€|%|Kräuter|Säcke|Dosen|Pflanzen)(?=[²³]?(?:[^A-Za-zäöü]|$))/g,"$1\u00a0$2").replace(/(\S) ([=·:<>≈]) (?=\S)/g,"$1\u00a0$2\u00a0").replace(/ (\?|\d)/g,(m,x)=>m);
+const esc=s=>NB(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/(^|[^A-Za-zäöüÄÖÜß])h_([abc])(?![A-Za-zäöüÄÖÜß])/g,"$1h<sub>$2</sub>").replace(/\{([^{}\/]+)\/([^{}]+)\}/g,'<span class="fr"><span>$1</span><span>$2</span></span>').replace(/\[([+−])\]/g,'<span class="rot">$1</span>');
+const el=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e;};
+// 13.11.2026 (Malte): Wie viel ins Heft? Kurzform mit ▬ (eine Zeile) statt ✎ – ✎ heißt im Skript „schriftlich“.
+// Drei Formen, an jeder Aufgabe sichtbar (Expertise-Umkehr: Gerüst nur, wo es hilft)
+const FORM={voll:"☰ Rechenweg",kurz:"▬ Kurzform",blitz:"⚡ Blitz"};
+const formHtml=f=>f?`<span class="form ${f}">${FORM[f]}</span>`:"";
+const HEFT={voll:"Nummer, kleine Skizze, dann ① Formel ② Zahlen mit Einheit ③ Ergebnis mit Einheit.",
+  kurz:"Nummer und eine Zeile, z. B. 4 cm · 8 cm = 32 cm² – bei Ankreuz-Aufgaben: Nummer und deine Antwort.",
+  blitz:"Nummer und nur das Ergebnis mit Einheit – im Kopf rechnen."};
+const tagHtml=t=>t==="v"?'<span class="tag v">💡 Verständnis</span>':t==="w"?'<span class="tag w">↩ Wiederholung</span>':t==="m"?'<span class="tag m">🔀 Mix: erst entscheiden</span>':"";   // „m“ seit 13.11.2026 (II.3b)
+// Farbmarkup [r:…] [g:…] [b:…] [o:…] [l:…] (nach esc, damit Brüche weiter funktionieren)
+const farbe=s=>s.replace(/\[([rgbol]):([^\]]+)\]/g,'<span class="c$1">$2</span>');
+function animTipp(zeilen){
+  const d=el("details","anim",'<summary>▶ Tipp: Beispiel mit anderen Zahlen</summary>');
+  const box=el("div","abox");d.appendChild(box);
+  const rows=zeilen.map(([z,h])=>{const r=el("div","az",`<div class="r">${farbe(esc(z))}</div><div class="h">${esc(h)}</div>`);box.appendChild(r);return r;});
+  const kn=el("div","kn",'<button class="p">⏸ Pause</button><button class="n">↻ Nochmal</button>');box.appendChild(kn);
+  const pb=kn.querySelector(".p");let n=0,timer=null,steht=false;
+  const zeig=()=>rows.forEach((r,i)=>{r.classList.toggle("da",i<n);r.classList.toggle("neu",i===n-1);});
+  const dauer=()=>1800+((zeilen[n-1]||["",""])[0].length+(zeilen[n-1]||["",""])[1].length)*55;   // Lesezeit nach Textlänge
+  const weiter=()=>{if(steht)return;n++;zeig();if(n<rows.length)timer=setTimeout(weiter,dauer());else pb.disabled=true;};
+  const start=()=>{clearTimeout(timer);steht=false;pb.disabled=false;pb.textContent="⏸ Pause";n=0;zeig();timer=setTimeout(weiter,400);};
+  pb.onclick=()=>{steht=!steht;pb.textContent=steht?"▶ Weiter":"⏸ Pause";clearTimeout(timer);if(!steht)weiter();};
+  kn.querySelector(".n").onclick=start;
+  d.addEventListener("toggle",()=>{if(d.open)start();else clearTimeout(timer);});
+  return d;
+}
+const ERG={};   // Ergebnisse der geprüften Felder: Schlüssel "Aufgabe★ 2 b" → true/false (erster Versuch)
+const ohneEinh=s=>String(s).replace(/\s*\(in (?:mm|cm|dm|km|m)[²³]?\)/g,"");   // Einheit wird über die Tasten gewählt
+const zahl=s=>{const m=String(s).replace(/[a-zA-Z]+[²³]?/g,"").replace(/\s/g,"").replace(",",".").match(/-?\d+(\.\d+)?/);return m?parseFloat(m[0]):NaN;};
+const gleich=(x,w)=>Math.abs(x-w)<=Math.max(0.011,Math.abs(w)*1e-6);
+// 19.11.2026 (Malte): Das Heft ist der Arbeitsort, die Seite ist Aufgabenblatt + Kontrolle (nicht Bettermarks). Deshalb KEINE Eingabefelder
+// an den Aufgaben – alles wird im Heft gerechnet, erst am Ende eines Blocks werden die Ergebnisse gesammelt verglichen (kontrolle()).
+function aufgabe(nr,a,stufe){
+  const gemischt=a.subform&&new Set(a.subform).size>1;
+  const kopfForm=!gemischt?formHtml(a.form):(a.subform[0]==="voll"&&a.subform.slice(1).every(f=>f!=="voll")?'<span class="form voll">☰ a)</span><span class="form kurz">▬ danach</span>':'<span class="form kurz">☰ / ▬ je Teilaufgabe</span>');
+  let h=`<div class="kopf">Aufgabe ${nr}${tagHtml(a.tag)}${kopfForm}</div><div class="txt">${esc(ohneEinh(a.tag==="w"?a.t.replace(/^Wiederholung: /,""):a.t))}</div>`;
+  if(a.svg)h+=`<div class="abild">${a.svg}</div>`;
+  h+=`<div class="heft">Ins Heft: ${a.subform&&a.subform.some(f=>f!==a.form)?"Das Zeichen an jeder Teilaufgabe sagt es dir: ☰ mit Formel, ▬ eine Zeile mit deinen Zahlen, ⚡ nur das Ergebnis.":(HEFT[a.form]||HEFT.voll)}</div>`;
+  // Einheit: Auswahl aus Länge/Fläche/Volumen in wechselnder Reihenfolge (13.11.2026) – jetzt in der Kontrolle
+  const einheit=(i)=>{const m=String((a.sub&&a.sub[i])||a.t).match(/\(in (mm|cm|dm|km|m)([²³]?)\)|in (mm|cm|dm|km|m)([²³]?)\./);
+    return m?{basis:m[1]||m[3],richtig:(m[1]||m[3])+(m[2]||m[4]||"")}:null;};
+  const feld=(i)=>{const u=einheit(i);
+    const knoepfe=u?["","²","³"].map(x=>u.basis+x).sort(()=>Math.random()-0.5).map(x=>`<button type="button" class="einh" data-u="${x}" aria-pressed="false">${x}</button>`).join(""):"";
+    return `<span class="eing" data-i="${i}"${u?` data-soll="${u.richtig}"`:""}><input inputmode="decimal" autocomplete="off" placeholder="Ergebnis">${knoepfe}<span class="mk"></span></span>`;};
+  const subSym=i=>(a.subform&&a.subform[i])?`<span class="form mini ${a.subform[i]}" title="${FORM[a.subform[i]]}">${FORM[a.subform[i]].split(" ")[0]}</span>`:"";
+  // Ankreuzen (a.kreuz aus kreuz.py): an der Aufgabe als Text (Antwort ins Heft), in der Kontrolle als Knöpfe
+  const kz=(s,i)=>{const t=esc(ohneEinh(s));const p=t.split("☐");let g=0,o=0,h2=`<span class="kzs" data-i="${i}">`+p[0];
+    p.slice(1).forEach(x=>{x=x.trim();let nach="";const k=x.indexOf(", ");if(k>=0){nach=x.slice(k);x=x.slice(0,k);}
+      h2+=`<button type="button" class="kz" data-g="${g}" data-o="${o}" aria-pressed="false">${x.replace(/\.$/,"")}</button>`+(nach?nach+" ":" ");o++;if(nach){g++;o=0;}});
+    return h2+`<span class="mk"></span></span>`;};
+  if(a.sub)h+="<ol>"+a.sub.map((s,i)=>`<li><b class="tb">${"abcdefgh"[i]})</b>${subSym(i)}${esc(ohneEinh(s))}${a.subsvg&&a.subsvg[i]?`<div class="subbild">${a.subsvg[i]}</div>`:""}</li>`).join("")+"</ol>";
+  if(a.tipp)h+=`<details class="tipp"><summary>💡 Tipp</summary><div>${esc(a.tipp)}</div></details>`;
+  const e=el("div","aufg",h);
+  if(a.anim)e.appendChild(animTipp(a.anim));
+  // Kontrollzeilen (werden von kontrolle() eingesammelt)
+  const n=a.sub?a.sub.length:1,zeilen=[];
+  for(let i=0;i<n;i++){const lab=`Aufgabe ${nr}${a.sub?" "+"abcdefgh"[i]+")":""}`;
+    if(a.check&&a.check[i]!=null)zeilen.push(`<div class="krow"><b>${lab}</b>${feld(i)}</div>`);
+    else if(a.kreuz&&a.kreuz[i])zeilen.push(`<div class="krow"><b>${lab}</b>${kz(a.sub?a.sub[i]:a.t,i)}</div>`);}
+  if(zeilen.length){
+    const c=el("div","kgr",zeilen.join(""));e.ctl=c;
+    c.querySelectorAll(".einh").forEach(b=>b.onclick=()=>{const f=b.parentNode;f.querySelectorAll(".einh").forEach(x=>x.setAttribute("aria-pressed",x===b));f.dataset.wahl=b.dataset.u;});
+    c.querySelectorAll(".kz").forEach(b=>b.onclick=()=>{const gr=[...b.parentNode.querySelectorAll(`.kz[data-g="${b.dataset.g}"]`)];
+      const an=b.getAttribute("aria-pressed")!=="true";if(gr.length>1)gr.forEach(x=>x.setAttribute("aria-pressed","false"));b.setAttribute("aria-pressed",an);});
+    e.pruefe=()=>{let alle=0,rich=0;
+      c.querySelectorAll(".eing").forEach(f=>{const i=+f.dataset.i,w=a.check[i],x=zahl(f.querySelector("input").value),mk=f.querySelector(".mk");
+        if(isNaN(x)){mk.textContent="?";mk.className="mk";return;}
+        if(f.dataset.soll&&!f.dataset.wahl){mk.textContent="Einheit?";mk.className="mk";return;}
+        const zahlOk=gleich(x,w),einhOk=!f.dataset.soll||f.dataset.wahl===f.dataset.soll,ok=zahlOk&&einhOk;
+        mk.textContent=ok?"✓":(zahlOk?"✗ Einheit":"✗");mk.className="mk "+(ok?"ok":"no");alle++;if(ok)rich++;
+        const key=`${nr}${a.sub?" "+"abcdefgh"[i]:""}`;if(!(key in ERG))ERG[key]={ok,stufe};});
+      c.querySelectorAll(".kzs").forEach(z=>{const i=+z.dataset.i,soll=a.kreuz[i],mk=z.querySelector(".mk");
+        const gew=soll.map((_,g)=>[...z.querySelectorAll(`.kz[data-g="${g}"]`)].filter(b=>b.getAttribute("aria-pressed")==="true").map(b=>+b.dataset.o));
+        const leer=soll.some((r,g)=>r.length&&!gew[g].length);if(leer){mk.textContent="?";mk.className="mk";return;}
+        const ok=soll.every((r,g)=>r.length===gew[g].length&&r.every(x=>gew[g].includes(x)));
+        mk.textContent=ok?"✓":"✗";mk.className="mk "+(ok?"ok":"no");alle++;if(ok)rich++;
+        const key=`${nr}${a.sub?" "+"abcdefgh"[i]:""}`;if(!(key in ERG))ERG[key]={ok,stufe};});
+      if(e.onGeprueft)e.onGeprueft(rich,alle);return [rich,alle];};
+  }
+  return e;
+}
+// Ein Kontrollblock am Ende jedes Teils: zugeklappt, erst öffnen, wenn alles im Heft steht.
+function kontrolle(aufg){
+  const mit=aufg.filter(e=>e.ctl);if(!mit.length)return el("div");
+  const d=el("details","kontrolle",`<summary>✔ Ergebnisse vergleichen<small>erst öffnen, wenn alle Aufgaben im Heft stehen</small></summary><p class="khin">Schau in dein Heft und gib nur dein <b>Endergebnis</b> ein (Zahl + Einheit) bzw. tippe deine Antwort an.</p>`);
+  mit.forEach(e=>d.appendChild(e.ctl));
+  const b=el("button","pruef","Vergleichen");const erg=el("div","kerg");d.append(b,erg);
+  b.onclick=()=>{let r=0,n=0;mit.forEach(e=>{const [a,b2]=e.pruefe();r+=a;n+=b2;});
+    erg.innerHTML=n?`<b>${r} von ${n}</b> stimmen. ${r<n?"Bei ✗: Rechnung im Heft suchen, den Fehler verbessern – dann hilft der Lösungsweg.":"Super!"}`:"Gib erst deine Ergebnisse aus dem Heft ein – mit Einheit.";};
+  return d;
+}
+// Lösungen (15.10.2026, Malte): nach „Lösungen anzeigen“ erst die Aufgabe wählen – nie alle Lösungen auf einmal. Nur richtige Lösungen.
+function loesung(liste){
+  const box=el("div");
+  const b=el("button","loesbtn");b.textContent="Lösungen anzeigen";
+  const f=el("div","frag",'<p>Stehen die Aufgabe und dein Rechenweg im Heft? Zu welcher Aufgabe möchtest du die Lösung sehen?</p>');f.hidden=true;
+  const kn=el("div","lwahl"),w=el("div","loes");w.hidden=true;f.appendChild(kn);
+  const zeile=([nr,a])=>{const l=a.sub?a.l.map((x,i)=>`${"abcdefgh"[i]}) ${esc(x)}`).join("&nbsp;&nbsp;&nbsp; "):a.l.map(esc).join("<br>");
+    // 22.11.2026: Lösungsbild (z. B. eine mögliche Zerlegung) erscheint mit dem Lösungsweg
+    const weg=a.weg?`<br><button class="wegbtn">Lösungsweg anzeigen</button><div class="weg" hidden>${a.weg.map(z=>"<div>"+esc(z)+"</div>").join("")}${a.loesbild?`<div class="lbild">${a.loesbild}</div>`:""}</div>`:"";
+    return `<div class="zeile"><b>Aufgabe ${nr}:</b> ${l}${a.idee?`<span class="warum">Warum: ${esc(a.idee)}</span>`:""}${weg}</div>`;};
+  liste.forEach((e,i)=>{const k=el("button","",`Aufgabe ${esc(String(e[0]))}`);k.setAttribute("aria-pressed","false");
+    k.onclick=()=>{kn.querySelectorAll("button").forEach((x,j)=>x.setAttribute("aria-pressed",j===i));w.innerHTML=zeile(e);w.hidden=false;
+      const wb=w.querySelector(".wegbtn");if(wb)wb.onclick=()=>{const g=w.querySelector(".weg");g.hidden=!g.hidden;wb.textContent=g.hidden?"Lösungsweg anzeigen":"Lösungsweg ausblenden";};};kn.appendChild(k);});
+  b.onclick=()=>{const offen=!f.hidden;f.hidden=offen;w.hidden=true;kn.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed","false"));
+    b.textContent=offen?"Lösungen anzeigen":"Lösungen ausblenden";};
+  box.append(b,f,w);return box;
+}
+function teil(T){
+  const root=el("section","teil");
+  if(D.mehrteilig)root.appendChild(el("div","teilkopf",esc(T.name)));
+  // 20.11.2026 (Malte, Variante B): EINE Seite je Stunde mit drei Knöpfen in der Reihenfolge des Ablaufs –
+  // ✏️ In der Stunde (Aufgabe 1, Plenum) · 📋 Arbeitsplan (Niveau, abhaken; bei der letzten Stunde einer Figur gemischt = Übungsstunde) · 🏠 Hausaufgabe.
+  // Immer nur ein Teil sichtbar; #plan bzw. #ha in der Adresse öffnet direkt diesen Teil.
+  const reiter=el("div","reiter"),P={s:el("div","panel"),p:el("div","panel"),h:el("div","panel")};
+  const R={s:el("button","","✏️&nbsp; In der Stunde<small>Aufgabe 1 · für alle</small>"),
+           p:el("button","","📋&nbsp; Arbeitsplan<small>dein Niveau ★ / ★★ / ★★★</small>"),
+           h:el("button","","🏠&nbsp; Hausaufgabe<small>nur wenn aufgegeben · 15 min</small>")};
+  const hatP=T.stufen&&Object.keys(T.stufen).length>0,hatH=!!T.ha;
+  const zeige=w=>{for(const k in P){P[k].hidden=k!==w;R[k].setAttribute("aria-pressed",k===w);}};
+  const HASH={s:"#stunde",p:"#plan",h:"#ha"};
+  for(const k of ["s","p","h"]){if((k==="p"&&!hatP)||(k==="h"&&!hatH))continue;R[k].onclick=()=>{zeige(k);history.replaceState(null,"",HASH[k]);scrollTo(0,0);};reiter.append(R[k]);}
+  root.appendChild(reiter);
+  const hz=document.querySelector(".hz");if(hz)root.appendChild(hz);
+  root.append(P.s,P.p,P.h);
+  const so='<div class="sowie">So arbeitest du: <b>✏️ Alle Aufgaben im Heft rechnen</b> → <b>✔ am Ende Ergebnisse vergleichen</b> (unten). Das Tablet brauchst du zwischendurch nur für einen Tipp.</div>';
+  const blattSeite=Object.values(T.stufen||{}).some(v=>v.aufg.some(x=>x.blatt));   // 22.11.2026: Arbeitsplan = Kontrolle zum Übungsblatt im Skript
+  const soBlatt='<div class="sowie">So arbeitest du: <b>✏️ Zeichne und rechne auf dem Übungsblatt im Skript</b> (gleiche Nummern wie hier). Hier holst du dir nur einen <b>Tipp</b> und <b>✔ vergleichst am Ende deine Ergebnisse</b>. Unter „Lösungen“ siehst du auch ein Lösungsbild.</div>';
+  for(const k in P)P[k].insertAdjacentHTML("beforeend",(k==="p"&&blattSeite)?soBlatt:so);
+  // ---- ✏️ In der Stunde
+  P.s.appendChild(el("p","zeit",esc(T.zeitA||"")));
+  P.s.appendChild(el("details","erin",`<summary>Erinnerung: Das brauchst du</summary><ul>${T.erinnerung.map(e=>"<li>"+esc(e)+"</li>").join("")}</ul>`));
+  P.s.appendChild(el("h2","","Aufgabe 1 · für alle"));
+  const a1=aufgabe(1,T.a1,"1");const empf=el("div","empf");empf.hidden=true;P.s.append(a1,kontrolle([a1]),empf,loesung([[1,T.a1]]));
+  // ---- 📋 Arbeitsplan
+  const wahl=el("div","wahl"),st=el("div");
+  if(hatP){P.p.appendChild(el("p","zeit",esc(T.zeitP||"")));
+    P.p.appendChild(el("details","erin",`<summary>Erinnerung: Das brauchst du</summary><ul>${T.erinnerung.map(e=>"<li>"+esc(e)+"</li>").join("")}</ul>`));
+    P.p.appendChild(el("h2","","Wähle dein Niveau"));P.p.append(wahl,st);}
+  let PL={};try{PL=JSON.parse(localStorage.getItem(KEY+"-plan")||"{}");}catch(e){}
+  const merke=()=>{try{localStorage.setItem(KEY+"-plan",JSON.stringify(PL));}catch(e){}};
+  const STUFEN=[["1","★"],["2","★★"],["3","★★★"]].filter(([k])=>T.stufen&&T.stufen[k]);
+  const knopf={};
+  STUFEN.forEach(([k,stern],si)=>{
+    const s=T.stufen[k];
+    const b=el("button","",`${stern}  ${esc(s.name)}<small>${D.untertitel[k-1]}</small>`);b.setAttribute("aria-pressed","false");b.dataset.k=k;knopf[k]=b;
+    const sec=el("section","stufe");sec.hidden=true;
+    sec.appendChild(el("h2","",esc(stern+"  "+s.name)));
+    // Abhakliste: was im Heft fertig ist, tippt der Schüler ab – keine Eingabe nötig
+    const nr=s.aufg.map((a,i)=>stern+" "+(i+2));
+    const liste=el("div","plan",`<div class="planti">Mein Arbeitsplan – abhaken, was im Heft fertig ist:</div>`);
+    nr.forEach(n=>{const c=el("button","pk",`Aufgabe ${esc(n)}`);c.type="button";c.setAttribute("aria-pressed",!!PL[n]);
+      c.onclick=()=>{PL[n]=!PL[n];c.setAttribute("aria-pressed",PL[n]);merke();};liste.appendChild(c);});
+    sec.appendChild(liste);
+    const AU=s.aufg.map((a,i)=>aufgabe(nr[i],a,stern));AU.forEach(x=>sec.appendChild(x));sec.appendChild(kontrolle(AU));
+    const lz=loesung(s.aufg.map((a,i)=>[nr[i],a]));sec.appendChild(lz);
+    const kb=el("button","kartebtn","📋 Ergebnis-Karte");lz.appendChild(kb);const kk=el("div");sec.appendChild(kk);
+    kb.onclick=()=>{kk.innerHTML="";kk.appendChild(karte(stern));};
+    const nx=STUFEN[si+1];
+    if(nx){const w=el("button","weiterniv",`Fertig? → weiter mit ${nx[1]} ${esc(T.stufen[nx[0]].name)}`);w.onclick=()=>{knopf[nx[0]].click();scrollTo(0,0);};sec.appendChild(w);}
+    b.onclick=()=>{wahl.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b));st.querySelectorAll(".stufe").forEach(x=>x.hidden=x!==sec);};
+    wahl.appendChild(b);st.appendChild(sec);
+  });
+  // ---- 🏠 Hausaufgabe (13.11.2026): heute · früher · verstehen, ★ freiwillig, höchstens 15 Minuten
+  if(hatH){const ha=el("section","hakasten");P.h.appendChild(ha);
+    ha.appendChild(el("h2","","🏠 Hausaufgabe"));
+    ha.appendChild(el("div","hinweis",'Drei kurze Aufgaben: <b>eine von heute, eine von früher, eine zum Verstehen</b>. Die ★-Aufgabe ist freiwillig. <b>Höchstens 15 Minuten</b> – dann hörst du auf und schreibst eine Hänge-Zeile. Das Zeichen an der Aufgabe (☰ Rechenweg · ▬ Kurzform · ⚡ Blitz) sagt dir, was ins Heft kommt.'));
+    ha.appendChild(uhr());
+    const HU=T.ha.map((a,i)=>aufgabe("H"+(i+1),a,"H"));HU.forEach(x=>ha.appendChild(x));ha.appendChild(kontrolle(HU));
+    const lz=loesung(T.ha.map((a,i)=>["H"+(i+1),a]));ha.appendChild(lz);
+    const kb=el("button","kartebtn","📋 Ergebnis-Karte Hausaufgabe");lz.appendChild(kb);const kk=el("div");ha.appendChild(kk);
+    kb.onclick=()=>{kk.innerHTML="";kk.appendChild(karte("H"));};}
+  zeige(location.hash==="#ha"&&hatH?"h":(location.hash==="#plan"&&hatP?"p":"s"));
+  // Niveau-Empfehlung aus Aufgabe 1 → Knopf Arbeitsplan (die Wahl bleibt beim Schüler)
+  a1.onGeprueft=(rich,alle)=>{if(!alle)return;const k=rich===alle?"3":(rich>=alle/2?"2":"1");const sn=["","★","★★","★★★"][k];
+    empf.hidden=false;empf.innerHTML=`Aufgabe 1: <b>${rich} von ${alle}</b> richtig. Wir empfehlen dir im <b>📋 Arbeitsplan</b> das Niveau <b>${sn}</b>. Du darfst trotzdem selbst wählen.`;
+    wahl.querySelectorAll("button").forEach(x=>{const alt=x.querySelector(".badge");if(alt)alt.remove();if(x.dataset.k===k)x.insertAdjacentHTML("beforeend",'<span class="badge">empfohlen</span>');});};
+  return root;
+}
+// 15-Minuten-Uhr (Hausaufgabe nach Zeit, Konzept 5a)
+function uhr(){
+  const u=el("div","uhr",'<span>⏱ Hausaufgabe: <b>höchstens 15 Minuten</b>, dann aufhören.</span><span class="zeit">15:00</span><button>Uhr starten</button>');
+  const z=u.querySelector(".zeit"),b=u.querySelector("button");let ende=0,t=null;
+  const tick=()=>{const r=Math.max(0,Math.round((ende-Date.now())/1000));z.textContent=`${Math.floor(r/60)}:${String(r%60).padStart(2,"0")}`;
+    if(r<=0){clearInterval(t);u.classList.add("um");z.textContent="Zeit um – hör auf. Schreib ggf. eine Hänge-Zeile.";b.textContent="Neu starten";}};
+  b.onclick=()=>{clearInterval(t);u.classList.remove("um");ende=Date.now()+15*60000;b.textContent="Neu starten";tick();t=setInterval(tick,1000);};
+  return u;
+}
+// Ergebnis-Karte: kein Name, kein Server – die Lehrkraft schaut in der Folgestunde aufs Tablet
+const KEY="karte-"+location.pathname.split("/").pop();
+function karte(stern){
+  const jetzt=new Date();let alt={};try{alt=JSON.parse(localStorage.getItem(KEY)||"{}");}catch(e){}
+  const zeilen=Object.entries(ERG).filter(([k,v])=>v.stufe===stern||v.stufe==="1").map(([k,v])=>`<span class="${v.ok?"ok":"no"}">${v.ok?"✓":"✗"}</span> Aufgabe ${esc(k.replace(/^1 /,"1 "))}`);
+  const c=el("div","ekarte",`<h3>Ergebnis-Karte · ${esc(D.titel)} · Stufe ${stern}</h3>`+
+    `<div>${jetzt.toLocaleDateString("de-DE")} · ${jetzt.toLocaleTimeString("de-DE",{hour:"2-digit",minute:"2-digit"})}</div>`+
+    `<div>${zeilen.length?zeilen.join("<br>"):"Noch keine Ergebnisse geprüft."}</div>`+
+    `<div style="margin-top:8px"><b>Hänge-Zeile</b> (wo genau hängst du – und warum?)</div><textarea placeholder="Ich hänge bei Aufgabe …, weil …"></textarea>`);
+  const ta=c.querySelector("textarea");ta.value=alt.haenge||"";
+  ta.oninput=()=>{try{localStorage.setItem(KEY,JSON.stringify({haenge:ta.value,erg:ERG,stufe:stern,zeit:Date.now()}));}catch(e){}};
+  try{localStorage.setItem(KEY,JSON.stringify({haenge:ta.value,erg:ERG,stufe:stern,zeit:Date.now()}));}catch(e){}
+  return c;
+}
+const box=document.getElementById("teile"),secs=D.teile.map(teil);
+secs.forEach(s=>box.appendChild(s));
+if(D.mehrteilig){
+  document.getElementById("teilwahl").hidden=false;const tw=document.getElementById("tw");
+  const zeig=i=>{secs.forEach((s,j)=>s.hidden=j!==i);tw.querySelectorAll("button").forEach((b,j)=>b.setAttribute("aria-pressed",j===i));};
+  D.teile.forEach((T,i)=>{const b=el("button","",esc(T.stunde)+`<small>${esc(T.kurz)}</small>`);b.onclick=()=>zeig(i);tw.appendChild(b);});
+  zeig(D.teile.length-1);
+}
+</script>
+</body>
+</html>

@@ -111,6 +111,8 @@
   .wahl button .badge{display:inline-block;margin-left:8px;font-size:13px;background:#2e7d32;color:#fff;border-radius:8px;padding:1px 8px;vertical-align:middle}
   .uhr{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:#fff;border:1px solid var(--line);border-radius:12px;padding:8px 12px;margin:6px 0 10px;font-size:18px}
   .uhr button{border:2px solid var(--acc);background:#fff;color:var(--acc);border-radius:10px;padding:6px 14px;font-weight:700;min-height:44px}
+  .lbild{margin:8px 0;background:#fff;border:1px solid var(--line);border-radius:10px;padding:6px} .lbild svg{display:block;width:100%;max-width:min(520px,100%) !important;height:auto}
+  .blattref{display:inline-block;background:#fff3c4;border:1px solid #e0b84a;border-radius:8px;padding:2px 8px;font-size:15px;font-weight:700;margin-left:6px}
   .sowie{background:#fff8e1;border:2px solid #e0b84a;border-radius:12px;padding:10px 14px;font-size:18px;margin:6px 0 10px}
   .kontrolle{margin:22px 0 10px;border:2px solid #2e7d32;border-radius:14px;background:#f1f8f1;padding:0 14px}
   .kontrolle>summary{cursor:pointer;padding:14px 0;font-size:20px;font-weight:700;color:#2e7d32}
@@ -157,7 +159,7 @@
 "use strict";
 // Versionsprüfung (12.10.2026): Safari zeigt sonst bis zu 10 Minuten (oft länger) eine alte, gespeicherte Fassung.
 // Beim Öffnen wird die Seite ohne Zwischenspeicher abgefragt; ist sie neuer, lädt sie sich einmal neu.
-const STAND="20261122200259";
+const STAND="20261122202806";
 fetch(location.pathname+"?nocache="+Date.now(),{cache:"no-store"}).then(r=>r.text()).then(t=>{
   const m=t.match(/const STAND="(\d+)"/);
   if(m&&m[1]!==STAND&&!sessionStorage.getItem("neu"+m[1])){sessionStorage.setItem("neu"+m[1],"1");location.replace(location.pathname+"?v="+m[1]);}
@@ -265,7 +267,8 @@ function loesung(liste){
   const f=el("div","frag",'<p>Stehen die Aufgabe und dein Rechenweg im Heft? Zu welcher Aufgabe möchtest du die Lösung sehen?</p>');f.hidden=true;
   const kn=el("div","lwahl"),w=el("div","loes");w.hidden=true;f.appendChild(kn);
   const zeile=([nr,a])=>{const l=a.sub?a.l.map((x,i)=>`${"abcdefgh"[i]}) ${esc(x)}`).join("&nbsp;&nbsp;&nbsp; "):a.l.map(esc).join("<br>");
-    const weg=a.weg?`<br><button class="wegbtn">Lösungsweg anzeigen</button><div class="weg" hidden>${a.weg.map(z=>"<div>"+esc(z)+"</div>").join("")}</div>`:"";
+    // 22.11.2026: Lösungsbild (z. B. eine mögliche Zerlegung) erscheint mit dem Lösungsweg
+    const weg=a.weg?`<br><button class="wegbtn">Lösungsweg anzeigen</button><div class="weg" hidden>${a.weg.map(z=>"<div>"+esc(z)+"</div>").join("")}${a.loesbild?`<div class="lbild">${a.loesbild}</div>`:""}</div>`:"";
     return `<div class="zeile"><b>Aufgabe ${nr}:</b> ${l}${a.idee?`<span class="warum">Warum: ${esc(a.idee)}</span>`:""}${weg}</div>`;};
   liste.forEach((e,i)=>{const k=el("button","",`Aufgabe ${esc(String(e[0]))}`);k.setAttribute("aria-pressed","false");
     k.onclick=()=>{kn.querySelectorAll("button").forEach((x,j)=>x.setAttribute("aria-pressed",j===i));w.innerHTML=zeile(e);w.hidden=false;
@@ -292,7 +295,9 @@ function teil(T){
   const hz=document.querySelector(".hz");if(hz)root.appendChild(hz);
   root.append(P.s,P.p,P.h);
   const so='<div class="sowie">So arbeitest du: <b>✏️ Alle Aufgaben im Heft rechnen</b> → <b>✔ am Ende Ergebnisse vergleichen</b> (unten). Das Tablet brauchst du zwischendurch nur für einen Tipp.</div>';
-  for(const k in P)P[k].insertAdjacentHTML("beforeend",so);
+  const blattSeite=Object.values(T.stufen||{}).some(v=>v.aufg.some(x=>x.blatt));   // 22.11.2026: Arbeitsplan = Kontrolle zum Übungsblatt im Skript
+  const soBlatt='<div class="sowie">So arbeitest du: <b>✏️ Zeichne und rechne auf dem Übungsblatt im Skript</b> (gleiche Nummern wie hier). Hier holst du dir nur einen <b>Tipp</b> und <b>✔ vergleichst am Ende deine Ergebnisse</b>. Unter „Lösungen“ siehst du auch ein Lösungsbild.</div>';
+  for(const k in P)P[k].insertAdjacentHTML("beforeend",(k==="p"&&blattSeite)?soBlatt:so);
   // ---- ✏️ In der Stunde
   P.s.appendChild(el("p","zeit",esc(T.zeitA||"")));
   P.s.appendChild(el("details","erin",`<summary>Erinnerung: Das brauchst du</summary><ul>${T.erinnerung.map(e=>"<li>"+esc(e)+"</li>").join("")}</ul>`));
