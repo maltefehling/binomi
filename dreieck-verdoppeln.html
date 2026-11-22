@@ -65,9 +65,12 @@ function zeichne(){
   punkt.setAttribute("cx",F[0]+(s>=G?-rr:rr)*0.42);punkt.setAttribute("cy",Y0-rr*0.42);
   tg.setAttribute("x",(A[0]+B[0])/2);tg.setAttribute("y",Y0+30);tg.textContent="g = 6 m";
   th.setAttribute("x",S[0]+(s>=G?-82:8));th.setAttribute("y",Y0-H*K/2);th.textContent="h = 4 m";
+  // 22.11.2026 (Malte): ein Schritt pro Zeile
+  const z=t=>`<div style="padding:2px 0">${t}</div>`;
   document.getElementById("wert").innerHTML=winkel>=180?
-    `Zwei gleiche Dreiecke = <b>Parallelogramm</b>: <span class="cg">6 m</span> · <span class="ch">4 m</span> = 24 m²<br>Ein Dreieck ist die <b>Hälfte</b>: 24 m² : 2 = <b>12 m²</b>`:
-    `Dreieck: <span class="cg">g = 6 m</span>, <span class="ch">h = 4 m</span> → Fläche = <b>12 m²</b>${s!==2?" &nbsp;(Spitze verschoben – Grundseite und Höhe sind gleich geblieben)":""}`;
+    z(`Zwei gleiche Dreiecke ergeben ein <b>Parallelogramm</b>.`)+z(`Parallelogramm: <span class="cg">6 m</span> · <span class="ch">4 m</span> = 24 m²`)+
+    z(`Ein Dreieck ist die <b>Hälfte</b>:`)+z(`24 m² : 2 = <b>12 m²</b>`):
+    z(`Dreieck: <span class="cg">g = 6 m</span>`)+z(`<span class="ch">h = 4 m</span>`)+z(`Fläche = <b>12 m²</b>`)+(s!==2?z(`Spitze verschoben – Grundseite und Höhe sind gleich geblieben.`):"");
 }
 function drehe(){cancelAnimationFrame(anim);const t0=performance.now(),w0=winkel;
   const schritt=t=>{const f=Math.min(1,(t-t0)/1800);winkel=w0+(ziel-w0)*(1-Math.cos(Math.PI*f))/2;zeichne();if(f<1)anim=requestAnimationFrame(schritt);};anim=requestAnimationFrame(schritt);}

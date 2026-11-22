@@ -24,6 +24,7 @@
   .regler{display:flex;align-items:center;gap:12px;flex-wrap:wrap;font-size:20px;margin:6px 0}
   .regler input{flex:1 1 300px;height:44px;accent-color:var(--acc)}
   .wert{background:#fff;border:1px solid #c9d6e5;border-radius:14px;padding:10px 14px;font-size:24px;line-height:1.55;margin-top:10px}
+  .zeile{padding:2px 0} .hinweis{margin-top:8px;padding:8px 12px;border-radius:10px;background:#e8f4e6;border:1px solid #9fcf9a}
   .cg{color:var(--g);font-weight:800}.cc{color:var(--c);font-weight:800}.ch{color:var(--h);font-weight:800}
   .fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1.15;margin:0 4px}
   .fr>span:first-child{border-bottom:2px solid currentColor;padding:0 4px}
@@ -72,10 +73,21 @@ function zeichne(){
   ta.setAttribute("x",(A[0]+B[0])/2);ta.setAttribute("y",Y0+30);ta.textContent=fertig?"a":"a = 7 m";
   tc.setAttribute("x",(Dd[0]+Cc[0])/2);tc.setAttribute("y",Y0-H*K-12);tc.textContent="c = 3 m";
   th.setAttribute("x",Dd[0]+8);th.setAttribute("y",Y0-H*K/2+8);th.textContent="h = 3 m";
-  const recht=s===0?"<br><b>Jetzt ist es ein rechtwinkliges Trapez – auch das ist ein Trapez.</b>":"";
+  // 22.11.2026 (Malte): nie mehrere Gleichungen/Längen in einer Zeile – ein Schritt pro Zeile
+  const recht=s===0?`<div class="hinweis"><b>Jetzt ist es ein rechtwinkliges Trapez – auch das ist ein Trapez.</b></div>`:"";
+  const z=t=>`<div class="zeile">${t}</div>`;
   document.getElementById("wert").innerHTML=fertig?
-    `Zwei gleiche Trapeze = <b>Parallelogramm</b> mit Grundseite <span class="cg">a</span> + <span class="cc">c</span> = <span class="cg">7 m</span> + <span class="cc">3 m</span> = 10 m und <span class="ch">h = 3 m</span>: 10 m · 3 m = 30 m²<br>Ein Trapez ist die <b>Hälfte</b>: A = ${fr("(7 m + 3 m) · 3 m","2")} = ${fr("30 m²","2")} = <b>15 m²</b>${recht}`:
-    `Trapez: <span class="cg">a = 7 m</span>, <span class="cc">c = 3 m</span>, <span class="ch">h = 3 m</span> → Fläche = <b>15 m²</b>${s!==1?" &nbsp;(c verschoben – a, c und h sind gleich geblieben)":""}${recht}`;
+    z(`Zwei gleiche Trapeze ergeben ein <b>Parallelogramm</b>.`)+
+    z(`Grundseite = <span class="cg">a</span> + <span class="cc">c</span>`)+
+    z(`Grundseite = <span class="cg">7 m</span> + <span class="cc">3 m</span> = 10 m`)+
+    z(`Höhe <span class="ch">h = 3 m</span>`)+
+    z(`Parallelogramm: 10 m · 3 m = 30 m²`)+
+    z(`Ein Trapez ist die <b>Hälfte</b>:`)+
+    z(`A = ${fr("(7 m + 3 m) · 3 m","2")}`)+
+    z(`A = ${fr("30 m²","2")}`)+
+    z(`A = <b>15 m²</b>`)+recht:
+    z(`Trapez: <span class="cg">a = 7 m</span>`)+z(`<span class="cc">c = 3 m</span>`)+z(`<span class="ch">h = 3 m</span>`)+z(`Fläche = <b>15 m²</b>`)+
+    (s!==1?z(`c verschoben – a, c und h sind gleich geblieben.`):"")+recht;
 }
 function drehe(){cancelAnimationFrame(anim);const t0=performance.now(),w0=winkel;
   const schritt=t=>{const f=Math.min(1,(t-t0)/1800);winkel=w0+(ziel-w0)*(1-Math.cos(Math.PI*f))/2;zeichne();if(f<1)anim=requestAnimationFrame(schritt);};anim=requestAnimationFrame(schritt);}
