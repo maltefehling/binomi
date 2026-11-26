@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Rückwärts rechnen: Trapez (II.4a)</title>
+<!-- Kap. II Umfang und Flächeninhalt (Kl. 8), 26.11.2026 (Malte: beim Trapez fehlt „aus dem Flächeninhalt eine Seite berechnen“). QR neben der Rückwärts-Aufgabe im Skript II.4a (Noah).
+     Ablauf: Formel → einsetzen → zweites Trapez dazu (· 2, Parallelogramm mit Grundseite a + c) → Ecke umlegen → Kästchen in Reihen → durch h → minus a → Probe.
+     Andere Zahlen als im Skript (dort A = 20 m², a = 7 m, h = 4 m). Tafel: ein Schritt pro Zeile (Malte 22.11.2026). Lesezeit ≥ 1500 ms + 80 ms je Zeichen, Pause/Weiter. -->
+<style>
+  :root{--acc:#1f4e79;--ink:#1b2a3a;--bg:#f4f7fb;--g:#2e5d9f;--h:#c0700f}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;-webkit-user-select:none;user-select:none}
+  button{font:inherit;touch-action:manipulation}
+  header{padding:12px 18px;background:var(--acc);color:#fff} header h1{font-size:22px;margin:0}
+  main{max-width:1000px;margin:0 auto;padding:12px 16px 24px}
+  .wahl{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+  .wahl a{flex:1 1 160px;text-decoration:none;border:2px solid #c9d6e5;border-radius:12px;padding:8px 10px;color:var(--acc);font-weight:700;background:#fff;text-align:center;min-height:44px}
+  .wahl a.an{border-color:var(--acc);background:var(--acc);color:#fff}
+  .wer{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+  .wer img{width:84px;height:84px;object-fit:cover;object-position:top;border-radius:50%;background:#fff;border:3px solid #c9d6e5}
+  .wer div{font-size:19px;font-weight:700;color:var(--acc)}
+  .reihe{display:flex;gap:12px;flex-wrap:wrap}
+  .bild{flex:3 1 380px;background:#fff;border:1px solid #c9d6e5;border-radius:14px;padding:6px}
+  .tafel{flex:2 1 260px;background:#26493a;color:#fff;border-radius:14px;padding:12px 16px;font-size:22px;line-height:1.7;min-height:200px}
+  .tafel .z{opacity:0;transition:opacity .8s} .tafel .z.an{opacity:1}
+  .tafel .k{color:#b8d4c7;font-size:15px;display:block;line-height:1.2;margin-top:6px}
+  .gr{color:#ffd28a} .bl{color:#9cc3ff}
+  svg{width:100%;height:auto;display:block}
+  .knoepfe{display:flex;gap:10px;margin:10px 0}
+  .knoepfe button{flex:1 1 140px;min-height:52px;border-radius:12px;font-size:18px;font-weight:700;border:2px solid var(--acc);background:#fff;color:var(--acc)}
+  .knoepfe button.haupt{background:var(--acc);color:#fff}
+  .cap{background:#fff;border:2px solid #a9c1e0;border-radius:12px;padding:10px 14px;font-size:21px;line-height:1.45;min-height:64px}
+  .teil{transition:transform 1.6s ease, opacity .6s}
+  .fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;font-size:.85em;line-height:1.15;margin:0 3px}
+  .fr>span:first-child{border-bottom:2px solid currentColor;padding:0 4px}
+</style>
+</head>
+<body>
+<header><h1 id="titel">Rückwärts rechnen</h1></header>
+<main>
+  <div class="wer"><img id="foto" alt=""><div id="wertext"></div></div>
+  <div class="reihe">
+    <div class="bild"><svg id="svg" viewBox="0 0 560 300"></svg></div>
+    <div class="tafel" id="tafel"></div>
+  </div>
+  <div class="knoepfe"><button class="haupt" id="play">▶ Abspielen</button><button id="pause">⏸ Pause</button></div>
+  <div class="cap" id="cap">Tippe auf ▶ Abspielen.</div>
+</main>
+<script>
+"use strict";
+const NS="http://www.w3.org/2000/svg",svg=document.getElementById("svg"),K=40,X0=40,Y0=220;
+const P=(x,y)=>[X0+x*K,Y0-y*K], pts=a=>a.map(p=>P(...p).join(",")).join(" ");
+const mk=(t,a,p=svg)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);p.appendChild(e);return e;};
+function txt(x,y,t,o={},g=svg){const [sx,sy]=P(x,y);const e=mk("text",{x:sx,y:sy,"font-size":o.s||19,"font-weight":800,fill:o.c||"#1b2a3a","text-anchor":o.a||"middle"},g);e.textContent=t;return e;}
+function gitter(){for(let i=-1;i<=12;i++)mk("line",{x1:X0+i*K,y1:10,x2:X0+i*K,y2:290,stroke:"#e1e7ee"});for(let j=-1;j<=5;j++)mk("line",{x1:20,y1:Y0-j*K,x2:X0+12*K,y2:Y0-j*K,stroke:"#e1e7ee"});}
+function winkel(F,g){const r=19,[fx,fy]=P(...F);mk("path",{d:`M ${fx+r} ${fy} A ${r} ${r} 0 0 0 ${fx} ${fy-r}`,fill:"none",stroke:"#c0700f","stroke-width":2.5},g);mk("circle",{cx:fx+r*0.42,cy:fy-r*0.42,r:3,fill:"#c0700f"},g);}
+const grp=(o=1)=>{const g=mk("g",{class:"teil"});g.style.opacity=o;return g;};
+// Kästchen einzeln einblenden (Reihe für Reihe), x0..x0+n−1, Reihen 0..r−1
+function kaestchen(x0,n,r){const L=[];for(let j=0;j<r;j++)for(let i=0;i<n;i++){const [x,y]=P(x0+i,j+1);
+  const q=mk("rect",{x:x+3,y:y+3,width:K-6,height:K-6,rx:4,fill:"#9fd08c",class:"teil"});q.style.opacity=0;L.push(q);}return L;}
+const zeigeNach=(L,ms=140)=>L.forEach((q,i)=>{q.style.transitionDelay=(i*ms)+"ms";q.style.opacity=1;});
+const tafel=document.getElementById("tafel");
+function zeile(html,k){const d=document.createElement("div");d.className="z";d.innerHTML=(k?`<span class="k">${k}</span>`:"")+html;tafel.appendChild(d);requestAnimationFrame(()=>requestAnimationFrame(()=>d.classList.add("an")));}
+
+const FR=(z,n)=>`<span class='fr'><span>${z}</span><span>${n}</span></span>`;
+const A={
+ trapez:{titel:"Rückwärts rechnen: Trapez",wer:"noah_kopf.png",wertext:"Noah zeigt dir, wie man eine Seite aus dem Flächeninhalt findet.",aufbau(){
+   const kopie=mk("polygon",{points:pts([[6,0],[10,0],[11,2],[5,2]]),fill:"#f3c9a0",stroke:"#5a4a35","stroke-width":2.5,"stroke-dasharray":"8 5",class:"teil"});kopie.style.opacity=0;
+   const ecke=mk("polygon",{points:pts([[0,0],[1,0],[1,2]]),fill:"#d9c7a5",stroke:"#5a4a35","stroke-width":2.5,class:"teil"});
+   mk("polygon",{points:pts([[1,0],[6,0],[5,2],[1,2]]),fill:"#d9c7a5",stroke:"#5a4a35","stroke-width":2.5});
+   const rand=mk("polyline",{points:pts([[0,0],[1,2]]),fill:"none",stroke:"#5a4a35","stroke-width":2.5});
+   const h=grp(1);mk("line",{x1:P(1,0)[0],y1:Y0,x2:P(1,2)[0],y2:P(1,2)[1],stroke:"#c0700f","stroke-width":3,"stroke-dasharray":"7 5"},h);winkel([1,0],h);txt(1.2,0.9,"h = 2 m",{c:"#c0700f",a:"start",s:17},h);
+   const g1=grp(1);mk("line",{x1:P(0,0)[0],y1:Y0,x2:P(6,0)[0],y2:Y0,stroke:"#2e5d9f","stroke-width":5},g1);txt(3,-0.6,"a = 6 m",{c:"#2e5d9f"},g1);
+   const c1=grp(1);mk("line",{x1:P(1,2)[0],y1:P(1,2)[1],x2:P(5,2)[0],y2:P(5,2)[1],stroke:"#3f8f3a","stroke-width":5},c1);const cf=txt(3,2.35,"c = ?",{c:"#3f8f3a"},c1);
+   const a1=txt(8.5,3.5,"A = 10 m²",{c:"#3f6f35"});
+   const a2=grp(0);txt(7.5,3.5,"zwei Trapeze: 20 m²",{c:"#3f6f35"},a2);
+   const zehn=grp(0);txt(6,-0.6,"10 Kästchen je Reihe = a + c",{c:"#2e5d9f",s:17},zehn);
+   const q=kaestchen(1,10,2);
+   return {kopie,ecke,rand,h,g1,c1,cf,a1,a2,zehn,q};},
+  schritte:[
+   ["Eine Terrasse ist ein Trapez. Ihr Flächeninhalt ist 10 m². Die Seite a ist 6 m lang, die Höhe h ist 2 m. Wie lang ist die Seite c?",t=>{}],
+   ["Schreibe zuerst die Formel auf.",t=>zeile("A = "+FR("(<span class='bl'>a</span> + <span class='gr'>c</span>) · h","2"),"① Formel")],
+   ["Setze ein, was du schon kennst. Die Seite c kennst du noch nicht.",t=>zeile("10 m² = "+FR("(<span class='bl'>6 m</span> + <span class='gr'>c</span>) · 2 m","2"),"② einsetzen")],
+   ["Nimm ein zweites, gleiches Trapez dazu. Zusammen ergeben sie ein Parallelogramm – doppelt so groß: 20 m². Rückwärts heißt hier zuerst: mal 2.",t=>{t.kopie.style.opacity=1;t.a1.style.opacity=0;t.a2.style.opacity=1;zeile("20 m² = (<span class='bl'>6 m</span> + <span class='gr'>c</span>) · 2 m","③ erst · 2 (zwei Trapeze)");}],
+   ["Lege die Ecke links nach rechts um. Es entsteht ein Rechteck – 2 m hoch. Seine Länge ist a + c.",t=>{t.ecke.style.transform=`translate(${10*K}px,0px)`;t.rand.style.opacity=0;t.h.style.opacity=0;t.g1.style.opacity=0;t.c1.style.opacity=0;}],
+   ["Die 20 Kästchen liegen in 2 Reihen. In jeder Reihe sind 10 Kästchen. Also ist a + c zusammen 10 m. Statt mal rechnest du jetzt geteilt durch h.",t=>{zeigeNach(t.q,90);t.zehn.style.opacity=1;zeile("<span class='bl'>6 m</span> + <span class='gr'>c</span> = 20 m² : 2 m","④ dann durch h");zeile("<span class='bl'>6 m</span> + <span class='gr'>c</span> = 10 m");}],
+   ["a + c ist 10 m, und a ist 6 m. Also bleibt für c: 10 m minus 6 m.",t=>{zeile("<span class='gr'>c</span> = 10 m − <span class='bl'>6 m</span>","⑤ dann minus a");zeile("<span class='gr'>c</span> = <span class='gr'>4 m</span>");}],
+   ["Mach zum Schluss die Probe mit der Formel. Es passt!",t=>{zeile("A = "+FR("(<span class='bl'>6 m</span> + <span class='gr'>4 m</span>) · 2 m","2"),"⑥ Probe");zeile("A = "+FR("20 m²","2"));zeile("A = 10 m² ✓");}]]},
+};
+const cap=document.getElementById("cap"),pb=document.getElementById("pause");
+let akt,teile,n=0,timer=null,steht=false;
+const lese=t=>1500+80*t.length;
+function laden(){akt=A.trapez;clearTimeout(timer);
+  document.getElementById("titel").textContent=akt.titel;document.getElementById("foto").src=akt.wer;document.getElementById("wertext").textContent=akt.wertext;
+  svg.innerHTML="";tafel.innerHTML="";gitter();teile=akt.aufbau();n=0;
+  cap.textContent=akt.schritte[0][0]+"  (Tippe auf ▶ Abspielen.)";pb.disabled=true;}
+function weiter(){if(steht)return;if(n<akt.schritte.length){const [satz,f]=akt.schritte[n];f(teile);cap.textContent=satz;n++;timer=setTimeout(weiter,lese(satz)+1500);}else pb.disabled=true;}
+document.getElementById("play").onclick=()=>{laden();steht=false;pb.disabled=false;pb.textContent="⏸ Pause";timer=setTimeout(weiter,300);};
+pb.onclick=()=>{steht=!steht;pb.textContent=steht?"▶ Weiter":"⏸ Pause";clearTimeout(timer);if(!steht)weiter();};
+laden();
+</script>
+</body>
+</html>
