@@ -89,7 +89,8 @@ function laden(){akt=A.parallelogramm;clearTimeout(timer);
   svg.innerHTML="";tafel.innerHTML="";gitter();teile=akt.aufbau();n=0;
   cap.textContent=akt.schritte[0][0]+"  (Tippe auf ▶ Abspielen.)";pb.disabled=true;}
 function weiter(){if(steht)return;if(n<akt.schritte.length){const [satz,f]=akt.schritte[n];f(teile);cap.textContent=satz;n++;timer=setTimeout(weiter,lese(satz)+1500);}else pb.disabled=true;}
-document.getElementById("play").onclick=()=>{laden();steht=false;pb.disabled=false;pb.textContent="⏸ Pause";timer=setTimeout(weiter,300);};
+// 26.11.2026 (Malte: Start dauert zu lang): Einleitungssatz steht schon da – beim Abspielen sofort mit Schritt ① beginnen
+document.getElementById("play").onclick=()=>{laden();steht=false;pb.disabled=false;pb.textContent="⏸ Pause";n=1;timer=setTimeout(weiter,200);};
 pb.onclick=()=>{steht=!steht;pb.textContent=steht?"▶ Weiter":"⏸ Pause";clearTimeout(timer);if(!steht)weiter();};
 laden();
 </script>
