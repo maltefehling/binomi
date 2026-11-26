@@ -41,8 +41,8 @@
   <div class="tafel"><div class="z">&nbsp;</div>
     <div class="z">&nbsp;</div>
     <div class="z">100 % + 15 % = 115 %</div>
-    <div class="z">1 % = 40 € : 100 = 0,40 €</div>
-    <div class="z">115 % = 0,40 € · 115 = 46 €</div>
+    <div class="z">40 € : 100 = 0,40 €</div>
+    <div class="z">0,40 € · 115 = 46 €</div>
     <div class="z">&nbsp;</div></div>
   <div class="du" id="du"><b>Jetzt du:</b> Rechne bei deiner Aufgabe zuerst oben: 100 % plus die Prozentzahl, die dazukommt. Dann der Dreischritt bis dorthin.</div>
 </main>
@@ -56,7 +56,7 @@ function bildZustand(k){const on=(id,b)=>document.getElementById(id).style.opaci
 
 
 "use strict";
-const S=[["", "Der Streifen ist der alte Preis: 100 % sind 40 €. Er bleibt genau so lang.", true], ["", "Um 15 % teurer heißt: 15 % kommen dazu. Dafür hängen wir ein Stück an – der Streifen wächst über 100 % hinaus.", true], ["100 % + 15 % = 115 %", "Rechne zuerst oben: 100 % plus 15 % sind 115 %. Das ist der neue Preis.", true], ["1 % = 40 € : 100 = 0,40 €", "Jetzt der Dreischritt. Rechne runter auf 1 %: geteilt durch 100, oben und unten.", true], ["115 % = 0,40 € · 115 = 46 €", "Rechne hoch auf 115 %: mal 115. Der Eintritt kostet jetzt 46 €.", true], ["", "Probe: 15 % von 40 € sind 6 €. 40 € plus 6 € sind 46 €. Das passt.", false]];
+const S=[["", "Der Streifen ist der alte Preis: 100 % sind 40 €. Er bleibt genau so lang.", true], ["", "Um 15 % teurer heißt: 15 % kommen dazu. Dafür hängen wir ein Stück an – der Streifen wächst über 100 % hinaus.", true], ["100 % + 15 % = 115 %", "Rechne zuerst oben: 100 % plus 15 % sind 115 %. Das ist der neue Preis.", true], ["40 € : 100 = 0,40 €", "Jetzt der Dreischritt. Rechne runter auf 1 %: geteilt durch 100, oben und unten.", true], ["0,40 € · 115 = 46 €", "Rechne hoch auf 115 %: mal 115. Der Eintritt kostet jetzt 46 €.", true], ["", "Probe: 15 % von 40 € sind 6 €. 40 € plus 6 € sind 46 €. Das passt.", false]];
 const cap=document.getElementById("cap"),du=document.getElementById("du"),Z=[...document.querySelectorAll(".z")],pb=document.getElementById("pause");
 let n=0,timer=null,steht=false;
 const lese=t=>1500+80*t.length;            // Lesezeit nach Textlänge (Regel 16.10.2026)

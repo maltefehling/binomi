@@ -41,8 +41,8 @@
   <div class="tafel"><div class="z">&nbsp;</div>
     <div class="z">&nbsp;</div>
     <div class="z">Gesucht: der Prozentsatz</div>
-    <div class="z">1 % = 300 : 100 = 3</div>
-    <div class="z">240 : 3 = 80 → 80 %</div>
+    <div class="z">300 : 100 = 3</div>
+    <div class="z">240 : 3 = 80 Schritte</div>
     <div class="z">&nbsp;</div></div>
   <div class="du" id="du"><b>Jetzt du:</b> Unterstreiche bei deiner Aufgabe zuerst das Ganze. Steht es im Text? Steht schon eine Prozentzahl da? Dann weißt du, wo das „?“ hingehört.</div>
 </main>
@@ -54,7 +54,7 @@ function bildZustand(k){const on=(id,b)=>document.getElementById(id).style.opaci
 
 
 "use strict";
-const S=[["", "Frag zuerst: Was ist das Ganze? Alle Plätze im Zug – 300. Das Ganze steht unter 100 %.", true], ["", "Was ist der Teil? Die besetzten Plätze – 240. Der Teil ist kleiner als das Ganze, er steht weiter links.", true], ["Gesucht: der Prozentsatz", "Steht im Text schon eine Prozentzahl? Nein. Also fehlt oben die Zahl: Das Fragezeichen steht oben.", true], ["1 % = 300 : 100 = 3", "Jetzt der Dreischritt. Runter rechnen auf 1 %: 300 Plätze durch 100 sind 3 Plätze.", true], ["240 : 3 = 80 → 80 %", "Hoch rechnen auf den Teil: Wie viele 3er-Schritte sind es bis 240? 80 Schritte – also 80 %.", true], ["", "Der Prozentsatz ist 80 %. Probe am Streifen: 80 % ist weniger als 100 %, und 240 ist weniger als 300. Das passt.", false]];
+const S=[["", "Frag zuerst: Was ist das Ganze? Alle Plätze im Zug – 300. Das Ganze steht unter 100 %.", true], ["", "Was ist der Teil? Die besetzten Plätze – 240. Der Teil ist kleiner als das Ganze, er steht weiter links.", true], ["Gesucht: der Prozentsatz", "Steht im Text schon eine Prozentzahl? Nein. Also fehlt oben die Zahl: Das Fragezeichen steht oben.", true], ["300 : 100 = 3", "Jetzt der Dreischritt. Runter rechnen auf 1 %: 300 Plätze durch 100 sind 3 Plätze.", true], ["240 : 3 = 80 Schritte", "Hoch rechnen auf den Teil: Wie viele 3er-Schritte sind es bis 240? 80 Schritte – also 80 %.", true], ["", "Der Prozentsatz ist 80 %. Probe am Streifen: 80 % ist weniger als 100 %, und 240 ist weniger als 300. Das passt.", false]];
 const cap=document.getElementById("cap"),du=document.getElementById("du"),Z=[...document.querySelectorAll(".z")],pb=document.getElementById("pause");
 let n=0,timer=null,steht=false;
 const lese=t=>1500+80*t.length;            // Lesezeit nach Textlänge (Regel 16.10.2026)

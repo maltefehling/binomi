@@ -97,7 +97,7 @@ function genErweitern(schwer){
   else{n=wahl([2,3,4,5]);f=wahl([2,3,4,5,10]);a=zuf(1,n-1);}
   const N=n*f,L=a*f;
   return {art:"zahl",einh:"",html:`<div class="auf">${br(a,n)} = ${br("?",N)}<br>Welche Zahl steht im Zähler?</div>`,pruef:v=>v===L,loesung:`${br(a,n)} = ${br(L,N)}`,
-    erkl:`Der Nenner wird <b>mal ${f}</b> genommen: ${n} · ${f} = ${N}. Dann musst du auch den Zähler <b>mal ${f}</b> nehmen:<br><b>${a} · ${f} = ${L}</b>, also ${br(a,n)} = ${br(a+" · "+f,n+" · "+f)} = ${br(L,N)}.<div class="bild">${streifen(n,a)}${streifen(Math.min(N,50),Math.min(N,50)*a/n,"#fde7c8")}</div>Beide Streifen sind gleich weit gefärbt – der Wert des Bruchs ändert sich nicht.`,
+    erkl:`Der Nenner wird <b>mal ${f}</b> genommen: ${n} · ${f} = ${N}. Dann musst du auch den Zähler <b>mal ${f}</b> nehmen:<br><b>${a} · ${f} = ${L}</b>, also<br>${br(a,n)} = ${br(a+" · "+f,n+" · "+f)}<br>${br(a,n)} = ${br(L,N)}<div class="bild">${streifen(n,a)}${streifen(Math.min(N,50),Math.min(N,50)*a/n,"#fde7c8")}</div>Beide Streifen sind gleich weit gefärbt – der Wert des Bruchs ändert sich nicht.`,
     tipp:`Mit welcher Zahl wird der Nenner ${n} malgenommen, damit ${N} herauskommt? Nimm den Zähler mit derselben Zahl mal.`};
 }
 function genKuerzen(schwer){
@@ -106,7 +106,7 @@ function genKuerzen(schwer){
   else{do{q=wahl([2,3,4,5]);p=zuf(1,q-1);}while(ggt(p,q)!==1);f=wahl([2,3,4,5,10]);}
   const Z=p*f,N=q*f;
   return {art:"zahl",einh:"",html:`<div class="auf">Kürze: ${br(Z,N)} = ${br(p,"?")}<br>Welche Zahl steht im Nenner?</div>`,pruef:v=>v===q,loesung:`${br(Z,N)} = ${br(p,q)}`,
-    erkl:`Aus dem Zähler ${Z} wird ${p}: Er wird <b>durch ${f}</b> geteilt. Dann musst du auch den Nenner <b>durch ${f}</b> teilen:<br><b>${N} : ${f} = ${q}</b>, also ${br(Z,N)} = ${br(Z+" : "+f,N+" : "+f)} = ${br(p,q)}.`,
+    erkl:`Aus dem Zähler ${Z} wird ${p}: Er wird <b>durch ${f}</b> geteilt. Dann musst du auch den Nenner <b>durch ${f}</b> teilen:<br><b>${N} : ${f} = ${q}</b>, also<br>${br(Z,N)} = ${br(Z+" : "+f,N+" : "+f)}<br>${br(Z,N)} = ${br(p,q)}`,
     tipp:`Durch welche Zahl wurde der Zähler ${Z} geteilt, damit ${p} herauskommt? Teile den Nenner durch dieselbe Zahl.`};
 }
 const TYPEN=[{name:"① Bruch am Streifen",gen:genStreifen},{name:"② Erweitern",gen:genErweitern},{name:"③ Kürzen",gen:genKuerzen}];

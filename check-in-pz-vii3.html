@@ -93,7 +93,7 @@ function genTeilen(schwer){
 function genMal(schwer){
   const a=schwer?wahl([15,24,18,45,12,35]):wahl([6,12,15,20,24,30]),b=schwer?wahl([3,4,6,7]):wahl([2,3,4,5]),L=a*b;
   return {art:"zahl",einh:"",html:`<div class="auf">${a} · ${b} = ?</div>`,pruef:v=>v===L,loesung:`${a} · ${b} = ${L}`,
-    erkl:`Zerlege: ${a} · ${b} = ${Math.floor(a/10)*10} · ${b} + ${a%10} · ${b} = ${Math.floor(a/10)*10*b} + ${(a%10)*b} = <b>${L}</b>.<br>Oder: ${b} gleiche Schritte von ${a}.`,
+    erkl:`Zerlege:<br>${a} · ${b} = ${Math.floor(a/10)*10} · ${b} + ${a%10} · ${b}<br>${a} · ${b} = ${Math.floor(a/10)*10*b} + ${(a%10)*b}<br>${a} · ${b} = <b>${L}</b><br>Oder: ${b} gleiche Schritte von ${a}.`,
     tipp:`Zerlege ${a} in Zehner und Einer und nimm beide Teile mal ${b}.`};
 }
 function genWort(schwer){

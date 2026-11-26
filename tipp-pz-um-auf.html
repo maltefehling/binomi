@@ -41,8 +41,8 @@
   <div class="tafel"><div class="z">&nbsp;</div>
     <div class="z">&nbsp;</div>
     <div class="z">100 % − 25 % = 75 %</div>
-    <div class="z">1 % = 80 € : 100 = 0,80 €</div>
-    <div class="z">75 % = 0,80 € · 75 = 60 €</div>
+    <div class="z">80 € : 100 = 0,80 €</div>
+    <div class="z">0,80 € · 75 = 60 €</div>
     <div class="z">&nbsp;</div></div>
   <div class="du" id="du"><b>Jetzt du:</b> Frag bei deiner Aufgabe zuerst: Heißt es „um“ oder „auf“? Rechne oben aus, wie viel Prozent bleiben. Dann der Dreischritt.</div>
 </main>
@@ -55,7 +55,7 @@ function bildZustand(k){const on=(id,b)=>document.getElementById(id).style.opaci
 
 
 "use strict";
-const S=[["", "Der ganze Streifen ist der alte Preis: 100 % sind 80 €.", true], ["", "„Um 25 % reduziert“ heißt: 25 % fallen weg. Dieser Teil bleibt weiß – das ist der Rabatt.", true], ["100 % − 25 % = 75 %", "Rechne zuerst oben: Es bleiben 100 % minus 25 %, also 75 %. Das ist der grüne Teil – der neue Preis.", true], ["1 % = 80 € : 100 = 0,80 €", "Jetzt der Dreischritt. Rechne runter auf 1 %: geteilt durch 100, oben und unten.", true], ["75 % = 0,80 € · 75 = 60 €", "Rechne hoch auf 75 %: mal 75. Die Jacke kostet jetzt 60 €.", true], ["", "Probe: 80 € minus 60 € sind 20 € Rabatt – das sind 25 % von 80 €. Achtung: Bei „auf 25 % reduziert“ blieben nur 25 %. Dann kostete die Jacke 20 €.", false]];
+const S=[["", "Der ganze Streifen ist der alte Preis: 100 % sind 80 €.", true], ["", "„Um 25 % reduziert“ heißt: 25 % fallen weg. Dieser Teil bleibt weiß – das ist der Rabatt.", true], ["100 % − 25 % = 75 %", "Rechne zuerst oben: Es bleiben 100 % minus 25 %, also 75 %. Das ist der grüne Teil – der neue Preis.", true], ["80 € : 100 = 0,80 €", "Jetzt der Dreischritt. Rechne runter auf 1 %: geteilt durch 100, oben und unten.", true], ["0,80 € · 75 = 60 €", "Rechne hoch auf 75 %: mal 75. Die Jacke kostet jetzt 60 €.", true], ["", "Probe: 80 € minus 60 € sind 20 € Rabatt – das sind 25 % von 80 €. Achtung: Bei „auf 25 % reduziert“ blieben nur 25 %. Dann kostete die Jacke 20 €.", false]];
 const cap=document.getElementById("cap"),du=document.getElementById("du"),Z=[...document.querySelectorAll(".z")],pb=document.getElementById("pause");
 let n=0,timer=null,steht=false;
 const lese=t=>1500+80*t.length;            // Lesezeit nach Textlänge (Regel 16.10.2026)

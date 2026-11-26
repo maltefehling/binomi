@@ -105,7 +105,7 @@ function genPW(schwer){
   const fs=schwer?[[18,70,"€"],[240,85,"km"],[64,45,"€"],[1250,12,"ha"],[37.5,60,"€"]]:[[12,70,"€"],[40,30,"€"],[200,80,"€"],[300,90,"t"],[60,25,"km"],[80,75,"€"]];
   const [G,p,e]=wahl(fs),E=G/100,L=Math.round(E*p*1000)/1000;
   return {art:"zahl",einh:e,html:`<div class="auf"><b style="color:#c0700f">${de(p)} %</b> von <b style="color:#2e5d9f">${de(G)} ${e}</b> sind wie viel?</div><div style="font-size:17px;color:#5b6b7c">Dreischritt: erst 1 % (durch 100), dann mal ${de(p)}. Taschenrechner erlaubt.</div>`,
-    pruef:v=>Math.abs(v-L)<1e-6,loesung:`1 % = ${de(G)} ${e} : 100 = ${de(E)} ${e} · ${de(p)} % = ${de(E)} ${e} · ${de(p)} = ${de(L)} ${e}`,
+    pruef:v=>Math.abs(v-L)<1e-6,loesung:`<br>1 % = ${de(G)} ${e} : 100<br>1 % = ${de(E)} ${e}<br>${de(p)} % = ${de(E)} ${e} · ${de(p)}<br>${de(p)} % = ${de(L)} ${e}`,
     erkl:`Runter rechnen auf 1 %: ${de(G)} ${e} : 100 = <b>${de(E)} ${e}</b>.<br>Hoch rechnen auf ${de(p)} %: ${de(E)} ${e} · ${de(p)} = <b>${de(L)} ${e}</b>.`,
     tipp:`1 % sind ${de(E)} ${e}. Nimm das mal ${de(p)}.`};
 }

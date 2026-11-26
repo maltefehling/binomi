@@ -41,8 +41,8 @@
   <div class="tafel"><div class="z">&nbsp;</div>
     <div class="z">&nbsp;</div>
     <div class="z">Nicht: 48 € − 20 %</div>
-    <div class="z">1 % = 48 € : 120 = 0,40 €</div>
-    <div class="z">100 % = 0,40 € · 100 = 40 €</div>
+    <div class="z">48 € : 120 = 0,40 €</div>
+    <div class="z">0,40 € · 100 = 40 €</div>
     <div class="z">&nbsp;</div></div>
   <div class="du" id="du"><b>Jetzt du:</b> Frag bei deiner Aufgabe zuerst: Wo ist die 100 %? Dann rechne von der Prozentzahl, die du kennst, runter auf 1 % und hoch auf 100 %.</div>
 </main>
@@ -54,7 +54,7 @@ function bildZustand(k){const on=(id,b)=>document.getElementById(id).style.opaci
 
 
 "use strict";
-const S=[["", "Der Preis jetzt ist 100 % + 20 % = 120 %. Darunter stehen die 48 €.", true], ["", "Frag: Wo ist die 100 %? Die 100 % gehören immer zum Preis vorher. Dort steht das Fragezeichen.", true], ["Nicht: 48 € − 20 %", "Achtung: Die 20 % darfst du nicht von 48 € abziehen. Sie gehören zum Preis vorher, nicht zum Preis jetzt.", true], ["1 % = 48 € : 120 = 0,40 €", "Starte dort, wo oben und unten eine Zahl steht: bei 120 %. Rechne runter auf 1 % – geteilt durch 120.", true], ["100 % = 0,40 € · 100 = 40 €", "Rechne hoch auf 100 %: mal 100. Der Rucksack kostete vorher 40 €.", true], ["", "Probe: 20 % von 40 € sind 8 €. 40 € plus 8 € sind 48 €. Das passt.", false]];
+const S=[["", "Der Preis jetzt ist 100 % + 20 % = 120 %. Darunter stehen die 48 €.", true], ["", "Frag: Wo ist die 100 %? Die 100 % gehören immer zum Preis vorher. Dort steht das Fragezeichen.", true], ["Nicht: 48 € − 20 %", "Achtung: Die 20 % darfst du nicht von 48 € abziehen. Sie gehören zum Preis vorher, nicht zum Preis jetzt.", true], ["48 € : 120 = 0,40 €", "Starte dort, wo oben und unten eine Zahl steht: bei 120 %. Rechne runter auf 1 % – geteilt durch 120.", true], ["0,40 € · 100 = 40 €", "Rechne hoch auf 100 %: mal 100. Der Rucksack kostete vorher 40 €.", true], ["", "Probe: 20 % von 40 € sind 8 €. 40 € plus 8 € sind 48 €. Das passt.", false]];
 const cap=document.getElementById("cap"),du=document.getElementById("du"),Z=[...document.querySelectorAll(".z")],pb=document.getElementById("pause");
 let n=0,timer=null,steht=false;
 const lese=t=>1500+80*t.length;            // Lesezeit nach Textlänge (Regel 16.10.2026)
