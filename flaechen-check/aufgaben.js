@@ -297,6 +297,7 @@ function figur(pts, o = {}) {
       s += `<circle cx="${X(F[0] + 0.24 * (e[0] + v[0]))}" cy="${Y(F[1] + 0.24 * (e[1] + v[1]))}" r="3" fill="${opt.col || FB.h}"/>`; }
     if (txt) s += T(X((P[0] + F[0]) / 2 + (opt.dx ?? 0.25)), Y((P[1] + F[1]) / 2), txt, opt.col || FB.h, 'start');
   });
+  (o.linien || []).forEach(([P, Q, col]) => { s += `<line x1="${X(P[0])}" y1="${Y(P[1])}" x2="${X(Q[0])}" y2="${Y(Q[1])}" stroke="${col}" stroke-width="5"/>`; });
   (o.verl || []).forEach(([P, Q]) => { s += `<line x1="${X(P[0])}" y1="${Y(P[1])}" x2="${X(Q[0])}" y2="${Y(Q[1])}" stroke="#555" stroke-width="2" stroke-dasharray="6 5"/>`; });
   (o.texte || []).forEach(([x, y, t, c]) => { s += T(X(x), Y(y), t, c || FB.t); });
   return s + '</svg>';
@@ -308,6 +309,20 @@ const FR = (z, n) => frac(z, n);
 /* ---------- Aufgabengeneratoren (Kl. 8 RS, II Umfang und Flächeninhalt, 27.11.2026) ----------
    Jede Aufgabe: { title, q, type: 'num'|'mc', ans, post (Einheit), hint, sol:[Schritte – ein Schritt pro Zeile] }
    Eigene Aufgaben (Copyright): nur Aufgabentypen aus dem Unterricht, keine Buchaufgaben. Drachen/Raute nicht behandelt → nicht enthalten. */
+/* Zwei gleiche Figuren (die zweite gedreht) ergeben ein Parallelogramm – Bild für die Herleitungs-Aufgaben */
+function herleitBild(f1, f2, o) {
+  const top = o.h, mitte = f => [f.reduce((x, p) => x + p[0], 0) / f.length, f.reduce((x, p) => x + p[1], 0) / f.length];
+  const m1 = mitte(f1), m2 = mitte(f2);
+  const pts = o.dreieck ? [[0, 0], [o.g, 0], [o.g + o.l, top], [o.l, top]] : [[0, 0], [o.a + o.c, 0], [o.a + o.c + o.l, top], [o.l, top]];
+  const nr = [[m1[0] + 0.5, m1[1], '1', FB.r], [m2[0], m2[1], '2', FB.r]];
+  const texte = o.dreieck
+    ? [[o.g / 2, -0.75, 'g', FB.g], [o.l + o.g / 2, top + 0.75, 'g', FB.g], ...nr]
+    : [[o.a / 2, -0.75, 'a', FB.g], [o.a + o.c / 2, -0.75, 'c', FB.c], [o.l + o.c / 2, top + 0.75, 'c', FB.c], [o.l + o.c + o.a / 2, top + 0.75, 'a', FB.g], ...nr];
+  const linien = o.dreieck
+    ? [[[0, 0], [o.g, 0], FB.g], [[o.l, top], [o.l + o.g, top], FB.g]]
+    : [[[0, 0], [o.a, 0], FB.g], [[o.a, 0], [o.a + o.c, 0], FB.c], [[o.l, top], [o.l + o.c, top], FB.c], [[o.l + o.c, top], [o.l + o.c + o.a, top], FB.g]];
+  return figur(pts, { teile: [f1, f2], linien, hoehen: [[[o.l, top], [o.l, 0], 'h', { dx: 0.25 }]], texte, extraPts: [[0, -1.1], [0, top + 1.1]] });
+}
 const G = {
   /* ===== II.1 Rechteck und Quadrat ===== */
   rechteckA() {
@@ -411,6 +426,70 @@ const G = {
       type: 'num', ans: a + b + c + d, pre: 'U =', post: e, hint: 'Alle vier Seiten addieren – die Höhe gehört nicht dazu.',
       sol: ['U = a + b + c + d', `U = ${a} ${e} + ${b} ${e} + ${c} ${e} + ${d} ${e}`, `U = ${a + b + c + d} ${e}`] };
   },
+  /* ===== Herleiten aus dem Parallelogramm (27.11.2026, Malte: vor allem beim Trapez – warum a + c, warum h bleibt, warum durch 2).
+     Mehrere Fragen je Figur, je 4 Antworten in zufälliger Reihenfolge; die falschen Antworten sind typische Fehlvorstellungen. ===== */
+  herleitTrapez() {
+    const rw = rand() < .3, e = pick(['cm', 'm']);
+    let a, c, h, l;
+    do { a = R(6, 11); c = R(2, a - 3); h = 2 * R(2, 4); l = rw ? 0 : R(1, a - c - 1); } while (h === a + c || h === a || h === c || 2 * h === a + c);
+    const bild = herleitBild([[0, 0], [a, 0], [l + c, h], [l, h]], [[a, 0], [a + c, 0], [a + c + l, h], [l + c, h]], { a, c, h, l, e });
+    const fig = rw ? `Zwei gleiche <b>rechtwinklige</b> Trapeze mit <b>a = ${a} ${e}</b>, <b>c = ${c} ${e}</b> und <b>h = ${h} ${e}</b>. Das zweite ist gedreht und liegt daneben. Zusammen ergeben sie ein Rechteck – auch das ist ein Parallelogramm.`
+      : `Zwei gleiche Trapeze mit <b>a = ${a} ${e}</b>, <b>c = ${c} ${e}</b> und <b>h = ${h} ${e}</b>. Das zweite ist gedreht und liegt daneben. Zusammen ergeben sie ein Parallelogramm.`;
+    const P = (a + c) * h;
+    const V = [
+      () => ({ f: 'Wie lang ist die <b>Grundseite des Parallelogramms</b>?', ok: `${a + c} ${e}`, no: [`${a} ${e}`, `${a - c} ${e}`, `${2 * a} ${e}`],
+        hint: 'Schau unten auf die Grundseite: Dort liegt die Seite a des ersten Trapezes und daneben die Seite c des gedrehten Trapezes.',
+        sol: ['Grundseite = a + c', `Grundseite = ${a} ${e} + ${c} ${e}`, `Grundseite = ${a + c} ${e}`] }),
+      () => ({ f: 'Wie <b>hoch</b> ist das Parallelogramm?', ok: `${h} ${e}`, no: [`${2 * h} ${e}`, `${h / 2} ${e}`, `${a + c} ${e}`],
+        hint: 'Die Trapeze liegen nebeneinander, nicht übereinander. Wird die Figur dadurch höher?',
+        sol: ['Die Trapeze liegen nebeneinander.', `Das Parallelogramm ist genauso hoch wie ein Trapez: h = ${h} ${e}.`] }),
+      () => ({ f: 'Wie groß ist der <b>Flächeninhalt eines Trapezes</b>?', ok: `${kz(P / 2)} ${e}²`, no: [`${P} ${e}²`, `${kz(P / 4)} ${e}²`, `${kz([P, P / 2, P / 4].includes(a * c * h / 2) ? 2 * P : a * c * h / 2)} ${e}²`],
+        hint: 'Rechne zuerst den Flächeninhalt des ganzen Parallelogramms: Grundseite (a + c) mal Höhe. Ein Trapez ist die Hälfte davon.',
+        sol: ['Parallelogramm: A = (a + c) · h', `Parallelogramm: A = ${a + c} ${e} · ${h} ${e}`, `Parallelogramm: A = ${P} ${e}²`, `Ein Trapez ist die Hälfte: A = ${kz(P / 2)} ${e}²`] }),
+      () => ({ f: 'Warum ist die Grundseite des Parallelogramms <b>a + c</b> lang?', ok: 'Das zweite Trapez ist gedreht. Darum liegt unten seine Seite c neben der Seite a.',
+        no: ['Beim Trapez zählt man immer alle Seiten zusammen.', 'Die Seiten a und c sind gleich lang.', 'Die beiden Schenkel sind zusammen so lang wie a + c.'],
+        hint: 'Fahre im Bild die Grundseite von links nach rechts ab. Zu welchem Trapez gehört welches Stück?',
+        sol: ['Linkes Stück der Grundseite: Seite a vom ersten Trapez.', 'Rechtes Stück: Seite c vom gedrehten Trapez.', 'Zusammen: a + c.'] }),
+      () => ({ f: 'Warum steht in der Trapez-Formel <b>„durch 2“</b>?', ok: 'Das Parallelogramm besteht aus zwei gleichen Trapezen. Ein Trapez ist die Hälfte davon.',
+        no: ['Das Trapez hat zwei parallele Seiten.', 'Im Trapez ist die Höhe nur halb so lang.', 'Ein Trapez hat zwei Schenkel.'],
+        hint: 'Wie viele Trapeze stecken im Parallelogramm?',
+        sol: ['Im Parallelogramm stecken zwei gleiche Trapeze.', 'Parallelogramm: (a + c) · h', `Ein Trapez: ${FR('(a + c) · h', '2')}`] }),
+      () => ({ f: 'Warum steht <b>a + c</b> in der Formel in einer <b>Klammer</b>?', ok: 'Erst a + c ergibt die ganze Grundseite. Die ganze Grundseite wird mit h multipliziert.',
+        no: ['Ohne Klammer wäre die Formel zu lang.', 'Nur die Seite c wird mit h multipliziert.', 'Die Klammer bedeutet, dass man a durch c teilt.'],
+        hint: 'Im Parallelogramm rechnet man Grundseite mal Höhe. Wie lang ist hier die Grundseite?',
+        sol: ['Grundseite des Parallelogramms = a + c', 'Die ganze Grundseite mal h: (a + c) · h', 'Ohne Klammer würde nur c mit h multipliziert.'] }),
+      () => ({ f: 'Welche Formel gibt den Flächeninhalt <b>eines</b> Trapezes an?', ok: `A = ${FR('(a + c) · h', '2')}`, no: ['A = (a + c) · h', `A = ${FR('a · c · h', '2')}`, `A = ${FR('(a + c) · h', '4')}`],
+        hint: 'Parallelogramm: Grundseite (a + c) mal Höhe h. Ein Trapez ist die Hälfte.',
+        sol: ['Parallelogramm: A = (a + c) · h', `Ein Trapez: A = ${FR('(a + c) · h', '2')}`] }),
+    ];
+    const v = pick(V)();
+    return { title: 'Trapez-Formel herleiten', q: qf(`${fig} ${v.f}`, bild), type: 'mc', options: shuffle([v.ok, ...v.no]), ans: v.ok, hint: v.hint, sol: v.sol };
+  },
+  herleitDreieck() {
+    const e = pick(['cm', 'm']);
+    let g, h, sp;
+    do { g = R(5, 10); h = 2 * R(2, 4); sp = R(1, g - 1); } while (h === g || 2 * h === g || h === 2 * g);
+    const bild = herleitBild([[0, 0], [g, 0], [sp, h]], [[g, 0], [g + sp, h], [sp, h]], { g, h, l: sp, e, dreieck: true });
+    const fig = `Zwei gleiche Dreiecke mit <b>g = ${g} ${e}</b> und <b>h = ${h} ${e}</b>. Das zweite ist gedreht und liegt daneben. Zusammen ergeben sie ein Parallelogramm.`;
+    const P = g * h;
+    const V = [
+      () => ({ f: 'Wie groß ist der <b>Flächeninhalt eines Dreiecks</b>?', ok: `${kz(P / 2)} ${e}²`, no: [`${P} ${e}²`, `${2 * P} ${e}²`, `${kz(P / 4)} ${e}²`],
+        hint: 'Rechne zuerst das Parallelogramm: g mal h. Ein Dreieck ist die Hälfte davon.',
+        sol: ['Parallelogramm: A = g · h', `Parallelogramm: A = ${g} ${e} · ${h} ${e}`, `Parallelogramm: A = ${P} ${e}²`, `Ein Dreieck ist die Hälfte: A = ${kz(P / 2)} ${e}²`] }),
+      () => ({ f: 'Wie lang ist die <b>Grundseite des Parallelogramms</b>?', ok: `${g} ${e}`, no: [`${2 * g} ${e}`, `${g + h} ${e}`, `${kz(g / 2)} ${e}`],
+        hint: 'Schau unten auf die Grundseite: Sie gehört nur zum ersten Dreieck.',
+        sol: ['Unten liegt nur die Grundseite des ersten Dreiecks.', `Grundseite = g = ${g} ${e}`] }),
+      () => ({ f: 'Warum steht in der Dreieck-Formel <b>„durch 2“</b>?', ok: 'Zwei gleiche Dreiecke ergeben ein Parallelogramm. Ein Dreieck ist die Hälfte davon.',
+        no: ['Ein Dreieck hat drei Seiten.', 'Die Höhe steht immer genau in der Mitte.', 'Man rechnet g und h zusammen und halbiert.'],
+        hint: 'Wie viele Dreiecke stecken im Parallelogramm?',
+        sol: ['Im Parallelogramm stecken zwei gleiche Dreiecke.', 'Parallelogramm: g · h', `Ein Dreieck: ${FR('g · h', '2')}`] }),
+      () => ({ f: 'Welche Formel gibt den Flächeninhalt <b>eines</b> Dreiecks an?', ok: `A = ${FR('g · h', '2')}`, no: ['A = g · h', 'A = 2 · g · h', `A = ${FR('g + h', '2')}`],
+        hint: 'Parallelogramm: g mal h. Ein Dreieck ist die Hälfte.',
+        sol: ['Parallelogramm: A = g · h', `Ein Dreieck: A = ${FR('g · h', '2')}`] }),
+    ];
+    const v = pick(V)();
+    return { title: 'Dreieck-Formel herleiten', q: qf(`${fig} ${v.f}`, bild), type: 'mc', options: shuffle([v.ok, ...v.no]), ans: v.ok, hint: v.hint, sol: v.sol };
+  },
   /* ===== Rückwärts: aus dem Flächeninhalt eine Größe ===== */
   rueckRechteck() {
     const a = R(4, 12), b = R(2, 9), e = pick(['m', 'cm']), A = a * b;
@@ -491,7 +570,7 @@ const G = {
 /* Taschenrechner erlaubt (wie im Terme-Check). */
 const MIT_TR = new Set();
 
-/* ---------- Die Aufgabenplätze: 10 zum Thema (je einer pro „Ich kann …“-Zeile) + 1 Wiederholung. Test ≈ 20 Minuten.
+/* ---------- Die Aufgabenplätze: 10 zum Thema (seit 27.11. mit „Formel herleiten“) (je einer pro „Ich kann …“-Zeile) + 1 Wiederholung. Test ≈ 20 Minuten.
    Reihenfolge NICHT ändern, solange Ergebnisse aus laufenden Tests eingesammelt werden. CAN wortgleich im Kompetenzraster. */
 const SLOTS = [
   { area: 'II.1 Rechteck und Quadrat', name: 'Rechteck und Quadrat', gens: ['rechteckA', 'rechteckU'], back: ['rueckRechteck'] },
@@ -501,6 +580,7 @@ const SLOTS = [
   { area: 'II.3a Dreieck', name: 'Dreieck', gens: ['dreieckA'], practiceGens: ['dreieckA', 'dreieckU'], back: ['rueckDreieck'] },
   { area: 'II.3b Höhen im Dreieck', name: 'Seite und ihre Höhe', gens: ['dreieckRecht', 'dreieckSeite'] },
   { area: 'II.4a Trapez', name: 'Trapez', gens: ['trapezA'], practiceGens: ['trapezA', 'trapezU'], back: ['rueckTrapez'], backPractice: ['rueckTrapez', 'rueckTrapezC'] },
+  { area: 'II.4a Trapez', name: 'Formel herleiten', gens: ['herleitTrapez'], practiceGens: ['herleitTrapez', 'herleitTrapez', 'herleitDreieck'] },
   { area: 'II.5a Vielecke', name: 'Vielecke zerlegen', gens: ['vieleckA', 'vieleckU'] },
   { area: 'II.5a Vielecke', name: 'Regelmäßige Vielecke', gens: ['regel'] },
   { area: 'Wiederholung: Gleichungen (Kapitel I)', name: 'Gleichung mit Klammer', gens: ['gleichungKlammer'], review: true }
@@ -519,6 +599,7 @@ const CAN = [
   'den Flächeninhalt und den Umfang eines Dreiecks berechnen – auch rückwärts die Höhe oder die Grundseite.',
   'zu jeder Seite die passende Höhe nehmen – auch im rechtwinkligen Dreieck.',
   'den Flächeninhalt und den Umfang eines Trapezes berechnen – auch eines rechtwinkligen – auch rückwärts die Höhe oder die Seite c.',
+  'die Formel des Trapezes aus dem Parallelogramm herleiten: warum a + c, warum die Höhe bleibt und warum durch 2 – genauso beim Dreieck.',
   'Vielecke in bekannte Figuren zerlegen und Flächeninhalt und Umfang berechnen.',
   'ein regelmäßiges Sechseck oder Achteck in gleiche Dreiecke zerlegen und den Flächeninhalt berechnen.',
   'Gleichungen mit einer Klammer lösen.'
@@ -652,7 +733,7 @@ function decPractice(s) {
 const SALT = 'Hoeri-Flaechen';
 /* Stand der Aufgaben: bei jeder Änderung an Generatoren/SLOTS erhöhen (und ?v= in index.html/lehrer.html anpassen).
    Steckt im Ergebnis-Code, damit die Lehrerseite merkt, wenn ein Schülergerät eine andere Fassung hatte. */
-const APPV = '20261127b';
+const APPV = '20261127c';
 const sig = s => hash32(SALT + '|' + s).toString(36).toUpperCase().padStart(7, '0').slice(-5);
 function encAnswers(answers) {
   return answers.map(a => !a ? '' : a.k != null ? '#' + a.k : [a.a1 || '', a.a2 || ''].map(x => encodeURIComponent(String(x).trim()).replace(/!/g, '%21').replace(/~/g, '%7E')).join('~')).join('!');
