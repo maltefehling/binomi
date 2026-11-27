@@ -85,7 +85,7 @@
 
 <script src="lib/qrcode.js"></script>
 <script src="lib/jsQR.js"></script>
-<script src="aufgaben.js?v=20261127e"></script>
+<script src="aufgaben.js?v=20261127f"></script>
 <script>
 "use strict";
 const LKEY = 'flaechencheck.lehrer';
@@ -255,7 +255,7 @@ function printGrades(t) {
   $('printArea').innerHTML = `
     <h2>Notenliste Flächen-Check – ${esc(t.label || '')}</h2>
     <p>Stand ${d} · Testcode ${t.code} · ${rs.length} Ergebnisse · Notenschnitt ${avgNote} · Note linear: volle Punktzahl 1,0, halbe Punktzahl 3,5</p>
-    <table class="keylist gradelist"><thead><tr><th>Nr.</th><th>Name</th><th>Punkte (von ${SLOTS.length})</th><th>Note</th><th>verlassen</th><th>Übung: Runden / Themen / % richtig / Tage</th></tr></thead>
+    <table class="keylist gradelist"><thead><tr><th>Nr.</th><th>Name</th><th>Punkte (von ${TEST.length})</th><th>Note</th><th>verlassen</th><th>Übung: Runden / Themen / % richtig / Tage</th></tr></thead>
     <tbody>${nrs.map(nr => { const r = t.results[nr], p = practiceSum(t, nr);
       return `<tr><td>${nr}</td><td></td><td>${r ? fmtPts(r.pts) : 'fehlt'}</td><td><b>${r ? fmtNote(noteFor(r.pts)) : ''}</b></td><td>${r && r.tabs ? r.tabs + '×' : ''}</td>
         <td>${p ? `${p.rounds} / ${p.drills} / ${p.tasks ? Math.round(100 * p.correct / p.tasks) : '–'} % / ${p.days}` : '–'}</td></tr>`; }).join('')}</tbody></table>
@@ -356,7 +356,7 @@ function storeResult(t, r, foreign = false) {
   if (old && JSON.stringify(old.grades) === JSON.stringify(r.grades) && old.tabs === r.tabs) return say(`Nr. ${r.nr} ist schon erfasst.`, 'ok', `✓ Nr. ${r.nr} war schon erfasst`);
   t.results[r.nr] = Object.assign(r, { pts, at: Date.now() });
   saveD();
-  say(`${old ? 'Aktualisiert' : 'Erfasst'}: Nr. ${r.nr} · ${fmtPts(pts)}/${SLOTS.length} Punkte · Note ${fmtNote(noteFor(pts))}${r.tabs ? ` · ⚠️ ${r.tabs}× verlassen` : ''}${foreign ? ` · ⚠️ Nr. ${r.nr} steht nicht auf deiner Nummernliste` : ''}`,
+  say(`${old ? 'Aktualisiert' : 'Erfasst'}: Nr. ${r.nr} · ${fmtPts(pts)}/${TEST.length} Punkte · Note ${fmtNote(noteFor(pts))}${r.tabs ? ` · ⚠️ ${r.tabs}× verlassen` : ''}${foreign ? ` · ⚠️ Nr. ${r.nr} steht nicht auf deiner Nummernliste` : ''}`,
     foreign ? 'warn' : 'ok', foreign ? `⚠ Nr. ${r.nr} erfasst – steht nicht auf der Liste, bitte zur Lehrkraft` : `✓ Nr. ${r.nr} erfasst`);
   renderTests();
 }
@@ -425,13 +425,13 @@ function renderResults() {
   const nrs = [...new Set([...rs.map(r => r.nr), ...Object.keys(t.practice || {}).map(Number)])].sort((a, b) => a - b);
   if (!nrs.length) { $('resTable').innerHTML = ''; $('stats').innerHTML = '<span class="muted">Noch keine Ergebnisse.</span>'; return; }
   const avg = rs.length ? rs.reduce((s, r) => s + r.pts, 0) / rs.length : 0;
-  const quote = SLOTS.map((_, i) => rs.length ? rs.reduce((s, r) => s + points(r.grades[i]), 0) / rs.length : 0);
-  $('stats').innerHTML = `<b>${rs.length}</b> Testergebnisse${rs.length ? ` · Durchschnitt <b>${fmtPts(Math.round(avg * 10) / 10)}</b> von ${SLOTS.length} Punkten · Notenschnitt <b>${fmtNote(Math.round(rs.reduce((x, r) => x + noteFor(r.pts), 0) / rs.length * 10) / 10)}</b>` : ''} · Übungsdaten von <b>${Object.keys(t.practice || {}).length}</b> Nummern`;
+  const quote = TEST.map((_, i) => rs.length ? rs.reduce((s, r) => s + points(r.grades[i]), 0) / rs.length : 0);
+  $('stats').innerHTML = `<b>${rs.length}</b> Testergebnisse${rs.length ? ` · Durchschnitt <b>${fmtPts(Math.round(avg * 10) / 10)}</b> von ${TEST.length} Punkten · Notenschnitt <b>${fmtNote(Math.round(rs.reduce((x, r) => x + noteFor(r.pts), 0) / rs.length * 10) / 10)}</b>` : ''} · Übungsdaten von <b>${Object.keys(t.practice || {}).length}</b> Nummern`;
   const pcell = nr => { const p = practiceSum(t, nr); return p ? `<td>${p.rounds}</td><td>${p.drills}</td><td>${p.tasks ? Math.round(100 * p.correct / p.tasks) : '–'}</td><td>${p.days}</td><td>${Math.round(p.minutes)}</td><td>${p.last ? p.last.slice(8, 10) + '.' + p.last.slice(5, 7) + '.' : '–'}</td>` : '<td colspan="6" class="muted">keine Übungsdaten</td>'; };
-  const empty = '<td colspan="' + (SLOTS.length + 5) + '" class="muted">noch kein Testergebnis</td>';
+  const empty = '<td colspan="' + (TEST.length + 5) + '" class="muted">noch kein Testergebnis</td>';
   const cell = g => g === 2 ? '<td class="g2">✓</td>' : g === 1 ? '<td class="g1">½</td>' : '<td class="g0">✗</td>';
-  $('resTable').innerHTML = `<thead><tr><th rowspan="2">Nr.</th><th colspan="${SLOTS.length + 5}">Test</th><th colspan="6">Übung</th></tr>
-    <tr><th>Punkte</th><th>Note</th>${SLOTS.map((s, i) => `<th title="${esc(s.area + ' · ' + s.name)}" style="${s.review ? 'background:#ccfbf1' : ''}">${s.review ? '🔁' : i + 1}</th>`).join('')}<th>verl.</th><th>Min.</th><th>Quelle</th>
+  $('resTable').innerHTML = `<thead><tr><th rowspan="2">Nr.</th><th colspan="${TEST.length + 5}">Test</th><th colspan="6">Übung</th></tr>
+    <tr><th>Punkte</th><th>Note</th>${TEST.map((T, i) => SLOTS[T.slot]).map((s, i) => `<th title="${esc(s.area + ' · ' + s.name)}" style="${s.review ? 'background:#ccfbf1' : ''}">${s.review ? '🔁' : i + 1}</th>`).join('')}<th>verl.</th><th>Min.</th><th>Quelle</th>
     <th title="komplette Probetests">Runden</th><th title="Fünfer-Übungen zu einem Thema">Themen</th><th title="beim 1. Versuch richtig">%</th><th>Tage</th><th>Min.</th><th>zuletzt</th></tr></thead>
     <tbody>${nrs.map(nr => { const r = t.results[nr]; return `<tr class="${r && r.answers ? 'click' : ''}" data-nr="${nr}"><td><b>${nr}</b></td>${r ? `<td><b>${fmtPts(r.pts)}</b></td><td><b>${fmtNote(noteFor(r.pts))}</b></td>
       ${r.grades.map(cell).join('')}<td style="${r.tabs ? 'color:var(--bad);font-weight:700' : ''}">${r.tabs ? r.tabs + '×' : '–'}</td><td>${r.minutes ?? '–'}</td><td>${r.src}</td>` : empty}${pcell(nr)}</tr>`; }).join('')}
@@ -442,7 +442,7 @@ function showDetail(nr) {
   const t = cur(), r = t.results[nr]; if (!r || !r.answers) return;
   const tasks = testTasks(t.code, nr);
   const sym = g => g === 2 ? '<span class="g2">✓ 1 P.</span>' : g === 1 ? '<span class="g1">½ P.</span>' : '<span class="g0">✗ 0 P.</span>';
-  $('detail').innerHTML = `<div class="row"><h2 style="margin:0">Nr. ${nr} · ${fmtPts(r.pts)}/${SLOTS.length} Punkte · Note ${fmtNote(noteFor(r.pts))}</h2><span style="flex:1"></span><button id="dClose">Schließen</button></div>
+  $('detail').innerHTML = `<div class="row"><h2 style="margin:0">Nr. ${nr} · ${fmtPts(r.pts)}/${TEST.length} Punkte · Note ${fmtNote(noteFor(r.pts))}</h2><span style="flex:1"></span><button id="dClose">Schließen</button></div>
     ${tasks.map((x, i) => `<div class="item"><div class="qtitle">Aufgabe ${i + 1} · ${SLOTS[x.slot].area} · Ich kann ${x.can} · ${sym(r.grades[i])}</div>
       <div class="q">${x.q}</div>
       <div>Antwort: <b>${answerText(x, r.answers[i])}</b> &nbsp;·&nbsp; richtig: <b>${correctText(x)}</b></div>
@@ -454,11 +454,11 @@ function showDetail(nr) {
 $('btnCsv').onclick = () => {
   const t = cur(); if (!t) return;
   const nrs = [...new Set([...Object.keys(t.results), ...Object.keys(t.practice || {})].map(Number))].sort((a, b) => a - b);
-  const lines = [['Nr', 'Punkte', 'Note', ...SLOTS.map((_, i) => 'A' + (i + 1)), 'verlassen', 'Minuten',
+  const lines = [['Nr', 'Punkte', 'Note', ...TEST.map((_, i) => 'A' + (i + 1)), 'verlassen', 'Minuten',
     'Uebung_Runden', 'Uebung_Themen', 'Uebung_Aufgaben', 'Uebung_Prozent_richtig', 'Uebung_Tage', 'Uebung_Minuten', 'Uebung_zuletzt'].join(';')];
   nrs.forEach(nr => {
     const r = t.results[nr], p = practiceSum(t, nr);
-    lines.push([nr, ...(r ? [fmtPts(r.pts), fmtNote(noteFor(r.pts)), ...r.grades.map(g => fmtPts(points(g))), r.tabs, r.minutes ?? ''] : Array(SLOTS.length + 4).fill('')),
+    lines.push([nr, ...(r ? [fmtPts(r.pts), fmtNote(noteFor(r.pts)), ...r.grades.map(g => fmtPts(points(g))), r.tabs, r.minutes ?? ''] : Array(TEST.length + 4).fill('')),
       ...(p ? [p.rounds, p.drills, p.tasks, p.tasks ? Math.round(100 * p.correct / p.tasks) : '', p.days, Math.round(p.minutes), p.last] : Array(7).fill(''))].join(';'));
   });
   const blob = new Blob(['﻿' + lines.join('\r\n') + '\r\n'], { type: 'text/csv;charset=utf-8' });

@@ -588,7 +588,24 @@ const SLOTS = [
 ];
 /* 27.11.2026 (Malte): Rückwärtsrechnen gehört zu jeder Figur (Unterpunkt im Raster). In der Übung mischen sich vorwärts und rückwärts;
    im Test kommen GENAU ZWEI Figuren rückwärts: eine leichte (Rechteck oder Parallelogramm) und eine schwere (Dreieck oder Trapez). */
-const RUECK_LEICHT = [0, 1], RUECK_SCHWER = [3, 5];   // Plätze Rechteck, Parallelogramm | Dreieck, Trapez (seit 27.11. ohne Flächeneinheiten)
+/* Test (27.11.2026, Malte): jede Grundfigur einmal vorwärts UND einmal rückwärts; „Seite und ihre Höhe“ nur in der Übung,
+   die Vielecke als EINE Aufgabe (zerlegtes Vieleck oder regelmäßiges Vieleck); Wiederholung bleibt. 12 Aufgaben ≈ 20 min, nur ★–★★.
+   slot = Zeile im Raster (SLOTS-Index) für Rückmeldung und „üben“-Knopf. Reihenfolge NICHT ändern, solange Ergebnisse eingesammelt werden. */
+const TEST = [
+  { slot: 0, gens: ['rechteckA', 'rechteckU'] },
+  { slot: 0, gens: ['rueckRechteck'] },
+  { slot: 1, gens: ['paraA'] },
+  { slot: 1, gens: ['rueckPara'] },
+  { slot: 2, gens: ['hoeheMC'] },
+  { slot: 3, gens: ['dreieckA'] },
+  { slot: 3, gens: ['rueckDreieck'] },
+  { slot: 5, gens: ['trapezA'] },
+  { slot: 5, gens: ['rueckTrapez'] },
+  { slot: 6, gens: ['herleitTrapez'] },
+  { slot: 7, gens: ['vieleckA', 'vieleckU', 'regel'], slotByGen: { regel: 8 } },
+  { slot: 9, gens: ['gleichungKlammer'] }
+];
+const testSlot = (T, gen) => (T.slotByGen && T.slotByGen[gen] != null) ? T.slotByGen[gen] : T.slot;
 SLOTS.forEach(s => { if (s.back) s.practiceGens = [...(s.practiceGens || s.gens), ...(s.backPractice || s.back)]; });
 const testArea = s => s.area;
 const testKopf = s => `${s.area} · ${s.name}`;
@@ -626,7 +643,7 @@ function rasterReport(tasks, grades, withButtons = false) {
 function practiceTasks(slotIdx = null, n = 5) {
   rand = Math.random;
   const gens = s => s.practiceGens || s.gens;   // die Übung darf mehr Varianten haben als der Test
-  if (slotIdx === null) return shuffle(SLOTS.map((s, i) => Object.assign(makeTask(pick(gens(s))), { slot: i })));   // Übung gemischt, Test fest
+  if (slotIdx === null) return shuffle(TEST.map(T => { const g = pick(T.gens); return Object.assign(makeTask(g), { slot: testSlot(T, g) }); }));   // Probetest = Aufbau des Tests   // Übung gemischt, Test fest
   return Array.from({ length: n }, () => Object.assign(makeTask(pick(gens(SLOTS[slotIdx]))), { slot: slotIdx }));
 }
 
@@ -644,13 +661,11 @@ function swapTask() {
 }
 function testTasks(code, nr) {
   IM_TEST = true;
-  const out = SLOTS.map((s, i) => {
+  const out = TEST.map((T, i) => {
     rand = mulberry32(hash32(`typ|${code}|${i}`));
-    const ers = s.tauschbar && ohneBruch(code) ? pick(ERSATZ_TEST) : null;
-    const rl = mulberry32(hash32(`rueck|${code}`)), leicht = RUECK_LEICHT[Math.floor(rl() * 2)], schwer = RUECK_SCHWER[Math.floor(rl() * 2)];
-    const gen = ers ? ers.gen : (i === leicht || i === schwer) ? pick(s.back) : pick(s.gens);
+    const gen = pick(T.gens);
     rand = mulberry32(hash32(`zahl|${code}|${nr}|${i}`));
-    return Object.assign(makeTask(gen), { slot: ers ? ers.slot : i });
+    return Object.assign(makeTask(gen), { slot: testSlot(T, gen) });
   });
   rand = Math.random; IM_TEST = false;
   return out;
@@ -676,7 +691,7 @@ const HALF_TIP = {
 const points = g => g === 2 ? 1 : g === 1 ? 0.5 : 0;
 const fmtPts = p => String(p).replace('.', ',');
 /* Note linear (Realschule): volle Punktzahl = 1,0, halbe Punktzahl = 3,5, null Punkte = 6,0; auf eine Dezimale gerundet */
-const noteFor = (pts, max = SLOTS.length) => Math.round((6 - 5 * pts / max) * 10 + 1e-9) / 10;
+const noteFor = (pts, max = TEST.length) => Math.round((6 - 5 * pts / max) * 10 + 1e-9) / 10;
 const fmtNote = n => n.toFixed(1).replace('.', ',');
 
 /* Antwort lesbar machen (für Lehrerseite und Ergebnisanzeige) */
@@ -734,7 +749,7 @@ function decPractice(s) {
 const SALT = 'Hoeri-Flaechen';
 /* Stand der Aufgaben: bei jeder Änderung an Generatoren/SLOTS erhöhen (und ?v= in index.html/lehrer.html anpassen).
    Steckt im Ergebnis-Code, damit die Lehrerseite merkt, wenn ein Schülergerät eine andere Fassung hatte. */
-const APPV = '20261127e';
+const APPV = '20261127f';
 const sig = s => hash32(SALT + '|' + s).toString(36).toUpperCase().padStart(7, '0').slice(-5);
 function encAnswers(answers) {
   return answers.map(a => !a ? '' : a.k != null ? '#' + a.k : [a.a1 || '', a.a2 || ''].map(x => encodeURIComponent(String(x).trim()).replace(/!/g, '%21').replace(/~/g, '%7E')).join('~')).join('!');
@@ -773,7 +788,7 @@ function makeShortCode(code, nr, tabs, grades) {
   return `${nr}-${g}-${tabs}-${sig(`S|${code}|${nr}|${g}|${tabs}`)}`;
 }
 function parseShortCode(txt, code) {
-  const m = String(txt).trim().toUpperCase().replace(/\s/g, '').match(new RegExp(`^(\\d{3})-([012]{${SLOTS.length}})-(\\d{1,3})-([0-9A-Z]{5})$`));
+  const m = String(txt).trim().toUpperCase().replace(/\s/g, '').match(new RegExp(`^(\\d{3})-([012]{${TEST.length}})-(\\d{1,3})-([0-9A-Z]{5})$`));
   if (!m) return null;
   const [, nr, g, tabs, s] = m;
   return { nr: +nr, grades: [...g].map(Number), tabs: +tabs, valid: sig(`S|${code}|${+nr}|${g}|${+tabs}`) === s };

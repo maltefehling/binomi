@@ -12,7 +12,7 @@
 <!-- ============ START ============ -->
 <section id="vHome">
   <h1>Flächen-Check</h1>
-  <p class="muted" style="margin-top:0">Umfang und Flächeninhalt · 9 Aufgaben zu den Punkten des Kompetenzrasters + 1 Wiederholungsaufgabe</p>
+  <p class="muted" style="margin-top:0">Umfang und Flächeninhalt · 11 Aufgaben zu den Punkten des Kompetenzrasters + 1 Wiederholungsaufgabe</p>
   <div id="resumeBox"></div>
   <div id="openBox"></div>
   <div class="card" id="nrCard"></div>
@@ -87,7 +87,7 @@
 </main>
 
 <script src="lib/qrcode.js"></script>
-<script src="aufgaben.js?v=20261127e"></script>
+<script src="aufgaben.js?v=20261127f"></script>
 <script>
 "use strict";
 const VIEWS = ['vHome', 'vPractice', 'vLogin', 'vTest', 'vDone', 'vProof'];
@@ -407,7 +407,7 @@ $('loginGo').onclick = () => {
 
 function openTest(code, nr) {
   let st = store.get(tkey(code, nr));
-  if (!st) st = { code, nr, answers: Array(SLOTS.length).fill(null), tabs: 0, start: Date.now(), submitted: false, cur: 0 };
+  if (!st) st = { code, nr, answers: Array(TEST.length).fill(null), tabs: 0, start: Date.now(), submitted: false, cur: 0 };
   store.set(tkey(code, nr), st); store.set(ACTIVE, { code, nr });
   T = { code, nr, tasks: testTasks(code, nr), st };
   if (st.submitted) return renderDone();
@@ -423,11 +423,11 @@ function captureCurrent() {
 function renderTest() {
   const st = T.st, t = T.tasks[st.cur];
   $('tWho').textContent = `Test · Nr. ${T.nr}`;
-  $('tCount').textContent = `${st.answers.filter(answered).length} von ${SLOTS.length} beantwortet`;
+  $('tCount').textContent = `${st.answers.filter(answered).length} von ${TEST.length} beantwortet`;
   $('tNav').innerHTML = T.tasks.map((x, i) => `<button class="${answered(st.answers[i]) ? 'done' : ''} ${i === st.cur ? 'cur' : ''} ${SLOTS[x.slot].review ? 'rev' : ''}" data-i="${i}" aria-label="Aufgabe ${i + 1}">${SLOTS[x.slot].review ? '🔁' : i + 1}</button>`).join('');
   $('tNav').querySelectorAll('button').forEach(b => b.onclick = () => { captureCurrent(); st.cur = +b.dataset.i; saveT(); renderTest(); });
   $('tCard').innerHTML = taskHtml(t, `Aufgabe ${st.cur + 1} · ${testArea(SLOTS[t.slot])}`, st.answers[st.cur],
-    `<div class="btns">${st.cur > 0 ? '<button id="tPrev">← Zurück</button>' : ''}${st.cur + 1 < SLOTS.length ? '<button class="primary" id="tNext">Weiter →</button>' : '<button class="testbtn" id="tEnd">Fertig → Abgeben</button>'}</div>
+    `<div class="btns">${st.cur > 0 ? '<button id="tPrev">← Zurück</button>' : ''}${st.cur + 1 < TEST.length ? '<button class="primary" id="tNext">Weiter →</button>' : '<button class="testbtn" id="tEnd">Fertig → Abgeben</button>'}</div>
      <p class="muted" style="margin-top:10px"><small>Deine Antworten werden automatisch gespeichert. Du kannst jederzeit zu einer Aufgabe zurückspringen.</small></p>`);
   $('tCard').classList.remove('hidden'); $('tConfirm').classList.add('hidden');
   $('tCard').classList.toggle('review', !!SLOTS[t.slot].review);
@@ -437,15 +437,15 @@ function renderTest() {
   if (t.type === 'mc') $('tCard').querySelectorAll('.opt').forEach(b => b.onclick = () => {
     st.answers[st.cur] = { k: +b.dataset.k }; saveT();
     $('tCard').querySelectorAll('.opt').forEach(x => x.classList.toggle('sel', x === b));
-    $('tCount').textContent = `${st.answers.filter(answered).length} von ${SLOTS.length} beantwortet`;
+    $('tCount').textContent = `${st.answers.filter(answered).length} von ${TEST.length} beantwortet`;
     $('tNav').children[st.cur].classList.add('done');
   });
   else if (t.type === 'term') {
-    wireTerm($('tCard'), () => { captureCurrent(); $('tNav').children[st.cur].classList.toggle('done', answered(st.answers[st.cur])); $('tCount').textContent = `${st.answers.filter(answered).length} von ${SLOTS.length} beantwortet`; });
+    wireTerm($('tCard'), () => { captureCurrent(); $('tNav').children[st.cur].classList.toggle('done', answered(st.answers[st.cur])); $('tCount').textContent = `${st.answers.filter(answered).length} von ${TEST.length} beantwortet`; });
     inField($('tCard'), 'a1').addEventListener('keydown', e => { if (e.key === 'Enter' && $('tNext')) $('tNext').click(); });
   }
   else $('tCard').querySelectorAll('input').forEach(inp => {
-    inp.addEventListener('input', () => { captureCurrent(); $('tNav').children[st.cur].classList.toggle('done', answered(st.answers[st.cur])); $('tCount').textContent = `${st.answers.filter(answered).length} von ${SLOTS.length} beantwortet`; });
+    inp.addEventListener('input', () => { captureCurrent(); $('tNav').children[st.cur].classList.toggle('done', answered(st.answers[st.cur])); $('tCount').textContent = `${st.answers.filter(answered).length} von ${TEST.length} beantwortet`; });
     inp.addEventListener('keydown', e => { if (e.key === 'Enter' && $('tNext')) $('tNext').click(); });
   });
   if ($('tPrev')) $('tPrev').onclick = () => { captureCurrent(); st.cur--; saveT(); renderTest(); };
@@ -494,7 +494,7 @@ function buildOverview(T, grades, pts, when) {
     text = 'Bei den Grundlagen bist du noch nicht sicher. Der Test prüft nur die Grundlagen – und auf ihnen baut die Klassenarbeit auf.';
     next = 'Übe zuerst die Punkte unten mit den ★-Aufgaben aus deinem Kompetenzraster und mach danach noch einmal Probetests im Flächen-Check.';
   }
-  return { nr: T.nr, datum, note, pts, max: SLOTS.length, text, next, areas };
+  return { nr: T.nr, datum, note, pts, max: TEST.length, text, next, areas };
 }
 function overviewHtml(o) {
   const areaRow = a => `<div class="ovrow ${a.rev ? 'rev' : ''}"><div class="ovarea">${a.rev ? '🔁 ' : ''}${a.area}${a.rev ? ' <span class="muted" style="font-weight:400">(nicht im Kompetenzraster – im Heft wiederholen)</span>' : ''}</div>
@@ -591,7 +591,7 @@ function renderDone() {
   const ov = buildOverview(T, grades, pts, st.end || Date.now());
   $('doneCard').innerHTML = `
     <h2>✅ Test abgegeben · Nr. ${T.nr}</h2>
-    <div class="score">${fmtPts(pts)} / ${SLOTS.length} Punkte</div>
+    <div class="score">${fmtPts(pts)} / ${TEST.length} Punkte</div>
     <div class="note">Note <b>${fmtNote(noteFor(pts))}</b></div>
     <p><b>Zeige diesen QR-Code deiner Lehrkraft zum Scannen</b> – so, wie sie es in der Stunde ansagt. Lass die Seite so lange offen.</p>
     <div class="qrbox">${qrHtml}</div>
