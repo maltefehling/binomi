@@ -576,7 +576,6 @@ const MIT_TR = new Set();
    Reihenfolge NICHT ändern, solange Ergebnisse aus laufenden Tests eingesammelt werden. CAN wortgleich im Kompetenzraster. */
 const SLOTS = [
   { area: 'II.1 Rechteck und Quadrat', name: 'Rechteck und Quadrat', gens: ['rechteckA', 'rechteckU'], back: ['rueckRechteck'] },
-  { area: 'II.1 Rechteck und Quadrat', name: 'Flächeneinheiten', gens: ['einheit'] },
   { area: 'II.2a Parallelogramm', name: 'Parallelogramm', gens: ['paraA'], practiceGens: ['paraA', 'paraU'], back: ['rueckPara'] },
   { area: 'II.2b Höhe im Parallelogramm', name: 'Höhe erkennen', gens: ['hoeheMC'] },
   { area: 'II.3a Dreieck', name: 'Dreieck', gens: ['dreieckA'], practiceGens: ['dreieckA', 'dreieckU'], back: ['rueckDreieck'] },
@@ -589,13 +588,12 @@ const SLOTS = [
 ];
 /* 27.11.2026 (Malte): Rückwärtsrechnen gehört zu jeder Figur (Unterpunkt im Raster). In der Übung mischen sich vorwärts und rückwärts;
    im Test kommen GENAU ZWEI Figuren rückwärts: eine leichte (Rechteck oder Parallelogramm) und eine schwere (Dreieck oder Trapez). */
-const RUECK_LEICHT = [0, 2], RUECK_SCHWER = [4, 6];
+const RUECK_LEICHT = [0, 1], RUECK_SCHWER = [3, 5];   // Plätze Rechteck, Parallelogramm | Dreieck, Trapez (seit 27.11. ohne Flächeneinheiten)
 SLOTS.forEach(s => { if (s.back) s.practiceGens = [...(s.practiceGens || s.gens), ...(s.backPractice || s.back)]; });
 const testArea = s => s.area;
 const testKopf = s => `${s.area} · ${s.name}`;
 const CAN = [
   'den Umfang und den Flächeninhalt von Rechtecken und Quadraten berechnen – auch rückwärts eine fehlende Seite.',
-  'Flächeneinheiten umrechnen (m², dm², cm²).',
   'den Flächeninhalt und den Umfang eines Parallelogramms berechnen – mit der Höhe, nicht mit der schrägen Seite – auch rückwärts die Höhe oder die Seite.',
   'die Höhe zu einer Seite erkennen und einzeichnen – auch wenn sie außerhalb liegt.',
   'den Flächeninhalt und den Umfang eines Dreiecks berechnen – auch rückwärts die Höhe oder die Grundseite.',
@@ -736,7 +734,7 @@ function decPractice(s) {
 const SALT = 'Hoeri-Flaechen';
 /* Stand der Aufgaben: bei jeder Änderung an Generatoren/SLOTS erhöhen (und ?v= in index.html/lehrer.html anpassen).
    Steckt im Ergebnis-Code, damit die Lehrerseite merkt, wenn ein Schülergerät eine andere Fassung hatte. */
-const APPV = '20261127d';
+const APPV = '20261127e';
 const sig = s => hash32(SALT + '|' + s).toString(36).toUpperCase().padStart(7, '0').slice(-5);
 function encAnswers(answers) {
   return answers.map(a => !a ? '' : a.k != null ? '#' + a.k : [a.a1 || '', a.a2 || ''].map(x => encodeURIComponent(String(x).trim()).replace(/!/g, '%21').replace(/~/g, '%7E')).join('~')).join('!');
