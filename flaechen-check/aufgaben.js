@@ -4,6 +4,8 @@
 "use strict";
 const $ = id => document.getElementById(id);
 let rand = Math.random;
+/* Test = Grundlagen (★ bis ★★, Malte 27.11.2026): schwerere Varianten nur in der Übung */
+let IM_TEST = false;
 
 /* ---------- Reproduzierbarer Zufall ---------- */
 function mulberry32(a) {
@@ -523,7 +525,7 @@ const G = {
   },
   /* ===== II.5a Vielecke ===== */
   vieleckA() {
-    const art = pick(['L', 'haus', 'rt']);
+    const art = pick(IM_TEST ? ['L', 'haus'] : ['L', 'haus', 'rt']);   // Test nur ★/★★: das hochkant liegende Trapez (Höhe erst ausrechnen) nur in der Übung
     if (art === 'L') { const a = R(6, 9), b = R(2, 3), c = R(2, 3), d = R(b + 2, b + 4);   // unten a × b, links c × (d − b)
       const A = a * b + c * (d - b);
       return { title: 'Vieleck zerlegen', q: qf('Das L-Beet ist in zwei Rechtecke zerlegt. Berechne den <b>Flächeninhalt</b> des ganzen Beets.',
@@ -643,6 +645,7 @@ function swapTask() {
   return Object.assign(makeTask(pick(s.practiceGens || s.gens)), { slot: i, getauscht: true });
 }
 function testTasks(code, nr) {
+  IM_TEST = true;
   const out = SLOTS.map((s, i) => {
     rand = mulberry32(hash32(`typ|${code}|${i}`));
     const ers = s.tauschbar && ohneBruch(code) ? pick(ERSATZ_TEST) : null;
@@ -651,7 +654,7 @@ function testTasks(code, nr) {
     rand = mulberry32(hash32(`zahl|${code}|${nr}|${i}`));
     return Object.assign(makeTask(gen), { slot: ers ? ers.slot : i });
   });
-  rand = Math.random;
+  rand = Math.random; IM_TEST = false;
   return out;
 }
 
@@ -733,7 +736,7 @@ function decPractice(s) {
 const SALT = 'Hoeri-Flaechen';
 /* Stand der Aufgaben: bei jeder Änderung an Generatoren/SLOTS erhöhen (und ?v= in index.html/lehrer.html anpassen).
    Steckt im Ergebnis-Code, damit die Lehrerseite merkt, wenn ein Schülergerät eine andere Fassung hatte. */
-const APPV = '20261127c';
+const APPV = '20261127d';
 const sig = s => hash32(SALT + '|' + s).toString(36).toUpperCase().padStart(7, '0').slice(-5);
 function encAnswers(answers) {
   return answers.map(a => !a ? '' : a.k != null ? '#' + a.k : [a.a1 || '', a.a2 || ''].map(x => encodeURIComponent(String(x).trim()).replace(/!/g, '%21').replace(/~/g, '%7E')).join('~')).join('!');
